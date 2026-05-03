@@ -1,0 +1,62 @@
+{
+  "code": "023591",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 3,
+  "total_weight": 2.51,
+  "heavy_count": 0,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "06082",
+      "stock_name": "壁仞科技",
+      "weight": 1.13,
+      "shares": 106.92,
+      "market_value": 2720.75
+    },
+    {
+      "rank": 2,
+      "stock_code": "00517",
+      "stock_name": "中远海运国际",
+      "weight": 0.79,
+      "shares": 341.6,
+      "market_value": 1891.13
+    },
+    {
+      "rank": 3,
+      "stock_code": "02245",
+      "stock_name": "力勤资源",
+      "weight": 0.59,
+      "shares": 85.4,
+      "market_value": 1429.66
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "06082",
+        "stock_name": "壁仞科技",
+        "weight": 1.13,
+        "shares": 106.92,
+        "market_value": 2720.75
+      },
+      {
+        "rank": 2,
+        "stock_code": "00517",
+        "stock_name": "中远海运国际",
+        "weight": 0.79,
+        "shares": 341.6,
+        "market_value": 1891.13
+      },
+      {
+        "rank": 3,
+        "stock_code": "02245",
+        "stock_name": "力勤资源",
+        "weight": 0.59,
+        "shares": 85.4,
+        "market_value": 1429.66
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:39:56.314457"
+}

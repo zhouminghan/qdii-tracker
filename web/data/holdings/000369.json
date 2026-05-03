@@ -1,0 +1,190 @@
+{
+  "code": "000369",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 11,
+  "total_weight": 42.66,
+  "heavy_count": 2,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "LLY",
+      "stock_name": "礼来",
+      "weight": 8.99,
+      "shares": 2.12,
+      "market_value": 13464.86
+    },
+    {
+      "rank": 2,
+      "stock_code": "JNJ",
+      "stock_name": "强生",
+      "weight": 6.78,
+      "shares": 6.01,
+      "market_value": 10160.11
+    },
+    {
+      "rank": 3,
+      "stock_code": "ABBV",
+      "stock_name": "艾伯维",
+      "weight": 4.8,
+      "shares": 4.77,
+      "market_value": 7185.45
+    },
+    {
+      "rank": 4,
+      "stock_code": "MRK",
+      "stock_name": "默沙东",
+      "weight": 3.77,
+      "shares": 6.79,
+      "market_value": 5653.72
+    },
+    {
+      "rank": 5,
+      "stock_code": "NOVN",
+      "stock_name": "诺华",
+      "weight": 3.57,
+      "shares": 5.14,
+      "market_value": 5354.93
+    },
+    {
+      "rank": 6,
+      "stock_code": "ROPSW",
+      "stock_name": "罗氏控股股份公司",
+      "weight": 3.45,
+      "shares": 1.9,
+      "market_value": 5163.27
+    },
+    {
+      "rank": 7,
+      "stock_code": "AZN",
+      "stock_name": "阿斯利康(UK)",
+      "weight": 3.43,
+      "shares": 3.84,
+      "market_value": 5140.66
+    },
+    {
+      "rank": 8,
+      "stock_code": "UNH",
+      "stock_name": "联合健康",
+      "weight": 3.04,
+      "shares": 2.43,
+      "market_value": 4554.98
+    },
+    {
+      "rank": 9,
+      "stock_code": "AMGN",
+      "stock_name": "安进",
+      "weight": 2.38,
+      "shares": 1.46,
+      "market_value": 3565.46
+    },
+    {
+      "rank": 10,
+      "stock_code": "TMO",
+      "stock_name": "赛默飞世尔科技",
+      "weight": 2.3,
+      "shares": 1.01,
+      "market_value": 3443.95
+    },
+    {
+      "rank": 11,
+      "stock_code": "ROSW",
+      "stock_name": "罗氏控股股份公司",
+      "weight": 0.15,
+      "shares": 0.08,
+      "market_value": 223.33
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "LLY",
+        "stock_name": "礼来",
+        "weight": 8.99,
+        "shares": 2.12,
+        "market_value": 13464.86
+      },
+      {
+        "rank": 2,
+        "stock_code": "JNJ",
+        "stock_name": "强生",
+        "weight": 6.78,
+        "shares": 6.01,
+        "market_value": 10160.11
+      },
+      {
+        "rank": 3,
+        "stock_code": "ABBV",
+        "stock_name": "艾伯维",
+        "weight": 4.8,
+        "shares": 4.77,
+        "market_value": 7185.45
+      },
+      {
+        "rank": 4,
+        "stock_code": "MRK",
+        "stock_name": "默沙东",
+        "weight": 3.77,
+        "shares": 6.79,
+        "market_value": 5653.72
+      },
+      {
+        "rank": 5,
+        "stock_code": "NOVN",
+        "stock_name": "诺华",
+        "weight": 3.57,
+        "shares": 5.14,
+        "market_value": 5354.93
+      },
+      {
+        "rank": 6,
+        "stock_code": "ROPSW",
+        "stock_name": "罗氏控股股份公司",
+        "weight": 3.45,
+        "shares": 1.9,
+        "market_value": 5163.27
+      },
+      {
+        "rank": 7,
+        "stock_code": "AZN",
+        "stock_name": "阿斯利康(UK)",
+        "weight": 3.43,
+        "shares": 3.84,
+        "market_value": 5140.66
+      },
+      {
+        "rank": 8,
+        "stock_code": "UNH",
+        "stock_name": "联合健康",
+        "weight": 3.04,
+        "shares": 2.43,
+        "market_value": 4554.98
+      },
+      {
+        "rank": 9,
+        "stock_code": "AMGN",
+        "stock_name": "安进",
+        "weight": 2.38,
+        "shares": 1.46,
+        "market_value": 3565.46
+      },
+      {
+        "rank": 10,
+        "stock_code": "TMO",
+        "stock_name": "赛默飞世尔科技",
+        "weight": 2.3,
+        "shares": 1.01,
+        "market_value": 3443.95
+      },
+      {
+        "rank": 11,
+        "stock_code": "ROSW",
+        "stock_name": "罗氏控股股份公司",
+        "weight": 0.15,
+        "shares": 0.08,
+        "market_value": 223.33
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:40:01.531956"
+}

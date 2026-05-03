@@ -1,0 +1,190 @@
+{
+  "code": "270023",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 11,
+  "total_weight": 41.91,
+  "heavy_count": 2,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "ASML",
+      "stock_name": "阿斯麦",
+      "weight": 5.21,
+      "shares": 8.57,
+      "market_value": 78350.74
+    },
+    {
+      "rank": 2,
+      "stock_code": "02513",
+      "stock_name": "智谱",
+      "weight": 5.1,
+      "shares": 133.92,
+      "market_value": 76700.8
+    },
+    {
+      "rank": 3,
+      "stock_code": "GOOG",
+      "stock_name": "谷歌-C",
+      "weight": 4.94,
+      "shares": 37.45,
+      "market_value": 74331.1
+    },
+    {
+      "rank": 4,
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 4.47,
+      "shares": 55.67,
+      "market_value": 67179.04
+    },
+    {
+      "rank": 5,
+      "stock_code": "AAPL",
+      "stock_name": "苹果",
+      "weight": 4.07,
+      "shares": 34.85,
+      "market_value": 61199.55
+    },
+    {
+      "rank": 6,
+      "stock_code": "AMZN",
+      "stock_name": "亚马逊",
+      "weight": 4.02,
+      "shares": 41.97,
+      "market_value": 60487.15
+    },
+    {
+      "rank": 7,
+      "stock_code": "LRCX",
+      "stock_name": "拉姆研究",
+      "weight": 4.01,
+      "shares": 40.72,
+      "market_value": 60206.03
+    },
+    {
+      "rank": 8,
+      "stock_code": "SNDK",
+      "stock_name": "闪迪",
+      "weight": 3.54,
+      "shares": 12.12,
+      "market_value": 53268.85
+    },
+    {
+      "rank": 9,
+      "stock_code": "AVGO",
+      "stock_name": "博通",
+      "weight": 3.27,
+      "shares": 22.94,
+      "market_value": 49124.77
+    },
+    {
+      "rank": 10,
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 3.26,
+      "shares": 20.93,
+      "market_value": 48937.54
+    },
+    {
+      "rank": 11,
+      "stock_code": "GOOGL",
+      "stock_name": "谷歌-A",
+      "weight": 0.02,
+      "shares": 0.17,
+      "market_value": 345.02
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "ASML",
+        "stock_name": "阿斯麦",
+        "weight": 5.21,
+        "shares": 8.57,
+        "market_value": 78350.74
+      },
+      {
+        "rank": 2,
+        "stock_code": "02513",
+        "stock_name": "智谱",
+        "weight": 5.1,
+        "shares": 133.92,
+        "market_value": 76700.8
+      },
+      {
+        "rank": 3,
+        "stock_code": "GOOG",
+        "stock_name": "谷歌-C",
+        "weight": 4.94,
+        "shares": 37.45,
+        "market_value": 74331.1
+      },
+      {
+        "rank": 4,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 4.47,
+        "shares": 55.67,
+        "market_value": 67179.04
+      },
+      {
+        "rank": 5,
+        "stock_code": "AAPL",
+        "stock_name": "苹果",
+        "weight": 4.07,
+        "shares": 34.85,
+        "market_value": 61199.55
+      },
+      {
+        "rank": 6,
+        "stock_code": "AMZN",
+        "stock_name": "亚马逊",
+        "weight": 4.02,
+        "shares": 41.97,
+        "market_value": 60487.15
+      },
+      {
+        "rank": 7,
+        "stock_code": "LRCX",
+        "stock_name": "拉姆研究",
+        "weight": 4.01,
+        "shares": 40.72,
+        "market_value": 60206.03
+      },
+      {
+        "rank": 8,
+        "stock_code": "SNDK",
+        "stock_name": "闪迪",
+        "weight": 3.54,
+        "shares": 12.12,
+        "market_value": 53268.85
+      },
+      {
+        "rank": 9,
+        "stock_code": "AVGO",
+        "stock_name": "博通",
+        "weight": 3.27,
+        "shares": 22.94,
+        "market_value": 49124.77
+      },
+      {
+        "rank": 10,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 3.26,
+        "shares": 20.93,
+        "market_value": 48937.54
+      },
+      {
+        "rank": 11,
+        "stock_code": "GOOGL",
+        "stock_name": "谷歌-A",
+        "weight": 0.02,
+        "shares": 0.17,
+        "market_value": 345.02
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:39:49.246255"
+}

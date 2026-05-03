@@ -1,0 +1,174 @@
+{
+  "code": "019578",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 33.81,
+  "heavy_count": 1,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "XOM",
+      "stock_name": "埃克森美孚",
+      "weight": 5.63,
+      "shares": 4.16,
+      "market_value": 4888.43
+    },
+    {
+      "rank": 2,
+      "stock_code": "NEM",
+      "stock_name": "纽蒙特",
+      "weight": 3.82,
+      "shares": 4.43,
+      "market_value": 3317.81
+    },
+    {
+      "rank": 3,
+      "stock_code": "SHEL",
+      "stock_name": "壳牌",
+      "weight": 3.82,
+      "shares": 10.14,
+      "market_value": 3312.38
+    },
+    {
+      "rank": 4,
+      "stock_code": "VLO",
+      "stock_name": "瓦莱罗能源",
+      "weight": 3.65,
+      "shares": 1.85,
+      "market_value": 3167.46
+    },
+    {
+      "rank": 5,
+      "stock_code": "CNQ",
+      "stock_name": "加拿大自然资源有限公司",
+      "weight": 3.44,
+      "shares": 8.87,
+      "market_value": 2983.28
+    },
+    {
+      "rank": 6,
+      "stock_code": "TTE",
+      "stock_name": "TotalEnergies SE",
+      "weight": 3.04,
+      "shares": 4.19,
+      "market_value": 2634.89
+    },
+    {
+      "rank": 7,
+      "stock_code": "MPC",
+      "stock_name": "马拉松原油",
+      "weight": 2.63,
+      "shares": 1.35,
+      "market_value": 2278.4
+    },
+    {
+      "rank": 8,
+      "stock_code": "PBR",
+      "stock_name": "巴西石油",
+      "weight": 2.62,
+      "shares": 15.84,
+      "market_value": 2274.51
+    },
+    {
+      "rank": 9,
+      "stock_code": "AEM",
+      "stock_name": "阿哥尼可老鹰矿场有限公司",
+      "weight": 2.6,
+      "shares": 1.61,
+      "market_value": 2258.27
+    },
+    {
+      "rank": 10,
+      "stock_code": "KGC",
+      "stock_name": "金罗斯黄金",
+      "weight": 2.56,
+      "shares": 10.53,
+      "market_value": 2223.39
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "XOM",
+        "stock_name": "埃克森美孚",
+        "weight": 5.63,
+        "shares": 4.16,
+        "market_value": 4888.43
+      },
+      {
+        "rank": 2,
+        "stock_code": "NEM",
+        "stock_name": "纽蒙特",
+        "weight": 3.82,
+        "shares": 4.43,
+        "market_value": 3317.81
+      },
+      {
+        "rank": 3,
+        "stock_code": "SHEL",
+        "stock_name": "壳牌",
+        "weight": 3.82,
+        "shares": 10.14,
+        "market_value": 3312.38
+      },
+      {
+        "rank": 4,
+        "stock_code": "VLO",
+        "stock_name": "瓦莱罗能源",
+        "weight": 3.65,
+        "shares": 1.85,
+        "market_value": 3167.46
+      },
+      {
+        "rank": 5,
+        "stock_code": "CNQ",
+        "stock_name": "加拿大自然资源有限公司",
+        "weight": 3.44,
+        "shares": 8.87,
+        "market_value": 2983.28
+      },
+      {
+        "rank": 6,
+        "stock_code": "TTE",
+        "stock_name": "TotalEnergies SE",
+        "weight": 3.04,
+        "shares": 4.19,
+        "market_value": 2634.89
+      },
+      {
+        "rank": 7,
+        "stock_code": "MPC",
+        "stock_name": "马拉松原油",
+        "weight": 2.63,
+        "shares": 1.35,
+        "market_value": 2278.4
+      },
+      {
+        "rank": 8,
+        "stock_code": "PBR",
+        "stock_name": "巴西石油",
+        "weight": 2.62,
+        "shares": 15.84,
+        "market_value": 2274.51
+      },
+      {
+        "rank": 9,
+        "stock_code": "AEM",
+        "stock_name": "阿哥尼可老鹰矿场有限公司",
+        "weight": 2.6,
+        "shares": 1.61,
+        "market_value": 2258.27
+      },
+      {
+        "rank": 10,
+        "stock_code": "KGC",
+        "stock_name": "金罗斯黄金",
+        "weight": 2.56,
+        "shares": 10.53,
+        "market_value": 2223.39
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T14:12:47.811161"
+}

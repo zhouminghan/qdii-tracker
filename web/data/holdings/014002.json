@@ -1,0 +1,174 @@
+{
+  "code": "014002",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 51.0,
+  "heavy_count": 6,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "LITE",
+      "stock_name": "Lumentum Holdings Inc",
+      "weight": 8.22,
+      "shares": 5.08,
+      "market_value": 24721.85
+    },
+    {
+      "rank": 2,
+      "stock_code": "GOOG",
+      "stock_name": "谷歌-C",
+      "weight": 6.4,
+      "shares": 9.7,
+      "market_value": 19248.96
+    },
+    {
+      "rank": 3,
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 6.04,
+      "shares": 7.77,
+      "market_value": 18157.76
+    },
+    {
+      "rank": 4,
+      "stock_code": "WDC",
+      "stock_name": "西部数据",
+      "weight": 5.19,
+      "shares": 8.34,
+      "market_value": 15609.38
+    },
+    {
+      "rank": 5,
+      "stock_code": "COHR",
+      "stock_name": "Coherent Corp",
+      "weight": 5.17,
+      "shares": 9.44,
+      "market_value": 15559.67
+    },
+    {
+      "rank": 6,
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 5.13,
+      "shares": 6.6,
+      "market_value": 15428.49
+    },
+    {
+      "rank": 7,
+      "stock_code": "INTC",
+      "stock_name": "英特尔",
+      "weight": 4.34,
+      "shares": 42.7,
+      "market_value": 13038.58
+    },
+    {
+      "rank": 8,
+      "stock_code": "285AJP",
+      "stock_name": "铠侠控股株式会社",
+      "weight": 3.71,
+      "shares": 13.5,
+      "market_value": 11152.18
+    },
+    {
+      "rank": 9,
+      "stock_code": "NFLX",
+      "stock_name": "奈飞",
+      "weight": 3.55,
+      "shares": 16.03,
+      "market_value": 10664.76
+    },
+    {
+      "rank": 10,
+      "stock_code": "ASML",
+      "stock_name": "阿斯麦",
+      "weight": 3.25,
+      "shares": 1.07,
+      "market_value": 9779.11
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "LITE",
+        "stock_name": "Lumentum Holdings Inc",
+        "weight": 8.22,
+        "shares": 5.08,
+        "market_value": 24721.85
+      },
+      {
+        "rank": 2,
+        "stock_code": "GOOG",
+        "stock_name": "谷歌-C",
+        "weight": 6.4,
+        "shares": 9.7,
+        "market_value": 19248.96
+      },
+      {
+        "rank": 3,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 6.04,
+        "shares": 7.77,
+        "market_value": 18157.76
+      },
+      {
+        "rank": 4,
+        "stock_code": "WDC",
+        "stock_name": "西部数据",
+        "weight": 5.19,
+        "shares": 8.34,
+        "market_value": 15609.38
+      },
+      {
+        "rank": 5,
+        "stock_code": "COHR",
+        "stock_name": "Coherent Corp",
+        "weight": 5.17,
+        "shares": 9.44,
+        "market_value": 15559.67
+      },
+      {
+        "rank": 6,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 5.13,
+        "shares": 6.6,
+        "market_value": 15428.49
+      },
+      {
+        "rank": 7,
+        "stock_code": "INTC",
+        "stock_name": "英特尔",
+        "weight": 4.34,
+        "shares": 42.7,
+        "market_value": 13038.58
+      },
+      {
+        "rank": 8,
+        "stock_code": "285AJP",
+        "stock_name": "铠侠控股株式会社",
+        "weight": 3.71,
+        "shares": 13.5,
+        "market_value": 11152.18
+      },
+      {
+        "rank": 9,
+        "stock_code": "NFLX",
+        "stock_name": "奈飞",
+        "weight": 3.55,
+        "shares": 16.03,
+        "market_value": 10664.76
+      },
+      {
+        "rank": 10,
+        "stock_code": "ASML",
+        "stock_name": "阿斯麦",
+        "weight": 3.25,
+        "shares": 1.07,
+        "market_value": 9779.11
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T14:12:40.682763"
+}

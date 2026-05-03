@@ -1,0 +1,174 @@
+{
+  "code": "010644",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 57.05,
+  "heavy_count": 4,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "688266",
+      "stock_name": "泽璟制药",
+      "weight": 9.36,
+      "shares": 36.0,
+      "market_value": 3556.8
+    },
+    {
+      "rank": 2,
+      "stock_code": "002653",
+      "stock_name": "海思科",
+      "weight": 8.57,
+      "shares": 60.0,
+      "market_value": 3256.8
+    },
+    {
+      "rank": 3,
+      "stock_code": "01530",
+      "stock_name": "三生制药",
+      "weight": 8.15,
+      "shares": 155.0,
+      "market_value": 3098.45
+    },
+    {
+      "rank": 4,
+      "stock_code": "01672",
+      "stock_name": "歌礼制药-B",
+      "weight": 6.11,
+      "shares": 158.0,
+      "market_value": 2321.38
+    },
+    {
+      "rank": 5,
+      "stock_code": "06160",
+      "stock_name": "百济神州",
+      "weight": 4.78,
+      "shares": 12.0,
+      "market_value": 1818.17
+    },
+    {
+      "rank": 6,
+      "stock_code": "02105",
+      "stock_name": "来凯医药-B",
+      "weight": 4.55,
+      "shares": 130.45,
+      "market_value": 1727.71
+    },
+    {
+      "rank": 7,
+      "stock_code": "02595",
+      "stock_name": "劲方医药-B",
+      "weight": 4.35,
+      "shares": 55.98,
+      "market_value": 1651.87
+    },
+    {
+      "rank": 8,
+      "stock_code": "01801",
+      "stock_name": "信达生物",
+      "weight": 4.34,
+      "shares": 22.0,
+      "market_value": 1649.17
+    },
+    {
+      "rank": 9,
+      "stock_code": "03933",
+      "stock_name": "联邦制药",
+      "weight": 3.8,
+      "shares": 170.0,
+      "market_value": 1442.48
+    },
+    {
+      "rank": 10,
+      "stock_code": "ABVX",
+      "stock_name": "Abivax SA ADR",
+      "weight": 3.04,
+      "shares": 1.5,
+      "market_value": 1155.71
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "688266",
+        "stock_name": "泽璟制药",
+        "weight": 9.36,
+        "shares": 36.0,
+        "market_value": 3556.8
+      },
+      {
+        "rank": 2,
+        "stock_code": "002653",
+        "stock_name": "海思科",
+        "weight": 8.57,
+        "shares": 60.0,
+        "market_value": 3256.8
+      },
+      {
+        "rank": 3,
+        "stock_code": "01530",
+        "stock_name": "三生制药",
+        "weight": 8.15,
+        "shares": 155.0,
+        "market_value": 3098.45
+      },
+      {
+        "rank": 4,
+        "stock_code": "01672",
+        "stock_name": "歌礼制药-B",
+        "weight": 6.11,
+        "shares": 158.0,
+        "market_value": 2321.38
+      },
+      {
+        "rank": 5,
+        "stock_code": "06160",
+        "stock_name": "百济神州",
+        "weight": 4.78,
+        "shares": 12.0,
+        "market_value": 1818.17
+      },
+      {
+        "rank": 6,
+        "stock_code": "02105",
+        "stock_name": "来凯医药-B",
+        "weight": 4.55,
+        "shares": 130.45,
+        "market_value": 1727.71
+      },
+      {
+        "rank": 7,
+        "stock_code": "02595",
+        "stock_name": "劲方医药-B",
+        "weight": 4.35,
+        "shares": 55.98,
+        "market_value": 1651.87
+      },
+      {
+        "rank": 8,
+        "stock_code": "01801",
+        "stock_name": "信达生物",
+        "weight": 4.34,
+        "shares": 22.0,
+        "market_value": 1649.17
+      },
+      {
+        "rank": 9,
+        "stock_code": "03933",
+        "stock_name": "联邦制药",
+        "weight": 3.8,
+        "shares": 170.0,
+        "market_value": 1442.48
+      },
+      {
+        "rank": 10,
+        "stock_code": "ABVX",
+        "stock_name": "Abivax SA ADR",
+        "weight": 3.04,
+        "shares": 1.5,
+        "market_value": 1155.71
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:40:10.542272"
+}

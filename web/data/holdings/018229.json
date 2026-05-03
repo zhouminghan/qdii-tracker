@@ -1,0 +1,174 @@
+{
+  "code": "018229",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 41.77,
+  "heavy_count": 3,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "00100",
+      "stock_name": "MINIMAX-W",
+      "weight": 6.85,
+      "shares": 29.47,
+      "market_value": 22546.5
+    },
+    {
+      "rank": 2,
+      "stock_code": "06869",
+      "stock_name": "长飞光纤光缆",
+      "weight": 6.31,
+      "shares": 128.6,
+      "market_value": 20779.17
+    },
+    {
+      "rank": 3,
+      "stock_code": "688519",
+      "stock_name": "南亚新材",
+      "weight": 5.5,
+      "shares": 139.67,
+      "market_value": 18126.44
+    },
+    {
+      "rank": 4,
+      "stock_code": "GLW",
+      "stock_name": "康宁",
+      "weight": 4.46,
+      "shares": 15.6,
+      "market_value": 14681.19
+    },
+    {
+      "rank": 5,
+      "stock_code": "300502",
+      "stock_name": "新易盛",
+      "weight": 3.69,
+      "shares": 27.47,
+      "market_value": 12165.04
+    },
+    {
+      "rank": 6,
+      "stock_code": "LITE",
+      "stock_name": "Lumentum Holdings Inc",
+      "weight": 3.58,
+      "shares": 2.43,
+      "market_value": 11801.72
+    },
+    {
+      "rank": 7,
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 3.18,
+      "shares": 4.48,
+      "market_value": 10468.13
+    },
+    {
+      "rank": 8,
+      "stock_code": "GOOG",
+      "stock_name": "谷歌-C",
+      "weight": 3.02,
+      "shares": 5.0,
+      "market_value": 9934.22
+    },
+    {
+      "rank": 9,
+      "stock_code": "002384",
+      "stock_name": "东山精密",
+      "weight": 2.94,
+      "shares": 93.63,
+      "market_value": 9671.98
+    },
+    {
+      "rank": 10,
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 2.24,
+      "shares": 6.11,
+      "market_value": 7375.25
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "00100",
+        "stock_name": "MINIMAX-W",
+        "weight": 6.85,
+        "shares": 29.47,
+        "market_value": 22546.5
+      },
+      {
+        "rank": 2,
+        "stock_code": "06869",
+        "stock_name": "长飞光纤光缆",
+        "weight": 6.31,
+        "shares": 128.6,
+        "market_value": 20779.17
+      },
+      {
+        "rank": 3,
+        "stock_code": "688519",
+        "stock_name": "南亚新材",
+        "weight": 5.5,
+        "shares": 139.67,
+        "market_value": 18126.44
+      },
+      {
+        "rank": 4,
+        "stock_code": "GLW",
+        "stock_name": "康宁",
+        "weight": 4.46,
+        "shares": 15.6,
+        "market_value": 14681.19
+      },
+      {
+        "rank": 5,
+        "stock_code": "300502",
+        "stock_name": "新易盛",
+        "weight": 3.69,
+        "shares": 27.47,
+        "market_value": 12165.04
+      },
+      {
+        "rank": 6,
+        "stock_code": "LITE",
+        "stock_name": "Lumentum Holdings Inc",
+        "weight": 3.58,
+        "shares": 2.43,
+        "market_value": 11801.72
+      },
+      {
+        "rank": 7,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 3.18,
+        "shares": 4.48,
+        "market_value": 10468.13
+      },
+      {
+        "rank": 8,
+        "stock_code": "GOOG",
+        "stock_name": "谷歌-C",
+        "weight": 3.02,
+        "shares": 5.0,
+        "market_value": 9934.22
+      },
+      {
+        "rank": 9,
+        "stock_code": "002384",
+        "stock_name": "东山精密",
+        "weight": 2.94,
+        "shares": 93.63,
+        "market_value": 9671.98
+      },
+      {
+        "rank": 10,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 2.24,
+        "shares": 6.11,
+        "market_value": 7375.25
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:39:54.689307"
+}

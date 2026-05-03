@@ -1,0 +1,174 @@
+{
+  "code": "163813",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 5.35,
+  "heavy_count": 0,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "BRK_B",
+      "stock_name": "伯克希尔哈撒韦-B",
+      "weight": 1.85,
+      "shares": 0.3,
+      "market_value": 994.73
+    },
+    {
+      "rank": 2,
+      "stock_code": "GOOGL",
+      "stock_name": "谷歌-A",
+      "weight": 0.74,
+      "shares": 0.2,
+      "market_value": 397.95
+    },
+    {
+      "rank": 3,
+      "stock_code": "COP",
+      "stock_name": "康菲石油",
+      "weight": 0.51,
+      "shares": 0.3,
+      "market_value": 274.01
+    },
+    {
+      "rank": 4,
+      "stock_code": "CAT",
+      "stock_name": "卡特彼勒",
+      "weight": 0.46,
+      "shares": 0.05,
+      "market_value": 245.11
+    },
+    {
+      "rank": 5,
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 0.45,
+      "shares": 0.2,
+      "market_value": 241.35
+    },
+    {
+      "rank": 6,
+      "stock_code": "XOM",
+      "stock_name": "埃克森美孚",
+      "weight": 0.44,
+      "shares": 0.2,
+      "market_value": 234.79
+    },
+    {
+      "rank": 7,
+      "stock_code": "ASML",
+      "stock_name": "阿斯麦",
+      "weight": 0.34,
+      "shares": 0.02,
+      "market_value": 182.79
+    },
+    {
+      "rank": 8,
+      "stock_code": "AMAT",
+      "stock_name": "应用材料",
+      "weight": 0.22,
+      "shares": 0.05,
+      "market_value": 118.25
+    },
+    {
+      "rank": 9,
+      "stock_code": "GLW",
+      "stock_name": "康宁",
+      "weight": 0.17,
+      "shares": 0.1,
+      "market_value": 94.08
+    },
+    {
+      "rank": 10,
+      "stock_code": "WDC",
+      "stock_name": "西部数据",
+      "weight": 0.17,
+      "shares": 0.05,
+      "market_value": 93.58
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "BRK_B",
+        "stock_name": "伯克希尔哈撒韦-B",
+        "weight": 1.85,
+        "shares": 0.3,
+        "market_value": 994.73
+      },
+      {
+        "rank": 2,
+        "stock_code": "GOOGL",
+        "stock_name": "谷歌-A",
+        "weight": 0.74,
+        "shares": 0.2,
+        "market_value": 397.95
+      },
+      {
+        "rank": 3,
+        "stock_code": "COP",
+        "stock_name": "康菲石油",
+        "weight": 0.51,
+        "shares": 0.3,
+        "market_value": 274.01
+      },
+      {
+        "rank": 4,
+        "stock_code": "CAT",
+        "stock_name": "卡特彼勒",
+        "weight": 0.46,
+        "shares": 0.05,
+        "market_value": 245.11
+      },
+      {
+        "rank": 5,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 0.45,
+        "shares": 0.2,
+        "market_value": 241.35
+      },
+      {
+        "rank": 6,
+        "stock_code": "XOM",
+        "stock_name": "埃克森美孚",
+        "weight": 0.44,
+        "shares": 0.2,
+        "market_value": 234.79
+      },
+      {
+        "rank": 7,
+        "stock_code": "ASML",
+        "stock_name": "阿斯麦",
+        "weight": 0.34,
+        "shares": 0.02,
+        "market_value": 182.79
+      },
+      {
+        "rank": 8,
+        "stock_code": "AMAT",
+        "stock_name": "应用材料",
+        "weight": 0.22,
+        "shares": 0.05,
+        "market_value": 118.25
+      },
+      {
+        "rank": 9,
+        "stock_code": "GLW",
+        "stock_name": "康宁",
+        "weight": 0.17,
+        "shares": 0.1,
+        "market_value": 94.08
+      },
+      {
+        "rank": 10,
+        "stock_code": "WDC",
+        "stock_name": "西部数据",
+        "weight": 0.17,
+        "shares": 0.05,
+        "market_value": 93.58
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T14:12:49.891349"
+}

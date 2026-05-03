@@ -1,0 +1,174 @@
+{
+  "code": "004877",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 42.84,
+  "heavy_count": 3,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "NVS",
+      "stock_name": "诺华制药",
+      "weight": 10.15,
+      "shares": 5.31,
+      "market_value": 5616.04
+    },
+    {
+      "rank": 2,
+      "stock_code": "JNJ",
+      "stock_name": "强生",
+      "weight": 6.6,
+      "shares": 2.16,
+      "market_value": 3653.38
+    },
+    {
+      "rank": 3,
+      "stock_code": "AZN",
+      "stock_name": "阿斯利康",
+      "weight": 6.31,
+      "shares": 2.56,
+      "market_value": 3493.49
+    },
+    {
+      "rank": 4,
+      "stock_code": "IONS",
+      "stock_name": "Ionis Pharmaceuticals Inc",
+      "weight": 4.51,
+      "shares": 4.8,
+      "market_value": 2493.97
+    },
+    {
+      "rank": 5,
+      "stock_code": "RPRX",
+      "stock_name": "Royalty Pharma plc-A",
+      "weight": 3.26,
+      "shares": 5.44,
+      "market_value": 1806.36
+    },
+    {
+      "rank": 6,
+      "stock_code": "01093",
+      "stock_name": "石药集团",
+      "weight": 3.14,
+      "shares": 216.0,
+      "market_value": 1735.53
+    },
+    {
+      "rank": 7,
+      "stock_code": "06990",
+      "stock_name": "科伦博泰生物",
+      "weight": 2.64,
+      "shares": 3.6,
+      "market_value": 1462.17
+    },
+    {
+      "rank": 8,
+      "stock_code": "LLY",
+      "stock_name": "礼来",
+      "weight": 2.3,
+      "shares": 0.2,
+      "market_value": 1272.85
+    },
+    {
+      "rank": 9,
+      "stock_code": "TMO",
+      "stock_name": "赛默飞世尔科技",
+      "weight": 1.97,
+      "shares": 0.32,
+      "market_value": 1088.35
+    },
+    {
+      "rank": 10,
+      "stock_code": "BSX",
+      "stock_name": "波士顿科学",
+      "weight": 1.96,
+      "shares": 2.5,
+      "market_value": 1085.48
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "NVS",
+        "stock_name": "诺华制药",
+        "weight": 10.15,
+        "shares": 5.31,
+        "market_value": 5616.04
+      },
+      {
+        "rank": 2,
+        "stock_code": "JNJ",
+        "stock_name": "强生",
+        "weight": 6.6,
+        "shares": 2.16,
+        "market_value": 3653.38
+      },
+      {
+        "rank": 3,
+        "stock_code": "AZN",
+        "stock_name": "阿斯利康",
+        "weight": 6.31,
+        "shares": 2.56,
+        "market_value": 3493.49
+      },
+      {
+        "rank": 4,
+        "stock_code": "IONS",
+        "stock_name": "Ionis Pharmaceuticals Inc",
+        "weight": 4.51,
+        "shares": 4.8,
+        "market_value": 2493.97
+      },
+      {
+        "rank": 5,
+        "stock_code": "RPRX",
+        "stock_name": "Royalty Pharma plc-A",
+        "weight": 3.26,
+        "shares": 5.44,
+        "market_value": 1806.36
+      },
+      {
+        "rank": 6,
+        "stock_code": "01093",
+        "stock_name": "石药集团",
+        "weight": 3.14,
+        "shares": 216.0,
+        "market_value": 1735.53
+      },
+      {
+        "rank": 7,
+        "stock_code": "06990",
+        "stock_name": "科伦博泰生物",
+        "weight": 2.64,
+        "shares": 3.6,
+        "market_value": 1462.17
+      },
+      {
+        "rank": 8,
+        "stock_code": "LLY",
+        "stock_name": "礼来",
+        "weight": 2.3,
+        "shares": 0.2,
+        "market_value": 1272.85
+      },
+      {
+        "rank": 9,
+        "stock_code": "TMO",
+        "stock_name": "赛默飞世尔科技",
+        "weight": 1.97,
+        "shares": 0.32,
+        "market_value": 1088.35
+      },
+      {
+        "rank": 10,
+        "stock_code": "BSX",
+        "stock_name": "波士顿科学",
+        "weight": 1.96,
+        "shares": 2.5,
+        "market_value": 1085.48
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:40:08.411887"
+}

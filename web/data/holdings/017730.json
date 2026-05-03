@@ -1,0 +1,174 @@
+{
+  "code": "017730",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 40.15,
+  "heavy_count": 1,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "AVGO",
+      "stock_name": "博通",
+      "weight": 5.37,
+      "shares": 5.2,
+      "market_value": 11136.44
+    },
+    {
+      "rank": 2,
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 4.85,
+      "shares": 4.3,
+      "market_value": 10051.9
+    },
+    {
+      "rank": 3,
+      "stock_code": "MRVL",
+      "stock_name": "迈威尔科技",
+      "weight": 4.37,
+      "shares": 13.2,
+      "market_value": 9046.84
+    },
+    {
+      "rank": 4,
+      "stock_code": "688498",
+      "stock_name": "源杰科技",
+      "weight": 4.25,
+      "shares": 8.75,
+      "market_value": 8797.1
+    },
+    {
+      "rank": 5,
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 3.79,
+      "shares": 6.5,
+      "market_value": 7843.83
+    },
+    {
+      "rank": 6,
+      "stock_code": "ASML",
+      "stock_name": "阿斯麦",
+      "weight": 3.7,
+      "shares": 0.84,
+      "market_value": 7677.05
+    },
+    {
+      "rank": 7,
+      "stock_code": "688256",
+      "stock_name": "寒武纪",
+      "weight": 3.66,
+      "shares": 7.74,
+      "market_value": 7581.88
+    },
+    {
+      "rank": 8,
+      "stock_code": "KLAC",
+      "stock_name": "科磊",
+      "weight": 3.44,
+      "shares": 0.7,
+      "market_value": 7131.74
+    },
+    {
+      "rank": 9,
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 3.39,
+      "shares": 3.0,
+      "market_value": 7015.23
+    },
+    {
+      "rank": 10,
+      "stock_code": "AMD",
+      "stock_name": "超威半导体",
+      "weight": 3.33,
+      "shares": 4.9,
+      "market_value": 6897.31
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "AVGO",
+        "stock_name": "博通",
+        "weight": 5.37,
+        "shares": 5.2,
+        "market_value": 11136.44
+      },
+      {
+        "rank": 2,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 4.85,
+        "shares": 4.3,
+        "market_value": 10051.9
+      },
+      {
+        "rank": 3,
+        "stock_code": "MRVL",
+        "stock_name": "迈威尔科技",
+        "weight": 4.37,
+        "shares": 13.2,
+        "market_value": 9046.84
+      },
+      {
+        "rank": 4,
+        "stock_code": "688498",
+        "stock_name": "源杰科技",
+        "weight": 4.25,
+        "shares": 8.75,
+        "market_value": 8797.1
+      },
+      {
+        "rank": 5,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 3.79,
+        "shares": 6.5,
+        "market_value": 7843.83
+      },
+      {
+        "rank": 6,
+        "stock_code": "ASML",
+        "stock_name": "阿斯麦",
+        "weight": 3.7,
+        "shares": 0.84,
+        "market_value": 7677.05
+      },
+      {
+        "rank": 7,
+        "stock_code": "688256",
+        "stock_name": "寒武纪",
+        "weight": 3.66,
+        "shares": 7.74,
+        "market_value": 7581.88
+      },
+      {
+        "rank": 8,
+        "stock_code": "KLAC",
+        "stock_name": "科磊",
+        "weight": 3.44,
+        "shares": 0.7,
+        "market_value": 7131.74
+      },
+      {
+        "rank": 9,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 3.39,
+        "shares": 3.0,
+        "market_value": 7015.23
+      },
+      {
+        "rank": 10,
+        "stock_code": "AMD",
+        "stock_name": "超威半导体",
+        "weight": 3.33,
+        "shares": 4.9,
+        "market_value": 6897.31
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:39:57.433386"
+}

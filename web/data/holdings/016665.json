@@ -1,0 +1,174 @@
+{
+  "code": "016665",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 26.13,
+  "heavy_count": 0,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 3.65,
+      "shares": 6.0,
+      "market_value": 7240.46
+    },
+    {
+      "rank": 2,
+      "stock_code": "AVGO",
+      "stock_name": "博通",
+      "weight": 3.07,
+      "shares": 2.85,
+      "market_value": 6103.63
+    },
+    {
+      "rank": 3,
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 2.77,
+      "shares": 2.35,
+      "market_value": 5495.27
+    },
+    {
+      "rank": 4,
+      "stock_code": "TSEM",
+      "stock_name": "Tower半导体",
+      "weight": 2.75,
+      "shares": 4.5,
+      "market_value": 5463.97
+    },
+    {
+      "rank": 5,
+      "stock_code": "LITE",
+      "stock_name": "Lumentum Holdings Inc",
+      "weight": 2.69,
+      "shares": 1.1,
+      "market_value": 5348.95
+    },
+    {
+      "rank": 6,
+      "stock_code": "300308",
+      "stock_name": "中际旭创",
+      "weight": 2.44,
+      "shares": 8.5,
+      "market_value": 4839.99
+    },
+    {
+      "rank": 7,
+      "stock_code": "COHR",
+      "stock_name": "Coherent Corp",
+      "weight": 2.28,
+      "shares": 2.75,
+      "market_value": 4532.74
+    },
+    {
+      "rank": 8,
+      "stock_code": "300502",
+      "stock_name": "新易盛",
+      "weight": 2.23,
+      "shares": 10.0,
+      "market_value": 4428.4
+    },
+    {
+      "rank": 9,
+      "stock_code": "300476",
+      "stock_name": "胜宏科技",
+      "weight": 2.21,
+      "shares": 17.5,
+      "market_value": 4392.5
+    },
+    {
+      "rank": 10,
+      "stock_code": "JP3684400009",
+      "stock_name": "Nitto Boseki Co Ltd",
+      "weight": 2.04,
+      "shares": 5.0,
+      "market_value": 4056.84
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 3.65,
+        "shares": 6.0,
+        "market_value": 7240.46
+      },
+      {
+        "rank": 2,
+        "stock_code": "AVGO",
+        "stock_name": "博通",
+        "weight": 3.07,
+        "shares": 2.85,
+        "market_value": 6103.63
+      },
+      {
+        "rank": 3,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 2.77,
+        "shares": 2.35,
+        "market_value": 5495.27
+      },
+      {
+        "rank": 4,
+        "stock_code": "TSEM",
+        "stock_name": "Tower半导体",
+        "weight": 2.75,
+        "shares": 4.5,
+        "market_value": 5463.97
+      },
+      {
+        "rank": 5,
+        "stock_code": "LITE",
+        "stock_name": "Lumentum Holdings Inc",
+        "weight": 2.69,
+        "shares": 1.1,
+        "market_value": 5348.95
+      },
+      {
+        "rank": 6,
+        "stock_code": "300308",
+        "stock_name": "中际旭创",
+        "weight": 2.44,
+        "shares": 8.5,
+        "market_value": 4839.99
+      },
+      {
+        "rank": 7,
+        "stock_code": "COHR",
+        "stock_name": "Coherent Corp",
+        "weight": 2.28,
+        "shares": 2.75,
+        "market_value": 4532.74
+      },
+      {
+        "rank": 8,
+        "stock_code": "300502",
+        "stock_name": "新易盛",
+        "weight": 2.23,
+        "shares": 10.0,
+        "market_value": 4428.4
+      },
+      {
+        "rank": 9,
+        "stock_code": "300476",
+        "stock_name": "胜宏科技",
+        "weight": 2.21,
+        "shares": 17.5,
+        "market_value": 4392.5
+      },
+      {
+        "rank": 10,
+        "stock_code": "JP3684400009",
+        "stock_name": "Nitto Boseki Co Ltd",
+        "weight": 2.04,
+        "shares": 5.0,
+        "market_value": 4056.84
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T14:12:43.364322"
+}

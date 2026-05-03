@@ -1,0 +1,190 @@
+{
+  "code": "070012",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 11,
+  "total_weight": 43.49,
+  "heavy_count": 2,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "00700",
+      "stock_name": "腾讯控股",
+      "weight": 7.86,
+      "shares": 33.04,
+      "market_value": 14119.57
+    },
+    {
+      "rank": 2,
+      "stock_code": "00175",
+      "stock_name": "吉利汽车",
+      "weight": 5.35,
+      "shares": 520.1,
+      "market_value": 9606.93
+    },
+    {
+      "rank": 3,
+      "stock_code": "02899",
+      "stock_name": "紫金矿业",
+      "weight": 4.98,
+      "shares": 294.8,
+      "market_value": 8943.69
+    },
+    {
+      "rank": 4,
+      "stock_code": "00939",
+      "stock_name": "建设银行",
+      "weight": 4.95,
+      "shares": 1200.0,
+      "market_value": 8889.54
+    },
+    {
+      "rank": 5,
+      "stock_code": "02318",
+      "stock_name": "中国平安",
+      "weight": 4.31,
+      "shares": 147.7,
+      "market_value": 7752.98
+    },
+    {
+      "rank": 6,
+      "stock_code": "03968",
+      "stock_name": "招商银行",
+      "weight": 4.0,
+      "shares": 165.05,
+      "market_value": 7181.62
+    },
+    {
+      "rank": 7,
+      "stock_code": "02601",
+      "stock_name": "中国太保",
+      "weight": 3.54,
+      "shares": 225.88,
+      "market_value": 6358.17
+    },
+    {
+      "rank": 8,
+      "stock_code": "00883",
+      "stock_name": "中国海洋石油",
+      "weight": 2.72,
+      "shares": 197.6,
+      "market_value": 4885.19
+    },
+    {
+      "rank": 9,
+      "stock_code": "09999",
+      "stock_name": "网易-S",
+      "weight": 2.6,
+      "shares": 31.0,
+      "market_value": 4666.83
+    },
+    {
+      "rank": 10,
+      "stock_code": "00753",
+      "stock_name": "中国国航",
+      "weight": 2.49,
+      "shares": 1110.0,
+      "market_value": 4478.94
+    },
+    {
+      "rank": 11,
+      "stock_code": "NTES",
+      "stock_name": "网易",
+      "weight": 0.69,
+      "shares": 1.6,
+      "market_value": 1239.29
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "00700",
+        "stock_name": "腾讯控股",
+        "weight": 7.86,
+        "shares": 33.04,
+        "market_value": 14119.57
+      },
+      {
+        "rank": 2,
+        "stock_code": "00175",
+        "stock_name": "吉利汽车",
+        "weight": 5.35,
+        "shares": 520.1,
+        "market_value": 9606.93
+      },
+      {
+        "rank": 3,
+        "stock_code": "02899",
+        "stock_name": "紫金矿业",
+        "weight": 4.98,
+        "shares": 294.8,
+        "market_value": 8943.69
+      },
+      {
+        "rank": 4,
+        "stock_code": "00939",
+        "stock_name": "建设银行",
+        "weight": 4.95,
+        "shares": 1200.0,
+        "market_value": 8889.54
+      },
+      {
+        "rank": 5,
+        "stock_code": "02318",
+        "stock_name": "中国平安",
+        "weight": 4.31,
+        "shares": 147.7,
+        "market_value": 7752.98
+      },
+      {
+        "rank": 6,
+        "stock_code": "03968",
+        "stock_name": "招商银行",
+        "weight": 4.0,
+        "shares": 165.05,
+        "market_value": 7181.62
+      },
+      {
+        "rank": 7,
+        "stock_code": "02601",
+        "stock_name": "中国太保",
+        "weight": 3.54,
+        "shares": 225.88,
+        "market_value": 6358.17
+      },
+      {
+        "rank": 8,
+        "stock_code": "00883",
+        "stock_name": "中国海洋石油",
+        "weight": 2.72,
+        "shares": 197.6,
+        "market_value": 4885.19
+      },
+      {
+        "rank": 9,
+        "stock_code": "09999",
+        "stock_name": "网易-S",
+        "weight": 2.6,
+        "shares": 31.0,
+        "market_value": 4666.83
+      },
+      {
+        "rank": 10,
+        "stock_code": "00753",
+        "stock_name": "中国国航",
+        "weight": 2.49,
+        "shares": 1110.0,
+        "market_value": 4478.94
+      },
+      {
+        "rank": 11,
+        "stock_code": "NTES",
+        "stock_name": "网易",
+        "weight": 0.69,
+        "shares": 1.6,
+        "market_value": 1239.29
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:39:59.559625"
+}

@@ -1,0 +1,174 @@
+{
+  "code": "519601",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 47.69,
+  "heavy_count": 4,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "02208",
+      "stock_name": "金风科技",
+      "weight": 6.44,
+      "shares": 29.5,
+      "market_value": 371.79
+    },
+    {
+      "rank": 2,
+      "stock_code": "02096",
+      "stock_name": "先声药业",
+      "weight": 5.71,
+      "shares": 29.4,
+      "market_value": 329.53
+    },
+    {
+      "rank": 3,
+      "stock_code": "09969",
+      "stock_name": "诺诚健华",
+      "weight": 5.27,
+      "shares": 25.4,
+      "market_value": 303.98
+    },
+    {
+      "rank": 4,
+      "stock_code": "06990",
+      "stock_name": "科伦博泰生物",
+      "weight": 5.13,
+      "shares": 0.73,
+      "market_value": 296.37
+    },
+    {
+      "rank": 5,
+      "stock_code": "03808",
+      "stock_name": "中国重汽",
+      "weight": 4.98,
+      "shares": 8.4,
+      "market_value": 287.5
+    },
+    {
+      "rank": 6,
+      "stock_code": "03898",
+      "stock_name": "时代电气",
+      "weight": 4.69,
+      "shares": 8.42,
+      "market_value": 270.79
+    },
+    {
+      "rank": 7,
+      "stock_code": "02883",
+      "stock_name": "中海油田服务",
+      "weight": 4.64,
+      "shares": 33.6,
+      "market_value": 267.78
+    },
+    {
+      "rank": 8,
+      "stock_code": "00189",
+      "stock_name": "东岳集团",
+      "weight": 4.6,
+      "shares": 27.8,
+      "market_value": 265.47
+    },
+    {
+      "rank": 9,
+      "stock_code": "06181",
+      "stock_name": "老铺黄金",
+      "weight": 3.44,
+      "shares": 0.36,
+      "market_value": 198.74
+    },
+    {
+      "rank": 10,
+      "stock_code": "01209",
+      "stock_name": "华润万象生活",
+      "weight": 2.79,
+      "shares": 3.88,
+      "market_value": 161.08
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "02208",
+        "stock_name": "金风科技",
+        "weight": 6.44,
+        "shares": 29.5,
+        "market_value": 371.79
+      },
+      {
+        "rank": 2,
+        "stock_code": "02096",
+        "stock_name": "先声药业",
+        "weight": 5.71,
+        "shares": 29.4,
+        "market_value": 329.53
+      },
+      {
+        "rank": 3,
+        "stock_code": "09969",
+        "stock_name": "诺诚健华",
+        "weight": 5.27,
+        "shares": 25.4,
+        "market_value": 303.98
+      },
+      {
+        "rank": 4,
+        "stock_code": "06990",
+        "stock_name": "科伦博泰生物",
+        "weight": 5.13,
+        "shares": 0.73,
+        "market_value": 296.37
+      },
+      {
+        "rank": 5,
+        "stock_code": "03808",
+        "stock_name": "中国重汽",
+        "weight": 4.98,
+        "shares": 8.4,
+        "market_value": 287.5
+      },
+      {
+        "rank": 6,
+        "stock_code": "03898",
+        "stock_name": "时代电气",
+        "weight": 4.69,
+        "shares": 8.42,
+        "market_value": 270.79
+      },
+      {
+        "rank": 7,
+        "stock_code": "02883",
+        "stock_name": "中海油田服务",
+        "weight": 4.64,
+        "shares": 33.6,
+        "market_value": 267.78
+      },
+      {
+        "rank": 8,
+        "stock_code": "00189",
+        "stock_name": "东岳集团",
+        "weight": 4.6,
+        "shares": 27.8,
+        "market_value": 265.47
+      },
+      {
+        "rank": 9,
+        "stock_code": "06181",
+        "stock_name": "老铺黄金",
+        "weight": 3.44,
+        "shares": 0.36,
+        "market_value": 198.74
+      },
+      {
+        "rank": 10,
+        "stock_code": "01209",
+        "stock_name": "华润万象生活",
+        "weight": 2.79,
+        "shares": 3.88,
+        "market_value": 161.08
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:40:14.288620"
+}

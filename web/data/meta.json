@@ -1,0 +1,29 @@
+{
+  "generated_at": "2026-05-03T16:31:41.815503",
+  "total_scanned": 26641,
+  "sp500": {
+    "series": 7,
+    "funds": 21
+  },
+  "nasdaq_passive": {
+    "series": 17,
+    "funds": 43
+  },
+  "active": {
+    "series": 43,
+    "funds": 84
+  },
+  "etf": {
+    "series": 18,
+    "funds": 18
+  },
+  "excluded_count": 26475,
+  "enriched_at": "2026-05-03T16:34:41.108148",
+  "enriched_fields": [
+    "涨跌幅",
+    "规模",
+    "限额",
+    "基金经理",
+    "成立时间"
+  ]
+}

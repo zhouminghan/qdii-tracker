@@ -1,0 +1,1135 @@
+{
+  "generated_at": "2026-05-03T18:15:25.295199",
+  "category": "sp500",
+  "label": "板块1 · 标普500 指数（场外）",
+  "series_count": 7,
+  "series": [
+    {
+      "series_id": "博时__标普500ETF联接__sp500",
+      "company": "博时",
+      "company_display": "博时",
+      "series_name": "标普500ETF联接",
+      "display_name": "博时标普500ETF联接",
+      "category": "sp500",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "050025",
+          "name": "博时标普500ETF联接A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "nav_date": "2026-04-29",
+          "nav": 5.2751,
+          "nav_cum": 5.3341,
+          "daily_change": -0.01,
+          "chg_1w": -0.04,
+          "chg_1m": 10.73,
+          "chg_3m": 0.97,
+          "chg_6m": 0.74,
+          "chg_1y": 21.6,
+          "chg_2y": 33.08,
+          "chg_3y": 64.01,
+          "chg_ytd": 1.92,
+          "chg_since_inception": 453.82,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "0.12",
+          "scale": 59.27,
+          "scale_raw": "59.27亿",
+          "established": "2012-06-14",
+          "manager": "万琼",
+          "fund_company": "博时基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "博时标普500交易型开放式指数证券投资基金联接基金",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<50.0万",
+              "rate": 1.2
+            },
+            {
+              "condition": "50.0万<=买入金额<100.0万",
+              "rate": 0.8
+            },
+            {
+              "condition": "100.0万<=买入金额<500.0万",
+              "rate": 0.3
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<2.0年",
+              "rate": 0.5
+            },
+            {
+              "condition": "2.0年<=持有期限<3.0年",
+              "rate": 0.25
+            },
+            {
+              "condition": "3.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.2,
+          "free_hold_days": null,
+          "first_buy_rate": 1.2,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "006075",
+          "name": "博时标普500ETF联接C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "nav_date": "2026-04-29",
+          "nav": 5.1136,
+          "nav_cum": 5.1136,
+          "daily_change": -0.01,
+          "chg_1w": -0.05,
+          "chg_1m": 10.69,
+          "chg_3m": 0.88,
+          "chg_6m": 0.56,
+          "chg_1y": 21.17,
+          "chg_2y": 32.14,
+          "chg_3y": 62.28,
+          "chg_ytd": 1.8,
+          "chg_since_inception": 153.47,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "",
+          "scale": 12.41,
+          "scale_raw": "12.41亿",
+          "established": "2018-06-07",
+          "manager": "万琼",
+          "fund_company": "博时基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "博时标普500交易型开放式指数证券投资基金联接基金",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.2,
+          "free_hold_days": 7,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "018738",
+          "name": "博时标普500ETF联接E(人民币)",
+          "share_class": "E",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "",
+          "scale": 16.31,
+          "scale_raw": "16.31亿",
+          "established": "2023-07-04",
+          "manager": "万琼",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": [],
+          "nav": 5.2736,
+          "nav_date": "2026-04-29",
+          "daily_change": -0.01,
+          "chg_1m": 10.72,
+          "chg_3m": 0.97,
+          "chg_6m": 0.73,
+          "chg_1y": 21.59,
+          "chg_ytd": 1.22
+        }
+      ],
+      "default_share_code": "050025",
+      "series_scale": 71.68
+    },
+    {
+      "series_id": "摩根__标普500指数__sp500",
+      "company": "摩根",
+      "company_display": "摩根",
+      "series_name": "标普500指数",
+      "display_name": "摩根标普500指数",
+      "category": "sp500",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "017641",
+          "name": "摩根标普500指数(QDII)人民币A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "nav_date": "2026-04-29",
+          "nav": 1.6051,
+          "nav_cum": 1.6051,
+          "daily_change": 0.0,
+          "chg_1w": 0.02,
+          "chg_1m": 10.72,
+          "chg_3m": 1.29,
+          "chg_6m": 0.94,
+          "chg_1y": 21.18,
+          "chg_2y": 32.05,
+          "chg_3y": 60.69,
+          "chg_ytd": 2.2,
+          "chg_since_inception": 60.51,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "0.12",
+          "scale": 36.62,
+          "scale_raw": "36.62亿",
+          "established": "2023-04-06",
+          "manager": "张军",
+          "fund_company": "摩根基金管理（中国）有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "摩根标普500指数型发起式证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<50.0万",
+              "rate": 1.2
+            },
+            {
+              "condition": "50.0万<=买入金额<100.0万",
+              "rate": 0.8
+            },
+            {
+              "condition": "100.0万<=买入金额<500.0万",
+              "rate": 0.3
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限<2.0年",
+              "rate": 0.25
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.15,
+          "free_hold_days": null,
+          "first_buy_rate": 1.2,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "019305",
+          "name": "摩根标普500指数(QDII)人民币C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "nav_date": "2026-04-29",
+          "nav": 1.5915,
+          "nav_cum": 1.5915,
+          "daily_change": 0.0,
+          "chg_1w": 0.01,
+          "chg_1m": 10.68,
+          "chg_3m": 1.21,
+          "chg_6m": 0.79,
+          "chg_1y": 20.82,
+          "chg_2y": 31.19,
+          "chg_3y": null,
+          "chg_ytd": 2.1,
+          "chg_since_inception": 43.4,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "",
+          "scale": 14.18,
+          "scale_raw": "14.18亿",
+          "established": "2023-09-01",
+          "manager": "张军",
+          "fund_company": "摩根基金管理（中国）有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "摩根标普500指数型发起式证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.15,
+          "free_hold_days": 7,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "017642",
+          "name": "摩根标普500指数(QDII)美钞",
+          "share_class": "A(美钞)",
+          "currency": "美元",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "1.2",
+          "scale": 36.62,
+          "scale_raw": "36.62亿",
+          "established": "2023-04-06",
+          "manager": "张军",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": [],
+          "nav": 0.234,
+          "nav_date": "2026-04-29",
+          "daily_change": 0.0,
+          "chg_1m": 11.59,
+          "chg_3m": 3.04,
+          "chg_6m": 4.23,
+          "chg_1y": 27.24,
+          "chg_ytd": 3.67
+        },
+        {
+          "code": "017643",
+          "name": "摩根标普500指数(QDII)美汇",
+          "share_class": "A(美汇)",
+          "currency": "美元",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "1.2",
+          "scale": 36.62,
+          "scale_raw": "36.62亿",
+          "established": "2023-04-06",
+          "manager": "张军",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": [],
+          "nav": 0.234,
+          "nav_date": "2026-04-29",
+          "daily_change": 0.0,
+          "chg_1m": 11.59,
+          "chg_3m": 3.04,
+          "chg_6m": 4.23,
+          "chg_1y": 27.24,
+          "chg_ytd": 3.67
+        }
+      ],
+      "default_share_code": "017641",
+      "series_scale": 50.8
+    },
+    {
+      "series_id": "天弘__标普500__sp500",
+      "company": "天弘",
+      "company_display": "天弘",
+      "series_name": "标普500",
+      "display_name": "天弘标普500",
+      "category": "sp500",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "007721",
+          "name": "天弘标普500发起(QDII-FOF)A",
+          "share_class": "FOF",
+          "currency": "人民币",
+          "fund_type": "QDII-FOF",
+          "nav_date": "2026-04-29",
+          "nav": 2.1333,
+          "nav_cum": 2.1333,
+          "daily_change": 0.04,
+          "chg_1w": 0.0,
+          "chg_1m": 10.28,
+          "chg_3m": 0.87,
+          "chg_6m": 0.29,
+          "chg_1y": 20.61,
+          "chg_2y": 29.88,
+          "chg_3y": 58.12,
+          "chg_ytd": 1.59,
+          "chg_since_inception": 113.33,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "0.1",
+          "scale": 22.29,
+          "scale_raw": "22.29亿",
+          "established": "2019-09-24",
+          "manager": "胡超",
+          "fund_company": "天弘基金管理有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "天弘标普500发起式证券投资基金(QDII-FOF)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<500.0万",
+              "rate": 1.0
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<180.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "180.0天<=持有期限<365.0天",
+              "rate": 0.25
+            },
+            {
+              "condition": "365.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.2,
+          "free_hold_days": 365,
+          "first_buy_rate": 1.0,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "007722",
+          "name": "天弘标普500发起(QDII-FOF)C",
+          "share_class": "FOF",
+          "currency": "人民币",
+          "fund_type": "QDII-FOF",
+          "nav_date": "2026-04-29",
+          "nav": 2.0956,
+          "nav_cum": 2.0956,
+          "daily_change": 0.04,
+          "chg_1w": 0.0,
+          "chg_1m": 10.25,
+          "chg_3m": 0.8,
+          "chg_6m": 0.17,
+          "chg_1y": 20.32,
+          "chg_2y": 29.13,
+          "chg_3y": 56.86,
+          "chg_ytd": 1.51,
+          "chg_since_inception": 109.56,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "",
+          "scale": 14.8,
+          "scale_raw": "14.80亿",
+          "established": "2019-09-24",
+          "manager": "胡超",
+          "fund_company": "天弘基金管理有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "天弘标普500发起式证券投资基金(QDII-FOF)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.2,
+          "free_hold_days": 7,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "022523",
+          "name": "天弘标普500发起(QDII-FOF)D",
+          "share_class": "FOF",
+          "currency": "人民币",
+          "fund_type": "QDII-FOF",
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "",
+          "scale": 1.94,
+          "scale_raw": "1.94亿",
+          "established": "2024-11-01",
+          "manager": "胡超",
+          "fund_company": "天弘基金管理有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "天弘标普500发起式证券投资基金(QDII-FOF)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 1.0
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5,
+          "nav": 2.0951,
+          "nav_date": "2026-04-29",
+          "daily_change": 0.03,
+          "chg_1m": 10.25,
+          "chg_3m": 0.8,
+          "chg_6m": 0.17,
+          "chg_1y": 20.3,
+          "chg_ytd": 0.86
+        }
+      ],
+      "default_share_code": "007721",
+      "series_scale": 39.03
+    },
+    {
+      "series_id": "易方达__标普500指数__sp500",
+      "company": "易方达",
+      "company_display": "易方达",
+      "series_name": "标普500指数",
+      "display_name": "易方达标普500指数",
+      "category": "sp500",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "161125",
+          "name": "易方达标普500指数人民币A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10.0,
+          "fee": "0.12",
+          "scale": 14.47,
+          "scale_raw": "14.47亿",
+          "established": "2016-12-02",
+          "manager": "刘依姗",
+          "fund_company": "易方达基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "易方达标普500指数证券投资基金(LOF)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.2
+            },
+            {
+              "condition": "100.0万<=买入金额<200.0万",
+              "rate": 0.8
+            },
+            {
+              "condition": "200.0万<=买入金额<500.0万",
+              "rate": 0.5
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限<2.0年",
+              "rate": 0.25
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.8,
+          "custody_fee": 0.2,
+          "free_hold_days": null,
+          "first_buy_rate": 1.2,
+          "max_sell_rate": 1.5,
+          "nav": 2.9745,
+          "nav_date": "2026-04-29",
+          "daily_change": -0.01,
+          "chg_1m": 10.65,
+          "chg_3m": 0.92,
+          "chg_6m": 0.6,
+          "chg_1y": 21.27,
+          "chg_ytd": 0.86
+        },
+        {
+          "code": "012860",
+          "name": "易方达标普500指数人民币C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10.0,
+          "fee": "",
+          "scale": 1.4,
+          "scale_raw": "1.40亿",
+          "established": "2021-07-19",
+          "manager": "刘依姗",
+          "fund_company": "易方达基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "易方达标普500指数证券投资基金(LOF)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.8,
+          "custody_fee": 0.2,
+          "free_hold_days": 7,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5,
+          "nav": 2.9261,
+          "nav_date": "2026-04-29",
+          "daily_change": -0.01,
+          "chg_1m": 10.61,
+          "chg_3m": 0.83,
+          "chg_6m": 0.42,
+          "chg_1y": 20.81,
+          "chg_ytd": 1.11
+        }
+      ],
+      "default_share_code": "161125",
+      "series_scale": 15.870000000000001
+    },
+    {
+      "series_id": "大成__标普500等权重指数__sp500",
+      "company": "大成",
+      "company_display": "大成",
+      "series_name": "标普500等权重指数",
+      "display_name": "大成标普500等权重指数",
+      "category": "sp500",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "096001",
+          "name": "大成标普500等权重指数(QDII)A人民币",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "nav_date": "2026-04-29",
+          "nav": 2.6427,
+          "nav_cum": 3.3448,
+          "daily_change": -0.14,
+          "chg_1w": -1.04,
+          "chg_1m": 5.01,
+          "chg_3m": -0.53,
+          "chg_6m": 3.01,
+          "chg_1y": 12.51,
+          "chg_2y": 17.26,
+          "chg_3y": 34.78,
+          "chg_ytd": 2.07,
+          "chg_since_inception": 275.83,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 1000.0,
+          "fee": "0.15",
+          "scale": 5.81,
+          "scale_raw": "5.81亿",
+          "established": "2011-03-23",
+          "manager": "冉凌浩",
+          "fund_company": "大成基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "大成标普500等权重指数证券投资基金",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "100.0万<=买入金额<500.0万",
+              "rate": 1.0
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限<2.0年",
+              "rate": 0.25
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.0,
+          "custody_fee": 0.2,
+          "free_hold_days": null,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "008401",
+          "name": "大成标普500等权重指数(QDII)C人民币",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "nav_date": "2026-04-29",
+          "nav": 2.6306,
+          "nav_cum": 2.8642,
+          "daily_change": -0.14,
+          "chg_1w": -1.05,
+          "chg_1m": 4.99,
+          "chg_3m": -0.6,
+          "chg_6m": 2.86,
+          "chg_1y": 12.17,
+          "chg_2y": 16.58,
+          "chg_3y": null,
+          "chg_ytd": 1.98,
+          "chg_since_inception": 25.14,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 1000.0,
+          "fee": "",
+          "scale": 1.38,
+          "scale_raw": "1.38亿",
+          "established": "2023-08-30",
+          "manager": "冉凌浩",
+          "fund_company": "大成基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "大成标普500等权重指数证券投资基金",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.0,
+          "custody_fee": 0.2,
+          "free_hold_days": 7,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "013404",
+          "name": "大成标普500等权重指数(QDII)A美元",
+          "share_class": "A",
+          "currency": "美元",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "1.5",
+          "scale": 5.81,
+          "scale_raw": "5.81亿",
+          "established": "2021-09-07",
+          "manager": "冉凌浩",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": [],
+          "nav": 0.3852,
+          "nav_date": "2026-04-29",
+          "daily_change": -0.16,
+          "chg_1m": 5.82,
+          "chg_3m": 1.16,
+          "chg_6m": 6.37,
+          "chg_1y": 18.14,
+          "chg_ytd": 1.83
+        },
+        {
+          "code": "015545",
+          "name": "大成标普500等权重指数(QDII)C美元",
+          "share_class": "C",
+          "currency": "美元",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "",
+          "scale": 1.38,
+          "scale_raw": "1.38亿",
+          "established": "2023-08-30",
+          "manager": "冉凌浩",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": [],
+          "nav": 0.3834,
+          "nav_date": "2026-04-29",
+          "daily_change": -0.18,
+          "chg_1m": 5.79,
+          "chg_3m": 1.08,
+          "chg_6m": 6.2,
+          "chg_1y": 17.74,
+          "chg_ytd": 1.73
+        }
+      ],
+      "default_share_code": "096001",
+      "series_scale": 7.1899999999999995
+    },
+    {
+      "series_id": "华夏__标普500ETF联接__sp500",
+      "company": "华夏",
+      "company_display": "华夏",
+      "series_name": "标普500ETF联接",
+      "display_name": "华夏标普500ETF联接",
+      "category": "sp500",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "018064",
+          "name": "华夏标普500ETF发起式联接(QDII)A(人民币)",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "0.12",
+          "scale": 3.39,
+          "scale_raw": "3.39亿",
+          "established": "2023-05-10",
+          "manager": "赵宗庭",
+          "fund_company": "华夏基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "华夏标普500交易型开放式指数证券投资基金发起式联接基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.2
+            },
+            {
+              "condition": "100.0万<=买入金额<200.0万",
+              "rate": 0.9
+            },
+            {
+              "condition": "200.0万<=买入金额<500.0万",
+              "rate": 0.6
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.15,
+          "free_hold_days": 7,
+          "first_buy_rate": 1.2,
+          "max_sell_rate": 1.5,
+          "nav": 1.6101,
+          "nav_date": "2026-04-29",
+          "daily_change": -0.09,
+          "chg_1m": 10.47,
+          "chg_3m": 1.13,
+          "chg_6m": 0.16,
+          "chg_1y": 19.97,
+          "chg_ytd": 1.66
+        },
+        {
+          "code": "018065",
+          "name": "华夏标普500ETF发起式联接(QDII)C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "",
+          "scale": 1.83,
+          "scale_raw": "1.83亿",
+          "established": "2023-05-10",
+          "manager": "赵宗庭",
+          "fund_company": "华夏基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "华夏标普500交易型开放式指数证券投资基金发起式联接基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.15,
+          "free_hold_days": 7,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5,
+          "nav": 1.5958,
+          "nav_date": "2026-04-29",
+          "daily_change": -0.09,
+          "chg_1m": 10.44,
+          "chg_3m": 1.05,
+          "chg_6m": 0.0,
+          "chg_1y": 19.61,
+          "chg_ytd": 1.57
+        },
+        {
+          "code": "018066",
+          "name": "华夏标普500ETF发起式联接(QDII)A(美元)",
+          "share_class": "A",
+          "currency": "美元",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "1.2",
+          "scale": 3.39,
+          "scale_raw": "3.39亿",
+          "established": "2023-05-10",
+          "manager": "赵宗庭",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": [],
+          "nav": 0.2357,
+          "nav_date": "2026-04-29",
+          "daily_change": -0.04,
+          "chg_1m": 11.81,
+          "chg_3m": 2.84,
+          "chg_6m": 4.06,
+          "chg_1y": 27.54,
+          "chg_ytd": 3.6
+        }
+      ],
+      "default_share_code": "018064",
+      "series_scale": 5.220000000000001
+    },
+    {
+      "series_id": "国泰__标普500ETF联接__sp500",
+      "company": "国泰",
+      "company_display": "国泰",
+      "series_name": "标普500ETF联接",
+      "display_name": "国泰标普500ETF联接",
+      "category": "sp500",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "017028",
+          "name": "国泰标普500ETF发起联接(QDII)A人民币",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10000.0,
+          "fee": "0.1",
+          "scale": 1.32,
+          "scale_raw": "1.32亿",
+          "established": "2022-11-02",
+          "manager": "苗梦羽",
+          "fund_company": "国泰基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "国泰标普500交易型开放式指数证券投资基金发起式联接基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<50.0万",
+              "rate": 1.0
+            },
+            {
+              "condition": "50.0万<=买入金额<100.0万",
+              "rate": 0.6
+            },
+            {
+              "condition": "100.0万<=买入金额",
+              "rate": 100.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.15,
+          "free_hold_days": 7,
+          "first_buy_rate": 1.0,
+          "max_sell_rate": 1.5,
+          "nav": 1.6223,
+          "nav_date": "2026-04-29",
+          "daily_change": -0.01,
+          "chg_1m": 10.88,
+          "chg_3m": 1.3,
+          "chg_6m": 1.84,
+          "chg_1y": 19.95,
+          "chg_ytd": 1.48
+        },
+        {
+          "code": "017030",
+          "name": "国泰标普500ETF发起联接(QDII)C人民币",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10000.0,
+          "fee": "",
+          "scale": 0.649355,
+          "scale_raw": "6493.55万",
+          "established": "2022-11-02",
+          "manager": "苗梦羽",
+          "fund_company": "国泰基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "国泰标普500ETF发起联接(QDII)C人民币",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.15,
+          "free_hold_days": 7,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5,
+          "nav": 1.6057,
+          "nav_date": "2026-04-29",
+          "daily_change": 0.0,
+          "chg_1m": 10.86,
+          "chg_3m": 1.23,
+          "chg_6m": 1.68,
+          "chg_1y": 19.59,
+          "chg_ytd": 1.4
+        }
+      ],
+      "default_share_code": "017028",
+      "series_scale": 1.9693550000000002
+    }
+  ],
+  "total_scale": 191.76,
+  "enriched_at": "2026-05-03T18:18:12.783596"
+}

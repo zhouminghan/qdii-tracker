@@ -1,0 +1,174 @@
+{
+  "code": "006373",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 58.21,
+  "heavy_count": 7,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 7.69,
+      "shares": 13.62,
+      "market_value": 31842.07
+    },
+    {
+      "rank": 2,
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 7.03,
+      "shares": 12.45,
+      "market_value": 29103.87
+    },
+    {
+      "rank": 3,
+      "stock_code": "LRCX",
+      "stock_name": "拉姆研究",
+      "weight": 7.02,
+      "shares": 19.67,
+      "market_value": 29074.19
+    },
+    {
+      "rank": 4,
+      "stock_code": "GLW",
+      "stock_name": "康宁",
+      "weight": 6.79,
+      "shares": 29.88,
+      "market_value": 28115.69
+    },
+    {
+      "rank": 5,
+      "stock_code": "GOOG",
+      "stock_name": "谷歌-C",
+      "weight": 6.49,
+      "shares": 13.55,
+      "market_value": 26890.62
+    },
+    {
+      "rank": 6,
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 5.86,
+      "shares": 20.12,
+      "market_value": 24278.23
+    },
+    {
+      "rank": 7,
+      "stock_code": "TSEM",
+      "stock_name": "Tower半导体",
+      "weight": 5.01,
+      "shares": 17.08,
+      "market_value": 20741.0
+    },
+    {
+      "rank": 8,
+      "stock_code": "MKSI",
+      "stock_name": "MKS Inc",
+      "weight": 4.68,
+      "shares": 12.17,
+      "market_value": 19358.93
+    },
+    {
+      "rank": 9,
+      "stock_code": "TTMI",
+      "stock_name": "TTM科技",
+      "weight": 4.48,
+      "shares": 27.54,
+      "market_value": 18565.6
+    },
+    {
+      "rank": 10,
+      "stock_code": "INTC",
+      "stock_name": "英特尔",
+      "weight": 3.16,
+      "shares": 42.88,
+      "market_value": 13093.02
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 7.69,
+        "shares": 13.62,
+        "market_value": 31842.07
+      },
+      {
+        "rank": 2,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 7.03,
+        "shares": 12.45,
+        "market_value": 29103.87
+      },
+      {
+        "rank": 3,
+        "stock_code": "LRCX",
+        "stock_name": "拉姆研究",
+        "weight": 7.02,
+        "shares": 19.67,
+        "market_value": 29074.19
+      },
+      {
+        "rank": 4,
+        "stock_code": "GLW",
+        "stock_name": "康宁",
+        "weight": 6.79,
+        "shares": 29.88,
+        "market_value": 28115.69
+      },
+      {
+        "rank": 5,
+        "stock_code": "GOOG",
+        "stock_name": "谷歌-C",
+        "weight": 6.49,
+        "shares": 13.55,
+        "market_value": 26890.62
+      },
+      {
+        "rank": 6,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 5.86,
+        "shares": 20.12,
+        "market_value": 24278.23
+      },
+      {
+        "rank": 7,
+        "stock_code": "TSEM",
+        "stock_name": "Tower半导体",
+        "weight": 5.01,
+        "shares": 17.08,
+        "market_value": 20741.0
+      },
+      {
+        "rank": 8,
+        "stock_code": "MKSI",
+        "stock_name": "MKS Inc",
+        "weight": 4.68,
+        "shares": 12.17,
+        "market_value": 19358.93
+      },
+      {
+        "rank": 9,
+        "stock_code": "TTMI",
+        "stock_name": "TTM科技",
+        "weight": 4.48,
+        "shares": 27.54,
+        "market_value": 18565.6
+      },
+      {
+        "rank": 10,
+        "stock_code": "INTC",
+        "stock_name": "英特尔",
+        "weight": 3.16,
+        "shares": 42.88,
+        "market_value": 13093.02
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:39:53.030829"
+}

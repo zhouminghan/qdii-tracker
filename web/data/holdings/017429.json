@@ -1,0 +1,174 @@
+{
+  "code": "017429",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 47.65,
+  "heavy_count": 3,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "300750",
+      "stock_name": "宁德时代",
+      "weight": 9.4,
+      "shares": 2.6,
+      "market_value": 1043.62
+    },
+    {
+      "rank": 2,
+      "stock_code": "00700",
+      "stock_name": "腾讯控股",
+      "weight": 6.08,
+      "shares": 1.58,
+      "market_value": 675.21
+    },
+    {
+      "rank": 3,
+      "stock_code": "TSLA",
+      "stock_name": "特斯拉",
+      "weight": 5.01,
+      "shares": 0.22,
+      "market_value": 556.13
+    },
+    {
+      "rank": 4,
+      "stock_code": "00175",
+      "stock_name": "吉利汽车",
+      "weight": 4.89,
+      "shares": 29.4,
+      "market_value": 543.06
+    },
+    {
+      "rank": 5,
+      "stock_code": "301358",
+      "stock_name": "湖南裕能",
+      "weight": 4.73,
+      "shares": 6.94,
+      "market_value": 524.53
+    },
+    {
+      "rank": 6,
+      "stock_code": "01801",
+      "stock_name": "信达生物",
+      "weight": 4.32,
+      "shares": 6.4,
+      "market_value": 479.76
+    },
+    {
+      "rank": 7,
+      "stock_code": "02097",
+      "stock_name": "蜜雪集团",
+      "weight": 3.89,
+      "shares": 1.67,
+      "market_value": 432.04
+    },
+    {
+      "rank": 8,
+      "stock_code": "09868",
+      "stock_name": "小鹏集团-W",
+      "weight": 3.48,
+      "shares": 6.69,
+      "market_value": 386.61
+    },
+    {
+      "rank": 9,
+      "stock_code": "AZN",
+      "stock_name": "阿斯利康",
+      "weight": 2.95,
+      "shares": 0.24,
+      "market_value": 327.51
+    },
+    {
+      "rank": 10,
+      "stock_code": "JNJ",
+      "stock_name": "强生",
+      "weight": 2.9,
+      "shares": 0.19,
+      "market_value": 321.36
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "300750",
+        "stock_name": "宁德时代",
+        "weight": 9.4,
+        "shares": 2.6,
+        "market_value": 1043.62
+      },
+      {
+        "rank": 2,
+        "stock_code": "00700",
+        "stock_name": "腾讯控股",
+        "weight": 6.08,
+        "shares": 1.58,
+        "market_value": 675.21
+      },
+      {
+        "rank": 3,
+        "stock_code": "TSLA",
+        "stock_name": "特斯拉",
+        "weight": 5.01,
+        "shares": 0.22,
+        "market_value": 556.13
+      },
+      {
+        "rank": 4,
+        "stock_code": "00175",
+        "stock_name": "吉利汽车",
+        "weight": 4.89,
+        "shares": 29.4,
+        "market_value": 543.06
+      },
+      {
+        "rank": 5,
+        "stock_code": "301358",
+        "stock_name": "湖南裕能",
+        "weight": 4.73,
+        "shares": 6.94,
+        "market_value": 524.53
+      },
+      {
+        "rank": 6,
+        "stock_code": "01801",
+        "stock_name": "信达生物",
+        "weight": 4.32,
+        "shares": 6.4,
+        "market_value": 479.76
+      },
+      {
+        "rank": 7,
+        "stock_code": "02097",
+        "stock_name": "蜜雪集团",
+        "weight": 3.89,
+        "shares": 1.67,
+        "market_value": 432.04
+      },
+      {
+        "rank": 8,
+        "stock_code": "09868",
+        "stock_name": "小鹏集团-W",
+        "weight": 3.48,
+        "shares": 6.69,
+        "market_value": 386.61
+      },
+      {
+        "rank": 9,
+        "stock_code": "AZN",
+        "stock_name": "阿斯利康",
+        "weight": 2.95,
+        "shares": 0.24,
+        "market_value": 327.51
+      },
+      {
+        "rank": 10,
+        "stock_code": "JNJ",
+        "stock_name": "强生",
+        "weight": 2.9,
+        "shares": 0.19,
+        "market_value": 321.36
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:40:13.195383"
+}

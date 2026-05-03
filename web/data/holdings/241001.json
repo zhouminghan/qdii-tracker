@@ -1,0 +1,174 @@
+{
+  "code": "241001",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 48.26,
+  "heavy_count": 4,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "01772",
+      "stock_name": "赣锋锂业",
+      "weight": 5.57,
+      "shares": 5.4,
+      "market_value": 346.72
+    },
+    {
+      "rank": 2,
+      "stock_code": "00883",
+      "stock_name": "中国海洋石油",
+      "weight": 5.47,
+      "shares": 13.8,
+      "market_value": 341.02
+    },
+    {
+      "rank": 3,
+      "stock_code": "06869",
+      "stock_name": "长飞光纤光缆",
+      "weight": 5.44,
+      "shares": 2.1,
+      "market_value": 339.17
+    },
+    {
+      "rank": 4,
+      "stock_code": "00857",
+      "stock_name": "中国石油股份",
+      "weight": 5.42,
+      "shares": 35.6,
+      "market_value": 337.76
+    },
+    {
+      "rank": 5,
+      "stock_code": "02513",
+      "stock_name": "智谱",
+      "weight": 4.62,
+      "shares": 0.47,
+      "market_value": 287.67
+    },
+    {
+      "rank": 6,
+      "stock_code": "03939",
+      "stock_name": "万国黄金集团",
+      "weight": 4.58,
+      "shares": 24.0,
+      "market_value": 285.53
+    },
+    {
+      "rank": 7,
+      "stock_code": "00175",
+      "stock_name": "吉利汽车",
+      "weight": 4.53,
+      "shares": 15.3,
+      "market_value": 282.49
+    },
+    {
+      "rank": 8,
+      "stock_code": "01070",
+      "stock_name": "TCL电子",
+      "weight": 4.34,
+      "shares": 24.0,
+      "market_value": 270.28
+    },
+    {
+      "rank": 9,
+      "stock_code": "03668",
+      "stock_name": "兖煤澳大利亚",
+      "weight": 4.23,
+      "shares": 6.7,
+      "market_value": 263.37
+    },
+    {
+      "rank": 10,
+      "stock_code": "01138",
+      "stock_name": "中远海能",
+      "weight": 4.06,
+      "shares": 16.0,
+      "market_value": 253.19
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "01772",
+        "stock_name": "赣锋锂业",
+        "weight": 5.57,
+        "shares": 5.4,
+        "market_value": 346.72
+      },
+      {
+        "rank": 2,
+        "stock_code": "00883",
+        "stock_name": "中国海洋石油",
+        "weight": 5.47,
+        "shares": 13.8,
+        "market_value": 341.02
+      },
+      {
+        "rank": 3,
+        "stock_code": "06869",
+        "stock_name": "长飞光纤光缆",
+        "weight": 5.44,
+        "shares": 2.1,
+        "market_value": 339.17
+      },
+      {
+        "rank": 4,
+        "stock_code": "00857",
+        "stock_name": "中国石油股份",
+        "weight": 5.42,
+        "shares": 35.6,
+        "market_value": 337.76
+      },
+      {
+        "rank": 5,
+        "stock_code": "02513",
+        "stock_name": "智谱",
+        "weight": 4.62,
+        "shares": 0.47,
+        "market_value": 287.67
+      },
+      {
+        "rank": 6,
+        "stock_code": "03939",
+        "stock_name": "万国黄金集团",
+        "weight": 4.58,
+        "shares": 24.0,
+        "market_value": 285.53
+      },
+      {
+        "rank": 7,
+        "stock_code": "00175",
+        "stock_name": "吉利汽车",
+        "weight": 4.53,
+        "shares": 15.3,
+        "market_value": 282.49
+      },
+      {
+        "rank": 8,
+        "stock_code": "01070",
+        "stock_name": "TCL电子",
+        "weight": 4.34,
+        "shares": 24.0,
+        "market_value": 270.28
+      },
+      {
+        "rank": 9,
+        "stock_code": "03668",
+        "stock_name": "兖煤澳大利亚",
+        "weight": 4.23,
+        "shares": 6.7,
+        "market_value": 263.37
+      },
+      {
+        "rank": 10,
+        "stock_code": "01138",
+        "stock_name": "中远海能",
+        "weight": 4.06,
+        "shares": 16.0,
+        "market_value": 253.19
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:40:13.724816"
+}

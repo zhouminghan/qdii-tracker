@@ -1,0 +1,174 @@
+{
+  "code": "017653",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 43.15,
+  "heavy_count": 1,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "00981",
+      "stock_name": "中芯国际",
+      "weight": 6.68,
+      "shares": 42.0,
+      "market_value": 1880.15
+    },
+    {
+      "rank": 2,
+      "stock_code": "01347",
+      "stock_name": "华虹半导体",
+      "weight": 4.87,
+      "shares": 20.0,
+      "market_value": 1371.22
+    },
+    {
+      "rank": 3,
+      "stock_code": "ASML",
+      "stock_name": "阿斯麦",
+      "weight": 4.87,
+      "shares": 0.15,
+      "market_value": 1370.9
+    },
+    {
+      "rank": 4,
+      "stock_code": "TXN",
+      "stock_name": "德州仪器",
+      "weight": 4.44,
+      "shares": 0.93,
+      "market_value": 1249.3
+    },
+    {
+      "rank": 5,
+      "stock_code": "GOOG",
+      "stock_name": "谷歌-C",
+      "weight": 4.38,
+      "shares": 0.62,
+      "market_value": 1233.64
+    },
+    {
+      "rank": 6,
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 4.07,
+      "shares": 0.49,
+      "market_value": 1145.82
+    },
+    {
+      "rank": 7,
+      "stock_code": "AMAT",
+      "stock_name": "应用材料",
+      "weight": 4.03,
+      "shares": 0.48,
+      "market_value": 1135.19
+    },
+    {
+      "rank": 8,
+      "stock_code": "09988",
+      "stock_name": "阿里巴巴-W",
+      "weight": 3.73,
+      "shares": 10.0,
+      "market_value": 1050.71
+    },
+    {
+      "rank": 9,
+      "stock_code": "LITE",
+      "stock_name": "Lumentum Holdings Inc",
+      "weight": 3.45,
+      "shares": 0.2,
+      "market_value": 972.54
+    },
+    {
+      "rank": 10,
+      "stock_code": "LRCX",
+      "stock_name": "拉姆研究",
+      "weight": 2.63,
+      "shares": 0.5,
+      "market_value": 739.2
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "00981",
+        "stock_name": "中芯国际",
+        "weight": 6.68,
+        "shares": 42.0,
+        "market_value": 1880.15
+      },
+      {
+        "rank": 2,
+        "stock_code": "01347",
+        "stock_name": "华虹半导体",
+        "weight": 4.87,
+        "shares": 20.0,
+        "market_value": 1371.22
+      },
+      {
+        "rank": 3,
+        "stock_code": "ASML",
+        "stock_name": "阿斯麦",
+        "weight": 4.87,
+        "shares": 0.15,
+        "market_value": 1370.9
+      },
+      {
+        "rank": 4,
+        "stock_code": "TXN",
+        "stock_name": "德州仪器",
+        "weight": 4.44,
+        "shares": 0.93,
+        "market_value": 1249.3
+      },
+      {
+        "rank": 5,
+        "stock_code": "GOOG",
+        "stock_name": "谷歌-C",
+        "weight": 4.38,
+        "shares": 0.62,
+        "market_value": 1233.64
+      },
+      {
+        "rank": 6,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 4.07,
+        "shares": 0.49,
+        "market_value": 1145.82
+      },
+      {
+        "rank": 7,
+        "stock_code": "AMAT",
+        "stock_name": "应用材料",
+        "weight": 4.03,
+        "shares": 0.48,
+        "market_value": 1135.19
+      },
+      {
+        "rank": 8,
+        "stock_code": "09988",
+        "stock_name": "阿里巴巴-W",
+        "weight": 3.73,
+        "shares": 10.0,
+        "market_value": 1050.71
+      },
+      {
+        "rank": 9,
+        "stock_code": "LITE",
+        "stock_name": "Lumentum Holdings Inc",
+        "weight": 3.45,
+        "shares": 0.2,
+        "market_value": 972.54
+      },
+      {
+        "rank": 10,
+        "stock_code": "LRCX",
+        "stock_name": "拉姆研究",
+        "weight": 2.63,
+        "shares": 0.5,
+        "market_value": 739.2
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:40:11.551053"
+}

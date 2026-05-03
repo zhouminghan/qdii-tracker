@@ -1,0 +1,190 @@
+{
+  "code": "008253",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 11,
+  "total_weight": 45.8,
+  "heavy_count": 3,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 7.79,
+      "shares": 4.0,
+      "market_value": 4826.97
+    },
+    {
+      "rank": 2,
+      "stock_code": "LITE",
+      "stock_name": "Lumentum Holdings Inc",
+      "weight": 7.07,
+      "shares": 0.9,
+      "market_value": 4376.41
+    },
+    {
+      "rank": 3,
+      "stock_code": "SNDK",
+      "stock_name": "闪迪",
+      "weight": 5.47,
+      "shares": 0.77,
+      "market_value": 3385.05
+    },
+    {
+      "rank": 4,
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 4.53,
+      "shares": 1.2,
+      "market_value": 2805.18
+    },
+    {
+      "rank": 5,
+      "stock_code": "AVGO",
+      "stock_name": "博通",
+      "weight": 4.15,
+      "shares": 1.2,
+      "market_value": 2569.95
+    },
+    {
+      "rank": 6,
+      "stock_code": "GOOG",
+      "stock_name": "谷歌-C",
+      "weight": 3.96,
+      "shares": 1.24,
+      "market_value": 2451.35
+    },
+    {
+      "rank": 7,
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 3.89,
+      "shares": 1.03,
+      "market_value": 2408.56
+    },
+    {
+      "rank": 8,
+      "stock_code": "GLW",
+      "stock_name": "康宁",
+      "weight": 2.96,
+      "shares": 1.95,
+      "market_value": 1834.62
+    },
+    {
+      "rank": 9,
+      "stock_code": "COHR",
+      "stock_name": "Coherent Corp",
+      "weight": 2.66,
+      "shares": 1.0,
+      "market_value": 1648.27
+    },
+    {
+      "rank": 10,
+      "stock_code": "ASML",
+      "stock_name": "阿斯麦",
+      "weight": 2.36,
+      "shares": 0.16,
+      "market_value": 1462.3
+    },
+    {
+      "rank": 11,
+      "stock_code": "GOOGL",
+      "stock_name": "谷歌-A",
+      "weight": 0.96,
+      "shares": 0.3,
+      "market_value": 596.92
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 7.79,
+        "shares": 4.0,
+        "market_value": 4826.97
+      },
+      {
+        "rank": 2,
+        "stock_code": "LITE",
+        "stock_name": "Lumentum Holdings Inc",
+        "weight": 7.07,
+        "shares": 0.9,
+        "market_value": 4376.41
+      },
+      {
+        "rank": 3,
+        "stock_code": "SNDK",
+        "stock_name": "闪迪",
+        "weight": 5.47,
+        "shares": 0.77,
+        "market_value": 3385.05
+      },
+      {
+        "rank": 4,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 4.53,
+        "shares": 1.2,
+        "market_value": 2805.18
+      },
+      {
+        "rank": 5,
+        "stock_code": "AVGO",
+        "stock_name": "博通",
+        "weight": 4.15,
+        "shares": 1.2,
+        "market_value": 2569.95
+      },
+      {
+        "rank": 6,
+        "stock_code": "GOOG",
+        "stock_name": "谷歌-C",
+        "weight": 3.96,
+        "shares": 1.24,
+        "market_value": 2451.35
+      },
+      {
+        "rank": 7,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 3.89,
+        "shares": 1.03,
+        "market_value": 2408.56
+      },
+      {
+        "rank": 8,
+        "stock_code": "GLW",
+        "stock_name": "康宁",
+        "weight": 2.96,
+        "shares": 1.95,
+        "market_value": 1834.62
+      },
+      {
+        "rank": 9,
+        "stock_code": "COHR",
+        "stock_name": "Coherent Corp",
+        "weight": 2.66,
+        "shares": 1.0,
+        "market_value": 1648.27
+      },
+      {
+        "rank": 10,
+        "stock_code": "ASML",
+        "stock_name": "阿斯麦",
+        "weight": 2.36,
+        "shares": 0.16,
+        "market_value": 1462.3
+      },
+      {
+        "rank": 11,
+        "stock_code": "GOOGL",
+        "stock_name": "谷歌-A",
+        "weight": 0.96,
+        "shares": 0.3,
+        "market_value": 596.92
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:40:05.753121"
+}

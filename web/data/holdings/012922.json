@@ -1,0 +1,174 @@
+{
+  "code": "012922",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 51.83,
+  "heavy_count": 3,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 8.88,
+      "shares": 37.45,
+      "market_value": 87568.59
+    },
+    {
+      "rank": 2,
+      "stock_code": "LITE",
+      "stock_name": "Lumentum Holdings Inc",
+      "weight": 8.68,
+      "shares": 17.62,
+      "market_value": 85656.55
+    },
+    {
+      "rank": 3,
+      "stock_code": "300502",
+      "stock_name": "新易盛",
+      "weight": 6.02,
+      "shares": 134.12,
+      "market_value": 59393.83
+    },
+    {
+      "rank": 4,
+      "stock_code": "GLW",
+      "stock_name": "康宁",
+      "weight": 4.67,
+      "shares": 48.98,
+      "market_value": 46080.11
+    },
+    {
+      "rank": 5,
+      "stock_code": "AXTI",
+      "stock_name": "AXT Inc",
+      "weight": 4.67,
+      "shares": 116.75,
+      "market_value": 46028.99
+    },
+    {
+      "rank": 6,
+      "stock_code": "300308",
+      "stock_name": "中际旭创",
+      "weight": 4.67,
+      "shares": 80.83,
+      "market_value": 46027.63
+    },
+    {
+      "rank": 7,
+      "stock_code": "688498",
+      "stock_name": "源杰科技",
+      "weight": 4.49,
+      "shares": 44.06,
+      "market_value": 44301.5
+    },
+    {
+      "rank": 8,
+      "stock_code": "TSEM",
+      "stock_name": "Tower半导体",
+      "weight": 3.72,
+      "shares": 30.2,
+      "market_value": 36664.96
+    },
+    {
+      "rank": 9,
+      "stock_code": "GOOGL",
+      "stock_name": "谷歌-A",
+      "weight": 3.36,
+      "shares": 16.68,
+      "market_value": 33190.3
+    },
+    {
+      "rank": 10,
+      "stock_code": "002384",
+      "stock_name": "东山精密",
+      "weight": 2.67,
+      "shares": 255.0,
+      "market_value": 26341.72
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 8.88,
+        "shares": 37.45,
+        "market_value": 87568.59
+      },
+      {
+        "rank": 2,
+        "stock_code": "LITE",
+        "stock_name": "Lumentum Holdings Inc",
+        "weight": 8.68,
+        "shares": 17.62,
+        "market_value": 85656.55
+      },
+      {
+        "rank": 3,
+        "stock_code": "300502",
+        "stock_name": "新易盛",
+        "weight": 6.02,
+        "shares": 134.12,
+        "market_value": 59393.83
+      },
+      {
+        "rank": 4,
+        "stock_code": "GLW",
+        "stock_name": "康宁",
+        "weight": 4.67,
+        "shares": 48.98,
+        "market_value": 46080.11
+      },
+      {
+        "rank": 5,
+        "stock_code": "AXTI",
+        "stock_name": "AXT Inc",
+        "weight": 4.67,
+        "shares": 116.75,
+        "market_value": 46028.99
+      },
+      {
+        "rank": 6,
+        "stock_code": "300308",
+        "stock_name": "中际旭创",
+        "weight": 4.67,
+        "shares": 80.83,
+        "market_value": 46027.63
+      },
+      {
+        "rank": 7,
+        "stock_code": "688498",
+        "stock_name": "源杰科技",
+        "weight": 4.49,
+        "shares": 44.06,
+        "market_value": 44301.5
+      },
+      {
+        "rank": 8,
+        "stock_code": "TSEM",
+        "stock_name": "Tower半导体",
+        "weight": 3.72,
+        "shares": 30.2,
+        "market_value": 36664.96
+      },
+      {
+        "rank": 9,
+        "stock_code": "GOOGL",
+        "stock_name": "谷歌-A",
+        "weight": 3.36,
+        "shares": 16.68,
+        "market_value": 33190.3
+      },
+      {
+        "rank": 10,
+        "stock_code": "002384",
+        "stock_name": "东山精密",
+        "weight": 2.67,
+        "shares": 255.0,
+        "market_value": 26341.72
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T14:12:36.231796"
+}

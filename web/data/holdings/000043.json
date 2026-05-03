@@ -1,0 +1,190 @@
+{
+  "code": "000043",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 11,
+  "total_weight": 53.99,
+  "heavy_count": 4,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 9.97,
+      "shares": 36.7,
+      "market_value": 44284.83
+    },
+    {
+      "rank": 2,
+      "stock_code": "AAPL",
+      "stock_name": "苹果",
+      "weight": 9.75,
+      "shares": 24.66,
+      "market_value": 43306.03
+    },
+    {
+      "rank": 3,
+      "stock_code": "GOOGL",
+      "stock_name": "谷歌-A",
+      "weight": 6.2,
+      "shares": 13.84,
+      "market_value": 27547.39
+    },
+    {
+      "rank": 4,
+      "stock_code": "MSFT",
+      "stock_name": "微软",
+      "weight": 6.17,
+      "shares": 10.7,
+      "market_value": 27407.0
+    },
+    {
+      "rank": 5,
+      "stock_code": "AVGO",
+      "stock_name": "博通",
+      "weight": 4.86,
+      "shares": 10.07,
+      "market_value": 21567.65
+    },
+    {
+      "rank": 6,
+      "stock_code": "AMZN",
+      "stock_name": "亚马逊",
+      "weight": 4.04,
+      "shares": 12.44,
+      "market_value": 17927.47
+    },
+    {
+      "rank": 7,
+      "stock_code": "TSLA",
+      "stock_name": "特斯拉",
+      "weight": 3.1,
+      "shares": 5.34,
+      "market_value": 13744.76
+    },
+    {
+      "rank": 8,
+      "stock_code": "GOOG",
+      "stock_name": "谷歌-C",
+      "weight": 2.9,
+      "shares": 6.48,
+      "market_value": 12871.48
+    },
+    {
+      "rank": 9,
+      "stock_code": "META",
+      "stock_name": "Meta Platforms Inc-A",
+      "weight": 2.84,
+      "shares": 3.19,
+      "market_value": 12615.89
+    },
+    {
+      "rank": 10,
+      "stock_code": "LLY",
+      "stock_name": "礼来",
+      "weight": 2.34,
+      "shares": 1.63,
+      "market_value": 10380.1
+    },
+    {
+      "rank": 11,
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 1.82,
+      "shares": 3.46,
+      "market_value": 8100.49
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 9.97,
+        "shares": 36.7,
+        "market_value": 44284.83
+      },
+      {
+        "rank": 2,
+        "stock_code": "AAPL",
+        "stock_name": "苹果",
+        "weight": 9.75,
+        "shares": 24.66,
+        "market_value": 43306.03
+      },
+      {
+        "rank": 3,
+        "stock_code": "GOOGL",
+        "stock_name": "谷歌-A",
+        "weight": 6.2,
+        "shares": 13.84,
+        "market_value": 27547.39
+      },
+      {
+        "rank": 4,
+        "stock_code": "MSFT",
+        "stock_name": "微软",
+        "weight": 6.17,
+        "shares": 10.7,
+        "market_value": 27407.0
+      },
+      {
+        "rank": 5,
+        "stock_code": "AVGO",
+        "stock_name": "博通",
+        "weight": 4.86,
+        "shares": 10.07,
+        "market_value": 21567.65
+      },
+      {
+        "rank": 6,
+        "stock_code": "AMZN",
+        "stock_name": "亚马逊",
+        "weight": 4.04,
+        "shares": 12.44,
+        "market_value": 17927.47
+      },
+      {
+        "rank": 7,
+        "stock_code": "TSLA",
+        "stock_name": "特斯拉",
+        "weight": 3.1,
+        "shares": 5.34,
+        "market_value": 13744.76
+      },
+      {
+        "rank": 8,
+        "stock_code": "GOOG",
+        "stock_name": "谷歌-C",
+        "weight": 2.9,
+        "shares": 6.48,
+        "market_value": 12871.48
+      },
+      {
+        "rank": 9,
+        "stock_code": "META",
+        "stock_name": "Meta Platforms Inc-A",
+        "weight": 2.84,
+        "shares": 3.19,
+        "market_value": 12615.89
+      },
+      {
+        "rank": 10,
+        "stock_code": "LLY",
+        "stock_name": "礼来",
+        "weight": 2.34,
+        "shares": 1.63,
+        "market_value": 10380.1
+      },
+      {
+        "rank": 11,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 1.82,
+        "shares": 3.46,
+        "market_value": 8100.49
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:39:52.041424"
+}

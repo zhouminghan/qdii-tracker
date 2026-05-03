@@ -1,0 +1,174 @@
+{
+  "code": "017437",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 72.51,
+  "heavy_count": 9,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "NFLX",
+      "stock_name": "奈飞",
+      "weight": 9.32,
+      "shares": 127.85,
+      "market_value": 85059.91
+    },
+    {
+      "rank": 2,
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 9.28,
+      "shares": 70.16,
+      "market_value": 84662.22
+    },
+    {
+      "rank": 3,
+      "stock_code": "AAPL",
+      "stock_name": "苹果",
+      "weight": 7.76,
+      "shares": 40.35,
+      "market_value": 70850.41
+    },
+    {
+      "rank": 4,
+      "stock_code": "MSFT",
+      "stock_name": "微软",
+      "weight": 7.5,
+      "shares": 26.73,
+      "market_value": 68457.06
+    },
+    {
+      "rank": 5,
+      "stock_code": "AVGO",
+      "stock_name": "博通",
+      "weight": 7.43,
+      "shares": 31.65,
+      "market_value": 67772.1
+    },
+    {
+      "rank": 6,
+      "stock_code": "TSLA",
+      "stock_name": "特斯拉",
+      "weight": 7.33,
+      "shares": 26.0,
+      "market_value": 66873.54
+    },
+    {
+      "rank": 7,
+      "stock_code": "GOOG",
+      "stock_name": "谷歌-C",
+      "weight": 6.82,
+      "shares": 31.36,
+      "market_value": 62241.47
+    },
+    {
+      "rank": 8,
+      "stock_code": "AMZN",
+      "stock_name": "亚马逊",
+      "weight": 6.34,
+      "shares": 40.12,
+      "market_value": 57810.15
+    },
+    {
+      "rank": 9,
+      "stock_code": "META",
+      "stock_name": "Meta Platforms Inc-A",
+      "weight": 5.77,
+      "shares": 13.3,
+      "market_value": 52655.95
+    },
+    {
+      "rank": 10,
+      "stock_code": "MRVL",
+      "stock_name": "迈威尔科技",
+      "weight": 4.96,
+      "shares": 65.98,
+      "market_value": 45222.54
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "NFLX",
+        "stock_name": "奈飞",
+        "weight": 9.32,
+        "shares": 127.85,
+        "market_value": 85059.91
+      },
+      {
+        "rank": 2,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 9.28,
+        "shares": 70.16,
+        "market_value": 84662.22
+      },
+      {
+        "rank": 3,
+        "stock_code": "AAPL",
+        "stock_name": "苹果",
+        "weight": 7.76,
+        "shares": 40.35,
+        "market_value": 70850.41
+      },
+      {
+        "rank": 4,
+        "stock_code": "MSFT",
+        "stock_name": "微软",
+        "weight": 7.5,
+        "shares": 26.73,
+        "market_value": 68457.06
+      },
+      {
+        "rank": 5,
+        "stock_code": "AVGO",
+        "stock_name": "博通",
+        "weight": 7.43,
+        "shares": 31.65,
+        "market_value": 67772.1
+      },
+      {
+        "rank": 6,
+        "stock_code": "TSLA",
+        "stock_name": "特斯拉",
+        "weight": 7.33,
+        "shares": 26.0,
+        "market_value": 66873.54
+      },
+      {
+        "rank": 7,
+        "stock_code": "GOOG",
+        "stock_name": "谷歌-C",
+        "weight": 6.82,
+        "shares": 31.36,
+        "market_value": 62241.47
+      },
+      {
+        "rank": 8,
+        "stock_code": "AMZN",
+        "stock_name": "亚马逊",
+        "weight": 6.34,
+        "shares": 40.12,
+        "market_value": 57810.15
+      },
+      {
+        "rank": 9,
+        "stock_code": "META",
+        "stock_name": "Meta Platforms Inc-A",
+        "weight": 5.77,
+        "shares": 13.3,
+        "market_value": 52655.95
+      },
+      {
+        "rank": 10,
+        "stock_code": "MRVL",
+        "stock_name": "迈威尔科技",
+        "weight": 4.96,
+        "shares": 65.98,
+        "market_value": 45222.54
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T14:12:36.766706"
+}

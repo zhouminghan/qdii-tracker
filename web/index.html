@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>US Fund Tracker · 美股基金看板</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #f5f5f4;
+    }
+    .num {
+      font-family: "SF Mono", Monaco, Menlo, monospace;
+      font-variant-numeric: tabular-nums;
+    }
+    .up { color: #dc2626; }
+    .down { color: #16a34a; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .badge-open { background: #dcfce7; color: #166534; }
+    .badge-limit { background: #fef3c7; color: #92400e; }
+    .badge-paused { background: #fee2e2; color: #991b1b; }
+    .badge-qdii { background: #e0e7ff; color: #3730a3; padding: 1px 6px; font-size: 10px; }
+    .badge-usd { background: #fef3c7; color: #78350f; padding: 1px 6px; font-size: 10px; }
+    .badge-cny { background: #f1f5f9; color: #475569; padding: 1px 6px; font-size: 10px; }
+    .fade-in { animation: fade 0.2s ease; }
+    @keyframes fade { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+    .tab-active {
+      background: #1c1917;
+      color: white;
+    }
+    .logo-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.25);
+      letter-spacing: -0.5px;
+      position: relative;
+      overflow: hidden;
+      text-shadow: 0 1px 2px rgba(0,0,0,.2);
+    }
+    /* 对角高光，模拟真 logo 的立体感 */
+    .logo-avatar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(to bottom, rgba(255,255,255,.18), transparent);
+      pointer-events: none;
+    }
+    /* 右下角轻微阴影增加立体感 */
+    .logo-avatar::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40%;
+      background: linear-gradient(to top, rgba(0,0,0,.08), transparent);
+      pointer-events: none;
+    }
+    .logo-avatar > span { position: relative; z-index: 1; }
+    .logo-letter-1 { font-size: 18px; }
+    .logo-letter-2 { font-size: 13px; }
+    /* 费率弹窗 */
+    .fee-tip {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+      border-bottom: 1px dotted #94a3b8;
+    }
+    .fee-tip:hover .fee-popover { display: block; }
+    .fee-popover {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      margin-top: 4px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 11px;
+      min-width: 260px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.1);
+      z-index: 100;
+      text-align: left;
+    }
+    .fee-popover table { width: 100%; border-collapse: collapse; }
+    .fee-popover th, .fee-popover td { padding: 2px 4px; text-align: left; }
+    .fee-popover th { color: #64748b; font-weight: 500; }
+    /* 分组筛选 Chips */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      background: #f5f5f4;
+      color: #57534e;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .chip:hover { background: #e7e5e4; }
+    .chip.chip-active {
+      background: #1c1917;
+      color: white;
+    }
+    .chip-count {
+      font-size: 11px;
+      padding: 1px 7px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.08);
+      font-variant-numeric: tabular-nums;
+    }
+    .chip.chip-active .chip-count { background: rgba(255,255,255,.2); }
+  </style>
+</head>
+<body class="text-stone-900">
+
+  <!-- 顶部导航 -->
+  <header class="bg-white border-b border-stone-200 sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-stone-900 rounded-lg flex items-center justify-center text-white font-bold text-sm">美</div>
+        <div>
+          <div class="font-bold text-lg tracking-tight leading-none">US Fund Tracker</div>
+          <div class="text-xs text-stone-500 mt-0.5">美股基金追踪看板</div>
+        </div>
+      </div>
+      <nav class="flex items-center gap-2 text-sm">
+        <button class="tab-btn tab-active px-4 py-2 rounded-lg transition" data-tab="offshore">🏦 场外基金</button>
+        <button class="tab-btn px-4 py-2 rounded-lg hover:bg-stone-100 transition" data-tab="etf">📈 场内 ETF</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 主标题区 -->
+  <section class="max-w-7xl mx-auto px-6 pt-8 pb-6">
+    <div class="text-xs tracking-widest text-stone-500 uppercase mb-2">US EQUITY FUND TRACKER</div>
+    <h1 class="text-3xl font-bold tracking-tight mb-2">美股基金追踪看板</h1>
+    <p class="text-sm text-stone-600" id="page-subtitle">支付宝 / 天天基金可买的场外基金，按投资标的分三组：标普500 / 纳指100 / 美股主动。</p>
+
+    <!-- 基金知识说明（可折叠，按 Tab 动态显示） -->
+    <div class="mt-4" id="knowledge-cards">
+      <!-- 卡片 1：场内 vs 场外（仅在场内 ETF Tab 显示） -->
+      <details class="bg-sky-50 border border-sky-200 rounded-xl overflow-hidden" id="card-onshore-offshore" data-for-tabs="etf" open>
+        <summary class="cursor-pointer px-5 py-3 text-sm font-medium text-sky-900 hover:bg-sky-100 transition flex items-center gap-2 select-none">
+          <span>🏛️</span>
+          <span>场内 vs 场外：两种买基金的方式</span>
+        </summary>
+        <div class="px-5 pb-4 pt-1 text-sm text-stone-700 bg-white">
+          <p class="text-xs text-stone-500 mb-3 mt-2">同一只基金（如纳指 100），可能同时存在「场内」和「场外」两种版本，交易规则完全不同。</p>
+          <div class="space-y-3">
+            <div class="flex gap-3 p-3 rounded-lg bg-stone-50">
+              <span class="badge badge-cny flex-shrink-0" style="padding:4px 10px;">场外基金</span>
+              <div class="text-xs leading-relaxed flex-1">
+                <div class="font-semibold text-stone-900">支付宝 / 天天基金 / 银行 买的「普通基金」</div>
+                <div class="text-stone-600 mt-1"><b>价格：</b>按当日 15:00 收盘后的官方净值成交（T+1 出净值，T+1 可赎回）</div>
+                <div class="text-stone-600"><b>优势：</b>开户门槛低（支付宝 1 键买）、可定投、起购金额小（10 元起）</div>
+                <div class="text-stone-600"><b>劣势：</b>申购费较高（0~1.5%）、赎回到账慢（T+2 到 T+7）、不能盘中交易</div>
+                <div class="text-emerald-700 mt-1"><b>适合：</b>长期定投、不会开股票账户、中小金额投资</div>
+              </div>
+            </div>
+            <div class="flex gap-3 p-3 rounded-lg bg-stone-50">
+              <span class="badge badge-qdii flex-shrink-0" style="padding:4px 10px;">场内 ETF</span>
+              <div class="text-xs leading-relaxed flex-1">
+                <div class="font-semibold text-stone-900">股票账户买的「交易所基金」（代码如 513100、159941）</div>
+                <div class="text-stone-600 mt-1"><b>价格：</b>盘中随时波动，像买股票一样一手（100 份）起买，T+1 卖出</div>
+                <div class="text-stone-600"><b>优势：</b>费率超低（0.15~0.5%）、手续费走股票佣金（万一起）、日内可看实时涨跌</div>
+                <div class="text-stone-600"><b>劣势：</b>需证券账户、容易溢价（QDII 常溢价 1~5%）、不能直接定投</div>
+                <div class="text-emerald-700 mt-1"><b>适合：</b>有股票账户、在意费率、想做波段或择时</div>
+              </div>
+            </div>
+            <div class="flex gap-3 p-3 rounded-lg bg-stone-50">
+              <span class="badge badge-open flex-shrink-0" style="padding:4px 10px;">ETF 联接</span>
+              <div class="text-xs leading-relaxed flex-1">
+                <div class="font-semibold text-stone-900">场外版 ETF（两头通吃的折中方案）</div>
+                <div class="text-stone-600 mt-1">≥90% 资产投向对应的场内 ETF，但自己是场外基金 —— 支付宝就能买，又能享受 ETF 低费率。<b>是多数普通投资者的最佳选择</b>。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- 卡片 2：A/C/E/F 决策对照表（仅在场外 Tab 显示） -->
+      <details class="bg-amber-50 border border-amber-200 rounded-xl overflow-hidden mt-3" id="card-share-class" data-for-tabs="offshore" open>
+        <summary class="cursor-pointer px-5 py-3 text-sm font-medium text-amber-900 hover:bg-amber-100 transition flex items-center gap-2 select-none">
+          <span>📊</span>
+          <span>A / C / E / F 份额怎么选？—— 同一只基金不同份额的对比</span>
+        </summary>
+        <div class="px-5 pb-4 pt-2 bg-white">
+          <p class="text-xs text-stone-500 mb-3">同一只基金拆成多种"份额"，<b>投资策略和底层资产完全相同</b>，只是费率结构不同。选对份额能省下不少手续费。</p>
+
+          <!-- 决策对照表 -->
+          <table class="w-full text-xs border border-stone-200 rounded-lg overflow-hidden">
+            <thead class="bg-stone-50 text-stone-600">
+              <tr class="border-b border-stone-200">
+                <th class="text-left px-3 py-2 font-medium w-20">份额</th>
+                <th class="text-left px-3 py-2 font-medium">费率特征</th>
+                <th class="text-left px-3 py-2 font-medium w-36">适合谁买</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-stone-100">
+              <tr>
+                <td class="px-3 py-2"><span class="badge badge-open" style="padding:4px 10px;">A 类</span></td>
+                <td class="px-3 py-2 text-stone-700">申购费 <b>0.8~1.5%</b>（代销平台常 1 折）· QDII 多为持有 180d/365d 后免赎回费</td>
+                <td class="px-3 py-2 text-emerald-700"><b>长期定投 / 长持</b>（≥1 年）</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2"><span class="badge badge-limit" style="padding:4px 10px;">C 类</span></td>
+                <td class="px-3 py-2 text-stone-700">申购 <b>免费</b>，但每年从基金资产扣 <b>0.2~0.8%</b> 销售服务费</td>
+                <td class="px-3 py-2 text-emerald-700"><b>短线 / 波段</b>（&lt;6 个月）</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2"><span class="badge badge-qdii" style="padding:4px 10px;">E 类</span></td>
+                <td class="px-3 py-2 text-stone-700">A 类的折扣版，仅在支付宝/天天基金等代销平台销售，申购费常 <b>1 折起</b></td>
+                <td class="px-3 py-2 text-emerald-700">同 A 类 · <b>更省手续费</b></td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2"><span class="badge badge-qdii" style="padding:4px 10px;">F 类</span></td>
+                <td class="px-3 py-2 text-stone-700">发起式份额：基金公司自掏 ≥1000 万锁 3 年（代表信心），费率结构类似 A 或 C</td>
+                <td class="px-3 py-2 text-stone-500">按 A/C 的选法 · 关注成立门槛</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2"><span class="badge badge-paused" style="padding:4px 10px;">I 类</span></td>
+                <td class="px-3 py-2 text-stone-700">机构专享，管理费 / 申购费最低，<b>起购 500~1000 万</b></td>
+                <td class="px-3 py-2 text-stone-400">普通人基本买不到</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 决策小贴士 -->
+          <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+            <div class="bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2 text-emerald-800">
+              💡 <b>简单决策法</b>：长期定投选 A（有 E 就选 E）；短线择时选 C；其余不用操心。
+            </div>
+            <div class="bg-sky-50 border border-sky-100 rounded-lg px-3 py-2 text-sky-800">
+              🧩 <b>LOF（上市型开放式基金）</b>：既可支付宝申赎，也可证券账户买卖 —— 是另一种交易方式，不是"份额选择"。
+            </div>
+          </div>
+
+          <p class="text-[11px] text-stone-500 mt-3">⚠️ 免赎回费天数由各基金公司约定，QDII 为防短炒汇率波动普遍较长（多为 180d / 365d）。具体数字请展开系列看「卖出规则」列。</p>
+        </div>
+      </details>
+    </div>
+
+  </section>
+
+  <!-- 2 大板块：场外基金 / 场内 ETF -->
+  <main class="max-w-7xl mx-auto px-6 pb-16 space-y-8">
+    <section data-category="offshore">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h2 class="text-lg font-bold">🏦 场外基金（支付宝 / 天天基金可买）</h2>
+          <p class="text-xs text-stone-500 mt-1">按 15:00 收盘净值成交，支持小额定投。用下方 Chips 可快速筛选分组。</p>
+        </div>
+        <span class="text-xs text-stone-500" id="count-offshore">--</span>
+      </div>
+      <!-- 分组筛选 Chips（JS 动态注入） -->
+      <div id="offshore-chips" class="flex flex-wrap items-center gap-2 mb-3"></div>
+      <div class="bg-white rounded-xl border border-stone-200 overflow-hidden" id="table-offshore"></div>
+    </section>
+
+    <section data-category="etf">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h2 class="text-lg font-bold">📈 场内 ETF（需股票账户）</h2>
+          <p class="text-xs text-stone-500 mt-1">通过证券账户买卖，T+0/T+1 交易，非支付宝直接申购。用下方 Chips 可快速筛选跟踪标的。</p>
+        </div>
+        <span class="text-xs text-stone-500" id="count-etf">--</span>
+      </div>
+      <!-- 分组筛选 Chips（JS 动态注入） -->
+      <div id="etf-chips" class="flex flex-wrap items-center gap-2 mb-3"></div>
+      <div class="bg-white rounded-xl border border-stone-200 overflow-hidden" id="table-etf"></div>
+    </section>
+  </main>
+
+  <!-- 基金详情 Modal -->
+  <div id="detailModal" class="hidden fixed inset-0 z-50 overflow-y-auto" style="background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);">
+    <div class="modal-overlay min-h-screen flex items-start justify-center p-4 md:p-8">
+      <div class="bg-stone-50 rounded-2xl w-full max-w-5xl shadow-2xl overflow-hidden">
+        <!-- Header -->
+        <div class="bg-white border-b border-stone-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+          <div class="min-w-0">
+            <h2 id="detail-title" class="text-xl font-bold truncate">--</h2>
+            <div id="detail-subtitle" class="text-xs text-stone-500 mt-1 flex items-center flex-wrap gap-1">--</div>
+          </div>
+          <button onclick="closeDetail()" class="w-9 h-9 rounded-full hover:bg-stone-100 flex items-center justify-center transition text-stone-500 hover:text-stone-900 flex-shrink-0 ml-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Body -->
+        <div class="p-6 space-y-6">
+          <!-- 顶部信息卡片 -->
+          <section>
+            <div class="text-xs tracking-widest text-stone-500 uppercase mb-3">OVERVIEW · 基础信息</div>
+            <div id="detail-info" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3"></div>
+          </section>
+
+          <!-- 持仓 -->
+          <section>
+            <div class="text-xs tracking-widest text-stone-500 uppercase mb-3">HOLDINGS · 前十大重仓股</div>
+            <div id="detail-holdings" class="bg-white rounded-xl border border-stone-200 p-5">
+              <div class="text-center py-12 text-stone-400 text-sm">加载中...</div>
+            </div>
+          </section>
+
+          <!-- 业绩表现 -->
+          <section>
+            <div class="text-xs tracking-widest text-stone-500 uppercase mb-3">PERFORMANCE · 业绩表现</div>
+            <div class="bg-white rounded-xl border border-stone-200 p-4">
+              <div id="detail-perf" class="grid grid-cols-4 md:grid-cols-8 gap-2"></div>
+            </div>
+          </section>
+
+          <!-- 费率 -->
+          <section>
+            <div class="text-xs tracking-widest text-stone-500 uppercase mb-3">FEES · 费率结构</div>
+            <div id="detail-fee" class="bg-white rounded-xl border border-stone-200 px-5 py-3"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="max-w-7xl mx-auto px-6 pb-8">
+    <div class="bg-stone-50 rounded-xl p-5 text-xs text-stone-500 leading-relaxed border border-stone-200">
+      <div class="font-semibold text-stone-700 mb-2">⚠️ 风险提示与免责声明</div>
+      <p>基金投资有风险，过往业绩不代表未来表现。QDII 基金受汇率波动、海外市场风险影响。本页面数据来自 AKShare 与天天基金公开接口，仅供个人研究参考，不构成投资建议。限额字段以基金 APP 实际显示为准。</p>
+      <p class="mt-2">📊 数据来源：East Money (AKShare) / 雪球 · 📜 MIT License</p>
+    </div>
+  </footer>
+
+  <script>
+    // 数据源（后端生成的 5 个 JSON），前端渲染时前 4 个合并到"场外"Tab
+    const DATA_CATEGORIES = ['sp500', 'nasdaq_passive', 'active', 'global_other', 'etf'];
+    const RENDER_TABS = ['offshore', 'etf'];
+    // 场外 Tab 内部的分组配置（对应 Chips 的 4 个筛选项）
+    const OFFSHORE_GROUPS = [
+      { key: 'sp500',          label: '📊 标普500 指数基金',  desc: 'S&P 500 · 被动跟踪' },
+      { key: 'nasdaq_passive', label: '💻 纳指100 指数基金',  desc: 'NASDAQ 100 · 被动跟踪' },
+      { key: 'active',         label: '🎯 美股主动基金',      desc: '精选 18 只重仓美股的主动 QDII' },
+      { key: 'global_other',   label: '🌐 全球/其他 QDII',    desc: '全球配置型 / 非美股核心方向' },
+    ];
+    const STATE = { data: {} };
+
+    // ==================== 基金公司 Logo（彩色方块 + 公司汉字缩写） ====================
+    // 每个基金公司配一个固定的品牌色（参考真实公司主色）
+    const COMPANY_BRAND = {
+      '易方达': { color: '#d4351c', letter: '易' },  // 红
+      '华夏':   { color: '#0e5ba6', letter: '华' },  // 蓝
+      '南方':   { color: '#c8102e', letter: '南' },  // 红
+      '嘉实':   { color: '#e87500', letter: '嘉' },  // 橙
+      '广发':   { color: '#d92027', letter: '广' },
+      '华安':   { color: '#8b0000', letter: '华安' },
+      '博时':   { color: '#ea5506', letter: '博' },
+      '大成':   { color: '#c5050c', letter: '大' },
+      '天弘':   { color: '#e60012', letter: '天' },
+      '摩根':   { color: '#c41e3a', letter: 'JP' },
+      '汇添富': { color: '#1a3e82', letter: '汇' },
+      '招商':   { color: '#c8102e', letter: '招' },
+      '华泰柏瑞': { color: '#c8102e', letter: '华泰' },
+      '万家':   { color: '#e87500', letter: '万' },
+      '宝盈':   { color: '#1a3e82', letter: '宝' },
+      '建信':   { color: '#005bac', letter: '建' },
+      '国泰':   { color: '#c41e3a', letter: '国' },
+      '浦银安盛': { color: '#bc0028', letter: '浦' },
+      '富国':   { color: '#0066b3', letter: '富' },
+      '华宝':   { color: '#c8102e', letter: '华宝' },
+      '景顺长城': { color: '#c8102e', letter: '景' },
+      '鹏华':   { color: '#00529b', letter: '鹏' },
+      '工银':   { color: '#c8102e', letter: '工' },
+      '交银':   { color: '#005bac', letter: '交' },
+      '农银':   { color: '#007b3a', letter: '农' },
+      '中银':   { color: '#c8102e', letter: '中' },
+      '民生加银': { color: '#005bac', letter: '民' },
+      '上投摩根': { color: '#c41e3a', letter: '上投' },
+      '德邦':   { color: '#e60012', letter: '德' },
+      '海富通': { color: '#005bac', letter: '海' },
+      '兴业':   { color: '#005bac', letter: '兴' },
+      '中欧':   { color: '#1a3e82', letter: '中欧' },
+      '融通':   { color: '#c8102e', letter: '融' },
+      '新华':   { color: '#bc0028', letter: '新' },
+      '泰达宏利': { color: '#c41e3a', letter: '泰' },
+      '国投瑞银': { color: '#0066b3', letter: '国投' },
+      '中信保诚': { color: '#c8102e', letter: '中信' },
+      '国海富兰克林': { color: '#0066b3', letter: '国海' },
+      '宏利':   { color: '#007f5f', letter: '宏' },
+      '信达澳亚': { color: '#c41e3a', letter: '信达' },
+      '同泰':   { color: '#e60012', letter: '同' },
+      '平安':   { color: '#e60012', letter: '平' },
+      '银华':   { color: '#c41e3a', letter: '银' },
+      '上银':   { color: '#c8102e', letter: '上银' },
+      '长城':   { color: '#1a3e82', letter: '长' },
+      '长信':   { color: '#005bac', letter: '长信' },
+    };
+
+    function getLogo(company) {
+      const brand = COMPANY_BRAND[company] || { color: '#6b7280', letter: (company || '?').charAt(0) };
+      const letterClass = brand.letter.length === 1 ? 'logo-letter-1' : 'logo-letter-2';
+      // 用渐变代替纯色，让 logo 更有质感（从品牌色到略深的同色调）
+      const bg = `linear-gradient(135deg, ${brand.color} 0%, ${adjustColor(brand.color, -15)} 100%)`;
+      return `<div class="logo-avatar ${letterClass}" style="background: ${bg}"><span>${brand.letter}</span></div>`;
+    }
+
+    // 颜色加深/提亮（amount 为负数 = 加深）
+    function adjustColor(hex, amount) {
+      hex = hex.replace('#', '');
+      const num = parseInt(hex, 16);
+      const r = Math.max(0, Math.min(255, (num >> 16) + amount));
+      const g = Math.max(0, Math.min(255, ((num >> 8) & 0xff) + amount));
+      const b = Math.max(0, Math.min(255, (num & 0xff) + amount));
+      return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+    }
+
+    // ==================== 数据加载 ====================
+    async function loadData() {
+      for (const cat of DATA_CATEGORIES) {
+        const res = await fetch(`./data/${cat}.json?t=${Date.now()}`);
+        STATE.data[cat] = await res.json();
+      }
+      const meta = await (await fetch(`./data/meta.json?t=${Date.now()}`)).json();
+      updateKPI(meta);
+      RENDER_TABS.forEach(renderCategory);
+
+      // 异步加载股票行情（不阻塞主页）
+      try {
+        const stockRes = await fetch(`./data/us_stocks.json?t=${Date.now()}`);
+        if (stockRes.ok) {
+          const stockData = await stockRes.json();
+          STATE.stocks = stockData.stocks || {};
+          STATE.stocksUpdatedAt = stockData.generated_at;
+        }
+      } catch (e) {
+        console.warn('股票行情加载失败（不影响主页）:', e.message);
+      }
+    }
+
+    function updateKPI(meta) {
+      // KPI 卡片已移除，此函数保留空壳以防将来恢复
+    }
+
+    // ETF 分组配置（按跟踪标的）
+    const ETF_GROUPS = [
+      { key: 'sp500',     label: '📊 跟踪 标普500 指数',   desc: 'S&P 500 · 美股大盘蓝筹' },
+      { key: 'nasdaq100', label: '💻 跟踪 纳斯达克100 指数', desc: 'NASDAQ 100 · 美股科技龙头' },
+      { key: 'us50',      label: '🎯 跟踪 美国50 指数',     desc: '中证·美国50 · 头部 50 只美股' },
+      { key: 'other',     label: '其他',                 desc: '' },
+    ];
+
+    function renderCategory(tab) {
+      const container = document.getElementById(`table-${tab}`);
+      const isEtf = tab === 'etf';
+      const isOffshore = tab === 'offshore';
+
+      // 「场外」表头要不要加持仓列：只要包含 active 组就加
+      const showHoldings = isOffshore;  // 场外含主动基金，统一加持仓列
+
+      // 收集要渲染的 series 分组
+      let groups;
+      let totalSeries = 0, totalShares = 0, totalScale = 0;
+
+      if (isOffshore) {
+        // 场外 = sp500 + nasdaq_passive + active 三个 source 分组
+        groups = OFFSHORE_GROUPS.map(g => {
+          const src = STATE.data[g.key];
+          const items = src?.series || [];
+          return {
+            ...g,
+            items,
+            sourceCat: g.key,
+            // active 和 global_other 都是主动型 —— 显示基金经理、展示持仓按钮
+            isActive: (g.key === 'active' || g.key === 'global_other'),
+          };
+        }).filter(g => g.items.length);
+      } else if (isEtf) {
+        // ETF 按 etf_target 分组（原逻辑）
+        const src = STATE.data.etf;
+        const byTarget = {};
+        for (const s of src.series) {
+          const t = s.etf_target || 'other';
+          (byTarget[t] = byTarget[t] || []).push(s);
+        }
+        for (const key in byTarget) {
+          // 组内按规模降序（与场外一致，大盘子在前）
+          byTarget[key].sort((a, b) => (b.series_scale || 0) - (a.series_scale || 0));
+        }
+        groups = ETF_GROUPS
+          .map(g => ({ ...g, items: byTarget[g.key] || [], sourceCat: 'etf', isActive: false }))
+          .filter(g => g.items.length);
+      }
+
+      // 统计
+      groups.forEach(g => {
+        totalSeries += g.items.length;
+        g.items.forEach(s => {
+          totalShares += s.shares.length;
+          totalScale += (s.series_scale || 0);
+        });
+      });
+      document.getElementById(`count-${tab}`).textContent =
+        `${totalSeries} 个系列 · ${totalShares} 只份额 · 总规模 ${totalScale.toFixed(0)} 亿`;
+
+      // 代表性净值日期：取第一个 group 第一个 series 的默认份额
+      const firstSeries = groups[0]?.items?.[0];
+      const firstDef = firstSeries?.shares?.find(s => s.code === firstSeries.default_share_code) || firstSeries?.shares?.[0];
+      const navHeaderDate = firstDef?.nav_date || '';
+
+      // 列数（用于分组标题行 colspan）
+      // 基础 10 列：展开+名称+规模+净值+1月+YTD+1年+成立+(申购)+份额
+      // 场外 = 10 列（含申购，无持仓）
+      // 场外+主动 = 11 列（含申购 + 持仓）
+      // ETF = 10 列（无申购，有持仓占位）
+      const colspan = showHoldings ? 11 : 10;
+
+      const pieces = [];
+      for (const group of groups) {
+        // Chips 已承载分组标识，不再渲染组内大紫条
+        // 同一组内所有 series 用该组的 isActive 判断是否显示"持仓"按钮
+        pieces.push(group.items.map(s => {
+          return renderSeries(s, group.isActive, isEtf, showHoldings, group.key);
+        }).join(''));
+      }
+      const bodyHtml = pieces.join('');
+
+      container.innerHTML = `
+        <table class="w-full text-sm">
+          <thead class="bg-stone-50 border-b border-stone-200 text-stone-600 text-xs">
+            <tr>
+              <th class="text-left py-3 px-3 font-medium w-8"></th>
+              <th class="text-left py-3 px-3 font-medium">基金系列</th>
+              <th class="text-right py-3 px-3 font-medium">规模</th>
+              <th class="text-right py-3 px-3 font-medium">
+                <div>${isEtf ? '最新价' : '净值'}</div>
+                ${navHeaderDate ? `<div class="text-[10px] text-stone-400 font-normal mt-0.5">${navHeaderDate}</div>` : ''}
+              </th>
+              <th class="text-right py-3 px-3 font-medium">近1月</th>
+              <th class="text-right py-3 px-3 font-medium">今年来</th>
+              <th class="text-right py-3 px-3 font-medium">近1年</th>
+              <th class="text-right py-3 px-3 font-medium">成立来</th>
+              ${isEtf ? '' : '<th class="text-center py-3 px-3 font-medium">申购</th>'}
+              <th class="text-center py-3 px-3 font-medium">份额</th>
+              ${showHoldings ? '<th class="text-center py-3 px-3 font-medium">持仓</th>' : ''}
+            </tr>
+          </thead>
+          <tbody>
+            ${bodyHtml}
+          </tbody>
+        </table>
+      `;
+
+      container.querySelectorAll('.series-row').forEach(row => {
+        // ETF 行不需要展开（因为只有一只份额）
+        if (row.dataset.isEtf === '1') return;
+        row.addEventListener('click', () => toggleSeries(row));
+      });
+
+      // 渲染分组筛选 Chips
+      renderChips(tab, groups);
+    }
+
+    // ==================== 通用分组筛选 Chips ====================
+    // 每个 tab 的筛选状态
+    const CHIP_STATE = {};
+
+    function renderChips(tab, groups) {
+      const chipsBox = document.getElementById(`${tab}-chips`);
+      if (!chipsBox) return;
+      if (!groups.length) { chipsBox.innerHTML = ''; return; }
+
+      const defaultKey = groups[0].key;
+      const chips = groups.map((g, i) =>
+        `<button class="chip${i === 0 ? ' chip-active' : ''}" data-filter="${g.key}">${g.label}  <span class="chip-count">${g.items.length}</span></button>`
+      );
+      chipsBox.innerHTML = chips.join('');
+      chipsBox.querySelectorAll('.chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          chipsBox.querySelectorAll('.chip').forEach(b => b.classList.remove('chip-active'));
+          btn.classList.add('chip-active');
+          applyChipFilter(tab, groups, btn.dataset.filter);
+        });
+      });
+      // 应用默认筛选
+      applyChipFilter(tab, groups, defaultKey);
+    }
+
+    function applyChipFilter(tab, groups, filter) {
+      CHIP_STATE[tab] = filter;
+      const table = document.getElementById(`table-${tab}`);
+      if (!table) return;
+
+      // series 行：控制显隐
+      // 展开行（share-rows）：不匹配时强制隐藏并重置状态；匹配时清 inline display，让 .hidden 类主宰
+      table.querySelectorAll('tr.series-row').forEach(tr => {
+        const match = (tr.dataset.group === filter);
+        tr.style.display = match ? '' : 'none';
+        const id = tr.dataset.seriesId;
+        const detail = table.querySelector(`.share-rows[data-parent="${id}"]`);
+        if (!detail) return;
+        if (match) {
+          detail.style.display = '';
+        } else {
+          detail.style.display = 'none';
+          detail.classList.add('hidden');
+          const arrow = tr.querySelector('.arrow');
+          if (arrow) arrow.style.transform = '';
+        }
+      });
+
+      // 更新计数：当前筛选组
+      const currentGroup = groups.find(g => g.key === filter);
+      if (!currentGroup) return;
+      let visibleSeries = currentGroup.items.length;
+      let visibleShares = 0, visibleScale = 0;
+      currentGroup.items.forEach(s => {
+        visibleShares += s.shares.length;
+        visibleScale += (s.series_scale || 0);
+      });
+      const countEl = document.getElementById(`count-${tab}`);
+      if (countEl) {
+        countEl.textContent =
+          `${visibleSeries} 个系列 · ${visibleShares} ${tab === 'etf' ? '只 ETF' : '只份额'} · 总规模 ${visibleScale.toFixed(0)} 亿`;
+      }
+    }
+
+    function renderSeries(series, isActive, isEtf, showHoldings, groupKey) {
+      // showHoldings: 当前表格是否存在"持仓"列（决定 colspan 和是否渲染持仓按钮）
+      // isActive: 这只基金是不是主动基金（决定要不要显示基金经理、是否渲染持仓按钮）
+      // groupKey: 分组键，打到 DOM data-group 上，供 Chips 筛选使用
+      if (showHoldings === undefined) showHoldings = isActive;
+      const grpAttr = groupKey ? ` data-group="${groupKey}"` : '';
+      // v3: 选第一个"人民币A类"或"人民币+最早字母份额"作为外层默认
+      // 这里采用 enrich_data.py 里算好的 default_share_code
+      const defCode = series.default_share_code;
+      const def = series.shares.find(s => s.code === defCode) || series.shares[0];
+
+      const seriesScale = series.series_scale
+        ? (series.series_scale >= 100
+            ? `${series.series_scale.toFixed(0)}亿`
+            : `${series.series_scale.toFixed(2)}亿`)
+        : '--';
+
+      const price = isEtf ? (def.etf_price?.toFixed(3) ?? def.nav?.toFixed(4) ?? '--') : (def.nav?.toFixed(4) ?? '--');
+      const dailyChange = isEtf && def.etf_change_pct != null ? def.etf_change_pct : def.daily_change;
+      const navDate = def.nav_date ? `<div class="text-[10px] text-stone-400">${def.nav_date}</div>` : '';
+
+      // 持仓列的 td：如果表格有持仓列，就要输出；主动基金给按钮，其他给 —
+      const holdingsTd = showHoldings
+        ? (isActive ? `<td class="py-3 px-3 text-center">${holdingsBtn(defCode)}</td>` : '<td class="py-3 px-3 text-center text-stone-300">—</td>')
+        : '';
+
+      // 展开后的子表格 colspan
+      const expandColspan = showHoldings ? 11 : 10;
+
+      return `
+        <tr class="series-row border-b border-stone-100 ${isEtf ? '' : 'hover:bg-stone-50 cursor-pointer'} transition" data-series-id="${series.series_id}" data-is-etf="${isEtf ? '1' : '0'}"${grpAttr}>
+          <td class="py-3 px-3 text-stone-400">
+            ${isEtf ? '' : `<svg class="arrow w-4 h-4 inline transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>`}
+          </td>
+          <td class="py-3 px-3">
+            <div class="flex items-center gap-3">
+              ${getLogo(series.company)}
+              <div class="min-w-0">
+                <div class="font-medium truncate">${isEtf ? def.name : series.display_name}</div>
+                <div class="text-xs text-stone-500 num mt-0.5">
+                  ${def.code} · ${isEtf ? '场内 ETF' : (def.share_class + (def.currency === '美元' ? ' · 美元' : ''))}
+                  <span class="badge ${isEtf ? 'badge-qdii' : 'badge-qdii'} ml-1">${isEtf ? 'ETF' : 'QDII'}</span>
+                  ${isActive && def.manager ? `<span class="text-stone-400 ml-1">· ${def.manager}</span>` : ''}
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="py-3 px-3 text-right num font-medium">${seriesScale}</td>
+          <td class="py-3 px-3 text-right num">
+            <div class="font-medium">${price}</div>
+            <div class="text-xs ${dailyChange > 0 ? 'up' : dailyChange < 0 ? 'down' : 'text-stone-400'}">${dailyChange == null ? '--' : (dailyChange > 0 ? '+' : '') + dailyChange.toFixed(2) + '%'}</div>
+          </td>
+          ${changeCell(def.chg_1m)}
+          ${changeCell(def.chg_ytd)}
+          ${changeCell(def.chg_1y)}
+          ${changeCell(def.chg_since_inception)}
+          ${isEtf ? '' : `<td class="py-3 px-3 text-center">${statusBadge(def)}</td>`}
+          <td class="py-3 px-3 text-center text-stone-500 num text-xs">${isEtf ? '—' : series.shares.length}</td>
+          ${holdingsTd}
+        </tr>
+        ${isEtf ? '' : `<tr class="share-rows hidden bg-stone-50/60" data-parent="${series.series_id}">
+          <td colspan="${expandColspan}" class="p-0">
+            <div class="px-6 py-3 border-y border-stone-100 fade-in">
+              <div class="text-xs text-stone-500 mb-2">${series.shares.length} 个份额（人民币优先，A类在前）：</div>
+              <table class="w-full text-xs">
+                <thead class="text-stone-500">
+                  <tr>
+                    <th class="text-left py-2 font-medium">代码</th>
+                    <th class="text-left py-2 font-medium">份额名称</th>
+                    <th class="text-center py-2 font-medium">类别</th>
+                    <th class="text-center py-2 font-medium">币种</th>
+                    <th class="text-right py-2 font-medium">规模</th>
+                    <th class="text-right py-2 font-medium">净值</th>
+                    <th class="text-right py-2 font-medium">日涨跌</th>
+                    <th class="text-right py-2 font-medium">近1年</th>
+                    ${isEtf ? '' : `
+                      <th class="text-center py-2 font-medium">申购状态</th>
+                      <th class="text-right py-2 font-medium">日限额</th>
+                    `}
+                    <th class="text-right py-2 font-medium">买入费</th>
+                    <th class="text-right py-2 font-medium">卖出规则</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${series.shares.map(sh => renderShare(sh, sh.code === defCode, isEtf)).join('')}
+                </tbody>
+              </table>
+            </div>
+          </td>
+        </tr>`}
+      `;
+    }
+
+    function renderShare(sh, isDefault, isEtf) {
+      const curCls = sh.currency === '美元' ? 'badge-usd' : 'badge-cny';
+      const priceDisp = isEtf && sh.etf_price ? sh.etf_price.toFixed(3) : (sh.nav?.toFixed(4) ?? '--');
+      const dailyChg = isEtf && sh.etf_change_pct != null ? sh.etf_change_pct : sh.daily_change;
+      const navDateDisp = sh.nav_date ? `<div class="text-[10px] text-stone-400">${sh.nav_date}</div>` : '';
+
+      return `
+        <tr class="border-t border-stone-100">
+          <td class="py-2 num">${sh.code}${isDefault ? '<span class="text-amber-500 ml-1">★</span>' : ''}</td>
+          <td class="py-2 text-stone-600">${sh.name}</td>
+          <td class="py-2 text-center">
+            <span class="badge bg-stone-200 text-stone-700">${sh.share_class}</span>
+          </td>
+          <td class="py-2 text-center">
+            <span class="badge ${curCls}">${sh.currency || '人民币'}</span>
+          </td>
+          <td class="py-2 text-right num">${sh.scale_raw || `<span class="text-stone-300" title="基金公司未单独披露此份额规模">—</span>`}</td>
+          <td class="py-2 text-right num">
+            <div>${priceDisp}</div>
+            ${navDateDisp}
+          </td>
+          ${changeCell(dailyChg, true)}
+          ${changeCell(sh.chg_1y, true)}
+          ${isEtf ? '' : `
+            <td class="py-2 text-center">
+              ${sh.buy_status ? `<span class="${buyStatusClass(sh.buy_status)}">${sh.buy_status}</span>` : '--'}
+            </td>
+            <td class="py-2 text-right num">${formatLimitForDetail(sh)}</td>
+          `}
+          <td class="py-2 text-right">${renderBuyFee(sh)}</td>
+          <td class="py-2 text-right">${renderSellRule(sh)}</td>
+        </tr>
+      `;
+    }
+
+    function renderBuyFee(sh) {
+      const rate = sh.first_buy_rate;
+      const rules = sh.buy_rules || [];
+      if (rate === null || rate === undefined) {
+        return sh.fee ? `<span class="num text-stone-500">${sh.fee}%</span>` : '--';
+      }
+      // 构建分档买入费率 tooltip
+      const popHtml = rules.length > 1 ? `
+        <div class="fee-popover">
+          <div class="font-semibold text-stone-700 mb-1">买入费率分档</div>
+          <table>
+            ${rules.map(r => `
+              <tr>
+                <td class="text-stone-600">${r.condition}</td>
+                <td class="text-right num font-medium">${r.rate}%</td>
+              </tr>
+            `).join('')}
+          </table>
+          ${sh.mgmt_fee != null ? `<div class="text-stone-500 mt-2 pt-2 border-t border-stone-100">管理费 ${sh.mgmt_fee}%/年 · 托管费 ${sh.custody_fee || '--'}%/年</div>` : ''}
+        </div>
+      ` : '';
+      const badge = rate === 0 ? '<span class="text-green-600 num font-medium">免费</span>' : `<span class="num font-medium">${rate}%</span>`;
+      return rules.length > 1
+        ? `<span class="fee-tip">${badge}${popHtml}</span>`
+        : badge;
+    }
+
+    function renderSellRule(sh) {
+      const freeDays = sh.free_hold_days;
+      const rules = sh.sell_rules || [];
+      if (!rules.length) return '--';
+
+      // 生成卖出规则 tooltip
+      const popHtml = `
+        <div class="fee-popover">
+          <div class="font-semibold text-stone-700 mb-1">卖出规则（持有期限）</div>
+          <table>
+            ${rules.map(r => {
+              const isFree = r.rate === 0;
+              return `
+                <tr>
+                  <td class="text-stone-600">${r.condition}</td>
+                  <td class="text-right num font-medium ${isFree ? 'text-green-600' : ''}">
+                    ${isFree ? '免费' : r.rate + '%'}
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </table>
+        </div>
+      `;
+
+      // 主展示：免X天 / 最高Y%
+      const label = freeDays != null
+        ? `<span class="text-green-600 font-medium">持有${freeDays}天免</span>`
+        : `<span class="text-stone-500">${rules[0].rate}%起</span>`;
+      return `<span class="fee-tip">${label}${popHtml}</span>`;
+    }
+
+    function changeCell(v, small = false) {
+      if (v === null || v === undefined) {
+        return `<td class="${small ? 'py-2' : 'py-3 px-3'} text-right text-stone-400 num">--</td>`;
+      }
+      const cls = v > 0 ? 'up' : v < 0 ? 'down' : '';
+      const prefix = v > 0 ? '+' : '';
+      return `<td class="${small ? 'py-2' : 'py-3 px-3'} text-right num ${cls}">${prefix}${v.toFixed(2)}%</td>`;
+    }
+
+    function statusBadge(sh) {
+      const st = sh.buy_status || '';
+      if (!st) return '<span class="text-stone-400 text-xs">--</span>';
+      const cls = buyStatusClass(st);
+      if (st.includes('暂停')) {
+        return `<span class="${cls}">${st}</span>`;
+      }
+      if (st.includes('限') && sh.daily_limit) {
+        return `<span class="${cls}">${st} ¥${formatLimit(sh.daily_limit)}</span>`;
+      }
+      return `<span class="${cls}">${st}</span>`;
+    }
+
+    function formatLimitForDetail(sh) {
+      if (!sh.buy_status) return '--';
+      if (sh.buy_status.includes('暂停')) return '—';
+      if (sh.daily_limit) return `¥${formatLimit(sh.daily_limit)}`;
+      return sh.buy_status.includes('开放') ? '不限' : '--';
+    }
+
+    function buyStatusClass(status) {
+      if (status.includes('暂停')) return 'badge badge-paused';
+      if (status.includes('限')) return 'badge badge-limit';
+      if (status.includes('开放')) return 'badge badge-open';
+      return 'badge bg-stone-100 text-stone-600';
+    }
+
+    function formatLimit(v) {
+      if (!v) return '--';
+      if (v >= 10000) return `${(v / 10000).toFixed(0)}万`;
+      if (v >= 1000) return `${(v / 1000).toFixed(0)}k`;
+      return v.toFixed(0);
+    }
+
+    function toggleSeries(row) {
+      const id = row.dataset.seriesId;
+      const detail = document.querySelector(`.share-rows[data-parent="${id}"]`);
+      const arrow = row.querySelector('.arrow');
+      if (detail.classList.contains('hidden')) {
+        detail.classList.remove('hidden');
+        arrow.style.transform = 'rotate(90deg)';
+      } else {
+        detail.classList.add('hidden');
+        arrow.style.transform = '';
+      }
+    }
+
+    // ==================== 详情页 / 持仓 ====================
+
+    function holdingsBtn(code) {
+      // 只有抓到持仓数据的基金才显示按钮（前端运行时会校验）
+      return `<button class="holdings-btn text-xs px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition font-medium"
+                data-code="${code}"
+                onclick="event.stopPropagation(); openDetail('${code}', event);">
+                📊 持仓
+              </button>`;
+    }
+
+    async function openDetail(code, evt) {
+      if (evt) evt.stopPropagation();
+
+      // 找到这只基金所在的系列（主动/全球其他 QDII 都可能有持仓按钮）
+      let series = null, share = null;
+      for (const cat of ['active', 'global_other']) {
+        const d = STATE.data[cat];
+        if (!d) continue;
+        for (const s of d.series) {
+          const sh = s.shares.find(x => x.code === code);
+          if (sh) { series = s; share = sh; break; }
+        }
+        if (series) break;
+      }
+      if (!series) {
+        alert('未找到基金数据');
+        return;
+      }
+
+      // 打开 Modal
+      const modal = document.getElementById('detailModal');
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+
+      // 先填基础信息（来自列表数据）
+      renderDetailBasic(series, share);
+
+      // 再异步加载持仓
+      try {
+        const res = await fetch(`./data/holdings/${code}.json`);
+        if (!res.ok) throw new Error('持仓数据未抓取');
+        const holdings = await res.json();
+        renderDetailHoldings(holdings);
+      } catch (e) {
+        document.getElementById('detail-holdings').innerHTML =
+          `<div class="text-center py-12 text-stone-400 text-sm">暂无持仓数据（可能是新基金或季报未披露）</div>`;
+      }
+    }
+
+    function closeDetail() {
+      document.getElementById('detailModal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function renderDetailBasic(series, share) {
+      // 标题
+      document.getElementById('detail-title').textContent = series.display_name;
+      document.getElementById('detail-subtitle').innerHTML = `
+        <span class="num">${share.code}</span> · ${share.share_class}${share.currency === '美元' ? ' · 美元' : ''}
+        <span class="badge badge-qdii ml-1">QDII</span>
+        ${share.manager ? `<span class="text-stone-500 ml-2">基金经理 <span class="text-stone-900 font-medium">${share.manager}</span></span>` : ''}
+      `;
+
+      // 顶部信息卡片
+      const infoCards = [
+        { label: '基金规模', value: share.scale_raw || '--', sub: series.company },
+        { label: '成立时间', value: share.established || '--', sub: '至今' },
+        { label: '单位净值', value: share.nav?.toFixed(4) ?? '--', sub: share.nav_date || '' },
+        { label: '日涨跌', value: fmtPct(share.daily_change), sub: '当日', isChange: true, chgVal: share.daily_change },
+        { label: '成立来收益', value: fmtPct(share.chg_since_inception), sub: '累计', isChange: true, chgVal: share.chg_since_inception },
+        { label: '日买入限额', value: share.purchase_state === '暂停申购' ? '—' : fmtMoney(share.daily_limit), sub: share.purchase_state || '' },
+      ];
+      document.getElementById('detail-info').innerHTML = infoCards.map(c => `
+        <div class="bg-white rounded-xl border border-stone-200 p-4">
+          <div class="text-xs text-stone-500">${c.label}</div>
+          <div class="text-xl font-bold mt-1 ${c.isChange ? (c.chgVal > 0 ? 'up' : c.chgVal < 0 ? 'down' : '') : ''} num">${c.value}</div>
+          <div class="text-xs text-stone-400 mt-1">${c.sub}</div>
+        </div>
+      `).join('');
+
+      // 业绩表现
+      const perfItems = [
+        { label: '近1月', value: share.chg_1m },
+        { label: '近3月', value: share.chg_3m },
+        { label: '近6月', value: share.chg_6m },
+        { label: '今年来', value: share.chg_ytd },
+        { label: '近1年', value: share.chg_1y },
+        { label: '近3年', value: share.chg_3y },
+        { label: '近5年', value: share.chg_5y },
+        { label: '成立来', value: share.chg_since_inception },
+      ];
+      document.getElementById('detail-perf').innerHTML = perfItems.map(p => `
+        <div class="text-center p-3 rounded-lg bg-stone-50">
+          <div class="text-xs text-stone-500 mb-1">${p.label}</div>
+          <div class="font-bold num ${p.value > 0 ? 'up' : p.value < 0 ? 'down' : ''}">${fmtPct(p.value)}</div>
+        </div>
+      `).join('');
+
+      // 费率结构
+      const feeItems = [];
+      if (share.first_buy_rate != null) {
+        feeItems.push({ label: '首档买入费', value: share.first_buy_rate === 0 ? '免费' : `${share.first_buy_rate}%` });
+      }
+      if (share.free_hold_days != null) {
+        feeItems.push({ label: '免赎回费持有天数', value: `${share.free_hold_days} 天`, highlight: true });
+      }
+      if (share.mgmt_fee != null) {
+        feeItems.push({ label: '管理费（年）', value: `${share.mgmt_fee}%` });
+      }
+      if (share.custody_fee != null) {
+        feeItems.push({ label: '托管费（年）', value: `${share.custody_fee}%` });
+      }
+      document.getElementById('detail-fee').innerHTML = feeItems.map(f => `
+        <div class="flex justify-between py-2 border-b border-stone-100 last:border-0">
+          <span class="text-sm text-stone-500">${f.label}</span>
+          <span class="text-sm font-medium num ${f.highlight ? 'text-indigo-600' : ''}">${f.value}</span>
+        </div>
+      `).join('') || '<div class="text-sm text-stone-400 text-center py-4">暂无费率数据</div>';
+    }
+
+    function renderDetailHoldings(data) {
+      const container = document.getElementById('detail-holdings');
+      if (!data.holdings || data.holdings.length === 0) {
+        container.innerHTML = '<div class="text-center py-12 text-stone-400 text-sm">暂无持仓数据</div>';
+        return;
+      }
+
+      // 持仓头部汇总条
+      const summaryHtml = `
+        <div class="grid grid-cols-3 gap-2 mb-4">
+          <div class="bg-indigo-50 rounded-lg p-3 text-center">
+            <div class="text-xs text-indigo-600">持仓只数</div>
+            <div class="text-xl font-bold text-indigo-900 num mt-1">${data.holdings_count} 只</div>
+          </div>
+          <div class="bg-emerald-50 rounded-lg p-3 text-center">
+            <div class="text-xs text-emerald-600">Top10 总占比</div>
+            <div class="text-xl font-bold text-emerald-900 num mt-1">${data.total_weight}%</div>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-3 text-center">
+            <div class="text-xs text-amber-600">重仓股（>5%）</div>
+            <div class="text-xl font-bold text-amber-900 num mt-1">${data.heavy_count} 只</div>
+          </div>
+        </div>
+      `;
+
+      // 最大权重用于做条形图
+      const maxW = Math.max(...data.holdings.map(h => h.weight || 0));
+
+      const listHtml = `
+        <div class="text-xs text-stone-500 mb-2 flex justify-between">
+          <span>${data.latest_quarter || '最新季报'} · 当日涨跌基于实时行情</span>
+          <span>持仓数据截至 ${(data.fetched_at || '').slice(0, 10)}</span>
+        </div>
+        <table class="w-full text-sm">
+          <thead class="text-xs text-stone-500 border-b border-stone-200">
+            <tr>
+              <th class="text-left py-2 font-medium w-8">#</th>
+              <th class="text-left py-2 font-medium">股票名称</th>
+              <th class="text-left py-2 font-medium">代码</th>
+              <th class="text-right py-2 font-medium">占净值比</th>
+              <th class="text-right py-2 font-medium">当日涨跌</th>
+              <th class="text-right py-2 font-medium">持仓市值</th>
+              <th class="w-32"></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${data.holdings.map((h, i) => {
+              const stock = STATE.stocks?.[h.stock_code];
+              const chg = stock?.change_pct;
+              const chgCell = chg == null
+                ? '<span class="text-stone-300">--</span>'
+                : `<span class="${chg > 0 ? 'up' : chg < 0 ? 'down' : ''}">${chg > 0 ? '+' : ''}${chg.toFixed(2)}%</span>`;
+              return `
+                <tr class="border-b border-stone-50 hover:bg-stone-50/50">
+                  <td class="py-2.5 text-stone-400 num">${h.rank || (i + 1)}</td>
+                  <td class="py-2.5">
+                    <span class="font-medium">${h.stock_name}</span>
+                    ${stock ? `<span class="badge ml-1 ${stock.market === 'US' ? 'badge-qdii' : stock.market === 'HK' ? 'badge-usd' : 'badge-cny'}" style="font-size:9px;">${stock.market}</span>` : ''}
+                  </td>
+                  <td class="py-2.5 text-xs text-stone-500 num">${h.stock_code}</td>
+                  <td class="py-2.5 text-right num font-bold">${h.weight?.toFixed(2)}%</td>
+                  <td class="py-2.5 text-right num text-sm">${chgCell}</td>
+                  <td class="py-2.5 text-right num text-stone-500 text-xs">${fmtMV(h.market_value)}</td>
+                  <td class="py-2.5 pl-3">
+                    <div class="h-2 bg-stone-100 rounded-full overflow-hidden">
+                      <div class="h-full bg-gradient-to-r from-indigo-400 to-indigo-600" style="width: ${((h.weight || 0) / maxW * 100)}%"></div>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+
+      container.innerHTML = summaryHtml + listHtml;
+    }
+
+    // 工具：格式化
+    function fmtPct(v) {
+      if (v == null) return '--';
+      return (v > 0 ? '+' : '') + v.toFixed(2) + '%';
+    }
+    function fmtMoney(v) {
+      if (v == null || v === 0) return '--';
+      if (v >= 10000) return `¥${(v / 10000).toFixed(0)}万`;
+      return `¥${v.toFixed(0)}`;
+    }
+    function fmtMV(v) {
+      // v 单位是万元
+      if (v == null) return '--';
+      if (v >= 10000) return `${(v / 10000).toFixed(2)}亿`;
+      return `${v.toFixed(0)}万`;
+    }
+
+    // ESC 关闭
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeDetail();
+    });
+
+    // 点击遮罩区域关闭（点到内容卡片不关闭，只点背景才关闭）
+    document.getElementById('detailModal').addEventListener('click', e => {
+      if (e.target.id === 'detailModal' || e.target.classList.contains('modal-overlay')) {
+        closeDetail();
+      }
+    });
+
+    // 各板块的副标题文案
+    const SUBTITLE_BY_TAB = {
+      offshore: '支付宝 / 天天基金可买的场外基金，按投资标的分三组：标普500 / 纳指100 / 美股主动。',
+      etf: '场内 ETF（513 / 159 开头），需股票账户买卖，费率最低、盘中实时涨跌，按跟踪标的分组展示。',
+    };
+
+    // 根据当前 Tab 显示 / 隐藏知识卡片
+    function updateKnowledgeCards(tab) {
+      document.querySelectorAll('#knowledge-cards details[data-for-tabs]').forEach(card => {
+        const tabs = (card.dataset.forTabs || '').split(',').map(s => s.trim());
+        card.style.display = tabs.includes(tab) ? '' : 'none';
+      });
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('main > section').forEach(sec => {
+        sec.style.display = (sec.dataset.category === tab) ? '' : 'none';
+      });
+      updateKnowledgeCards(tab);
+      // 更新副标题
+      const sub = document.getElementById('page-subtitle');
+      if (sub && SUBTITLE_BY_TAB[tab]) sub.textContent = SUBTITLE_BY_TAB[tab];
+    }
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+        btn.classList.add('tab-active');
+        switchTab(btn.dataset.tab);
+      });
+    });
+
+    // 初始化：默认「场外」Tab
+    switchTab('offshore');
+
+    loadData();
+  </script>
+</body>
+</html>

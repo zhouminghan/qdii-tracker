@@ -1,0 +1,174 @@
+{
+  "code": "161128",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 66.95,
+  "heavy_count": 4,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 20.16,
+      "shares": 57.71,
+      "market_value": 69639.47
+    },
+    {
+      "rank": 2,
+      "stock_code": "AAPL",
+      "stock_name": "苹果",
+      "weight": 17.73,
+      "shares": 34.87,
+      "market_value": 61226.42
+    },
+    {
+      "rank": 3,
+      "stock_code": "MSFT",
+      "stock_name": "微软",
+      "weight": 13.08,
+      "shares": 17.63,
+      "market_value": 45168.71
+    },
+    {
+      "rank": 4,
+      "stock_code": "AVGO",
+      "stock_name": "博通",
+      "weight": 6.98,
+      "shares": 11.26,
+      "market_value": 24114.04
+    },
+    {
+      "rank": 5,
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 1.81,
+      "shares": 2.67,
+      "market_value": 6248.3
+    },
+    {
+      "rank": 6,
+      "stock_code": "PLTR",
+      "stock_name": "Palantir Technologies Inc-A",
+      "weight": 1.59,
+      "shares": 5.42,
+      "market_value": 5490.92
+    },
+    {
+      "rank": 7,
+      "stock_code": "AMD",
+      "stock_name": "超威半导体",
+      "weight": 1.58,
+      "shares": 3.87,
+      "market_value": 5450.14
+    },
+    {
+      "rank": 8,
+      "stock_code": "CSCO",
+      "stock_name": "思科",
+      "weight": 1.46,
+      "shares": 9.38,
+      "market_value": 5037.62
+    },
+    {
+      "rank": 9,
+      "stock_code": "AMAT",
+      "stock_name": "应用材料",
+      "weight": 1.29,
+      "shares": 1.89,
+      "market_value": 4460.59
+    },
+    {
+      "rank": 10,
+      "stock_code": "LRCX",
+      "stock_name": "拉姆研究",
+      "weight": 1.27,
+      "shares": 2.97,
+      "market_value": 4384.49
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 20.16,
+        "shares": 57.71,
+        "market_value": 69639.47
+      },
+      {
+        "rank": 2,
+        "stock_code": "AAPL",
+        "stock_name": "苹果",
+        "weight": 17.73,
+        "shares": 34.87,
+        "market_value": 61226.42
+      },
+      {
+        "rank": 3,
+        "stock_code": "MSFT",
+        "stock_name": "微软",
+        "weight": 13.08,
+        "shares": 17.63,
+        "market_value": 45168.71
+      },
+      {
+        "rank": 4,
+        "stock_code": "AVGO",
+        "stock_name": "博通",
+        "weight": 6.98,
+        "shares": 11.26,
+        "market_value": 24114.04
+      },
+      {
+        "rank": 5,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 1.81,
+        "shares": 2.67,
+        "market_value": 6248.3
+      },
+      {
+        "rank": 6,
+        "stock_code": "PLTR",
+        "stock_name": "Palantir Technologies Inc-A",
+        "weight": 1.59,
+        "shares": 5.42,
+        "market_value": 5490.92
+      },
+      {
+        "rank": 7,
+        "stock_code": "AMD",
+        "stock_name": "超威半导体",
+        "weight": 1.58,
+        "shares": 3.87,
+        "market_value": 5450.14
+      },
+      {
+        "rank": 8,
+        "stock_code": "CSCO",
+        "stock_name": "思科",
+        "weight": 1.46,
+        "shares": 9.38,
+        "market_value": 5037.62
+      },
+      {
+        "rank": 9,
+        "stock_code": "AMAT",
+        "stock_name": "应用材料",
+        "weight": 1.29,
+        "shares": 1.89,
+        "market_value": 4460.59
+      },
+      {
+        "rank": 10,
+        "stock_code": "LRCX",
+        "stock_name": "拉姆研究",
+        "weight": 1.27,
+        "shares": 2.97,
+        "market_value": 4384.49
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:39:53.555696"
+}

@@ -1,0 +1,174 @@
+{
+  "code": "019155",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 39.16,
+  "heavy_count": 2,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "00100",
+      "stock_name": "MINIMAX-W",
+      "weight": 6.27,
+      "shares": 4.24,
+      "market_value": 3246.72
+    },
+    {
+      "rank": 2,
+      "stock_code": "LITE",
+      "stock_name": "Lumentum Holdings Inc",
+      "weight": 5.67,
+      "shares": 0.6,
+      "market_value": 2937.54
+    },
+    {
+      "rank": 3,
+      "stock_code": "06869",
+      "stock_name": "长飞光纤光缆",
+      "weight": 4.57,
+      "shares": 14.65,
+      "market_value": 2367.14
+    },
+    {
+      "rank": 4,
+      "stock_code": "AXTI",
+      "stock_name": "AXT Inc",
+      "weight": 3.51,
+      "shares": 4.62,
+      "market_value": 1820.37
+    },
+    {
+      "rank": 5,
+      "stock_code": "TSEM",
+      "stock_name": "Tower半导体",
+      "weight": 3.49,
+      "shares": 1.49,
+      "market_value": 1809.55
+    },
+    {
+      "rank": 6,
+      "stock_code": "600498",
+      "stock_name": "烽火通信",
+      "weight": 3.48,
+      "shares": 35.72,
+      "market_value": 1803.15
+    },
+    {
+      "rank": 7,
+      "stock_code": "300604",
+      "stock_name": "长川科技",
+      "weight": 3.25,
+      "shares": 13.89,
+      "market_value": 1681.38
+    },
+    {
+      "rank": 8,
+      "stock_code": "GLW",
+      "stock_name": "康宁",
+      "weight": 3.16,
+      "shares": 1.74,
+      "market_value": 1634.13
+    },
+    {
+      "rank": 9,
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 3.08,
+      "shares": 0.68,
+      "market_value": 1594.28
+    },
+    {
+      "rank": 10,
+      "stock_code": "GOOGL",
+      "stock_name": "谷歌-A",
+      "weight": 2.68,
+      "shares": 0.7,
+      "market_value": 1389.04
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "00100",
+        "stock_name": "MINIMAX-W",
+        "weight": 6.27,
+        "shares": 4.24,
+        "market_value": 3246.72
+      },
+      {
+        "rank": 2,
+        "stock_code": "LITE",
+        "stock_name": "Lumentum Holdings Inc",
+        "weight": 5.67,
+        "shares": 0.6,
+        "market_value": 2937.54
+      },
+      {
+        "rank": 3,
+        "stock_code": "06869",
+        "stock_name": "长飞光纤光缆",
+        "weight": 4.57,
+        "shares": 14.65,
+        "market_value": 2367.14
+      },
+      {
+        "rank": 4,
+        "stock_code": "AXTI",
+        "stock_name": "AXT Inc",
+        "weight": 3.51,
+        "shares": 4.62,
+        "market_value": 1820.37
+      },
+      {
+        "rank": 5,
+        "stock_code": "TSEM",
+        "stock_name": "Tower半导体",
+        "weight": 3.49,
+        "shares": 1.49,
+        "market_value": 1809.55
+      },
+      {
+        "rank": 6,
+        "stock_code": "600498",
+        "stock_name": "烽火通信",
+        "weight": 3.48,
+        "shares": 35.72,
+        "market_value": 1803.15
+      },
+      {
+        "rank": 7,
+        "stock_code": "300604",
+        "stock_name": "长川科技",
+        "weight": 3.25,
+        "shares": 13.89,
+        "market_value": 1681.38
+      },
+      {
+        "rank": 8,
+        "stock_code": "GLW",
+        "stock_name": "康宁",
+        "weight": 3.16,
+        "shares": 1.74,
+        "market_value": 1634.13
+      },
+      {
+        "rank": 9,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 3.08,
+        "shares": 0.68,
+        "market_value": 1594.28
+      },
+      {
+        "rank": 10,
+        "stock_code": "GOOGL",
+        "stock_name": "谷歌-A",
+        "weight": 2.68,
+        "shares": 0.7,
+        "market_value": 1389.04
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:40:06.831903"
+}

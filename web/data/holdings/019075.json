@@ -1,0 +1,238 @@
+{
+  "code": "019075",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 14,
+  "total_weight": 41.22,
+  "heavy_count": 0,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "002594",
+      "stock_name": "比亚迪",
+      "weight": 4.15,
+      "shares": 0.96,
+      "market_value": 101.04
+    },
+    {
+      "rank": 2,
+      "stock_code": "300207",
+      "stock_name": "欣旺达",
+      "weight": 3.88,
+      "shares": 3.75,
+      "market_value": 94.54
+    },
+    {
+      "rank": 3,
+      "stock_code": "00883",
+      "stock_name": "中国海洋石油",
+      "weight": 3.75,
+      "shares": 3.7,
+      "market_value": 91.47
+    },
+    {
+      "rank": 4,
+      "stock_code": "600519",
+      "stock_name": "贵州茅台",
+      "weight": 3.57,
+      "shares": 0.06,
+      "market_value": 87.0
+    },
+    {
+      "rank": 5,
+      "stock_code": "601088",
+      "stock_name": "中国神华",
+      "weight": 3.43,
+      "shares": 1.79,
+      "market_value": 83.68
+    },
+    {
+      "rank": 6,
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 2.89,
+      "shares": 0.03,
+      "market_value": 70.39
+    },
+    {
+      "rank": 7,
+      "stock_code": "600426",
+      "stock_name": "华鲁恒升",
+      "weight": 2.79,
+      "shares": 1.88,
+      "market_value": 68.06
+    },
+    {
+      "rank": 8,
+      "stock_code": "01088",
+      "stock_name": "中国神华",
+      "weight": 2.76,
+      "shares": 1.65,
+      "market_value": 67.19
+    },
+    {
+      "rank": 9,
+      "stock_code": "300054",
+      "stock_name": "鼎龙股份",
+      "weight": 2.55,
+      "shares": 1.26,
+      "market_value": 62.12
+    },
+    {
+      "rank": 10,
+      "stock_code": "00981",
+      "stock_name": "中芯国际",
+      "weight": 2.48,
+      "shares": 1.35,
+      "market_value": 60.43
+    },
+    {
+      "rank": 11,
+      "stock_code": "GOOG",
+      "stock_name": "谷歌-C",
+      "weight": 2.42,
+      "shares": 0.03,
+      "market_value": 58.95
+    },
+    {
+      "rank": 12,
+      "stock_code": "600938",
+      "stock_name": "中国海油",
+      "weight": 2.4,
+      "shares": 1.46,
+      "market_value": 58.4
+    },
+    {
+      "rank": 13,
+      "stock_code": "01211",
+      "stock_name": "比亚迪股份",
+      "weight": 2.34,
+      "shares": 0.61,
+      "market_value": 56.98
+    },
+    {
+      "rank": 14,
+      "stock_code": "GOOGL",
+      "stock_name": "谷歌-A",
+      "weight": 1.81,
+      "shares": 0.02,
+      "market_value": 44.17
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "002594",
+        "stock_name": "比亚迪",
+        "weight": 4.15,
+        "shares": 0.96,
+        "market_value": 101.04
+      },
+      {
+        "rank": 2,
+        "stock_code": "300207",
+        "stock_name": "欣旺达",
+        "weight": 3.88,
+        "shares": 3.75,
+        "market_value": 94.54
+      },
+      {
+        "rank": 3,
+        "stock_code": "00883",
+        "stock_name": "中国海洋石油",
+        "weight": 3.75,
+        "shares": 3.7,
+        "market_value": 91.47
+      },
+      {
+        "rank": 4,
+        "stock_code": "600519",
+        "stock_name": "贵州茅台",
+        "weight": 3.57,
+        "shares": 0.06,
+        "market_value": 87.0
+      },
+      {
+        "rank": 5,
+        "stock_code": "601088",
+        "stock_name": "中国神华",
+        "weight": 3.43,
+        "shares": 1.79,
+        "market_value": 83.68
+      },
+      {
+        "rank": 6,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 2.89,
+        "shares": 0.03,
+        "market_value": 70.39
+      },
+      {
+        "rank": 7,
+        "stock_code": "600426",
+        "stock_name": "华鲁恒升",
+        "weight": 2.79,
+        "shares": 1.88,
+        "market_value": 68.06
+      },
+      {
+        "rank": 8,
+        "stock_code": "01088",
+        "stock_name": "中国神华",
+        "weight": 2.76,
+        "shares": 1.65,
+        "market_value": 67.19
+      },
+      {
+        "rank": 9,
+        "stock_code": "300054",
+        "stock_name": "鼎龙股份",
+        "weight": 2.55,
+        "shares": 1.26,
+        "market_value": 62.12
+      },
+      {
+        "rank": 10,
+        "stock_code": "00981",
+        "stock_name": "中芯国际",
+        "weight": 2.48,
+        "shares": 1.35,
+        "market_value": 60.43
+      },
+      {
+        "rank": 11,
+        "stock_code": "GOOG",
+        "stock_name": "谷歌-C",
+        "weight": 2.42,
+        "shares": 0.03,
+        "market_value": 58.95
+      },
+      {
+        "rank": 12,
+        "stock_code": "600938",
+        "stock_name": "中国海油",
+        "weight": 2.4,
+        "shares": 1.46,
+        "market_value": 58.4
+      },
+      {
+        "rank": 13,
+        "stock_code": "01211",
+        "stock_name": "比亚迪股份",
+        "weight": 2.34,
+        "shares": 0.61,
+        "market_value": 56.98
+      },
+      {
+        "rank": 14,
+        "stock_code": "GOOGL",
+        "stock_name": "谷歌-A",
+        "weight": 1.81,
+        "shares": 0.02,
+        "market_value": 44.17
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:40:14.805084"
+}

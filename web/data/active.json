@@ -1,0 +1,2622 @@
+{
+  "generated_at": "2026-05-03T18:15:25.295199",
+  "category": "active",
+  "label": "板块3 · 美股主动（场外·白名单精选）",
+  "series_count": 18,
+  "series": [
+    {
+      "series_id": "广发__全球精选股票__active",
+      "company": "广发",
+      "company_display": "广发",
+      "series_name": "全球精选股票",
+      "display_name": "广发全球精选股票",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "270023",
+          "name": "广发全球精选股票(QDII)人民币A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "nav_date": "2026-04-29",
+          "nav": 5.6878,
+          "nav_cum": 6.1268,
+          "daily_change": 0.32,
+          "chg_1w": -1.91,
+          "chg_1m": 18.42,
+          "chg_3m": 11.87,
+          "chg_6m": 15.75,
+          "chg_1y": 54.8,
+          "chg_2y": 65.45,
+          "chg_3y": 164.18,
+          "chg_ytd": 22.26,
+          "chg_since_inception": 655.2,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 5000.0,
+          "fee": "0.16",
+          "scale": 112.68,
+          "scale_raw": "112.68亿",
+          "established": "2010-08-18",
+          "manager": "李耀柱",
+          "fund_company": "广发基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "广发全球精选股票型证券投资基金",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.6
+            },
+            {
+              "condition": "100.0万<=买入金额<500.0万",
+              "rate": 1.0
+            },
+            {
+              "condition": "500.0万<=买入金额<1000.0万",
+              "rate": 0.5
+            },
+            {
+              "condition": "1000.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限<2.0年",
+              "rate": 0.3
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": null,
+          "first_buy_rate": 1.6,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "021277",
+          "name": "广发全球精选股票(QDII)人民币C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "nav_date": "2026-04-29",
+          "nav": 5.6206,
+          "nav_cum": 5.6206,
+          "daily_change": 0.32,
+          "chg_1w": -1.92,
+          "chg_1m": 18.36,
+          "chg_3m": 11.68,
+          "chg_6m": 15.39,
+          "chg_1y": 53.82,
+          "chg_2y": 63.49,
+          "chg_3y": null,
+          "chg_ytd": 22.01,
+          "chg_since_inception": 65.26,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 5000.0,
+          "fee": "",
+          "scale": 33.07,
+          "scale_raw": "33.07亿",
+          "established": "2024-04-18",
+          "manager": "李耀柱",
+          "fund_company": "广发基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "广发全球精选股票型证券投资基金",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "023402",
+          "name": "广发全球精选股票(QDII)人民币F",
+          "share_class": "F",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 500.0,
+          "daily_limit": 0.0,
+          "fee": "",
+          "scale": 4.57,
+          "scale_raw": "4.57亿",
+          "established": "2025-02-18",
+          "manager": "李耀柱",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": [],
+          "nav": 5.6574,
+          "nav_date": "2026-04-29",
+          "daily_change": 0.32,
+          "chg_1m": 18.37,
+          "chg_3m": 11.71,
+          "chg_6m": 15.44,
+          "chg_1y": 53.98,
+          "chg_ytd": 19.94
+        }
+      ],
+      "default_share_code": "270023",
+      "series_scale": 145.75
+    },
+    {
+      "series_id": "易方达__全球成长精选混合__active",
+      "company": "易方达",
+      "company_display": "易方达",
+      "series_name": "全球成长精选混合",
+      "display_name": "易方达全球成长精选混合",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "012920",
+          "name": "易方达全球成长精选混合(QDII)人民币A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "QDII-混合偏股",
+          "nav_date": "2026-04-29",
+          "nav": 3.5527,
+          "nav_cum": 3.5527,
+          "daily_change": 2.61,
+          "chg_1w": 0.25,
+          "chg_1m": 26.71,
+          "chg_3m": 29.0,
+          "chg_6m": 40.09,
+          "chg_1y": 163.83,
+          "chg_2y": 230.67,
+          "chg_3y": 278.87,
+          "chg_ytd": 41.78,
+          "chg_since_inception": 255.27,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 50.0,
+          "fee": "0.15",
+          "scale": 37.05,
+          "scale_raw": "37.05亿",
+          "established": "2022-01-11",
+          "manager": "郑希",
+          "fund_company": "易方达基金管理有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "易方达全球成长精选混合型证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "100.0万<=买入金额<500.0万",
+              "rate": 1.2
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限<2.0年",
+              "rate": 0.25
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": null,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "012922",
+          "name": "易方达全球成长精选混合(QDII)人民币C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "QDII-混合偏股",
+          "nav_date": "2026-04-29",
+          "nav": 3.4874,
+          "nav_cum": 3.4874,
+          "daily_change": 2.61,
+          "chg_1w": 0.24,
+          "chg_1m": 26.65,
+          "chg_3m": 28.85,
+          "chg_6m": 39.73,
+          "chg_1y": 162.57,
+          "chg_2y": 227.61,
+          "chg_3y": 274.02,
+          "chg_ytd": 41.55,
+          "chg_since_inception": 248.74,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 50.0,
+          "fee": "",
+          "scale": 61.61,
+          "scale_raw": "61.61亿",
+          "established": "2022-01-11",
+          "manager": "郑希",
+          "fund_company": "易方达基金管理有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "易方达全球成长精选混合型证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        }
+      ],
+      "default_share_code": "012920",
+      "series_scale": 98.66
+    },
+    {
+      "series_id": "华宝__纳斯达克精选股票__active",
+      "company": "华宝",
+      "company_display": "华宝",
+      "series_name": "纳斯达克精选股票",
+      "display_name": "华宝纳斯达克精选股票",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "017436",
+          "name": "华宝纳斯达克精选股票发起式(QDII)A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "nav_date": "2026-04-29",
+          "nav": 2.2782,
+          "nav_cum": 2.2782,
+          "daily_change": -0.27,
+          "chg_1w": -1.84,
+          "chg_1m": 18.44,
+          "chg_3m": 4.86,
+          "chg_6m": -4.64,
+          "chg_1y": 37.38,
+          "chg_2y": 56.23,
+          "chg_3y": 110.28,
+          "chg_ytd": 2.85,
+          "chg_since_inception": 127.82,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "0.15",
+          "scale": 39.51,
+          "scale_raw": "39.51亿",
+          "established": "2023-03-02",
+          "manager": "周晶 赵启元",
+          "fund_company": "华宝基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "华宝纳斯达克精选股票型发起式证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "100.0万<=买入金额<200.0万",
+              "rate": 1.0
+            },
+            {
+              "condition": "200.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<180.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "180.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 180,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "017437",
+          "name": "华宝纳斯达克精选股票发起式(QDII)C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "nav_date": "2026-04-29",
+          "nav": 2.2515,
+          "nav_cum": 2.2515,
+          "daily_change": -0.27,
+          "chg_1w": -1.85,
+          "chg_1m": 18.4,
+          "chg_3m": 4.76,
+          "chg_6m": -4.83,
+          "chg_1y": 36.84,
+          "chg_2y": 55.0,
+          "chg_3y": 107.76,
+          "chg_ytd": 2.72,
+          "chg_since_inception": 125.15,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "",
+          "scale": 51.75,
+          "scale_raw": "51.75亿",
+          "established": "2023-03-02",
+          "manager": "周晶 赵启元",
+          "fund_company": "华宝基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "华宝纳斯达克精选股票型发起式证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        }
+      ],
+      "default_share_code": "017436",
+      "series_scale": 91.25999999999999
+    },
+    {
+      "series_id": "华夏__全球科技先锋混合__active",
+      "company": "华夏",
+      "company_display": "华夏",
+      "series_name": "全球科技先锋混合",
+      "display_name": "华夏全球科技先锋混合",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "005698",
+          "name": "华夏全球科技先锋混合(QDII)A(人民币)",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "QDII-混合偏股",
+          "nav_date": "2026-04-29",
+          "nav": 2.9503,
+          "nav_cum": 2.9503,
+          "daily_change": 1.86,
+          "chg_1w": -2.22,
+          "chg_1m": 26.05,
+          "chg_3m": 25.65,
+          "chg_6m": 29.4,
+          "chg_1y": 83.56,
+          "chg_2y": 92.03,
+          "chg_3y": 194.41,
+          "chg_ytd": 37.38,
+          "chg_since_inception": 195.03,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10000.0,
+          "fee": "0.15",
+          "scale": 33.0,
+          "scale_raw": "33.00亿",
+          "established": "2018-04-17",
+          "manager": "李湘杰",
+          "fund_company": "华夏基金管理有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "华夏全球科技先锋混合型证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<50.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "50.0万<=买入金额<200.0万",
+              "rate": 1.2
+            },
+            {
+              "condition": "200.0万<=买入金额<500.0万",
+              "rate": 0.8
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 365,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "024239",
+          "name": "华夏全球科技先锋混合(QDII)C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "QDII-混合偏股",
+          "nav_date": "2026-04-29",
+          "nav": 2.9192,
+          "nav_cum": 2.9192,
+          "daily_change": 1.86,
+          "chg_1w": -2.23,
+          "chg_1m": 25.99,
+          "chg_3m": 25.3,
+          "chg_6m": 28.87,
+          "chg_1y": null,
+          "chg_2y": null,
+          "chg_3y": null,
+          "chg_ytd": 36.94,
+          "chg_since_inception": 66.53,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10000.0,
+          "fee": "",
+          "scale": 13.94,
+          "scale_raw": "13.94亿",
+          "established": "2025-05-13",
+          "manager": "李湘杰",
+          "fund_company": "华夏基金管理有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "华夏全球科技先锋混合型证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        }
+      ],
+      "default_share_code": "005698",
+      "series_scale": 46.94
+    },
+    {
+      "series_id": "建信__新兴市场混合__active",
+      "company": "建信",
+      "company_display": "建信",
+      "series_name": "新兴市场混合",
+      "display_name": "建信新兴市场混合",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "539002",
+          "name": "建信新兴市场混合(QDII)A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "QDII-混合偏股",
+          "nav_date": "2026-04-29",
+          "nav": 2.058,
+          "nav_cum": 2.058,
+          "daily_change": 1.38,
+          "chg_1w": 2.03,
+          "chg_1m": 25.26,
+          "chg_3m": 25.56,
+          "chg_6m": 42.42,
+          "chg_1y": 135.2,
+          "chg_2y": 121.29,
+          "chg_3y": 175.5,
+          "chg_ytd": 44.12,
+          "chg_since_inception": 105.8,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 20.0,
+          "fee": "0.16",
+          "scale": 11.2,
+          "scale_raw": "11.20亿",
+          "established": "2011-06-21",
+          "manager": "李博涵 程星烨 房乐",
+          "fund_company": "建信基金管理有限责任公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "建信新兴市场优选混合型证券投资基金",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.6
+            },
+            {
+              "condition": "100.0万<=买入金额<500.0万",
+              "rate": 1.0
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限<2.0年",
+              "rate": 0.3
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": null,
+          "first_buy_rate": 1.6,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "018147",
+          "name": "建信新兴市场混合(QDII)C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "QDII-混合偏股",
+          "nav_date": "2026-04-29",
+          "nav": 2.027,
+          "nav_cum": 2.027,
+          "daily_change": 1.35,
+          "chg_1w": 2.01,
+          "chg_1m": 25.2,
+          "chg_3m": 25.36,
+          "chg_6m": 42.15,
+          "chg_1y": 134.06,
+          "chg_2y": 119.61,
+          "chg_3y": 171.35,
+          "chg_ytd": 43.96,
+          "chg_since_inception": 152.43,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 20.0,
+          "fee": "",
+          "scale": 34.49,
+          "scale_raw": "34.49亿",
+          "established": "2023-03-17",
+          "manager": "程星烨 李博涵 房乐",
+          "fund_company": "建信基金管理有限责任公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "建信新兴市场优选混合型证券投资基金",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        }
+      ],
+      "default_share_code": "539002",
+      "series_scale": 45.69
+    },
+    {
+      "series_id": "嘉实__美国成长股票__active",
+      "company": "嘉实",
+      "company_display": "嘉实",
+      "series_name": "美国成长股票",
+      "display_name": "嘉实美国成长股票",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "000043",
+          "name": "嘉实美国成长股票人民币",
+          "share_class": "默认",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "nav_date": "2026-04-29",
+          "nav": 5.968,
+          "nav_cum": 5.968,
+          "daily_change": 0.24,
+          "chg_1w": -0.17,
+          "chg_1m": 16.11,
+          "chg_3m": 3.04,
+          "chg_6m": 0.18,
+          "chg_1y": 33.39,
+          "chg_2y": 44.64,
+          "chg_3y": 101.08,
+          "chg_ytd": 4.61,
+          "chg_since_inception": 496.8,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "0.15",
+          "scale": 43.44,
+          "scale_raw": "43.44亿",
+          "established": "2013-06-14",
+          "manager": "张楠 陈俊杰",
+          "fund_company": "嘉实基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "嘉实美国成长股票型证券投资基金",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<50.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "50.0万<=买入金额<200.0万",
+              "rate": 1.2
+            },
+            {
+              "condition": "200.0万<=买入金额<500.0万",
+              "rate": 0.8
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限<2.0年",
+              "rate": 0.3
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": null,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5
+        }
+      ],
+      "default_share_code": "000043",
+      "series_scale": 43.44
+    },
+    {
+      "series_id": "景顺长城__纳斯达克科技ETF联接__active",
+      "company": "景顺长城",
+      "company_display": "景顺长城",
+      "series_name": "纳斯达克科技ETF联接",
+      "display_name": "景顺长城纳斯达克科技ETF联接",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "017091",
+          "name": "景顺长城纳斯达克科技ETF联接(QDII)A人民币",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "0.12",
+          "scale": 23.05,
+          "scale_raw": "23.05亿",
+          "established": "2022-12-09",
+          "manager": "汪洋 张晓南",
+          "fund_company": "景顺长城基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "景顺长城纳斯达克科技市值加权交易型开放式指数证券投资基金发起式联接基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.2
+            },
+            {
+              "condition": "100.0万<=买入金额<200.0万",
+              "rate": 0.8
+            },
+            {
+              "condition": "200.0万<=买入金额<500.0万",
+              "rate": 0.4
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<180.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "180.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.8,
+          "custody_fee": 0.2,
+          "free_hold_days": 180,
+          "first_buy_rate": 1.2,
+          "max_sell_rate": 1.5,
+          "nav": 2.5193,
+          "nav_date": "2026-04-29",
+          "daily_change": 0.64,
+          "chg_1m": 22.09,
+          "chg_3m": 4.91,
+          "chg_6m": 2.04,
+          "chg_1y": 43.28,
+          "chg_ytd": 5.85
+        },
+        {
+          "code": "017093",
+          "name": "景顺长城纳斯达克科技ETF联接(QDII)C人民币",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "",
+          "scale": 11.8,
+          "scale_raw": "11.80亿",
+          "established": "2022-12-09",
+          "manager": "汪洋 张晓南",
+          "fund_company": "景顺长城基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "景顺长城纳斯达克科技市值加权交易型开放式指数证券投资基金发起式联接基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<180.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "180.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.8,
+          "custody_fee": 0.2,
+          "free_hold_days": 180,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5,
+          "nav": 2.4829,
+          "nav_date": "2026-04-29",
+          "daily_change": 0.63,
+          "chg_1m": 22.05,
+          "chg_3m": 4.8,
+          "chg_6m": 1.83,
+          "chg_1y": 42.71,
+          "chg_ytd": 5.72
+        },
+        {
+          "code": "019118",
+          "name": "景顺长城纳斯达克科技ETF联接(QDII)E人民币",
+          "share_class": "E",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "",
+          "scale": 8.03,
+          "scale_raw": "8.03亿",
+          "established": "2023-08-16",
+          "manager": "汪洋 张晓南",
+          "fund_company": "景顺长城基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "景顺长城纳斯达克科技市值加权交易型开放式指数证券投资基金发起式联接基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.8,
+          "custody_fee": 0.2,
+          "free_hold_days": 7,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5,
+          "nav": 2.5035,
+          "nav_date": "2026-04-29",
+          "daily_change": 0.64,
+          "chg_1m": 22.07,
+          "chg_3m": 4.86,
+          "chg_6m": 1.94,
+          "chg_1y": 43.0,
+          "chg_ytd": 6.72
+        }
+      ],
+      "default_share_code": "017091",
+      "series_scale": 42.88
+    },
+    {
+      "series_id": "国富__全球科技互联混合__active",
+      "company": "国富",
+      "company_display": "国海富兰克林",
+      "series_name": "全球科技互联混合",
+      "display_name": "国富全球科技互联混合",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "006373",
+          "name": "国富全球科技互联混合(QDII)人民币A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "QDII-混合偏股",
+          "nav_date": "2026-04-29",
+          "nav": 6.1282,
+          "nav_cum": 6.1282,
+          "daily_change": 1.43,
+          "chg_1w": 2.3,
+          "chg_1m": 25.53,
+          "chg_3m": 17.34,
+          "chg_6m": 38.14,
+          "chg_1y": 87.37,
+          "chg_2y": 112.53,
+          "chg_3y": 193.88,
+          "chg_ytd": 38.41,
+          "chg_since_inception": 512.82,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "0.15",
+          "scale": 29.89,
+          "scale_raw": "29.89亿",
+          "established": "2018-11-20",
+          "manager": "狄星华 徐成",
+          "fund_company": "国海富兰克林基金管理有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "富兰克林国海全球科技互联混合型证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "100.0万<=买入金额<300.0万",
+              "rate": 0.8
+            },
+            {
+              "condition": "300.0万<=买入金额<500.0万",
+              "rate": 0.4
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<180.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "180.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 180,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "021842",
+          "name": "国富全球科技互联混合(QDII)人民币C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "QDII-混合偏股",
+          "nav_date": "2026-04-29",
+          "nav": 6.088,
+          "nav_cum": 6.088,
+          "daily_change": 1.43,
+          "chg_1w": 2.3,
+          "chg_1m": 25.48,
+          "chg_3m": 17.22,
+          "chg_6m": 37.86,
+          "chg_1y": 86.45,
+          "chg_2y": null,
+          "chg_3y": null,
+          "chg_ytd": 38.23,
+          "chg_since_inception": 99.0,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "",
+          "scale": 9.93,
+          "scale_raw": "9.93亿",
+          "established": "2024-07-25",
+          "manager": "狄星华 徐成",
+          "fund_company": "国海富兰克林基金管理有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "富兰克林国海全球科技互联混合型证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        }
+      ],
+      "default_share_code": "006373",
+      "series_scale": 39.82
+    },
+    {
+      "series_id": "易方达__标普信息科技指数__active",
+      "company": "易方达",
+      "company_display": "易方达",
+      "series_name": "标普信息科技指数",
+      "display_name": "易方达标普信息科技指数",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "161128",
+          "name": "易方达标普信息科技指数(QDII-LOF)A(人民币)",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10.0,
+          "fee": "0.12",
+          "scale": 33.29,
+          "scale_raw": "33.29亿",
+          "established": "2016-12-13",
+          "manager": "刘依姗",
+          "fund_company": "易方达基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "易方达标普信息科技指数证券投资基金(LOF)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.2
+            },
+            {
+              "condition": "100.0万<=买入金额<200.0万",
+              "rate": 0.8
+            },
+            {
+              "condition": "200.0万<=买入金额<500.0万",
+              "rate": 0.5
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限<2.0年",
+              "rate": 0.25
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.8,
+          "custody_fee": 0.2,
+          "free_hold_days": null,
+          "first_buy_rate": 1.2,
+          "max_sell_rate": 1.5,
+          "nav": 6.0567,
+          "nav_date": "2026-04-29",
+          "daily_change": 0.21,
+          "chg_1m": 19.01,
+          "chg_3m": 5.41,
+          "chg_6m": -2.21,
+          "chg_1y": 39.54,
+          "chg_ytd": 5.39
+        },
+        {
+          "code": "012868",
+          "name": "易方达标普信息科技指数(QDII-LOF)C(人民币)",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10.0,
+          "fee": "",
+          "scale": 1.25,
+          "scale_raw": "1.25亿",
+          "established": "2021-07-21",
+          "manager": "刘依姗",
+          "fund_company": "易方达基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "易方达标普信息科技指数证券投资基金(LOF)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.8,
+          "custody_fee": 0.2,
+          "free_hold_days": 7,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5,
+          "nav": 5.9525,
+          "nav_date": "2026-04-29",
+          "daily_change": 0.21,
+          "chg_1m": 18.97,
+          "chg_3m": 5.32,
+          "chg_6m": -2.38,
+          "chg_1y": 39.02,
+          "chg_ytd": 3.84
+        }
+      ],
+      "default_share_code": "161128",
+      "series_scale": 34.54
+    },
+    {
+      "series_id": "银华__海外数字经济量化选股混合__active",
+      "company": "银华",
+      "company_display": "银华",
+      "series_name": "海外数字经济量化选股混合",
+      "display_name": "银华海外数字经济量化选股混合",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "016701",
+          "name": "银华海外数字经济量化选股混合发起式(QDII)A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "QDII-混合偏股",
+          "nav_date": "2026-04-29",
+          "nav": 1.9024,
+          "nav_cum": 1.9024,
+          "daily_change": 1.41,
+          "chg_1w": 2.31,
+          "chg_1m": 22.65,
+          "chg_3m": 5.6,
+          "chg_6m": 2.75,
+          "chg_1y": 47.18,
+          "chg_2y": 57.91,
+          "chg_3y": 90.13,
+          "chg_ytd": 6.91,
+          "chg_since_inception": 90.24,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100000.0,
+          "fee": "0.15",
+          "scale": 11.46,
+          "scale_raw": "11.46亿",
+          "established": "2023-03-15",
+          "manager": "马君",
+          "fund_company": "银华基金管理股份有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "银华海外数字经济量化选股混合型发起式证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<1000.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "1000.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<180.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "180.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 180,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "016702",
+          "name": "银华海外数字经济量化选股混合发起式(QDII)C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "QDII-混合偏股",
+          "nav_date": "2026-04-29",
+          "nav": 1.8754,
+          "nav_cum": 1.8754,
+          "daily_change": 1.41,
+          "chg_1w": 2.31,
+          "chg_1m": 22.61,
+          "chg_3m": 5.5,
+          "chg_6m": 2.55,
+          "chg_1y": 46.55,
+          "chg_2y": 56.61,
+          "chg_3y": 87.52,
+          "chg_ytd": 6.78,
+          "chg_since_inception": 87.54,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100000.0,
+          "fee": "",
+          "scale": 23.08,
+          "scale_raw": "23.08亿",
+          "established": "2023-03-15",
+          "manager": "马君",
+          "fund_company": "银华基金管理股份有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "银华海外数字经济量化选股混合型发起式证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        }
+      ],
+      "default_share_code": "016701",
+      "series_scale": 34.54
+    },
+    {
+      "series_id": "浦银安盛__全球智能科技__active",
+      "company": "浦银安盛",
+      "company_display": "浦银安盛",
+      "series_name": "全球智能科技",
+      "display_name": "浦银安盛全球智能科技",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "006555",
+          "name": "浦银安盛全球智能科技(QDII)A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "nav_date": "2026-04-29",
+          "nav": 3.1935,
+          "nav_cum": 3.1935,
+          "daily_change": 1.26,
+          "chg_1w": -0.13,
+          "chg_1m": 24.59,
+          "chg_3m": 16.38,
+          "chg_6m": 22.49,
+          "chg_1y": 74.12,
+          "chg_2y": 82.1,
+          "chg_3y": 151.56,
+          "chg_ytd": 25.83,
+          "chg_since_inception": 219.35,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 500.0,
+          "fee": "0.15",
+          "scale": 10.73,
+          "scale_raw": "10.73亿",
+          "established": "2019-01-29",
+          "manager": "IKEDA KAE 俞瑾",
+          "fund_company": "浦银安盛基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "浦银安盛全球智能科技股票型证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "100.0万<=买入金额<300.0万",
+              "rate": 1.0
+            },
+            {
+              "condition": "300.0万<=买入金额<500.0万",
+              "rate": 0.3
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限<2.0年",
+              "rate": 0.25
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": null,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "014002",
+          "name": "浦银安盛全球智能科技(QDII)C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "nav_date": "2026-04-29",
+          "nav": 3.1297,
+          "nav_cum": 3.1297,
+          "daily_change": 1.26,
+          "chg_1w": -0.13,
+          "chg_1m": 24.55,
+          "chg_3m": 16.27,
+          "chg_6m": 22.25,
+          "chg_1y": 73.33,
+          "chg_2y": 80.56,
+          "chg_3y": 148.59,
+          "chg_ytd": 25.67,
+          "chg_since_inception": 84.59,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 500.0,
+          "fee": "",
+          "scale": 19.34,
+          "scale_raw": "19.34亿",
+          "established": "2021-11-03",
+          "manager": "IKEDA KAE 俞瑾",
+          "fund_company": "浦银安盛基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "浦银安盛全球智能科技股票型证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        }
+      ],
+      "default_share_code": "006555",
+      "series_scale": 30.07
+    },
+    {
+      "series_id": "嘉实__全球产业升级股票__active",
+      "company": "嘉实",
+      "company_display": "嘉实",
+      "series_name": "全球产业升级股票",
+      "display_name": "嘉实全球产业升级股票",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "017730",
+          "name": "嘉实全球产业升级股票发起式(QDII)A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "nav_date": "2026-04-29",
+          "nav": 3.4966,
+          "nav_cum": 3.4966,
+          "daily_change": 1.26,
+          "chg_1w": 3.53,
+          "chg_1m": 29.35,
+          "chg_3m": 20.91,
+          "chg_6m": 33.04,
+          "chg_1y": 129.33,
+          "chg_2y": 147.56,
+          "chg_3y": 253.3,
+          "chg_ytd": 35.12,
+          "chg_since_inception": 249.66,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "0.15",
+          "scale": 9.22,
+          "scale_raw": "9.22亿",
+          "established": "2023-02-09",
+          "manager": "陈俊杰",
+          "fund_company": "嘉实基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "嘉实全球产业升级股票型发起式证券投资基金（QDII）",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "100.0万<=买入金额<200.0万",
+              "rate": 1.0
+            },
+            {
+              "condition": "200.0万<=买入金额<500.0万",
+              "rate": 0.6
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<180.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "180.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 180,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "017731",
+          "name": "嘉实全球产业升级股票发起式(QDII)C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "nav_date": "2026-04-29",
+          "nav": 3.4304,
+          "nav_cum": 3.4304,
+          "daily_change": 1.26,
+          "chg_1w": 3.52,
+          "chg_1m": 29.28,
+          "chg_3m": 20.74,
+          "chg_6m": 32.65,
+          "chg_1y": 127.93,
+          "chg_2y": 144.68,
+          "chg_3y": 247.07,
+          "chg_ytd": 34.86,
+          "chg_since_inception": 243.04,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "",
+          "scale": 11.5,
+          "scale_raw": "11.50亿",
+          "established": "2023-02-09",
+          "manager": "陈俊杰",
+          "fund_company": "嘉实基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "嘉实全球产业升级股票型发起式证券投资基金（QDII）",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        }
+      ],
+      "default_share_code": "017730",
+      "series_scale": 20.72
+    },
+    {
+      "series_id": "天弘__全球高端制造混合__active",
+      "company": "天弘",
+      "company_display": "天弘",
+      "series_name": "全球高端制造混合",
+      "display_name": "天弘全球高端制造混合",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "016664",
+          "name": "天弘全球高端制造混合(QDII)A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "QDII-混合偏股",
+          "nav_date": "2026-04-29",
+          "nav": 2.716,
+          "nav_cum": 2.716,
+          "daily_change": 1.06,
+          "chg_1w": -0.91,
+          "chg_1m": 28.72,
+          "chg_3m": 30.06,
+          "chg_6m": 45.81,
+          "chg_1y": 151.55,
+          "chg_2y": 134.06,
+          "chg_3y": 171.63,
+          "chg_ytd": 45.95,
+          "chg_since_inception": 171.6,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "0.15",
+          "scale": 5.61,
+          "scale_raw": "5.61亿",
+          "established": "2023-04-26",
+          "manager": "刘冬",
+          "fund_company": "天弘基金管理有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "天弘全球高端制造混合型证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "100.0万<=买入金额<200.0万",
+              "rate": 1.0
+            },
+            {
+              "condition": "200.0万<=买入金额<500.0万",
+              "rate": 0.8
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限<2.0年",
+              "rate": 0.25
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": null,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "016665",
+          "name": "天弘全球高端制造混合(QDII)C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "QDII-混合偏股",
+          "nav_date": "2026-04-29",
+          "nav": 2.6917,
+          "nav_cum": 2.6917,
+          "daily_change": 1.05,
+          "chg_1w": -0.91,
+          "chg_1m": 28.68,
+          "chg_3m": 29.95,
+          "chg_6m": 45.58,
+          "chg_1y": 150.72,
+          "chg_2y": 132.79,
+          "chg_3y": 169.2,
+          "chg_ytd": 45.79,
+          "chg_since_inception": 169.17,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "",
+          "scale": 14.25,
+          "scale_raw": "14.25亿",
+          "established": "2023-04-26",
+          "manager": "刘冬",
+          "fund_company": "天弘基金管理有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "天弘全球高端制造混合型证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        }
+      ],
+      "default_share_code": "016664",
+      "series_scale": 19.86
+    },
+    {
+      "series_id": "汇添富__全球移动互联混合__active",
+      "company": "汇添富",
+      "company_display": "汇添富",
+      "series_name": "全球移动互联混合",
+      "display_name": "汇添富全球移动互联混合",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "001668",
+          "name": "汇添富全球移动互联混合(QDII)人民币A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "QDII-混合灵活",
+          "nav_date": "2026-04-29",
+          "nav": 4.9143,
+          "nav_cum": 4.9143,
+          "daily_change": 1.0,
+          "chg_1w": 0.66,
+          "chg_1m": 20.89,
+          "chg_3m": 4.24,
+          "chg_6m": 3.18,
+          "chg_1y": 39.34,
+          "chg_2y": 52.58,
+          "chg_3y": 119.09,
+          "chg_ytd": 8.61,
+          "chg_since_inception": 393.4,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 5000.0,
+          "fee": "0.16",
+          "scale": 14.91,
+          "scale_raw": "14.91亿",
+          "established": "2017-01-25",
+          "manager": "杨瑨",
+          "fund_company": "汇添富基金管理股份有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "汇添富全球移动互联灵活配置混合型证券投资基金",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.6
+            },
+            {
+              "condition": "100.0万<=买入金额<200.0万",
+              "rate": 1.0
+            },
+            {
+              "condition": "200.0万<=买入金额<500.0万",
+              "rate": 0.5
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<180.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "180.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 180,
+          "first_buy_rate": 1.6,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "015202",
+          "name": "汇添富全球移动互联混合(QDII)人民币C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "QDII-混合灵活",
+          "nav_date": "2026-04-29",
+          "nav": 4.7876,
+          "nav_cum": 4.7876,
+          "daily_change": 1.0,
+          "chg_1w": 0.65,
+          "chg_1m": 20.83,
+          "chg_3m": 4.08,
+          "chg_6m": 2.88,
+          "chg_1y": 38.51,
+          "chg_2y": 50.61,
+          "chg_3y": 114.98,
+          "chg_ytd": 8.4,
+          "chg_since_inception": 124.66,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 5000.0,
+          "fee": "",
+          "scale": 4.48,
+          "scale_raw": "4.48亿",
+          "established": "2022-03-07",
+          "manager": "杨瑨",
+          "fund_company": "汇添富基金管理股份有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "汇添富全球移动互联灵活配置混合型证券投资基金",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "015203",
+          "name": "汇添富全球移动互联混合(QDII)人民币D",
+          "share_class": "D",
+          "currency": "人民币",
+          "fund_type": "QDII-混合灵活",
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "",
+          "scale": 0.223154,
+          "scale_raw": "2231.54万",
+          "established": "2022-03-07",
+          "manager": "杨瑨",
+          "fund_company": "汇添富基金管理股份有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "汇添富全球移动互联灵活配置混合型证券投资基金",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5,
+          "nav": 4.8292,
+          "nav_date": "2026-04-29",
+          "daily_change": 1.0,
+          "chg_1m": 20.85,
+          "chg_3m": 4.13,
+          "chg_6m": 2.97,
+          "chg_1y": 38.79,
+          "chg_ytd": 6.18
+        }
+      ],
+      "default_share_code": "001668",
+      "series_scale": 19.613154
+    },
+    {
+      "series_id": "长城__全球新能源车股票__active",
+      "company": "长城",
+      "company_display": "长城",
+      "series_name": "全球新能源车股票",
+      "display_name": "长城全球新能源车股票",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "501226",
+          "name": "长城全球新能源车股票发起式(QDII)A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "nav_date": "2026-04-29",
+          "nav": 2.4324,
+          "nav_cum": 2.4324,
+          "daily_change": 1.81,
+          "chg_1w": 2.66,
+          "chg_1m": 24.1,
+          "chg_3m": 12.29,
+          "chg_6m": 21.1,
+          "chg_1y": 81.16,
+          "chg_2y": 89.69,
+          "chg_3y": 142.39,
+          "chg_ytd": 25.35,
+          "chg_since_inception": 143.24,
+          "buy_status": "开放申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100000000000.0,
+          "fee": "0.15",
+          "scale": 5.78,
+          "scale_raw": "5.78亿",
+          "established": "2023-04-21",
+          "manager": "曲少杰",
+          "fund_company": "长城基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "长城全球新能源汽车股票型发起式证券投资基金(QDII-LOF)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "100.0万<=买入金额<300.0万",
+              "rate": 1.0
+            },
+            {
+              "condition": "300.0万<=买入金额<500.0万",
+              "rate": 0.5
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<184.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "184.0天<=持有期限<365.0天",
+              "rate": 0.25
+            },
+            {
+              "condition": "365.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 365,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "018036",
+          "name": "长城全球新能源车股票发起式(QDII)C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "nav_date": "2026-04-29",
+          "nav": 2.3946,
+          "nav_cum": 2.3946,
+          "daily_change": 1.81,
+          "chg_1w": 2.65,
+          "chg_1m": 24.03,
+          "chg_3m": 12.12,
+          "chg_6m": 20.71,
+          "chg_1y": 80.02,
+          "chg_2y": 87.78,
+          "chg_3y": 138.65,
+          "chg_ytd": 25.08,
+          "chg_since_inception": 139.46,
+          "buy_status": "开放申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100000000000.0,
+          "fee": "",
+          "scale": 9.93,
+          "scale_raw": "9.93亿",
+          "established": "2023-04-21",
+          "manager": "曲少杰",
+          "fund_company": "长城基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "长城全球新能源汽车股票型发起式证券投资基金(QDII-LOF)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        }
+      ],
+      "default_share_code": "501226",
+      "series_scale": 15.71
+    },
+    {
+      "series_id": "华宝__海外科技股票__active",
+      "company": "华宝",
+      "company_display": "华宝",
+      "series_name": "海外科技股票",
+      "display_name": "华宝海外科技股票",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "501312",
+          "name": "华宝海外科技股票(QDII-LOF)A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "nav_date": "2026-04-29",
+          "nav": 2.0906,
+          "nav_cum": 2.0906,
+          "daily_change": -0.9,
+          "chg_1w": -2.75,
+          "chg_1m": 15.82,
+          "chg_3m": -0.44,
+          "chg_6m": -1.83,
+          "chg_1y": 41.94,
+          "chg_2y": 61.86,
+          "chg_3y": 108.21,
+          "chg_ytd": 4.68,
+          "chg_since_inception": 109.06,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "0.12",
+          "scale": 7.99,
+          "scale_raw": "7.99亿",
+          "established": "2023-04-11",
+          "manager": "杨洋 周晶 赵启元",
+          "fund_company": "华宝基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "华宝海外科技股票型证券投资基金（QDII-LOF）",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.2
+            },
+            {
+              "condition": "100.0万<=买入金额<200.0万",
+              "rate": 0.6
+            },
+            {
+              "condition": "200.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限<180.0天",
+              "rate": 0.25
+            },
+            {
+              "condition": "180.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.0,
+          "custody_fee": 0.2,
+          "free_hold_days": 180,
+          "first_buy_rate": 1.2,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "017204",
+          "name": "华宝海外科技股票(QDII-LOF)C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "nav_date": "2026-04-29",
+          "nav": 2.074,
+          "nav_cum": 2.074,
+          "daily_change": -0.9,
+          "chg_1w": -2.76,
+          "chg_1m": 15.79,
+          "chg_3m": -0.52,
+          "chg_6m": -1.98,
+          "chg_1y": 41.51,
+          "chg_2y": 60.89,
+          "chg_3y": 106.59,
+          "chg_ytd": 4.57,
+          "chg_since_inception": 107.4,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100.0,
+          "fee": "",
+          "scale": 5.17,
+          "scale_raw": "5.17亿",
+          "established": "2023-04-11",
+          "manager": "杨洋 周晶 赵启元",
+          "fund_company": "华宝基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "华宝海外科技股票型证券投资基金（QDII-LOF）",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.0,
+          "custody_fee": 0.2,
+          "free_hold_days": 7,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        }
+      ],
+      "default_share_code": "501312",
+      "series_scale": 13.16
+    },
+    {
+      "series_id": "华宝__致远混合__active",
+      "company": "华宝",
+      "company_display": "华宝",
+      "series_name": "致远混合",
+      "display_name": "华宝致远混合",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "008253",
+          "name": "华宝致远混合(QDII)A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "QDII-混合偏股",
+          "nav_date": "2026-04-29",
+          "nav": 1.6778,
+          "nav_cum": 1.6778,
+          "daily_change": 2.17,
+          "chg_1w": 0.39,
+          "chg_1m": 22.3,
+          "chg_3m": 12.37,
+          "chg_6m": 19.62,
+          "chg_1y": 79.69,
+          "chg_2y": 80.49,
+          "chg_3y": 96.12,
+          "chg_ytd": 26.05,
+          "chg_since_inception": 67.78,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 500.0,
+          "fee": "0.15",
+          "scale": 2.26,
+          "scale_raw": "2.26亿",
+          "established": "2019-11-27",
+          "manager": "周晶 杨洋",
+          "fund_company": "华宝基金管理有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "华宝致远混合型证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "100.0万<=买入金额<200.0万",
+              "rate": 1.0
+            },
+            {
+              "condition": "200.0万<=买入金额<500.0万",
+              "rate": 0.5
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限<2.0年",
+              "rate": 0.25
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": null,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "008254",
+          "name": "华宝致远混合(QDII)C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "QDII-混合偏股",
+          "nav_date": "2026-04-29",
+          "nav": 1.6355,
+          "nav_cum": 1.6355,
+          "daily_change": 2.18,
+          "chg_1w": 0.39,
+          "chg_1m": 22.25,
+          "chg_3m": 12.27,
+          "chg_6m": 19.4,
+          "chg_1y": 78.98,
+          "chg_2y": 79.08,
+          "chg_3y": 93.8,
+          "chg_ytd": 25.89,
+          "chg_since_inception": 63.55,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 500.0,
+          "fee": "",
+          "scale": 3.94,
+          "scale_raw": "3.94亿",
+          "established": "2019-11-27",
+          "manager": "周晶 杨洋",
+          "fund_company": "华宝基金管理有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "华宝致远混合型证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        }
+      ],
+      "default_share_code": "008253",
+      "series_scale": 6.199999999999999
+    },
+    {
+      "series_id": "华宝__海外新能源汽车股票__active",
+      "company": "华宝",
+      "company_display": "华宝",
+      "series_name": "海外新能源汽车股票",
+      "display_name": "华宝海外新能源汽车股票",
+      "category": "active",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "017144",
+          "name": "华宝海外新能源汽车股票发起式(QDII)A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "nav_date": "2026-04-29",
+          "nav": 1.6745,
+          "nav_cum": 1.6745,
+          "daily_change": -0.74,
+          "chg_1w": -4.4,
+          "chg_1m": 14.8,
+          "chg_3m": 3.25,
+          "chg_6m": -9.54,
+          "chg_1y": 28.33,
+          "chg_2y": 71.37,
+          "chg_3y": null,
+          "chg_ytd": -2.85,
+          "chg_since_inception": 67.45,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10000.0,
+          "fee": "0.15",
+          "scale": 1.44,
+          "scale_raw": "1.44亿",
+          "established": "2023-05-23",
+          "manager": "周晶 赵启元",
+          "fund_company": "华宝基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "华宝海外新能源汽车股票型发起式证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "100.0万<=买入金额<200.0万",
+              "rate": 1.0
+            },
+            {
+              "condition": "200.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<180.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "180.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 180,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "017145",
+          "name": "华宝海外新能源汽车股票发起式(QDII)C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "nav_date": "2026-04-29",
+          "nav": 1.6561,
+          "nav_cum": 1.6561,
+          "daily_change": -0.74,
+          "chg_1w": -4.4,
+          "chg_1m": 14.76,
+          "chg_3m": 3.15,
+          "chg_6m": -9.71,
+          "chg_1y": 27.82,
+          "chg_2y": 70.01,
+          "chg_3y": null,
+          "chg_ytd": -2.98,
+          "chg_since_inception": 65.61,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10000.0,
+          "fee": "",
+          "scale": 3.23,
+          "scale_raw": "3.23亿",
+          "established": "2023-05-23",
+          "manager": "周晶 赵启元",
+          "fund_company": "华宝基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "华宝海外新能源汽车股票型发起式证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        }
+      ],
+      "default_share_code": "017144",
+      "series_scale": 4.67
+    }
+  ],
+  "total_scale": 753.52,
+  "enriched_at": "2026-05-03T18:18:12.795418"
+}

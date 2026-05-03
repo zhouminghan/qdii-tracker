@@ -1,0 +1,38 @@
+# ==================== Python ====================
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 虚拟环境
+venv/
+.venv/
+env/
+.env
+
+# ==================== 系统/编辑器 ====================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ==================== 项目数据 ====================
+# 只忽略项目根的 data/（脚本中间产物）；不影响 web/data/（前端消费，需要追踪）
+# 用前导斜杠 / 锚定到根目录
+/data/
+
+# funds-raw.json 是全量扫描原始数据（2.4MB，含 26000+ 只基金），前端不消费，不追踪
+funds-raw.json
+
+# AKShare 的缓存目录（如果有）
+.akshare/
+akshare_cache/
+
+# 日志
+*.log
+logs/

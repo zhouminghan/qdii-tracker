@@ -1,0 +1,174 @@
+{
+  "code": "001668",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 46.67,
+  "heavy_count": 2,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 8.96,
+      "shares": 14.58,
+      "market_value": 17597.09
+    },
+    {
+      "rank": 2,
+      "stock_code": "GOOGL",
+      "stock_name": "谷歌-A",
+      "weight": 8.14,
+      "shares": 8.03,
+      "market_value": 15974.65
+    },
+    {
+      "rank": 3,
+      "stock_code": "MSFT",
+      "stock_name": "微软",
+      "weight": 5.0,
+      "shares": 3.84,
+      "market_value": 9822.79
+    },
+    {
+      "rank": 4,
+      "stock_code": "AMZN",
+      "stock_name": "亚马逊",
+      "weight": 4.84,
+      "shares": 6.59,
+      "market_value": 9496.58
+    },
+    {
+      "rank": 5,
+      "stock_code": "AAPL",
+      "stock_name": "苹果",
+      "weight": 4.45,
+      "shares": 4.97,
+      "market_value": 8734.01
+    },
+    {
+      "rank": 6,
+      "stock_code": "AVGO",
+      "stock_name": "博通",
+      "weight": 3.89,
+      "shares": 3.57,
+      "market_value": 7643.88
+    },
+    {
+      "rank": 7,
+      "stock_code": "META",
+      "stock_name": "Meta Platforms Inc-A",
+      "weight": 3.48,
+      "shares": 1.73,
+      "market_value": 6841.99
+    },
+    {
+      "rank": 8,
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 3.34,
+      "shares": 2.81,
+      "market_value": 6567.19
+    },
+    {
+      "rank": 9,
+      "stock_code": "NFLX",
+      "stock_name": "奈飞",
+      "weight": 2.36,
+      "shares": 6.95,
+      "market_value": 4623.84
+    },
+    {
+      "rank": 10,
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 2.21,
+      "shares": 1.86,
+      "market_value": 4336.34
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 8.96,
+        "shares": 14.58,
+        "market_value": 17597.09
+      },
+      {
+        "rank": 2,
+        "stock_code": "GOOGL",
+        "stock_name": "谷歌-A",
+        "weight": 8.14,
+        "shares": 8.03,
+        "market_value": 15974.65
+      },
+      {
+        "rank": 3,
+        "stock_code": "MSFT",
+        "stock_name": "微软",
+        "weight": 5.0,
+        "shares": 3.84,
+        "market_value": 9822.79
+      },
+      {
+        "rank": 4,
+        "stock_code": "AMZN",
+        "stock_name": "亚马逊",
+        "weight": 4.84,
+        "shares": 6.59,
+        "market_value": 9496.58
+      },
+      {
+        "rank": 5,
+        "stock_code": "AAPL",
+        "stock_name": "苹果",
+        "weight": 4.45,
+        "shares": 4.97,
+        "market_value": 8734.01
+      },
+      {
+        "rank": 6,
+        "stock_code": "AVGO",
+        "stock_name": "博通",
+        "weight": 3.89,
+        "shares": 3.57,
+        "market_value": 7643.88
+      },
+      {
+        "rank": 7,
+        "stock_code": "META",
+        "stock_name": "Meta Platforms Inc-A",
+        "weight": 3.48,
+        "shares": 1.73,
+        "market_value": 6841.99
+      },
+      {
+        "rank": 8,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 3.34,
+        "shares": 2.81,
+        "market_value": 6567.19
+      },
+      {
+        "rank": 9,
+        "stock_code": "NFLX",
+        "stock_name": "奈飞",
+        "weight": 2.36,
+        "shares": 6.95,
+        "market_value": 4623.84
+      },
+      {
+        "rank": 10,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 2.21,
+        "shares": 1.86,
+        "market_value": 4336.34
+      }
+    ]
+  },
+  "fetched_at": "2026-05-03T17:39:58.516884"
+}
