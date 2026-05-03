@@ -197,9 +197,23 @@ def fetch_ytd(code: str):
 def main():
     project_root = Path(__file__).parent.parent
     data_dir = project_root / "data"
+    web_data_dir = project_root / "web" / "data"
 
     # 统一加载所有板块数据（三个 Pass 共享同一组内存对象，避免多次读取导致的覆盖 bug）
     ALL_CATS = ["sp500", "nasdaq_passive", "active", "global_other", "etf"]
+
+    # Seed：data/ 不存在或缺文件时，从 web/data/（仓库追踪的产物）拷贝过来当起点
+    # 这样新克隆的仓库 / CI 环境也能直接跑增量更新，不必先跑一遍完整流水线
+    data_dir.mkdir(parents=True, exist_ok=True)
+    import shutil as _shutil
+    for cat in ALL_CATS:
+        dst = data_dir / f"{cat}.json"
+        if not dst.exists():
+            src = web_data_dir / f"{cat}.json"
+            if src.exists():
+                _shutil.copy2(src, dst)
+                print(f"🌱 seed: data/{cat}.json ← web/data/{cat}.json")
+
     loaded_data = {}
     for cat in ALL_CATS:
         fp = data_dir / f"{cat}.json"

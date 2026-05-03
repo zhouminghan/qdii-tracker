@@ -531,6 +531,17 @@ def main():
     with open(data_dir / "funds-raw.json", "w", encoding="utf-8") as f:
         json.dump({"generated_at": now, "classified": classified}, f, ensure_ascii=False, indent=2)
 
+    # 同步到 web/data/（前端消费目录；funds-raw.json 太大且前端不用，不同步）
+    web_data_dir = project_root / "web" / "data"
+    if web_data_dir.exists():
+        import shutil as _shutil
+        for cat in ["sp500", "nasdaq_passive", "active", "global_other", "etf"]:
+            src = data_dir / f"{cat}.json"
+            if src.exists():
+                _shutil.copy2(src, web_data_dir / f"{cat}.json")
+        _shutil.copy2(data_dir / "meta.json", web_data_dir / "meta.json")
+        print(f"🔄 已同步到 {web_data_dir}")
+
     print("\n✅ 扫描完成！")
 
 

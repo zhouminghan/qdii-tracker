@@ -25,7 +25,18 @@ def _to_float(v):
 def main():
     project_root = Path(__file__).parent.parent
     data_dir = project_root / "data"
+    web_data_dir = project_root / "web" / "data"
     holdings_dir = data_dir / "holdings"
+    holdings_dir.mkdir(parents=True, exist_ok=True)
+
+    # Seed：data/holdings 为空时从 web/data/holdings/ 拷贝（新克隆/CI 场景）
+    if not any(holdings_dir.glob("*.json")):
+        web_holdings_dir = web_data_dir / "holdings"
+        if web_holdings_dir.exists():
+            import shutil as _shutil
+            for src in web_holdings_dir.glob("*.json"):
+                _shutil.copy2(src, holdings_dir / src.name)
+            print(f"🌱 seed: data/holdings/ ← web/data/holdings/（{len(list(holdings_dir.glob('*.json')))} 个）")
 
     # 1. 收集持仓股票代码（去重）
     stock_codes = set()
@@ -127,6 +138,12 @@ def main():
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
     print(f"\n✅ 已保存到 {out_file}")
+
+    # 同步到 web/data/（前端消费目录）
+    if web_data_dir.exists():
+        import shutil as _shutil
+        _shutil.copy2(out_file, web_data_dir / "us_stocks.json")
+        print(f"🔄 同步到 {web_data_dir / 'us_stocks.json'}")
 
 
 if __name__ == "__main__":

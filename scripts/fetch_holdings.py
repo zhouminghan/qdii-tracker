@@ -69,8 +69,19 @@ def fetch_holdings(code: str, year: str = None):
 def main():
     project_root = Path(__file__).parent.parent
     data_dir = project_root / "data"
+    web_data_dir = project_root / "web" / "data"
     holdings_dir = data_dir / "holdings"
-    holdings_dir.mkdir(exist_ok=True)
+    holdings_dir.mkdir(parents=True, exist_ok=True)
+
+    # Seed：data/ 缺文件时从 web/data/ 拷贝过来（新克隆仓库/CI 也能直接跑）
+    import shutil as _shutil
+    for cat in ["active", "global_other"]:
+        dst = data_dir / f"{cat}.json"
+        if not dst.exists():
+            src = web_data_dir / f"{cat}.json"
+            if src.exists():
+                _shutil.copy2(src, dst)
+                print(f"🌱 seed: data/{cat}.json ← web/data/{cat}.json")
 
     # 抓主动基金 + 全球/其他 QDII（两个都是主动型，都值得看持仓；被动指数无意义）
     target_codes = []
