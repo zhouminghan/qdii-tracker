@@ -1,0 +1,109 @@
+name: 🔄 Update Fund Data
+
+# ┌─────────────── 触发规则 ───────────────┐
+on:
+  schedule:
+    # 每交易日 17:30（北京时间）= 09:30 UTC，跑"增量更新"
+    # cron 字段： 分 时 日 月 周几
+    - cron: '30 9 * * 1-5'
+    # 每月 1 日凌晨 2:00（北京时间）= 18:00 UTC（前一天），跑"完整流水线"
+    - cron: '0 18 1 * *'
+  # 允许手动在 GitHub 网页上点按钮触发
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: '运行模式'
+        required: true
+        default: 'incremental'
+        type: choice
+        options:
+          - incremental   # 增量（快速）
+          - full          # 完整流水线（~20 分钟）
+
+# 授权：需要 write 权限才能 commit/push 数据文件回仓库
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # 1. 拉代码
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          # 需要完整 history 才能 push 成功
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 2. 装 Python
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: scripts/requirements.txt
+
+      # 3. 装依赖
+      - name: 📦 Install dependencies
+        run: |
+          cd scripts
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4. 判断运行模式
+      #    手动触发用 inputs.mode；定时触发根据 cron 表达式判断
+      - name: 🧭 Decide run mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "mode=${{ inputs.mode }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event.schedule }}" = "0 18 1 * *" ]; then
+            echo "mode=full" >> $GITHUB_OUTPUT
+          else
+            echo "mode=incremental" >> $GITHUB_OUTPUT
+          fi
+          echo "触发模式: $(cat $GITHUB_OUTPUT)"
+
+      # 5a. 增量更新（快）
+      - name: ⚡ Incremental update
+        if: steps.mode.outputs.mode == 'incremental'
+        run: |
+          cd scripts
+          echo "=== [1/2] fill_missing.py（净值 + YTD + 历史收益）==="
+          python fill_missing.py
+          echo "=== [2/2] fetch_stocks.py（持仓股票实时行情）==="
+          python fetch_stocks.py
+
+      # 5b. 完整流水线（慢）
+      - name: 🚀 Full pipeline
+        if: steps.mode.outputs.mode == 'full'
+        run: |
+          cd scripts
+          echo "=== [1/5] scan_funds.py（扫描+分类）==="
+          python scan_funds.py
+          echo "=== [2/5] enrich_data.py（规模+费率+基金经理）==="
+          python enrich_data.py
+          echo "=== [3/5] fill_missing.py（补漏）==="
+          python fill_missing.py
+          echo "=== [4/5] fetch_holdings.py（主动基金持仓）==="
+          python fetch_holdings.py
+          echo "=== [5/5] fetch_stocks.py（股票行情）==="
+          python fetch_stocks.py
+
+      # 6. 如果 web/data 有变化，commit 回主分支
+      - name: 💾 Commit data changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add web/data/
+          if git diff --cached --quiet; then
+            echo "⚠️  数据无变化，跳过 commit"
+          else
+            TS=$(date -u '+%Y-%m-%d %H:%M UTC')
+            git commit -m "chore(data): auto-update @ $TS [${{ steps.mode.outputs.mode }}]"
+            git push
+            echo "✅ 数据已更新并推送"
+          fi

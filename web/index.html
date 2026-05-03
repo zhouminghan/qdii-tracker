@@ -167,37 +167,70 @@
       <details class="bg-sky-50 border border-sky-200 rounded-xl overflow-hidden" id="card-onshore-offshore" data-for-tabs="etf" open>
         <summary class="cursor-pointer px-5 py-3 text-sm font-medium text-sky-900 hover:bg-sky-100 transition flex items-center gap-2 select-none">
           <span>🏛️</span>
-          <span>场内 vs 场外：两种买基金的方式</span>
+          <span>场内 ETF vs 场外基金：有什么区别？</span>
         </summary>
-        <div class="px-5 pb-4 pt-1 text-sm text-stone-700 bg-white">
-          <p class="text-xs text-stone-500 mb-3 mt-2">同一只基金（如纳指 100），可能同时存在「场内」和「场外」两种版本，交易规则完全不同。</p>
-          <div class="space-y-3">
-            <div class="flex gap-3 p-3 rounded-lg bg-stone-50">
-              <span class="badge badge-cny flex-shrink-0" style="padding:4px 10px;">场外基金</span>
-              <div class="text-xs leading-relaxed flex-1">
-                <div class="font-semibold text-stone-900">支付宝 / 天天基金 / 银行 买的「普通基金」</div>
-                <div class="text-stone-600 mt-1"><b>价格：</b>按当日 15:00 收盘后的官方净值成交（T+1 出净值，T+1 可赎回）</div>
-                <div class="text-stone-600"><b>优势：</b>开户门槛低（支付宝 1 键买）、可定投、起购金额小（10 元起）</div>
-                <div class="text-stone-600"><b>劣势：</b>申购费较高（0~1.5%）、赎回到账慢（T+2 到 T+7）、不能盘中交易</div>
-                <div class="text-emerald-700 mt-1"><b>适合：</b>长期定投、不会开股票账户、中小金额投资</div>
-              </div>
+        <div class="px-5 pb-4 pt-2 bg-white">
+          <p class="text-xs text-stone-500 mb-3">同一只美股指数（如纳指 100），往往同时存在场内和场外两种版本。<b>底层资产相同，差别在于买卖方式</b>。</p>
+
+          <!-- 维度对比表 -->
+          <table class="w-full text-xs border border-stone-200 rounded-lg overflow-hidden">
+            <thead class="bg-stone-50 text-stone-600">
+              <tr class="border-b border-stone-200">
+                <th class="text-left px-3 py-2 font-medium w-24">对比维度</th>
+                <th class="text-left px-3 py-2 font-medium">🏦 场外基金</th>
+                <th class="text-left px-3 py-2 font-medium">📈 场内 ETF</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-stone-100">
+              <tr>
+                <td class="px-3 py-2 text-stone-500">买在哪</td>
+                <td class="px-3 py-2 text-stone-700">支付宝 / 天天基金 / 基金公司 APP</td>
+                <td class="px-3 py-2 text-stone-700">证券账户（东财 / 华泰 / 同花顺 …）</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 text-stone-500">价格怎么定</td>
+                <td class="px-3 py-2 text-stone-700">按当日 <b>15:00 收盘净值</b>成交</td>
+                <td class="px-3 py-2 text-stone-700"><b>盘中实时波动</b>，像买股票</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 text-stone-500">起购门槛</td>
+                <td class="px-3 py-2 text-stone-700"><b>10 元</b>起 · 可定投</td>
+                <td class="px-3 py-2 text-stone-700"><b>100 份</b>起（部分 1 份）· 多数券商也支持定投</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 text-stone-500">费率</td>
+                <td class="px-3 py-2 text-stone-700">申购 0.15~1.5%（<b>电商 1 折</b>后常 ≈ 0.1%）<br>管理费 0.6~1.8%/年</td>
+                <td class="px-3 py-2 text-stone-700">股票佣金 <b>万 1 起</b>，无申购费<br>管理费 <b>0.15~0.5%/年</b>（最低）</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 text-stone-500">赎回速度</td>
+                <td class="px-3 py-2 text-stone-700">QDII 到账 <b>T+3 ~ T+10</b>（慢）</td>
+                <td class="px-3 py-2 text-stone-700">T+1 卖出即可取现（快）</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 text-stone-500">溢价风险</td>
+                <td class="px-3 py-2 text-stone-700">❌ 无，永远按净值成交</td>
+                <td class="px-3 py-2 text-stone-700">⚠️ QDII 额度紧张时可<b>溢价 1~10%</b>，小心别追高</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 附带说明：ETF 联接（折中方案） -->
+          <div class="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3">
+            <div class="text-xs font-medium text-amber-900 mb-1">💎 第三种选择：ETF 联接基金</div>
+            <p class="text-xs text-amber-800 leading-relaxed">
+              本质是<b>场外基金</b>（支付宝可买、可定投），但 ≥90% 资产投向对应的<b>场内 ETF</b> —— 等于"用场外的方式享受 ETF 的低费率，且无溢价问题"。申购费电商 1 折后常低至 0.1% 左右。
+              <span class="text-amber-900 font-medium">多数人的最佳选择。</span>
+            </p>
+          </div>
+
+          <!-- 决策小贴士 -->
+          <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+            <div class="bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2 text-emerald-800">
+              🧘 <b>不想开股票账户</b> → 支付宝买「ETF 联接基金」，定投最省心。
             </div>
-            <div class="flex gap-3 p-3 rounded-lg bg-stone-50">
-              <span class="badge badge-qdii flex-shrink-0" style="padding:4px 10px;">场内 ETF</span>
-              <div class="text-xs leading-relaxed flex-1">
-                <div class="font-semibold text-stone-900">股票账户买的「交易所基金」（代码如 513100、159941）</div>
-                <div class="text-stone-600 mt-1"><b>价格：</b>盘中随时波动，像买股票一样一手（100 份）起买，T+1 卖出</div>
-                <div class="text-stone-600"><b>优势：</b>费率超低（0.15~0.5%）、手续费走股票佣金（万一起）、日内可看实时涨跌</div>
-                <div class="text-stone-600"><b>劣势：</b>需证券账户、容易溢价（QDII 常溢价 1~5%）、不能直接定投</div>
-                <div class="text-emerald-700 mt-1"><b>适合：</b>有股票账户、在意费率、想做波段或择时</div>
-              </div>
-            </div>
-            <div class="flex gap-3 p-3 rounded-lg bg-stone-50">
-              <span class="badge badge-open flex-shrink-0" style="padding:4px 10px;">ETF 联接</span>
-              <div class="text-xs leading-relaxed flex-1">
-                <div class="font-semibold text-stone-900">场外版 ETF（两头通吃的折中方案）</div>
-                <div class="text-stone-600 mt-1">≥90% 资产投向对应的场内 ETF，但自己是场外基金 —— 支付宝就能买，又能享受 ETF 低费率。<b>是多数普通投资者的最佳选择</b>。</div>
-              </div>
+            <div class="bg-sky-50 border border-sky-100 rounded-lg px-3 py-2 text-sky-800">
+              ⚡ <b>有股票账户</b> → 场内 ETF 更划算，但注意 QDII 溢价时不要高位买入。
             </div>
           </div>
         </div>
@@ -240,12 +273,12 @@
               <tr>
                 <td class="px-3 py-2"><span class="badge badge-qdii" style="padding:4px 10px;">F 类</span></td>
                 <td class="px-3 py-2 text-stone-700">发起式份额：基金公司自掏 ≥1000 万锁 3 年（代表信心），费率结构类似 A 或 C</td>
-                <td class="px-3 py-2 text-stone-500">按 A/C 的选法 · 关注成立门槛</td>
+                <td class="px-3 py-2 text-emerald-700">下载基金公司<b>官方 APP</b>（如广发基金）直销购买</td>
               </tr>
               <tr>
                 <td class="px-3 py-2"><span class="badge badge-paused" style="padding:4px 10px;">I 类</span></td>
-                <td class="px-3 py-2 text-stone-700">机构专享，管理费 / 申购费最低，<b>起购 500~1000 万</b></td>
-                <td class="px-3 py-2 text-stone-400">普通人基本买不到</td>
+                <td class="px-3 py-2 text-stone-700">机构优惠费率：管理费 / 申购费最低，<b>起购门槛通常 500~1000 万</b>（部分基金个人直销也可买）</td>
+                <td class="px-3 py-2 text-emerald-700">基金公司 APP 直销 · <b>资金量大时最划算</b></td>
               </tr>
             </tbody>
           </table>
@@ -253,7 +286,7 @@
           <!-- 决策小贴士 -->
           <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
             <div class="bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2 text-emerald-800">
-              💡 <b>简单决策法</b>：长期定投选 A（有 E 就选 E）；短线择时选 C；其余不用操心。
+              💡 <b>简单决策法</b>：长期定投选 A（代销平台有 E 就选 E，1 折申购费）；短线择时选 C；资金量大想省管理费，下载基金公司 APP 直销买 F/I。
             </div>
             <div class="bg-sky-50 border border-sky-100 rounded-lg px-3 py-2 text-sky-800">
               🧩 <b>LOF（上市型开放式基金）</b>：既可支付宝申赎，也可证券账户买卖 —— 是另一种交易方式，不是"份额选择"。
@@ -270,12 +303,15 @@
   <!-- 2 大板块：场外基金 / 场内 ETF -->
   <main class="max-w-7xl mx-auto px-6 pb-16 space-y-8">
     <section data-category="offshore">
-      <div class="flex items-center justify-between mb-3">
-        <div>
-          <h2 class="text-lg font-bold">🏦 场外基金（支付宝 / 天天基金可买）</h2>
-          <p class="text-xs text-stone-500 mt-1">按 15:00 收盘净值成交，支持小额定投。用下方 Chips 可快速筛选分组。</p>
+      <div class="flex items-end justify-between mb-3 gap-4">
+        <div class="min-w-0">
+          <div class="flex items-baseline gap-2 flex-wrap">
+            <h2 class="text-lg font-bold" id="offshore-title">🏦 场外基金</h2>
+            <span class="text-xs text-stone-400 tracking-wider">· 支付宝 / 天天基金可买</span>
+          </div>
+          <p class="text-xs text-stone-500 mt-1" id="offshore-subtitle">按申购时当日 15:00 收盘净值成交，T+1 出净值，支持 10 元起小额定投。</p>
         </div>
-        <span class="text-xs text-stone-500" id="count-offshore">--</span>
+        <span class="text-xs text-stone-500 flex-shrink-0" id="count-offshore">--</span>
       </div>
       <!-- 分组筛选 Chips（JS 动态注入） -->
       <div id="offshore-chips" class="flex flex-wrap items-center gap-2 mb-3"></div>
@@ -283,12 +319,15 @@
     </section>
 
     <section data-category="etf">
-      <div class="flex items-center justify-between mb-3">
-        <div>
-          <h2 class="text-lg font-bold">📈 场内 ETF（需股票账户）</h2>
-          <p class="text-xs text-stone-500 mt-1">通过证券账户买卖，T+0/T+1 交易，非支付宝直接申购。用下方 Chips 可快速筛选跟踪标的。</p>
+      <div class="flex items-end justify-between mb-3 gap-4">
+        <div class="min-w-0">
+          <div class="flex items-baseline gap-2 flex-wrap">
+            <h2 class="text-lg font-bold" id="etf-title">📈 场内 ETF</h2>
+            <span class="text-xs text-stone-400 tracking-wider">· 需股票账户</span>
+          </div>
+          <p class="text-xs text-stone-500 mt-1" id="etf-subtitle">盘中实时交易（T+0 / T+1），费率最低（0.15~0.5%），支持一手 100 份起买。</p>
         </div>
-        <span class="text-xs text-stone-500" id="count-etf">--</span>
+        <span class="text-xs text-stone-500 flex-shrink-0" id="count-etf">--</span>
       </div>
       <!-- 分组筛选 Chips（JS 动态注入） -->
       <div id="etf-chips" class="flex flex-wrap items-center gap-2 mb-3"></div>
@@ -645,7 +684,31 @@
         countEl.textContent =
           `${visibleSeries} 个系列 · ${visibleShares} ${tab === 'etf' ? '只 ETF' : '只份额'} · 总规模 ${visibleScale.toFixed(0)} 亿`;
       }
+
+      // 更新区域标题 & 副标题（随 Chip 动态变化）
+      const meta = (GROUP_META[tab] || {})[filter];
+      if (meta) {
+        const titleEl = document.getElementById(`${tab}-title`);
+        const subEl = document.getElementById(`${tab}-subtitle`);
+        if (titleEl) titleEl.textContent = meta.title;
+        if (subEl) subEl.textContent = meta.subtitle;
+      }
     }
+
+    // 每个 Tab 下各分组的「标题 + 副标题」文案（按 tab 隔离，避免同 key 在场内外撞车）
+    const GROUP_META = {
+      offshore: {
+        sp500:          { title: '📊 标普500 指数基金', subtitle: '被动跟踪美国大盘 500 强 · 支付宝 / 天天基金可买，按当日净值成交' },
+        nasdaq_passive: { title: '💻 纳指100 指数基金', subtitle: '被动跟踪美股科技 100 强（苹果 / 微软 / 英伟达等）· 长期定投首选' },
+        active:         { title: '🎯 美股主动基金',     subtitle: '精选 18 只重仓美股的主动 QDII · 基金经理择股，费率较高但可能跑赢指数' },
+        global_other:   { title: '🌐 全球 / 其他 QDII', subtitle: '全球配置或非美股核心方向（医疗 / 能源 / 海外 / 混合等）· 分散投资' },
+      },
+      etf: {
+        sp500:     { title: '📊 标普500 ETF', subtitle: 'S&P 500 指数 ETF · 证券账户买卖，盘中实时涨跌，费率仅 0.15~0.5%' },
+        nasdaq100: { title: '💻 纳指100 ETF', subtitle: 'NASDAQ 100 指数 ETF · 美股科技龙头 ETF 版本，流动性强' },
+        us50:      { title: '🎯 美国50 ETF',  subtitle: '中证·美国50 指数 ETF · 头部 50 只美股浓缩版' },
+      },
+    };
 
     function renderSeries(series, isActive, isEtf, showHoldings, groupKey) {
       // showHoldings: 当前表格是否存在"持仓"列（决定 colspan 和是否渲染持仓按钮）
