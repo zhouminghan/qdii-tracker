@@ -617,6 +617,73 @@
       });
     }
 
+    // 持仓股票批量行情：支持美股 / 港股 / A 股（腾讯一个接口通吃，仅前缀不同）
+    //   · 美股：us{CODE}       例 usAAPL
+    //   · 港股：hk{CODE}       例 hk00700  （5 位数字）
+    //   · A 股：sh/sz{CODE}    例 sh600519 / sz000001
+    //
+    // 入参：codes = ['AAPL', '00700', '600519', ...]（原始代码，无前缀）
+    // 返回：{ AAPL: {price, change_pct, market}, 00700: {...}, ... }
+    // 失败的股票在返回值里不存在，调用方自行回退静态数据
+    function detectMarketPrefix(code) {
+      const c = String(code).trim();
+      // 港股：5 位纯数字（00700 / 09988 / 03690）
+      if (/^\d{5}$/.test(c)) return { prefix: 'hk', market: 'HK' };
+      // A 股：6 位纯数字
+      if (/^\d{6}$/.test(c)) {
+        const first = c[0];
+        if (first === '6' || first === '5' || first === '9') return { prefix: 'sh', market: 'A' };
+        if (first === '0' || first === '3' || first === '2') return { prefix: 'sz', market: 'A' };
+        return { prefix: 'sh', market: 'A' };
+      }
+      // 其余当美股（字母 / 字母+数字 / 含点号）
+      return { prefix: 'us', market: 'US' };
+    }
+
+    async function fetchStocksLive(codes) {
+      if (!codes.length) return {};
+      const meta = {};  // code -> {prefix, market}
+      const queries = [];
+      for (const c of codes) {
+        const m = detectMarketPrefix(c);
+        meta[c] = m;
+        queries.push(m.prefix + c);
+      }
+
+      return new Promise((resolve) => {
+        const s = document.createElement('script');
+        s.src = `https://qt.gtimg.cn/q=${queries.join(',')}&t=${Date.now()}`;
+        s.async = true;
+        const timer = setTimeout(() => { s.remove(); resolve({}); }, 4000);
+        s.onload = () => {
+          clearTimeout(timer);
+          const result = {};
+          for (const c of codes) {
+            const m = meta[c];
+            const key = 'v_' + m.prefix + c;
+            const raw = window[key];
+            if (typeof raw === 'string' && raw) {
+              const parts = raw.split('~');
+              // parts[3]=最新价 parts[32]=涨跌幅（所有市场通用）
+              const price = parseFloat(parts[3]);
+              const chgPct = parseFloat(parts[32]);
+              if (!isNaN(price) || !isNaN(chgPct)) {
+                result[c] = {
+                  price: isNaN(price) ? null : price,
+                  change_pct: isNaN(chgPct) ? null : chgPct,
+                  market: m.market,
+                };
+              }
+            }
+          }
+          s.remove();
+          resolve(result);
+        };
+        s.onerror = () => { clearTimeout(timer); s.remove(); resolve({}); };
+        document.head.appendChild(s);
+      });
+    }
+
     // 并发控制（避免一次性发 40+ 请求被限流）
     async function parallelMap(items, worker, concurrency = 8) {
       const results = new Array(items.length);
@@ -1229,6 +1296,29 @@
         const res = await fetch(`./data/holdings/${code}.json`);
         if (!res.ok) throw new Error('持仓数据未抓取');
         const holdings = await res.json();
+
+        // 🟢 动态刷新 Top10 股票"当日涨跌"——腾讯行情批量拉（US/HK/A 股通吃）
+        // 单次请求、失败静默降级（沿用静态 us_stocks.json）
+        try {
+          const codes = (holdings.holdings || [])
+            .map(h => h.stock_code)
+            .filter(Boolean);
+          if (codes.length) {
+            const live = await fetchStocksLive(codes);
+            // 合并到 STATE.stocks：保留原 name 等字段，只更新 price / change_pct / market
+            for (const [c, r] of Object.entries(live)) {
+              const existing = STATE.stocks[c] || {};
+              STATE.stocks[c] = {
+                ...existing,
+                code: c,
+                market: r.market || existing.market,
+                price: r.price != null ? r.price : existing.price,
+                change_pct: r.change_pct != null ? r.change_pct : existing.change_pct,
+              };
+            }
+          }
+        } catch (_) { /* 静默降级，使用 us_stocks.json */ }
+
         renderDetailHoldings(holdings);
       } catch (e) {
         document.getElementById('detail-holdings').innerHTML =
