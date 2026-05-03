@@ -6,7 +6,7 @@
 📦 **源码仓库**：<https://github.com/zhouminghan/qdii-tracker>
 ⚙️ **自动更新**：[![Update Fund Data](https://github.com/zhouminghan/qdii-tracker/actions/workflows/update-data.yml/badge.svg)](https://github.com/zhouminghan/qdii-tracker/actions/workflows/update-data.yml)
 
-![US Fund Tracker](https://img.shields.io/badge/status-running-success) ![Data](https://img.shields.io/badge/data-static-blue) ![Deploy](https://img.shields.io/badge/deploy-GitHub%20Pages%20%7C%20Docker-black)
+![US Fund Tracker](https://img.shields.io/badge/status-running-success) ![Data](https://img.shields.io/badge/data-static-blue) ![Deploy](https://img.shields.io/badge/deploy-GitHub%20Pages%20%7C%20Docker-black) ![License](https://img.shields.io/badge/license-MIT-green)
 
 > 🚀 **想快速用起来？** 直接跳到 [👉 部署方式](#-部署方式)：GitHub Pages 零服务器 or Docker 一键容器化，任选其一。
 
@@ -686,4 +686,12 @@ A: 编辑 `scripts/scan_funds.py` 的 3 个字典：
 
 ## 📜 License
 
-Private / Personal use only.
+本项目基于 **[MIT License](./LICENSE)** 开源。
+
+简而言之：
+- ✅ 你可以自由使用、修改、分发，甚至用于商业用途
+- ✅ 可以闭源二次开发
+- ⚠️ 必须保留原作者版权声明（LICENSE 文件）
+- ⚠️ 作者不承担任何责任（基金投资自负盈亏）
+
+**数据免责**：本项目仅聚合公开数据做展示，不构成投资建议。基金有风险，投资需谨慎。
