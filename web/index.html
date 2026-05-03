@@ -391,6 +391,9 @@
       <div class="font-semibold text-stone-700 mb-2">⚠️ 风险提示与免责声明</div>
       <p>基金投资有风险，过往业绩不代表未来表现。QDII 基金受汇率波动、海外市场风险影响。本页面数据来自 AKShare 与天天基金公开接口，仅供个人研究参考，不构成投资建议。限额字段以基金 APP 实际显示为准。</p>
       <p class="mt-2">📊 数据来源：East Money (AKShare) / 雪球 · 📜 MIT License</p>
+      <p class="mt-2" id="live-refresh-status">
+        <span class="text-stone-400">⏳ 正在拉取最新净值/行情...</span>
+      </p>
     </div>
   </footer>
 
@@ -497,6 +500,216 @@
       } catch (e) {
         console.warn('股票行情加载失败（不影响主页）:', e.message);
       }
+
+      // 首屏完成后立即触发"实时净值/行情"刷新（不阻塞首屏）
+      refreshLive();
+    }
+
+    // ==================== 动态拉取最新净值/行情 ====================
+    // 目的：解决"GitHub Actions 每天才跑一次，打开网页还是旧数据"的问题
+    // 思路：直接从前端调用天天基金 / 腾讯财经的公开 JSONP 接口
+    //  · 场外基金：https://fundgz.1234567.com.cn/js/{code}.js   -> 返回 jsonpgz({...}) 含估值+日期
+    //  · 场内 ETF：https://qt.gtimg.cn/q=sh{code}  或 sz{code}   -> 返回 v_sh510300="..." 逗号分隔行情串
+    // 拉取失败静默降级（沿用静态 JSON 的值）
+
+    // --- JSONP helper（同时支持天天基金 jsonpgz 回调 & 腾讯 gtimg 赋值语句）---
+    function loadScript(url, timeout = 5000) {
+      return new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = url;
+        s.async = true;
+        let done = false;
+        const timer = setTimeout(() => {
+          if (done) return;
+          done = true;
+          s.remove();
+          reject(new Error('timeout: ' + url));
+        }, timeout);
+        s.onload = () => {
+          if (done) return;
+          done = true;
+          clearTimeout(timer);
+          s.remove();
+          resolve();
+        };
+        s.onerror = () => {
+          if (done) return;
+          done = true;
+          clearTimeout(timer);
+          s.remove();
+          reject(new Error('load fail: ' + url));
+        };
+        document.head.appendChild(s);
+      });
+    }
+
+    // 场外基金单只：只取"最新真实净值"（dwjz + jzrq），不用估值
+    // fundgz 返回 jsonpgz({"fundcode":"...","jzrq":"2026-04-29","dwjz":"5.6878","gsz":"...","gszzl":"...","gztime":"..."})
+    //   · dwjz/jzrq 永远是最新一次收盘公布的真实单位净值
+    //   · 估值字段不用，展示上统一按"真实净值"处理
+    async function fetchOffshoreLive(code) {
+      window.jsonpgz = function (payload) { window.__lastGz = payload; };
+      try {
+        await loadScript(`https://fundgz.1234567.com.cn/js/${code}.js?rt=${Date.now()}`, 4000);
+        const p = window.__lastGz;
+        window.__lastGz = null;
+        if (!p || !p.fundcode) return null;
+        if (p.dwjz && p.jzrq) {
+          return {
+            nav: parseFloat(p.dwjz),
+            nav_date: p.jzrq,
+          };
+        }
+      } catch (e) {
+        // 静默降级
+      }
+      return null;
+    }
+
+    // 场内 ETF 批量：腾讯行情 qt.gtimg.cn 支持一次查多个：q=sh510300,sz159941,...
+    // 返回 v_sh510300="1~ETF名~510300~最新价~涨跌~涨跌幅~..."  字段 3=最新价 5=涨跌幅
+    async function fetchEtfLive(codes) {
+      if (!codes.length) return {};
+      // 给代码前加 sh/sz 前缀：5/6/9 开头沪市；0/3 开头深市
+      const query = codes.map(c => {
+        const first = c[0];
+        return (first === '5' || first === '6' || first === '9' ? 'sh' : 'sz') + c;
+      }).join(',');
+
+      return new Promise((resolve) => {
+        const sid = 'gtimg_' + Date.now();
+        const s = document.createElement('script');
+        s.src = `https://qt.gtimg.cn/q=${query}&t=${Date.now()}`;
+        s.async = true;
+        const timer = setTimeout(() => { s.remove(); resolve({}); }, 4000);
+        s.onload = () => {
+          clearTimeout(timer);
+          // gtimg 响应是一堆 var v_sh510300="..."; 语句；靠读取全局 v_xxx 变量取值
+          const result = {};
+          for (const code of codes) {
+            const prefix = (code[0] === '5' || code[0] === '6' || code[0] === '9') ? 'sh' : 'sz';
+            const key = 'v_' + prefix + code;
+            const raw = window[key];
+            if (typeof raw === 'string' && raw) {
+              const parts = raw.split('~');
+              // parts[3]=最新价 parts[32]=涨跌幅 parts[30]=YYYYMMDDHHMMSS（最后成交时间）
+              const price = parseFloat(parts[3]);
+              const chgPct = parseFloat(parts[32]);
+              const ts = parts[30] || '';
+              // 转成 YYYY-MM-DD
+              const tradeDate = ts.length >= 8
+                ? `${ts.slice(0, 4)}-${ts.slice(4, 6)}-${ts.slice(6, 8)}`
+                : '';
+              if (!isNaN(price)) {
+                result[code] = {
+                  price,
+                  chg: isNaN(chgPct) ? null : chgPct,
+                  trade_date: tradeDate,
+                };
+              }
+            }
+          }
+          s.remove();
+          resolve(result);
+        };
+        s.onerror = () => { clearTimeout(timer); s.remove(); resolve({}); };
+        document.head.appendChild(s);
+      });
+    }
+
+    // 并发控制（避免一次性发 40+ 请求被限流）
+    async function parallelMap(items, worker, concurrency = 8) {
+      const results = new Array(items.length);
+      let idx = 0;
+      await Promise.all(Array.from({ length: Math.min(concurrency, items.length) }, async () => {
+        while (idx < items.length) {
+          const i = idx++;
+          try { results[i] = await worker(items[i], i); }
+          catch { results[i] = null; }
+        }
+      }));
+      return results;
+    }
+
+    async function refreshLive() {
+      const status = document.getElementById('live-refresh-status');
+      const t0 = Date.now();
+
+      // --- 1) 收集所有要刷新的份额 ---
+      const offshoreShares = [];  // [{shareObj, code}]
+      const etfShares = [];
+      for (const cat of ['sp500', 'nasdaq_passive', 'active', 'global_other']) {
+        const d = STATE.data[cat];
+        if (!d?.series) continue;
+        for (const s of d.series) {
+          // 每个 series 刷新 default_share（外层表展示它）+ 展开行里的所有份额
+          for (const sh of s.shares) {
+            // QDII 只在支持 fundgz 的基金上刷（一般 6 位代码都行）
+            if (/^\d{6}$/.test(sh.code)) offshoreShares.push(sh);
+          }
+        }
+      }
+      const etfData = STATE.data.etf;
+      if (etfData?.series) {
+        for (const s of etfData.series) {
+          for (const sh of s.shares) {
+            if (/^\d{6}$/.test(sh.code)) etfShares.push(sh);
+          }
+        }
+      }
+
+      if (status) {
+        status.innerHTML = `<span class="text-stone-400">⏳ 正在拉取最新净值/行情（${offshoreShares.length} 只场外 + ${etfShares.length} 只 ETF）...</span>`;
+      }
+
+      // --- 2) 并发拉取 ---
+      let okOffshore = 0, okEtf = 0;
+
+      // 场外：一只一个 JSONP，只更新真实净值 + 日期
+      await parallelMap(offshoreShares, async (sh) => {
+        const r = await fetchOffshoreLive(sh.code);
+        if (!r) return;
+        if (r.nav != null && !isNaN(r.nav)) sh.nav = r.nav;
+        if (r.nav_date) sh.nav_date = r.nav_date;
+        okOffshore++;
+      }, 8);
+
+      // ETF：腾讯支持一次查多只，但太多也可能被截断，每批 30 只
+      const BATCH = 30;
+      for (let i = 0; i < etfShares.length; i += BATCH) {
+        const batch = etfShares.slice(i, i + BATCH);
+        const codes = batch.map(s => s.code);
+        const res = await fetchEtfLive(codes);
+        for (const sh of batch) {
+          const r = res[sh.code];
+          if (r && r.price) {
+            sh.etf_price = r.price;
+            if (r.chg != null) sh.etf_change_pct = r.chg;
+            if (r.trade_date) sh._live_etf_date = r.trade_date;
+            okEtf++;
+          }
+        }
+      }
+
+      // --- 3) 重渲染（renderChips 会自动从 CHIP_STATE 恢复选中状态）---
+      RENDER_TABS.forEach(renderCategory);
+
+      // --- 4) 更新 footer 状态 ---
+      const cost = ((Date.now() - t0) / 1000).toFixed(1);
+      const now = new Date();
+      const hhmmss = now.toTimeString().slice(0, 8);
+      if (status) {
+        const hasAny = okOffshore + okEtf > 0;
+        if (hasAny) {
+          status.innerHTML = `
+            <span class="text-green-600">🟢 实时净值/行情已刷新于 ${hhmmss}</span>
+            <span class="text-stone-400 ml-1">（场外 ${okOffshore}/${offshoreShares.length} · ETF ${okEtf}/${etfShares.length} · 耗时 ${cost}s · <a href="javascript:refreshLive()" class="underline hover:text-stone-700">手动刷新</a>）</span>
+            <br/><span class="text-stone-400 text-[11px]">净值/最新价每次打开页面动态拉取；历史收益/规模/限购/日涨跌等走后端 Actions 每日定时更新</span>
+          `;
+        } else {
+          status.innerHTML = `<span class="text-stone-500">⚠️ 实时拉取失败，显示的是仓库中的快照数据 · <a href="javascript:refreshLive()" class="underline">重试</a></span>`;
+        }
+      }
     }
 
     function updateKPI(meta) {
@@ -504,11 +717,11 @@
     }
 
     // ETF 分组配置（按跟踪标的）
+    // 醒目只有标普500 和 纳指100，其余（美国50 + 其他）统一归入"全球/其他"
     const ETF_GROUPS = [
-      { key: 'sp500',     label: '📊 跟踪 标普500 指数',   desc: 'S&P 500 · 美股大盘蓝筹' },
-      { key: 'nasdaq100', label: '💻 跟踪 纳斯达克100 指数', desc: 'NASDAQ 100 · 美股科技龙头' },
-      { key: 'us50',      label: '🎯 跟踪 美国50 指数',     desc: '中证·美国50 · 头部 50 只美股' },
-      { key: 'other',     label: '其他',                 desc: '' },
+      { key: 'sp500',        label: '📊 跟踪 标普500 指数',    desc: 'S&P 500 · 美股大盘蓝筹' },
+      { key: 'nasdaq100',    label: '💻 跟踪 纳斯达克100 指数', desc: 'NASDAQ 100 · 美股科技龙头' },
+      { key: 'global_other', label: '🌐 全球/其他 ETF',        desc: '美国50 / 全球配置 / 其他跨境方向' },
     ];
 
     function renderCategory(tab) {
@@ -537,11 +750,12 @@
           };
         }).filter(g => g.items.length);
       } else if (isEtf) {
-        // ETF 按 etf_target 分组（原逻辑）
+        // ETF 按 etf_target 分组：sp500/nasdaq100 单独，其余（含 us50、other、空值）归入 global_other
         const src = STATE.data.etf;
         const byTarget = {};
         for (const s of src.series) {
-          const t = s.etf_target || 'other';
+          const raw = s.etf_target;
+          const t = (raw === 'sp500' || raw === 'nasdaq100') ? raw : 'global_other';
           (byTarget[t] = byTarget[t] || []).push(s);
         }
         for (const key in byTarget) {
@@ -564,10 +778,14 @@
       document.getElementById(`count-${tab}`).textContent =
         `${totalSeries} 个系列 · ${totalShares} 只份额 · 总规模 ${totalScale.toFixed(0)} 亿`;
 
-      // 代表性净值日期：取第一个 group 第一个 series 的默认份额
+      // 表头"净值/最新价"列的代表性日期：
+      //  · 场内 ETF 优先用腾讯行情的交易日（_live_etf_date），否则 nav_date
+      //  · 场外 QDII 用 nav_date（动态刷新会覆盖为最新真实净值日期）
       const firstSeries = groups[0]?.items?.[0];
       const firstDef = firstSeries?.shares?.find(s => s.code === firstSeries.default_share_code) || firstSeries?.shares?.[0];
-      const navHeaderDate = firstDef?.nav_date || '';
+      const navHeaderDate = isEtf
+        ? (firstDef?._live_etf_date || firstDef?.nav_date || '')
+        : (firstDef?.nav_date || '');
 
       // 列数（用于分组标题行 colspan）
       // 基础 10 列：展开+名称+规模+净值+1月+YTD+1年+成立+(申购)+份额
@@ -631,9 +849,11 @@
       if (!chipsBox) return;
       if (!groups.length) { chipsBox.innerHTML = ''; return; }
 
-      const defaultKey = groups[0].key;
-      const chips = groups.map((g, i) =>
-        `<button class="chip${i === 0 ? ' chip-active' : ''}" data-filter="${g.key}">${g.label}  <span class="chip-count">${g.items.length}</span></button>`
+      // 恢复上次 chip 选中状态（若首次则默认第一个）
+      const savedKey = CHIP_STATE[tab];
+      const defaultKey = (savedKey && groups.some(g => g.key === savedKey)) ? savedKey : groups[0].key;
+      const chips = groups.map(g =>
+        `<button class="chip${g.key === defaultKey ? ' chip-active' : ''}" data-filter="${g.key}">${g.label}  <span class="chip-count">${g.items.length}</span></button>`
       );
       chipsBox.innerHTML = chips.join('');
       chipsBox.querySelectorAll('.chip').forEach(btn => {
@@ -643,7 +863,7 @@
           applyChipFilter(tab, groups, btn.dataset.filter);
         });
       });
-      // 应用默认筛选
+      // 应用当前筛选
       applyChipFilter(tab, groups, defaultKey);
     }
 
@@ -704,9 +924,9 @@
         global_other:   { title: '🌐 全球 / 其他 QDII', subtitle: '全球配置或非美股核心方向（医疗 / 能源 / 海外 / 混合等）· 分散投资' },
       },
       etf: {
-        sp500:     { title: '📊 标普500 ETF', subtitle: 'S&P 500 指数 ETF · 证券账户买卖，盘中实时涨跌，费率仅 0.15~0.5%' },
-        nasdaq100: { title: '💻 纳指100 ETF', subtitle: 'NASDAQ 100 指数 ETF · 美股科技龙头 ETF 版本，流动性强' },
-        us50:      { title: '🎯 美国50 ETF',  subtitle: '中证·美国50 指数 ETF · 头部 50 只美股浓缩版' },
+        sp500:        { title: '📊 标普500 ETF',       subtitle: 'S&P 500 指数 ETF · 证券账户买卖，盘中实时涨跌，费率仅 0.15~0.5%' },
+        nasdaq100:    { title: '💻 纳指100 ETF',       subtitle: 'NASDAQ 100 指数 ETF · 美股科技龙头 ETF 版本，流动性强' },
+        global_other: { title: '🌐 全球/其他 ETF',     subtitle: '中证·美国50 等头部美股浓缩版 + 全球配置 / 其他跨境方向' },
       },
     };
 
@@ -727,9 +947,17 @@
             : `${series.series_scale.toFixed(2)}亿`)
         : '--';
 
-      const price = isEtf ? (def.etf_price?.toFixed(3) ?? def.nav?.toFixed(4) ?? '--') : (def.nav?.toFixed(4) ?? '--');
-      const dailyChange = isEtf && def.etf_change_pct != null ? def.etf_change_pct : def.daily_change;
-      const navDate = def.nav_date ? `<div class="text-[10px] text-stone-400">${def.nav_date}</div>` : '';
+      // 外层行展示：统一使用 sh.nav（前端动态拉取会更新为最新真实净值）
+      //   · 场内 ETF 用 etf_price + etf_change_pct（腾讯行情实时）
+      //   · 场外 QDII 用 nav + daily_change（fundgz dwjz 覆盖 nav，daily_change 依赖后端 Actions）
+      let price, dailyChange;
+      if (isEtf) {
+        price = def.etf_price?.toFixed(3) ?? def.nav?.toFixed(4) ?? '--';
+        dailyChange = def.etf_change_pct != null ? def.etf_change_pct : def.daily_change;
+      } else {
+        price = def.nav?.toFixed(4) ?? '--';
+        dailyChange = def.daily_change;
+      }
 
       // 持仓列的 td：如果表格有持仓列，就要输出；主动基金给按钮，其他给 —
       const holdingsTd = showHoldings
@@ -784,8 +1012,10 @@
                     <th class="text-center py-2 font-medium">类别</th>
                     <th class="text-center py-2 font-medium">币种</th>
                     <th class="text-right py-2 font-medium">规模</th>
-                    <th class="text-right py-2 font-medium">净值</th>
-                    <th class="text-right py-2 font-medium">日涨跌</th>
+                    <th class="text-right py-2 font-medium">
+                      <div>净值</div>
+                      ${def.nav_date ? `<div class="text-[10px] text-stone-400 font-normal mt-0.5">${def.nav_date}</div>` : ''}
+                    </th>
                     <th class="text-right py-2 font-medium">近1年</th>
                     ${isEtf ? '' : `
                       <th class="text-center py-2 font-medium">申购状态</th>
@@ -807,9 +1037,11 @@
 
     function renderShare(sh, isDefault, isEtf) {
       const curCls = sh.currency === '美元' ? 'badge-usd' : 'badge-cny';
+      // 展开行始终显示真实净值 + 最近一次收盘的日涨跌（不展示盘中估值）
       const priceDisp = isEtf && sh.etf_price ? sh.etf_price.toFixed(3) : (sh.nav?.toFixed(4) ?? '--');
       const dailyChg = isEtf && sh.etf_change_pct != null ? sh.etf_change_pct : sh.daily_change;
-      const navDateDisp = sh.nav_date ? `<div class="text-[10px] text-stone-400">${sh.nav_date}</div>` : '';
+      const chgCls = dailyChg > 0 ? 'up' : dailyChg < 0 ? 'down' : 'text-stone-400';
+      const chgTxt = dailyChg == null ? '--' : (dailyChg > 0 ? '+' : '') + dailyChg.toFixed(2) + '%';
 
       return `
         <tr class="border-t border-stone-100">
@@ -824,9 +1056,8 @@
           <td class="py-2 text-right num">${sh.scale_raw || `<span class="text-stone-300" title="基金公司未单独披露此份额规模">—</span>`}</td>
           <td class="py-2 text-right num">
             <div>${priceDisp}</div>
-            ${navDateDisp}
+            <div class="text-[11px] ${chgCls}">${chgTxt}</div>
           </td>
-          ${changeCell(dailyChg, true)}
           ${changeCell(sh.chg_1y, true)}
           ${isEtf ? '' : `
             <td class="py-2 text-center">

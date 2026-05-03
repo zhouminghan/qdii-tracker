@@ -36,3 +36,7 @@ akshare_cache/
 # 日志
 *.log
 logs/
+
+# ==================== Docker ====================
+# docker compose 挂载的 Nginx 日志卷（本地运行会生成，不上传）
+# web/data/ 是数据卷，本地运行时会被覆盖；不影响 git 追踪 web/data/*.json

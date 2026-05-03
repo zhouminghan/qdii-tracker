@@ -1,0 +1,20 @@
+services:
+  qdii-tracker:
+    build: .
+    image: qdii-tracker:latest
+    container_name: qdii-tracker
+    restart: unless-stopped
+    ports:
+      - "8080:80"           # 宿主机 8080 → 容器 80，浏览器访问 http://<宿主>:8080
+    volumes:
+      # 把 web/data 挂到宿主机，升级镜像不丢数据、手动触发脚本也能看到
+      - ./web/data:/app/web/data
+      # 日志（可选）
+      - ./logs:/var/log/nginx
+    environment:
+      TZ: Asia/Shanghai
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost/healthz"]
+      interval: 1m
+      timeout: 5s
+      retries: 3
