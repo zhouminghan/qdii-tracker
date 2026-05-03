@@ -111,7 +111,8 @@ qdii-tracker/
 │       └── holdings/{code}.json  # 基金持仓详情（52 只）
 │
 ├── .github/workflows/
-│   └── update-data.yml           # GitHub Actions 自动更新
+│   ├── update-data.yml           # GitHub Actions 自动更新数据
+│   └── deploy-pages.yml          # 发布 web/ 到 GitHub Pages
 │
 ├── Dockerfile                    # Docker 镜像定义（一键容器化）
 ├── docker-compose.yml            # docker compose 启动配置
@@ -319,13 +320,23 @@ git push -u origin main
 
 #### 步骤 4 · 启用 GitHub Pages
 
+> ⚠️ **注意**：GitHub Pages 的 "Deploy from a branch" 模式**不支持选择 `/web` 子目录**（只有 `/ (root)` 和 `/docs` 两个选项）。本项目用的是 **GitHub Actions 部署**方式，能发布任意目录。
+
 1. 打开仓库页面（`https://github.com/zhouminghan/qdii-tracker`）
 2. 顶部 **Settings** → 左侧 **Pages**
-3. **Source** 选 `Deploy from a branch`
-4. **Branch** 左边选 `main`，**右边选 `/web`** ⚠️（重要，前端就在这个目录）
-5. 点 **Save**
+3. **Source** 下拉选 → **`GitHub Actions`** ⚠️（不是 "Deploy from a branch"）
+4. 不需要填其他内容，**关闭设置页面即可**
 
-等 1~2 分钟，页面顶部会出现 `✅ Your site is live at https://zhouminghan.github.io/qdii-tracker/`。点开就能看到看板。
+> 这步本质上是告诉 GitHub "我要用自己的 Actions workflow 部署 Pages"。项目里已经写好了 `.github/workflows/deploy-pages.yml`，只要 push 到 main 且 `web/` 有变动就会自动发布。
+
+首次触发：
+- 选项一（推荐）：到 **Actions** 标签 → 左侧选 **🌐 Deploy GitHub Pages** → 右边 **Run workflow** 手动跑一次
+- 选项二：等下次 `web/` 下任何文件有变动 push 上来时自动触发
+
+部署成功后在 **Settings → Pages** 顶部会看到：
+```
+✅ Your site is live at https://zhouminghan.github.io/qdii-tracker/
+```
 
 #### 步骤 5 · 授予 Actions 写权限（关键！）
 
