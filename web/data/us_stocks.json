@@ -1,5 +1,1462 @@
 {
-  "generated_at": "2026-05-04T11:32:02.947687",
-  "total_stocks": 0,
-  "stocks": {}
+  "generated_at": "2026-05-05T11:16:51.348728",
+  "total_stocks": 182,
+  "stocks": {
+    "CRCL": {
+      "code": "CRCL",
+      "name": "Circle Internet Group Inc-A",
+      "market": "US",
+      "price": 119.53,
+      "change_pct": 19.89,
+      "change_amt": 19.83
+    },
+    "AXTI": {
+      "code": "AXTI",
+      "name": "AXT Inc",
+      "market": "US",
+      "price": 106.0,
+      "change_pct": 10.42,
+      "change_amt": 10.0
+    },
+    "MU": {
+      "code": "MU",
+      "name": "美光科技",
+      "market": "US",
+      "price": 576.45,
+      "change_pct": 6.31,
+      "change_amt": 34.24
+    },
+    "SNDK": {
+      "code": "SNDK",
+      "name": "闪迪",
+      "market": "US",
+      "price": 1255.86,
+      "change_pct": 5.8,
+      "change_amt": 68.86
+    },
+    "PONY": {
+      "code": "PONY",
+      "name": "小马智行",
+      "market": "US",
+      "price": 10.4,
+      "change_pct": 5.16,
+      "change_amt": 0.51
+    },
+    "MKSI": {
+      "code": "MKSI",
+      "name": "MKS Inc",
+      "market": "US",
+      "price": 291.53,
+      "change_pct": 4.35,
+      "change_amt": 12.15
+    },
+    "KYMR": {
+      "code": "KYMR",
+      "name": "Kymera Therapeutics Inc",
+      "market": "US",
+      "price": 83.59,
+      "change_pct": 3.57,
+      "change_amt": 2.88
+    },
+    "LITE": {
+      "code": "LITE",
+      "name": "Lumentum Holdings Inc",
+      "market": "US",
+      "price": 976.18,
+      "change_pct": 2.76,
+      "change_amt": 26.25
+    },
+    "NIO": {
+      "code": "NIO",
+      "name": "蔚来",
+      "market": "US",
+      "price": 6.07,
+      "change_pct": 2.71,
+      "change_amt": 0.16
+    },
+    "MPC": {
+      "code": "MPC",
+      "name": "马拉松原油",
+      "market": "US",
+      "price": 252.54,
+      "change_pct": 2.6,
+      "change_amt": 6.39
+    },
+    "WDC": {
+      "code": "WDC",
+      "name": "西部数据",
+      "market": "US",
+      "price": 442.36,
+      "change_pct": 2.51,
+      "change_amt": 10.84
+    },
+    "ARWR": {
+      "code": "ARWR",
+      "name": "Arrowhead Pharmaceuticals Inc",
+      "market": "US",
+      "price": 76.39,
+      "change_pct": 2.11,
+      "change_amt": 1.58
+    },
+    "VLO": {
+      "code": "VLO",
+      "name": "瓦莱罗能源",
+      "market": "US",
+      "price": 251.63,
+      "change_pct": 1.93,
+      "change_amt": 4.76
+    },
+    "RPRX": {
+      "code": "RPRX",
+      "name": "Royalty Pharma plc-A",
+      "market": "US",
+      "price": 50.2,
+      "change_pct": 1.48,
+      "change_amt": 0.73
+    },
+    "AMZN": {
+      "code": "AMZN",
+      "name": "亚马逊",
+      "market": "US",
+      "price": 272.05,
+      "change_pct": 1.41,
+      "change_amt": 3.79
+    },
+    "COP": {
+      "code": "COP",
+      "name": "康菲石油",
+      "market": "US",
+      "price": 124.91,
+      "change_pct": 1.4,
+      "change_amt": 1.72
+    },
+    "PLTR": {
+      "code": "PLTR",
+      "name": "Palantir Technologies Inc-A",
+      "market": "US",
+      "price": 146.03,
+      "change_pct": 1.36,
+      "change_amt": 1.96
+    },
+    "BABA": {
+      "code": "BABA",
+      "name": "阿里巴巴",
+      "market": "US",
+      "price": 133.27,
+      "change_pct": 1.35,
+      "change_amt": 1.77
+    },
+    "CNQ": {
+      "code": "CNQ",
+      "name": "加拿大自然资源",
+      "market": "US",
+      "price": 47.58,
+      "change_pct": 1.32,
+      "change_amt": 0.62
+    },
+    "GLW": {
+      "code": "GLW",
+      "name": "康宁",
+      "market": "US",
+      "price": 159.96,
+      "change_pct": 1.07,
+      "change_amt": 1.7
+    },
+    "GEV": {
+      "code": "GEV",
+      "name": "GE Vernova Inc",
+      "market": "US",
+      "price": 1073.95,
+      "change_pct": 1.03,
+      "change_amt": 11.0
+    },
+    "TSM": {
+      "code": "TSM",
+      "name": "台积电",
+      "market": "US",
+      "price": 401.61,
+      "change_pct": 0.99,
+      "change_amt": 3.94
+    },
+    "CVX": {
+      "code": "CVX",
+      "name": "雪佛龙",
+      "market": "US",
+      "price": 192.28,
+      "change_pct": 0.87,
+      "change_amt": 1.65
+    },
+    "CSCO": {
+      "code": "CSCO",
+      "name": "思科",
+      "market": "US",
+      "price": 92.63,
+      "change_pct": 0.85,
+      "change_amt": 0.78
+    },
+    "MRK": {
+      "code": "MRK",
+      "name": "默沙东",
+      "market": "US",
+      "price": 113.11,
+      "change_pct": 0.85,
+      "change_amt": 0.95
+    },
+    "FUTU": {
+      "code": "FUTU",
+      "name": "富途控股",
+      "market": "US",
+      "price": 156.04,
+      "change_pct": 0.77,
+      "change_amt": 1.19
+    },
+    "ABBV": {
+      "code": "ABBV",
+      "name": "艾伯维",
+      "market": "US",
+      "price": 208.16,
+      "change_pct": 0.76,
+      "change_amt": 1.56
+    },
+    "DOW": {
+      "code": "DOW",
+      "name": "陶氏",
+      "market": "US",
+      "price": 40.58,
+      "change_pct": 0.72,
+      "change_amt": 0.29
+    },
+    "LRCX": {
+      "code": "LRCX",
+      "name": "拉姆研究",
+      "market": "US",
+      "price": 258.57,
+      "change_pct": 0.72,
+      "change_amt": 1.85
+    },
+    "XOM": {
+      "code": "XOM",
+      "name": "埃克森美孚",
+      "market": "US",
+      "price": 153.69,
+      "change_pct": 0.62,
+      "change_amt": 0.94
+    },
+    "BSX": {
+      "code": "BSX",
+      "name": "波士顿科学",
+      "market": "US",
+      "price": 56.85,
+      "change_pct": 0.62,
+      "change_amt": 0.35
+    },
+    "ALNY": {
+      "code": "ALNY",
+      "name": "Alnylam Pharmaceuticals Inc",
+      "market": "US",
+      "price": 297.925,
+      "change_pct": 0.61,
+      "change_amt": 1.815
+    },
+    "CIEN": {
+      "code": "CIEN",
+      "name": "Ciena科技",
+      "market": "US",
+      "price": 538.51,
+      "change_pct": 0.6,
+      "change_amt": 3.22
+    },
+    "AMAT": {
+      "code": "AMAT",
+      "name": "应用材料",
+      "market": "US",
+      "price": 391.38,
+      "change_pct": 0.59,
+      "change_amt": 2.3
+    },
+    "UNH": {
+      "code": "UNH",
+      "name": "联合健康",
+      "market": "US",
+      "price": 370.75,
+      "change_pct": 0.53,
+      "change_amt": 1.97
+    },
+    "PBR": {
+      "code": "PBR",
+      "name": "巴西石油",
+      "market": "US",
+      "price": 22.01,
+      "change_pct": 0.5,
+      "change_amt": 0.11
+    },
+    "LLY": {
+      "code": "LLY",
+      "name": "礼来",
+      "market": "US",
+      "price": 967.93,
+      "change_pct": 0.48,
+      "change_amt": 4.6
+    },
+    "TSLA": {
+      "code": "TSLA",
+      "name": "特斯拉",
+      "market": "US",
+      "price": 392.51,
+      "change_pct": 0.43,
+      "change_amt": 1.69
+    },
+    "SHEL": {
+      "code": "SHEL",
+      "name": "壳牌",
+      "market": "US",
+      "price": 89.26,
+      "change_pct": 0.31,
+      "change_amt": 0.28
+    },
+    "META": {
+      "code": "META",
+      "name": "Meta Platforms Inc-A",
+      "market": "US",
+      "price": 610.41,
+      "change_pct": 0.27,
+      "change_amt": 1.665
+    },
+    "IONS": {
+      "code": "IONS",
+      "name": "Ionis Pharmaceuticals Inc",
+      "market": "US",
+      "price": 75.45,
+      "change_pct": 0.23,
+      "change_amt": 0.17
+    },
+    "COHR": {
+      "code": "COHR",
+      "name": "Coherent Corp",
+      "market": "US",
+      "price": 329.89,
+      "change_pct": 0.12,
+      "change_amt": 0.39
+    },
+    "WELL": {
+      "code": "WELL",
+      "name": "Welltower Inc",
+      "market": "US",
+      "price": 217.14,
+      "change_pct": 0.11,
+      "change_amt": 0.23
+    },
+    "COST": {
+      "code": "COST",
+      "name": "开市客",
+      "market": "US",
+      "price": 1012.79,
+      "change_pct": 0.11,
+      "change_amt": 1.09
+    },
+    "NVDA": {
+      "code": "NVDA",
+      "name": "英伟达",
+      "market": "US",
+      "price": 198.48,
+      "change_pct": 0.02,
+      "change_amt": 0.03
+    },
+    "RSG": {
+      "code": "RSG",
+      "name": "共和废品处理",
+      "market": "US",
+      "price": 206.55,
+      "change_pct": 0.0,
+      "change_amt": -0.01
+    },
+    "TXN": {
+      "code": "TXN",
+      "name": "德州仪器",
+      "market": "US",
+      "price": 280.89,
+      "change_pct": -0.05,
+      "change_amt": -0.13
+    },
+    "EQIX": {
+      "code": "EQIX",
+      "name": "易昆尼克斯",
+      "market": "US",
+      "price": 1083.2,
+      "change_pct": -0.17,
+      "change_amt": -1.83
+    },
+    "MSFT": {
+      "code": "MSFT",
+      "name": "微软",
+      "market": "US",
+      "price": 413.62,
+      "change_pct": -0.2,
+      "change_amt": -0.82
+    },
+    "VTR": {
+      "code": "VTR",
+      "name": "芬塔公司",
+      "market": "US",
+      "price": 87.79,
+      "change_pct": -0.26,
+      "change_amt": -0.23
+    },
+    "NEM": {
+      "code": "NEM",
+      "name": "纽蒙特",
+      "market": "US",
+      "price": 108.33,
+      "change_pct": -0.27,
+      "change_amt": -0.29
+    },
+    "ABVX": {
+      "code": "ABVX",
+      "name": "Abivax SA ADR",
+      "market": "US",
+      "price": 117.13,
+      "change_pct": -0.41,
+      "change_amt": -0.48
+    },
+    "SPG": {
+      "code": "SPG",
+      "name": "西蒙地产",
+      "market": "US",
+      "price": 201.51,
+      "change_pct": -0.46,
+      "change_amt": -0.93
+    },
+    "JBL": {
+      "code": "JBL",
+      "name": "捷普",
+      "market": "US",
+      "price": 340.8,
+      "change_pct": -0.49,
+      "change_amt": -1.67
+    },
+    "KO": {
+      "code": "KO",
+      "name": "可口可乐",
+      "market": "US",
+      "price": 78.19,
+      "change_pct": -0.5,
+      "change_amt": -0.39
+    },
+    "TTE": {
+      "code": "TTE",
+      "name": "TotalEnergies SE",
+      "market": "US",
+      "price": 92.3,
+      "change_pct": -0.52,
+      "change_amt": -0.48
+    },
+    "AEIS": {
+      "code": "AEIS",
+      "name": "先进能源工业",
+      "market": "US",
+      "price": 387.03,
+      "change_pct": -0.52,
+      "change_amt": -2.02
+    },
+    "AVB": {
+      "code": "AVB",
+      "name": "艾芙隆海湾社区",
+      "market": "US",
+      "price": 182.44,
+      "change_pct": -0.55,
+      "change_amt": -1.01
+    },
+    "O": {
+      "code": "O",
+      "name": "Realty Income Corp",
+      "market": "US",
+      "price": 63.45,
+      "change_pct": -0.56,
+      "change_amt": -0.36
+    },
+    "GOOGL": {
+      "code": "GOOGL",
+      "name": "谷歌-A",
+      "market": "US",
+      "price": 383.25,
+      "change_pct": -0.63,
+      "change_amt": -2.44
+    },
+    "MPWR": {
+      "code": "MPWR",
+      "name": "Monolithic Power Systems Inc",
+      "market": "US",
+      "price": 1573.3,
+      "change_pct": -0.64,
+      "change_amt": -10.18
+    },
+    "RACE": {
+      "code": "RACE",
+      "name": "法拉利",
+      "market": "US",
+      "price": 338.91,
+      "change_pct": -0.69,
+      "change_amt": -2.35
+    },
+    "AZN": {
+      "code": "AZN",
+      "name": "阿斯利康",
+      "market": "US",
+      "price": 183.46,
+      "change_pct": -0.69,
+      "change_amt": -1.28
+    },
+    "SO": {
+      "code": "SO",
+      "name": "南方电力",
+      "market": "US",
+      "price": 95.99,
+      "change_pct": -0.74,
+      "change_amt": -0.72
+    },
+    "KLAC": {
+      "code": "KLAC",
+      "name": "科磊",
+      "market": "US",
+      "price": 1713.32,
+      "change_pct": -0.75,
+      "change_amt": -12.94
+    },
+    "MRVL": {
+      "code": "MRVL",
+      "name": "迈威尔科技",
+      "market": "US",
+      "price": 163.66,
+      "change_pct": -0.78,
+      "change_amt": -1.29
+    },
+    "GOOG": {
+      "code": "GOOG",
+      "name": "谷歌-C",
+      "market": "US",
+      "price": 379.64,
+      "change_pct": -0.93,
+      "change_amt": -3.58
+    },
+    "BRK_B": {
+      "code": "BRK_B",
+      "name": "伯克希尔哈撒韦-B",
+      "market": "US",
+      "price": 468.52,
+      "change_pct": -0.95,
+      "change_amt": -4.49
+    },
+    "TTMI": {
+      "code": "TTMI",
+      "name": "TTM科技",
+      "market": "US",
+      "price": 157.47,
+      "change_pct": -0.96,
+      "change_amt": -1.52
+    },
+    "WMT": {
+      "code": "WMT",
+      "name": "沃尔玛",
+      "market": "US",
+      "price": 130.33,
+      "change_pct": -0.97,
+      "change_amt": -1.27
+    },
+    "DLR": {
+      "code": "DLR",
+      "name": "数字房地产信托",
+      "market": "US",
+      "price": 198.51,
+      "change_pct": -1.09,
+      "change_amt": -2.19
+    },
+    "AVGO": {
+      "code": "AVGO",
+      "name": "博通",
+      "market": "US",
+      "price": 416.5,
+      "change_pct": -1.13,
+      "change_amt": -4.78
+    },
+    "NFLX": {
+      "code": "NFLX",
+      "name": "奈飞",
+      "market": "US",
+      "price": 91.02,
+      "change_pct": -1.13,
+      "change_amt": -1.04
+    },
+    "AAPL": {
+      "code": "AAPL",
+      "name": "苹果",
+      "market": "US",
+      "price": 276.83,
+      "change_pct": -1.18,
+      "change_amt": -3.31
+    },
+    "EDU": {
+      "code": "EDU",
+      "name": "新东方",
+      "market": "US",
+      "price": 53.14,
+      "change_pct": -1.26,
+      "change_amt": -0.68
+    },
+    "JNJ": {
+      "code": "JNJ",
+      "name": "强生",
+      "market": "US",
+      "price": 224.2,
+      "change_pct": -1.32,
+      "change_amt": -2.99
+    },
+    "NVS": {
+      "code": "NVS",
+      "name": "诺华制药",
+      "market": "US",
+      "price": 144.62,
+      "change_pct": -1.33,
+      "change_amt": -1.95
+    },
+    "TSEM": {
+      "code": "TSEM",
+      "name": "Tower半导体",
+      "market": "US",
+      "price": 215.06,
+      "change_pct": -1.35,
+      "change_amt": -2.95
+    },
+    "TMO": {
+      "code": "TMO",
+      "name": "赛默飞世尔科技",
+      "market": "US",
+      "price": 462.6,
+      "change_pct": -1.41,
+      "change_amt": -6.61
+    },
+    "NTES": {
+      "code": "NTES",
+      "name": "网易",
+      "market": "US",
+      "price": 116.25,
+      "change_pct": -1.47,
+      "change_amt": -1.73
+    },
+    "CVNA": {
+      "code": "CVNA",
+      "name": "Carvana Co-A",
+      "market": "US",
+      "price": 376.55,
+      "change_pct": -1.58,
+      "change_amt": -6.05
+    },
+    "UBER": {
+      "code": "UBER",
+      "name": "优步",
+      "market": "US",
+      "price": 73.93,
+      "change_pct": -1.58,
+      "change_amt": -1.19
+    },
+    "AEP": {
+      "code": "AEP",
+      "name": "美国电力",
+      "market": "US",
+      "price": 134.66,
+      "change_pct": -1.64,
+      "change_amt": -2.25
+    },
+    "CAT": {
+      "code": "CAT",
+      "name": "卡特彼勒",
+      "market": "US",
+      "price": 874.78,
+      "change_pct": -1.67,
+      "change_amt": -14.89
+    },
+    "AMGN": {
+      "code": "AMGN",
+      "name": "安进",
+      "market": "US",
+      "price": 323.85,
+      "change_pct": -1.81,
+      "change_amt": -5.97
+    },
+    "PLD": {
+      "code": "PLD",
+      "name": "安博",
+      "market": "US",
+      "price": 138.76,
+      "change_pct": -1.87,
+      "change_amt": -2.65
+    },
+    "EXR": {
+      "code": "EXR",
+      "name": "Extra Space Storage Inc",
+      "market": "US",
+      "price": 139.33,
+      "change_pct": -1.89,
+      "change_amt": -2.69
+    },
+    "PDD": {
+      "code": "PDD",
+      "name": "拼多多",
+      "market": "US",
+      "price": 97.79,
+      "change_pct": -1.94,
+      "change_amt": -1.93
+    },
+    "AEM": {
+      "code": "AEM",
+      "name": "伊格尔矿业",
+      "market": "US",
+      "price": 179.93,
+      "change_pct": -1.98,
+      "change_amt": -3.63
+    },
+    "PSA": {
+      "code": "PSA",
+      "name": "大众仓储",
+      "market": "US",
+      "price": 295.36,
+      "change_pct": -2.05,
+      "change_amt": -6.19
+    },
+    "GE": {
+      "code": "GE",
+      "name": "GE航空航天",
+      "market": "US",
+      "price": 280.52,
+      "change_pct": -2.09,
+      "change_amt": -5.99
+    },
+    "KGC": {
+      "code": "KGC",
+      "name": "金罗斯黄金",
+      "market": "US",
+      "price": 28.89,
+      "change_pct": -2.23,
+      "change_amt": -0.66
+    },
+    "TER": {
+      "code": "TER",
+      "name": "泰瑞达",
+      "market": "US",
+      "price": 337.44,
+      "change_pct": -2.31,
+      "change_amt": -7.98
+    },
+    "BKNG": {
+      "code": "BKNG",
+      "name": "Booking Holdings",
+      "market": "US",
+      "price": 165.58,
+      "change_pct": -2.39,
+      "change_amt": -4.05
+    },
+    "RERE": {
+      "code": "RERE",
+      "name": "万物新生",
+      "market": "US",
+      "price": 4.32,
+      "change_pct": -2.48,
+      "change_amt": -0.11
+    },
+    "TAL": {
+      "code": "TAL",
+      "name": "好未来",
+      "market": "US",
+      "price": 10.89,
+      "change_pct": -2.51,
+      "change_amt": -0.28
+    },
+    "ASML": {
+      "code": "ASML",
+      "name": "阿斯麦",
+      "market": "US",
+      "price": 1386.21,
+      "change_pct": -2.86,
+      "change_amt": -40.81
+    },
+    "RIVN": {
+      "code": "RIVN",
+      "name": "Rivian Automotive Inc-A",
+      "market": "US",
+      "price": 14.51,
+      "change_pct": -3.4,
+      "change_amt": -0.51
+    },
+    "ARM": {
+      "code": "ARM",
+      "name": "Arm Holdings plc ADR",
+      "market": "US",
+      "price": 203.26,
+      "change_pct": -3.75,
+      "change_amt": -7.92
+    },
+    "INTC": {
+      "code": "INTC",
+      "name": "英特尔",
+      "market": "US",
+      "price": 95.78,
+      "change_pct": -3.85,
+      "change_amt": -3.84
+    },
+    "VIAV": {
+      "code": "VIAV",
+      "name": "Viavi Solutions Inc",
+      "market": "US",
+      "price": 52.49,
+      "change_pct": -5.13,
+      "change_amt": -2.84
+    },
+    "AMD": {
+      "code": "AMD",
+      "name": "超威半导体",
+      "market": "US",
+      "price": 341.54,
+      "change_pct": -5.27,
+      "change_amt": -19.0
+    },
+    "03750": {
+      "code": "03750",
+      "name": "宁德时代",
+      "market": "HK",
+      "price": 655.0,
+      "change_pct": 3.72,
+      "change_amt": 23.5
+    },
+    "09899": {
+      "code": "09899",
+      "name": "网易云音乐",
+      "market": "HK",
+      "price": 120.9,
+      "change_pct": 1.94,
+      "change_amt": 2.3
+    },
+    "02105": {
+      "code": "02105",
+      "name": "来凯医药-B",
+      "market": "HK",
+      "price": 14.02,
+      "change_pct": 1.74,
+      "change_amt": 0.24
+    },
+    "06869": {
+      "code": "06869",
+      "name": "长飞光纤光缆",
+      "market": "HK",
+      "price": 225.8,
+      "change_pct": 0.89,
+      "change_amt": 2.0
+    },
+    "00388": {
+      "code": "00388",
+      "name": "香港交易所",
+      "market": "HK",
+      "price": 418.2,
+      "change_pct": 0.77,
+      "change_amt": 3.2
+    },
+    "00268": {
+      "code": "00268",
+      "name": "金蝶国际",
+      "market": "HK",
+      "price": 8.58,
+      "change_pct": 0.47,
+      "change_amt": 0.04
+    },
+    "02318": {
+      "code": "02318",
+      "name": "中国平安",
+      "market": "HK",
+      "price": 63.5,
+      "change_pct": 0.4,
+      "change_amt": 0.25
+    },
+    "09868": {
+      "code": "09868",
+      "name": "小鹏集团-W",
+      "market": "HK",
+      "price": 62.75,
+      "change_pct": 0.32,
+      "change_amt": 0.2
+    },
+    "02601": {
+      "code": "02601",
+      "name": "中国太保",
+      "market": "HK",
+      "price": 34.46,
+      "change_pct": 0.29,
+      "change_amt": 0.1
+    },
+    "06160": {
+      "code": "06160",
+      "name": "百济神州",
+      "market": "HK",
+      "price": 176.8,
+      "change_pct": 0.06,
+      "change_amt": 0.1
+    },
+    "03968": {
+      "code": "03968",
+      "name": "招商银行",
+      "market": "HK",
+      "price": 47.1,
+      "change_pct": 0.04,
+      "change_amt": 0.02
+    },
+    "02883": {
+      "code": "02883",
+      "name": "中海油田服务",
+      "market": "HK",
+      "price": 9.46,
+      "change_pct": 0.0,
+      "change_amt": 0.0
+    },
+    "00175": {
+      "code": "00175",
+      "name": "吉利汽车",
+      "market": "HK",
+      "price": 23.0,
+      "change_pct": -0.09,
+      "change_amt": -0.02
+    },
+    "01209": {
+      "code": "01209",
+      "name": "华润万象生活",
+      "market": "HK",
+      "price": 46.76,
+      "change_pct": -0.13,
+      "change_amt": -0.06
+    },
+    "00700": {
+      "code": "00700",
+      "name": "腾讯控股",
+      "market": "HK",
+      "price": 472.2,
+      "change_pct": -0.17,
+      "change_amt": -0.8
+    },
+    "00857": {
+      "code": "00857",
+      "name": "中国石油股份",
+      "market": "HK",
+      "price": 11.68,
+      "change_pct": -0.17,
+      "change_amt": -0.02
+    },
+    "00883": {
+      "code": "00883",
+      "name": "中国海洋石油",
+      "market": "HK",
+      "price": 28.56,
+      "change_pct": -0.21,
+      "change_amt": -0.06
+    },
+    "01772": {
+      "code": "01772",
+      "name": "赣锋锂业",
+      "market": "HK",
+      "price": 86.5,
+      "change_pct": -0.23,
+      "change_amt": -0.2
+    },
+    "01398": {
+      "code": "01398",
+      "name": "工商银行",
+      "market": "HK",
+      "price": 6.9,
+      "change_pct": -0.29,
+      "change_amt": -0.02
+    },
+    "09988": {
+      "code": "09988",
+      "name": "阿里巴巴-W",
+      "market": "HK",
+      "price": 131.2,
+      "change_pct": -0.38,
+      "change_amt": -0.5
+    },
+    "09999": {
+      "code": "09999",
+      "name": "网易-S",
+      "market": "HK",
+      "price": 181.2,
+      "change_pct": -0.38,
+      "change_amt": -0.7
+    },
+    "00189": {
+      "code": "00189",
+      "name": "东岳集团",
+      "market": "HK",
+      "price": 13.09,
+      "change_pct": -0.38,
+      "change_amt": -0.05
+    },
+    "03898": {
+      "code": "03898",
+      "name": "时代电气",
+      "market": "HK",
+      "price": 36.22,
+      "change_pct": -0.44,
+      "change_amt": -0.16
+    },
+    "09969": {
+      "code": "09969",
+      "name": "诺诚健华",
+      "market": "HK",
+      "price": 13.65,
+      "change_pct": -0.44,
+      "change_amt": -0.06
+    },
+    "01088": {
+      "code": "01088",
+      "name": "中国神华",
+      "market": "HK",
+      "price": 47.84,
+      "change_pct": -0.46,
+      "change_amt": -0.22
+    },
+    "01801": {
+      "code": "01801",
+      "name": "信达生物",
+      "market": "HK",
+      "price": 92.0,
+      "change_pct": -0.49,
+      "change_amt": -0.45
+    },
+    "03939": {
+      "code": "03939",
+      "name": "万国黄金集团",
+      "market": "HK",
+      "price": 10.89,
+      "change_pct": -0.55,
+      "change_amt": -0.06
+    },
+    "02097": {
+      "code": "02097",
+      "name": "蜜雪集团",
+      "market": "HK",
+      "price": 293.2,
+      "change_pct": -0.61,
+      "change_amt": -1.8
+    },
+    "02595": {
+      "code": "02595",
+      "name": "劲方医药-B",
+      "market": "HK",
+      "price": 41.3,
+      "change_pct": -0.63,
+      "change_amt": -0.26
+    },
+    "00939": {
+      "code": "00939",
+      "name": "建设银行",
+      "market": "HK",
+      "price": 8.78,
+      "change_pct": -0.68,
+      "change_amt": -0.06
+    },
+    "00753": {
+      "code": "00753",
+      "name": "中国国航",
+      "market": "HK",
+      "price": 4.93,
+      "change_pct": -0.8,
+      "change_amt": -0.04
+    },
+    "02899": {
+      "code": "02899",
+      "name": "紫金矿业",
+      "market": "HK",
+      "price": 35.5,
+      "change_pct": -0.84,
+      "change_amt": -0.3
+    },
+    "06990": {
+      "code": "06990",
+      "name": "科伦博泰生物",
+      "market": "HK",
+      "price": 456.8,
+      "change_pct": -0.91,
+      "change_amt": -4.2
+    },
+    "00517": {
+      "code": "00517",
+      "name": "中远海运国际",
+      "market": "HK",
+      "price": 6.37,
+      "change_pct": -0.93,
+      "change_amt": -0.06
+    },
+    "01093": {
+      "code": "01093",
+      "name": "石药集团",
+      "market": "HK",
+      "price": 8.4,
+      "change_pct": -0.94,
+      "change_amt": -0.08
+    },
+    "03933": {
+      "code": "03933",
+      "name": "联邦制药",
+      "market": "HK",
+      "price": 9.39,
+      "change_pct": -0.95,
+      "change_amt": -0.09
+    },
+    "03808": {
+      "code": "03808",
+      "name": "中国重汽",
+      "market": "HK",
+      "price": 39.24,
+      "change_pct": -0.96,
+      "change_amt": -0.38
+    },
+    "01070": {
+      "code": "01070",
+      "name": "TCL电子",
+      "market": "HK",
+      "price": 15.0,
+      "change_pct": -0.99,
+      "change_amt": -0.15
+    },
+    "01138": {
+      "code": "01138",
+      "name": "中远海能",
+      "market": "HK",
+      "price": 18.88,
+      "change_pct": -1.0,
+      "change_amt": -0.19
+    },
+    "03690": {
+      "code": "03690",
+      "name": "美团-W",
+      "market": "HK",
+      "price": 83.55,
+      "change_pct": -1.07,
+      "change_amt": -0.9
+    },
+    "01672": {
+      "code": "01672",
+      "name": "歌礼制药-B",
+      "market": "HK",
+      "price": 16.72,
+      "change_pct": -1.07,
+      "change_amt": -0.18
+    },
+    "00522": {
+      "code": "00522",
+      "name": "ASMPT",
+      "market": "HK",
+      "price": 163.3,
+      "change_pct": -1.09,
+      "change_amt": -1.8
+    },
+    "02096": {
+      "code": "02096",
+      "name": "先声药业",
+      "market": "HK",
+      "price": 11.72,
+      "change_pct": -1.6,
+      "change_amt": -0.19
+    },
+    "01347": {
+      "code": "01347",
+      "name": "华虹半导体",
+      "market": "HK",
+      "price": 119.0,
+      "change_pct": -1.65,
+      "change_amt": -2.0
+    },
+    "01530": {
+      "code": "01530",
+      "name": "三生制药",
+      "market": "HK",
+      "price": 22.3,
+      "change_pct": -1.68,
+      "change_amt": -0.38
+    },
+    "00981": {
+      "code": "00981",
+      "name": "中芯国际",
+      "market": "HK",
+      "price": 70.8,
+      "change_pct": -1.87,
+      "change_amt": -1.35
+    },
+    "01211": {
+      "code": "01211",
+      "name": "比亚迪股份",
+      "market": "HK",
+      "price": 101.0,
+      "change_pct": -1.94,
+      "change_amt": -2.0
+    },
+    "03668": {
+      "code": "03668",
+      "name": "兖煤澳大利亚",
+      "market": "HK",
+      "price": 40.8,
+      "change_pct": -2.02,
+      "change_amt": -0.84
+    },
+    "03330": {
+      "code": "03330",
+      "name": "灵宝黄金",
+      "market": "HK",
+      "price": 19.61,
+      "change_pct": -2.24,
+      "change_amt": -0.45
+    },
+    "00100": {
+      "code": "00100",
+      "name": "MINIMAX-W",
+      "market": "HK",
+      "price": 782.5,
+      "change_pct": -2.55,
+      "change_amt": -20.5
+    },
+    "02208": {
+      "code": "02208",
+      "name": "金风科技",
+      "market": "HK",
+      "price": 17.73,
+      "change_pct": -2.64,
+      "change_amt": -0.48
+    },
+    "06181": {
+      "code": "06181",
+      "name": "老铺黄金",
+      "market": "HK",
+      "price": 553.5,
+      "change_pct": -2.72,
+      "change_amt": -15.5
+    },
+    "06082": {
+      "code": "06082",
+      "name": "壁仞科技",
+      "market": "HK",
+      "price": 47.0,
+      "change_pct": -3.49,
+      "change_amt": -1.7
+    },
+    "02513": {
+      "code": "02513",
+      "name": "智谱",
+      "market": "HK",
+      "price": 919.5,
+      "change_pct": -3.92,
+      "change_amt": -37.5
+    },
+    "02245": {
+      "code": "02245",
+      "name": "力勤资源",
+      "market": "HK",
+      "price": 12.39,
+      "change_pct": -4.84,
+      "change_amt": -0.63
+    },
+    "688256": {
+      "code": "688256",
+      "name": "寒武纪",
+      "market": "A",
+      "price": 1699.96,
+      "change_pct": 20.0,
+      "change_amt": 283.33
+    },
+    "688536": {
+      "code": "688536",
+      "name": "思瑞浦",
+      "market": "A",
+      "price": 268.1,
+      "change_pct": 12.95,
+      "change_amt": 30.74
+    },
+    "300054": {
+      "code": "300054",
+      "name": "鼎龙股份",
+      "market": "A",
+      "price": 62.36,
+      "change_pct": 5.75,
+      "change_amt": 3.39
+    },
+    "002653": {
+      "code": "002653",
+      "name": "海思科",
+      "market": "A",
+      "price": 58.53,
+      "change_pct": 5.4,
+      "change_amt": 3.0
+    },
+    "688498": {
+      "code": "688498",
+      "name": "源杰科技",
+      "market": "A",
+      "price": 1571.0,
+      "change_pct": 3.7,
+      "change_amt": 56.0
+    },
+    "688266": {
+      "code": "688266",
+      "name": "泽璟制药-U",
+      "market": "A",
+      "price": 104.0,
+      "change_pct": 3.59,
+      "change_amt": 3.6
+    },
+    "300454": {
+      "code": "300454",
+      "name": "深信服",
+      "market": "A",
+      "price": 117.18,
+      "change_pct": 3.15,
+      "change_amt": 3.58
+    },
+    "300308": {
+      "code": "300308",
+      "name": "中际旭创",
+      "market": "A",
+      "price": 857.5,
+      "change_pct": 1.48,
+      "change_amt": 12.5
+    },
+    "002384": {
+      "code": "002384",
+      "name": "东山精密",
+      "market": "A",
+      "price": 186.73,
+      "change_pct": 1.35,
+      "change_amt": 2.48
+    },
+    "603893": {
+      "code": "603893",
+      "name": "瑞芯微",
+      "market": "A",
+      "price": 182.9,
+      "change_pct": 0.29,
+      "change_amt": 0.53
+    },
+    "600938": {
+      "code": "600938",
+      "name": "中国海油",
+      "market": "A",
+      "price": 39.99,
+      "change_pct": 0.1,
+      "change_amt": 0.04
+    },
+    "601088": {
+      "code": "601088",
+      "name": "中国神华",
+      "market": "A",
+      "price": 48.0,
+      "change_pct": 0.04,
+      "change_amt": 0.02
+    },
+    "300604": {
+      "code": "300604",
+      "name": "长川科技",
+      "market": "A",
+      "price": 174.2,
+      "change_pct": -0.06,
+      "change_amt": -0.1
+    },
+    "688519": {
+      "code": "688519",
+      "name": "南亚新材",
+      "market": "A",
+      "price": 174.19,
+      "change_pct": -0.52,
+      "change_amt": -0.91
+    },
+    "300207": {
+      "code": "300207",
+      "name": "欣旺达",
+      "market": "A",
+      "price": 27.43,
+      "change_pct": -1.15,
+      "change_amt": -0.32
+    },
+    "600519": {
+      "code": "600519",
+      "name": "贵州茅台",
+      "market": "A",
+      "price": 1384.79,
+      "change_pct": -1.17,
+      "change_amt": -16.38
+    },
+    "600588": {
+      "code": "600588",
+      "name": "用友网络",
+      "market": "A",
+      "price": 11.68,
+      "change_pct": -1.6,
+      "change_amt": -0.19
+    },
+    "300476": {
+      "code": "300476",
+      "name": "胜宏科技",
+      "market": "A",
+      "price": 328.49,
+      "change_pct": -1.61,
+      "change_amt": -5.38
+    },
+    "600426": {
+      "code": "600426",
+      "name": "华鲁恒升",
+      "market": "A",
+      "price": 38.5,
+      "change_pct": -1.76,
+      "change_amt": -0.69
+    },
+    "300750": {
+      "code": "300750",
+      "name": "宁德时代",
+      "market": "A",
+      "price": 436.0,
+      "change_pct": -2.02,
+      "change_amt": -9.0
+    },
+    "300502": {
+      "code": "300502",
+      "name": "新易盛",
+      "market": "A",
+      "price": 525.79,
+      "change_pct": -2.09,
+      "change_amt": -11.21
+    },
+    "002594": {
+      "code": "002594",
+      "name": "比亚迪",
+      "market": "A",
+      "price": 102.98,
+      "change_pct": -2.3,
+      "change_amt": -2.42
+    },
+    "301358": {
+      "code": "301358",
+      "name": "湖南裕能",
+      "market": "A",
+      "price": 102.24,
+      "change_pct": -4.45,
+      "change_amt": -4.76
+    },
+    "600498": {
+      "code": "600498",
+      "name": "烽火通信",
+      "market": "A",
+      "price": 46.68,
+      "change_pct": -9.36,
+      "change_amt": -4.82
+    },
+    "000660": {
+      "code": "000660",
+      "name": "*ST南华",
+      "market": "A",
+      "price": null,
+      "change_pct": null,
+      "change_amt": null
+    }
+  }
 }
