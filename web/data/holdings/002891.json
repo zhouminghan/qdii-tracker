@@ -1,0 +1,174 @@
+{
+  "code": "002891",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 53.35,
+  "heavy_count": 6,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "COHR",
+      "stock_name": "Coherent Corp",
+      "weight": 7.54,
+      "shares": 3.06,
+      "market_value": 5046.84
+    },
+    {
+      "rank": 2,
+      "stock_code": "SNDK",
+      "stock_name": "闪迪",
+      "weight": 7.13,
+      "shares": 1.09,
+      "market_value": 4772.48
+    },
+    {
+      "rank": 3,
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 6.58,
+      "shares": 1.88,
+      "market_value": 4405.3
+    },
+    {
+      "rank": 4,
+      "stock_code": "ONTO",
+      "stock_name": "Onto Innovation Inc",
+      "weight": 5.85,
+      "shares": 2.76,
+      "market_value": 3912.5
+    },
+    {
+      "rank": 5,
+      "stock_code": "LITE",
+      "stock_name": "Lumentum Holdings Inc",
+      "weight": 5.79,
+      "shares": 0.8,
+      "market_value": 3872.64
+    },
+    {
+      "rank": 6,
+      "stock_code": "GLW",
+      "stock_name": "康宁",
+      "weight": 5.12,
+      "shares": 3.64,
+      "market_value": 3427.73
+    },
+    {
+      "rank": 7,
+      "stock_code": "GOOGL",
+      "stock_name": "谷歌-A",
+      "weight": 4.76,
+      "shares": 1.6,
+      "market_value": 3187.97
+    },
+    {
+      "rank": 8,
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 4.11,
+      "shares": 2.28,
+      "market_value": 2747.03
+    },
+    {
+      "rank": 9,
+      "stock_code": "INTC",
+      "stock_name": "英特尔",
+      "weight": 3.45,
+      "shares": 7.56,
+      "market_value": 2308.56
+    },
+    {
+      "rank": 10,
+      "stock_code": "AAOI",
+      "stock_name": "应用光电",
+      "weight": 3.02,
+      "shares": 3.45,
+      "market_value": 2018.57
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "COHR",
+        "stock_name": "Coherent Corp",
+        "weight": 7.54,
+        "shares": 3.06,
+        "market_value": 5046.84
+      },
+      {
+        "rank": 2,
+        "stock_code": "SNDK",
+        "stock_name": "闪迪",
+        "weight": 7.13,
+        "shares": 1.09,
+        "market_value": 4772.48
+      },
+      {
+        "rank": 3,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 6.58,
+        "shares": 1.88,
+        "market_value": 4405.3
+      },
+      {
+        "rank": 4,
+        "stock_code": "ONTO",
+        "stock_name": "Onto Innovation Inc",
+        "weight": 5.85,
+        "shares": 2.76,
+        "market_value": 3912.5
+      },
+      {
+        "rank": 5,
+        "stock_code": "LITE",
+        "stock_name": "Lumentum Holdings Inc",
+        "weight": 5.79,
+        "shares": 0.8,
+        "market_value": 3872.64
+      },
+      {
+        "rank": 6,
+        "stock_code": "GLW",
+        "stock_name": "康宁",
+        "weight": 5.12,
+        "shares": 3.64,
+        "market_value": 3427.73
+      },
+      {
+        "rank": 7,
+        "stock_code": "GOOGL",
+        "stock_name": "谷歌-A",
+        "weight": 4.76,
+        "shares": 1.6,
+        "market_value": 3187.97
+      },
+      {
+        "rank": 8,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 4.11,
+        "shares": 2.28,
+        "market_value": 2747.03
+      },
+      {
+        "rank": 9,
+        "stock_code": "INTC",
+        "stock_name": "英特尔",
+        "weight": 3.45,
+        "shares": 7.56,
+        "market_value": 2308.56
+      },
+      {
+        "rank": 10,
+        "stock_code": "AAOI",
+        "stock_name": "应用光电",
+        "weight": 3.02,
+        "shares": 3.45,
+        "market_value": 2018.57
+      }
+    ]
+  },
+  "fetched_at": "2026-05-08T01:58:35.273429"
+}

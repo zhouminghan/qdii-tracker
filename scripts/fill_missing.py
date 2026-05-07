@@ -216,23 +216,13 @@ def fetch_ytd(code: str):
 
 def main():
     project_root = Path(__file__).parent.parent
-    data_dir = project_root / "data"
-    web_data_dir = project_root / "web" / "data"
-
-    # 统一加载所有板块数据（三个 Pass 共享同一组内存对象，避免多次读取导致的覆盖 bug）
-    ALL_CATS = ["sp500", "nasdaq_passive", "active", "global_other", "etf"]
-
-    # Seed：data/ 不存在或缺文件时，从 web/data/（仓库追踪的产物）拷贝过来当起点
-    # 这样新克隆的仓库 / CI 环境也能直接跑增量更新，不必先跑一遍完整流水线
+    # 统一：直接读写 web/data/（前端消费目录），不再维护 data/ 副本
+    # 历史 bug（2026-05-08）：两目录分裂时，data/ 里的上游简化快照会覆盖 web/data/ 的完整版
+    #                        统一成单一目录后，该 bug 根治，字段永远完整
+    data_dir = project_root / "web" / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
-    import shutil as _shutil
-    for cat in ALL_CATS:
-        dst = data_dir / f"{cat}.json"
-        if not dst.exists():
-            src = web_data_dir / f"{cat}.json"
-            if src.exists():
-                _shutil.copy2(src, dst)
-                print(f"🌱 seed: data/{cat}.json ← web/data/{cat}.json")
+
+    ALL_CATS = ["sp500", "nasdaq_passive", "active", "global_other", "etf"]
 
     loaded_data = {}
     for cat in ALL_CATS:
@@ -240,6 +230,8 @@ def main():
         if fp.exists():
             with open(fp, encoding="utf-8") as f:
                 loaded_data[cat] = json.load(f)
+        else:
+            print(f"⚠️  {cat}.json 不存在，跳过（首次运行需先跑 scan_funds.py + enrich_data.py）")
 
     # ------------------------- Pass 1：pingzhongdata 历史收益 -------------------------
     # 场外 QDII：每天都跑（要刷新 nav/nav_date/daily_change），pzd 抓不到再降级
@@ -351,18 +343,6 @@ def main():
     print(f"📊 总结：Pass1 成功 {success} / 失败 {fail} / 共 {total}")
     print(f"         Pass2 成功 {success2} / 共 {total2}")
     print(f"         Pass3 成功 {success3} / 失败 {fail3} / 共 {total3}")
-
-    # 同步到 web/data/（前端消费目录）
-    web_data_dir = project_root / "web" / "data"
-    if web_data_dir.exists():
-        print("\n🔄 同步到 web/data/ …")
-        import shutil
-        for cat in ALL_CATS:
-            src = data_dir / f"{cat}.json"
-            dst = web_data_dir / f"{cat}.json"
-            if src.exists():
-                shutil.copy2(src, dst)
-                print(f"  ✅ {cat}.json")
 
 
 if __name__ == "__main__":

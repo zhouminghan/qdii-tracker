@@ -215,7 +215,8 @@ def share_sort_key(share: dict) -> tuple:
 
 def main():
     project_root = Path(__file__).parent.parent
-    data_dir = project_root / "data"
+    # 统一：直接读写 web/data/（前端消费目录），不再维护 data/ 副本
+    data_dir = project_root / "web" / "data"
 
     # Step 1: 批量数据（快）
     rank_map = fetch_rank_data()
@@ -308,17 +309,6 @@ def main():
     meta["enriched_fields"] = ["涨跌幅", "规模", "限额", "基金经理", "成立时间"]
     with open(meta_fp, "w", encoding="utf-8") as f:
         json.dump(meta, f, ensure_ascii=False, indent=2)
-
-    # 同步到 web/data/（前端消费目录）
-    web_data_dir = project_root / "web" / "data"
-    if web_data_dir.exists():
-        import shutil as _shutil
-        for cat in ["sp500", "nasdaq_passive", "active", "global_other", "etf"]:
-            src = data_dir / f"{cat}.json"
-            if src.exists():
-                _shutil.copy2(src, web_data_dir / f"{cat}.json")
-        _shutil.copy2(meta_fp, web_data_dir / "meta.json")
-        print(f"🔄 已同步到 {web_data_dir}")
 
     print("\n✅ 全量丰富完成！")
 

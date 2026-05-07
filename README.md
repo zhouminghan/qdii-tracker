@@ -21,7 +21,7 @@
 - **📈 历史净值走势图**：每只基金可弹窗查看完整历史，支持 7 档区间（1月/3月/6月/今年来/1年/3年/全部），y 轴累计涨跌幅，鼠标 hover 显示日期/净值/日涨跌/区间累计；底部「加载全部历史净值」展开完整逐日列表
 - **A/C/E/F/I 份额对比**：同一只基金不同份额的费率结构一目了然
 - **列头排序**：规模 / 净值（按当日涨跌） / 近1月 / 今年来 / 近1年 / 成立来 / 申购状态 都可点击切换升降序
-- **手动刷新按钮**：右上角一键重拉前端动态数据；交易日自动 5 分钟轮询
+- **手动刷新按钮**：右上角一键重拉 `web/data/*.json` + 对缺当日净值的基金兜底打 fundgz；交易日 15:00-22:30 每 15 分钟自动轮询
 - **持仓股票市场状态指示**：每只持仓股票按所属市场（A/HK/US）显示 ●（盘中实时）/ ○（已收盘）状态点，含**美股冬夏令时自动判定**
 - **展示指标**：规模 / 净值 / 日涨跌 / 近1月 / 今年来(YTD) / 近1年 / 成立来 / 基金经理 / 日限额 / 买卖费率 / 七姐妹含量
 
@@ -35,7 +35,7 @@
 │   web/data/                                        │
 │   ├── sp500.json / nasdaq_passive.json             │
 │   ├── active.json / global_other.json / etf.json   │
-│   ├── holdings/{code}.json    # 52 只基金的持仓     │
+│   ├── holdings/{code}.json    # 54 只基金的持仓     │
 │   ├── us_stocks.json          # 持仓股票实时行情    │
 │   └── meta.json               # 扫描元信息         │
 └──────────▲──────────────────────────┬──────────────┘
@@ -61,30 +61,31 @@
 ```
 
 **双数据源策略**：
-- 🔵 **静态层**：后端脚本每日定时跑（GitHub Actions / 容器 cron），产出 JSON 快照
-- 🟢 **动态层**：前端打开页面时**直连**天天基金 / 腾讯财经的 JSONP 接口，刷新"最新真实净值 + ETF 最新价"
+- 🔵 **静态层（权威）**：GitHub Actions 每交易日 **22:30** 跑完整增量脚本，产出 `web/data/*.json` 快照（commit 回仓库）
+- 🟢 **动态层（兜底）**：前端打开页面时先读 `web/data/*.json`；对"仓库里 nav_date 还不是今天"的基金，再兜底直接调 fundgz / 腾讯行情补拉
 
-### ⚡ 数据更新方式：**静态 JSON + 前端动态补净值**
+### ⚡ 数据更新方式：**Actions 主力 + 前端智能兜底**
 
-- **静态部分**：后端脚本跑完把结果写到 `web/data/*.json`，前端读本地 JSON
-- **动态部分**：页面打开时前端直接调公开接口刷新**最新真实净值 / ETF 实时价 / 持仓股票行情**；交易日每 5 分钟自动轮询一次
+- **静态部分**：Actions 22:30 定时跑 → 权威数据源，所有基金规模/净值/持仓都以此为准
+- **动态部分**：前端**仅在"仓库数据落后于今日"时**调 fundgz/腾讯兜底，**打开即见最新**
 
 | 数据类型 | 刷新方式 | 新鲜度 |
 |---|---|---|
-| 场外基金**最新净值 + 日期** | 🟢 前端动态拉 `fundgz.1234567.com.cn` | 打开即最新（QDII 净值 T+1 披露，盘后看到的是上一交易日值） |
+| 场外基金**最新净值 + 日期** | 🔵 Actions 22:30 写入 data.json；🟢 前端仅在缺当日净值时兜底拉 `fundgz.1234567.com.cn` | 22:30 后是当日最新；盘后 15-22:30 之间前端自动补拉 |
 | 场内 ETF **最新价 + 涨跌** | 🟢 前端动态拉 `qt.gtimg.cn` | 打开即最新（盘中 T+0 实时） |
 | 持仓股票**当日涨跌** | 🟢 前端动态拉 `qt.gtimg.cn`（点击「📊 持仓」时） | 按各市场（A/HK/US）盘时自动判定盘中/收盘 |
 | 历史净值走势（图表） | 🟢 前端动态拉 `pingzhongdata.js`（点击「📈 走势」时） | 实时拉取，覆盖基金成立至今全量 |
-| 基金规模、基金经理、费率 | 🔵 脚本 | 每日定时 |
-| 历史收益（近1月/YTD/1年/成立来） | 🔵 脚本 | 每日定时 |
-| 申购状态、日限额 | 🔵 脚本 | 每日定时 |
-| 持仓（Top10 重仓） | 🔵 脚本 | 季报周期（Q1/Q2/Q3/Q4 披露后） |
+| 基金规模、基金经理、费率 | 🔵 Actions 脚本 | 每月 1 日完整更新 |
+| 历史收益（近1月/YTD/1年/成立来） | 🔵 Actions 脚本 | 每交易日 22:30 |
+| 申购状态、日限额 | 🔵 Actions 脚本 | 每月 1 日完整更新 |
+| 持仓（Top10 重仓） | 🔵 Actions 脚本 | 每月 1 日完整更新（季报周期披露） |
 
-**脚本建议跑多频**：
-- 交易日 17:30 跑一次 `fill_missing.py + fetch_stocks.py`（净值 / 股价刷新）
-- 每月 1 日跑一次完整流水线（含持仓 + 费率）
+**刷新窗口**（前端兜底逻辑）：
+- 交易日 15:00-22:30：**每 15 分钟**自动轮询一次，只对"仓库里还不是今日净值"的基金调 fundgz
+- 22:30 之后：Actions 已跑 → 仓库就是最新 → 前端兜底队列自动为空，不再打 fundgz
+- 非交易日 / 交易日 15:00 前：不轮询（没新数据）
 
-> 上面两种部署方案已经把这个时间表默认配好（GitHub Actions / 容器内 cron），不用手动。
+> 两种部署方案已把这个时间表默认配好（GitHub Actions / 容器内 cron），不用手动。
 
 ---
 
@@ -105,15 +106,18 @@ qdii-tracker/
 │
 ├── web/                          # 前端（纯静态）
 │   ├── index.html                # 单文件应用
-│   └── data/                     # 前端消费的 JSON（git 追踪）
+│   └── data/                     # 前端消费的 JSON（git 追踪，也是脚本写入目标）
 │       ├── sp500.json            # 🏦 场外 · 标普500（7 系列）
 │       ├── nasdaq_passive.json   # 🏦 场外 · 纳指100（17 系列）
 │       ├── active.json           # 🏦 场外 · 美股主动精选（18 系列，白名单）
-│       ├── global_other.json     # 🏦 场外 · 全球/其他 QDII（22 系列）
+│       ├── global_other.json     # 🏦 场外 · 全球/其他 QDII（24 系列）
 │       ├── etf.json              # 📈 场内 ETF（18 系列）
 │       ├── us_stocks.json        # 持仓股票实时行情
 │       ├── meta.json             # 扫描元信息
-│       └── holdings/{code}.json  # 基金持仓详情（52 只）
+│       └── holdings/{code}.json  # 基金持仓详情（54 只）
+│
+├── docs/                         # 运维 SOP 文档
+│   └── ADDING-FUNDS.md           # 新增基金操作手册
 │
 ├── .github/workflows/
 │   ├── update-data.yml           # GitHub Actions 自动更新数据
@@ -121,12 +125,10 @@ qdii-tracker/
 │
 ├── Dockerfile                    # Docker 镜像定义（一键容器化）
 ├── docker-compose.yml            # docker compose 启动配置
-├── docker/
-│   ├── nginx.conf                # 容器内 Nginx 站点配置
-│   ├── crontab                   # 容器内 cron 计划（supercronic）
-│   └── entrypoint.sh             # 容器启动脚本
-│
-└── data/                         # 脚本中间产物（gitignore 不追踪）
+└── docker/
+    ├── nginx.conf                # 容器内 Nginx 站点配置
+    ├── crontab                   # 容器内 cron 计划（supercronic）
+    └── entrypoint.sh             # 容器启动脚本
 ```
 
 ---
@@ -150,7 +152,7 @@ qdii-tracker/
 5. **手动白/黑名单兜底**：`FORCE_INCLUDE_CODES` / `FORCE_EXCLUDE_CODES`（应对规则误伤的个案）
 6. 按"基金公司 + 产品名"归组成"系列"（A/C/E/F 份额自动合并）
 
-**输出**：`data/sp500.json` / `nasdaq_passive.json` / `active.json` / `global_other.json` / `etf.json`（框架，字段不全）
+**输出**：`web/data/sp500.json` / `nasdaq_passive.json` / `active.json` / `global_other.json` / `etf.json`（框架，字段不全）
 
 **耗时**：~30 秒（主要是 AKShare 初次抓 ETF 实时价）
 
@@ -189,9 +191,10 @@ qdii-tracker/
 
 **关键数据共享**：三个 Pass 共享**同一组内存 dict**（避免多次磁盘读写导致覆盖）
 
-**自动同步**：写完 `data/` 后自动 `copy2` 到 `web/data/`
+**统一目录策略（2026-05-08 重构）**：所有脚本直接读写 `web/data/`，不再维护 `data/` 中间副本。
+消除了过去"data/ 里的上游简化快照覆盖 web/data/ 完整版"的 bug。
 
-**耗时**：~10 分钟
+**耗时**：~1-2 分钟
 
 ---
 
@@ -201,7 +204,7 @@ qdii-tracker/
 
 **做什么**：调 AKShare `fund_portfolio_hold_em` 抓每只基金最新一期的 Top10 重仓股
 
-**输出**：`data/holdings/{code}.json`，格式：
+**输出**：`web/data/holdings/{code}.json`，格式：
 ```json
 {
   "fund_code": "161128",
@@ -215,7 +218,7 @@ qdii-tracker/
 }
 ```
 
-**自动同步**：写完 `data/holdings/` 后自动 `copy2` 到 `web/data/holdings/`
+**输出**：`web/data/holdings/{code}.json`
 
 **耗时**：~3 分钟（40 只 × 0.3s 限速）
 
@@ -230,7 +233,7 @@ qdii-tracker/
 - 港股、A 股：`stock_individual_spot_xq`（雪球接口，逐只调）
 - 输出 `{stock_code: {change_pct, market, price, ...}}`
 
-**输出**：`data/us_stocks.json`（前端加载时用作"持仓当日涨跌"的红绿标色）
+**输出**：`web/data/us_stocks.json`（前端加载时用作"持仓当日涨跌"的红绿标色）
 
 ---
 
@@ -243,10 +246,10 @@ qdii-tracker/
 cd scripts
 pip install -r requirements.txt
 
-# 2. 跑一次数据流水线（首次，~20 分钟）
+# 2. 跑一次数据流水线（首次，~10 分钟）
 python scan_funds.py
 python enrich_data.py
-python fill_missing.py        # 会自动同步到 web/data/
+python fill_missing.py        # 直接写 web/data/（2026-05 重构后不再有 data/→web/data/ 同步步骤）
 python fetch_holdings.py
 python fetch_stocks.py
 
@@ -256,11 +259,11 @@ python3 -m http.server 8765
 # 浏览器打开 http://localhost:8765/
 ```
 
-**日常增量更新**（交易日 17:00 后净值出来了）：
+**日常增量更新**（交易日 22:30 后 QDII 净值才稳定披露）：
 
 ```bash
 cd scripts
-python fill_missing.py        # 更新净值 + YTD + 收益（~10 分钟）
+python fill_missing.py        # 更新净值 + YTD + 收益（~2 分钟）
 python fetch_stocks.py        # 更新股价（~1 分钟）
 ```
 
@@ -288,7 +291,7 @@ python fetch_stocks.py        # 更新股价（~1 分钟）
 ### 你将得到什么
 
 - 一个公网可访问的网址：`https://zhouminghan.github.io/qdii-tracker/`
-- **工作日每天下午 17:30 自动更新数据**（净值出来之后）
+- **工作日 22:30 自动更新数据**（QDII 净值 T+1 披露，20-22 点基金公司陆续发布，22:30 跑最稳）
 - **每月 1 日凌晨自动跑完整流水线**（更新持仓等慢数据）
 - **想立刻更新** → GitHub 网页上点一个按钮就触发
 - 配置完之后 **完全不用再碰命令行**，日常在浏览器里用即可
@@ -391,8 +394,8 @@ workflow 文件已写好（`.github/workflows/update-data.yml`），开箱即用
 
 | 触发时机 | 模式 | 做什么 | 耗时 |
 |---|---|---|---|
-| 🗓️ **工作日 17:30**（北京时间） | 增量 | 更新净值 / YTD / 股价 | ~10 分钟 |
-| 🗓️ **每月 1 日 02:00** | 完整 | 额外更新：基金列表、持仓、费率 | ~20 分钟 |
+| 🗓️ **工作日 22:30**（北京时间） | 增量 | 更新净值 / YTD / 股价 | ~3 分钟 |
+| 🗓️ **每月 1 日 02:00** | 完整 | 额外更新：基金列表、持仓、费率 | ~15 分钟 |
 | 🖱️ 手动点 Run workflow | 可选 | 按你选 | 按模式 |
 
 需要改时间？修改 yaml 里的 `cron` 表达式即可（<https://crontab.guru/> 可视化生成）。
@@ -419,7 +422,7 @@ git push
 - 容器里自带 **Python 脚本 + Nginx + 定时任务**，一键起一个完整应用
 - **浏览器访问** `http://<机器 IP>:8080` 就能看
 - **首次启动自动跑一次完整流水线**（容器发现 `web/data/` 空就跑）
-- **工作日 17:30 + 每月 1 日** 自动刷新数据（用容器里的 supercronic）
+- **工作日 22:30 + 每月 1 日** 自动刷新数据（用容器里的 supercronic）
 - 升级镜像或重启容器都**不丢数据**（数据挂到宿主机 `./web/data/`）
 
 ### 🧰 前置准备
@@ -448,7 +451,7 @@ docker compose up -d --build
 
 第一次会构建镜像（约 3~5 分钟，下 Python 镜像 + 装依赖）。
 
-构建完成后容器立刻启动，并**在后台跑一次完整流水线**（约 15~20 分钟）。跑完就能看到数据。
+构建完成后容器立刻启动，并**在后台跑一次完整流水线**（约 10~15 分钟）。跑完就能看到数据。
 
 #### 步骤 3 · 查看运行日志
 
@@ -460,7 +463,7 @@ docker compose logs -f qdii-tracker
 
 ```
 🚀 [entrypoint] starting QDII Tracker container...
-📥 [entrypoint] web/data/ 为空，先跑一次完整流水线（预计 15~20 分钟，请耐心）...
+📥 [entrypoint] web/data/ 为空，先跑一次完整流水线（预计 10~15 分钟，请耐心）...
 🔍 [scan] 扫描全量基金...
 ...
 ✅ [entrypoint] 首次流水线完成
@@ -520,8 +523,8 @@ exit
 定时规则在 `docker/crontab`：
 
 ```cron
-# 工作日 17:30 增量更新（北京时间）
-30 17 * * 1-5 cd /app/scripts && python fill_missing.py && python fetch_stocks.py
+# 工作日 22:30 增量更新（北京时间）
+30 22 * * 1-5 cd /app/scripts && python fill_missing.py && python fetch_stocks.py
 
 # 每月 1 日 02:00 完整流水线
 0 2 1 * * cd /app/scripts && python scan_funds.py && python enrich_data.py && ...
@@ -651,7 +654,7 @@ Android Chrome：打开网址 → 右上角菜单 → **添加到主屏幕**
 | AKShare | `ak.stock_us_spot_em()` | 美股实时行情（大批量） | ⭐⭐⭐⭐ | 后端脚本 |
 | **天天基金** | `pingzhongdata/{code}.js` | 净值曲线、近期收益、资产配置 | ⭐⭐⭐⭐ | 后端脚本 + **前端走势图** |
 | 天天基金 | `fundf10.eastmoney.com/jbgk_{code}.html` | 规模、成立日、基金经理 | ⭐⭐⭐ | 后端脚本 |
-| 天天基金 | `fundgz.1234567.com.cn/js/{code}.js` | 最新真实净值 / 日期 | ⭐⭐⭐⭐⭐ | **前端动态**（JSONP，每 5 分钟自动轮询） |
+| 天天基金 | `fundgz.1234567.com.cn/js/{code}.js` | 最新真实净值 / 日期 | ⭐⭐⭐⭐⭐ | **前端兜底**（仅在仓库缺当日净值时拉，15 分钟轮询） |
 | **雪球** | 基金页 HTML | 规模、管理费、费率详情 | ⭐⭐⭐ | 后端脚本 |
 | 雪球 | `stock_individual_spot_xq` | 港股 / A 股实时 | ⭐⭐⭐ | 后端脚本 |
 | **腾讯财经** | `qt.gtimg.cn/q=sh510300,sz159941,...` | ETF 最新价 / 涨跌 / 交易日 | ⭐⭐⭐⭐⭐ | **前端动态**（批量） |
@@ -682,11 +685,24 @@ QDII 基金入口
 
 ---
 
+## ➕ 运维手册（新增基金 / 数据修复）
+
+- **[新增基金操作手册 → docs/ADDING-FUNDS.md](docs/ADDING-FUNDS.md)**
+  手工加一只/一个系列基金到看板，包含：查同系列份额的方法、骨架字段模板、三个补字段脚本的作用和顺序、本地验证清单、常见坑速查表。
+  - **最短路径**：编辑 `web/data/{分类}.json` 追加 series → 依次跑 `enrich_data.py` → `fill_missing.py` → `fetch_holdings.py` → commit。
+
+> 📂 所有运维类 SOP 统一沉淀在 `docs/` 目录下，方便人/AI 照着做。
+
+---
+
 ## 🛠 常见问题
 
 **Q: 前端看到数据和基金 APP 不一致？**
 A: 分两类看：
-- **净值 / ETF 最新价**：前端打开页面时实时拉，应该和天天基金/腾讯自选股一致。不一致先看 footer 提示（"🟢 实时净值已刷新于 xx:xx" or "⚠️ 实时拉取失败"）
+- **净值 / ETF 最新价**：先看 footer 提示
+  - 🟢 "数据已刷新于 xx:xx" → 仓库 + 兜底都正常
+  - 🟢 "仓库数据已是最新" → Actions 已跑完，data.json 就是当日权威值
+  - ⏸ "天天基金接口暂时限频" → fundgz 短时封 IP（5 分钟自动恢复，不影响仓库数据展示）
 - **规模 / 费率 / 历史收益 / 持仓等**：脚本快照，看 `web/data/meta.json` 的 `generated_at` / `enriched_at` 确认数据时间
 
 **Q: 为什么 QDII 子分类净值不是今天的？**
@@ -694,7 +710,10 @@ A: 这是 QDII 客观规则不是 bug：
 - **国内基金**：T+1 披露，今天 9~10 点能看到昨天净值
 - **QDII 基金**：因跨境结算，T+1 ~ T+2 披露，今早看到的常常是**前一交易日**的净值
 - 实测：5-7 早上 9 点，纯 A 股基金已披露 5-6 净值，但 QDII 仍是 5-4（因为节假日 + T+1）—— **数据源就是这样，前端做不了更多**
-- 解决：保持页面打开，**前端每 5 分钟自动刷新**，fundgz 一更新就同步到子分类
+- 解决方案：
+  - **盘后 15:00-22:30**：前端每 15 分钟自动调 fundgz 兜底，基金公司一披露就同步上来
+  - **22:30 之后**：Actions 跑完，仓库 data.json 就是当日最新值
+  - **次日早上**：刷页面即可，仓库已是昨日终值
 
 **Q: 走势图为什么 y 轴是百分比不是净值？**
 A: 不同基金净值绝对值差距很大（有的 0.6 有的 6.0），y 轴用净值多档对比无意义。用「区间累计涨跌幅」（以所选区间起点为 0% 基准），多档放在一起也能直观比较。
@@ -706,7 +725,7 @@ A: 该股票所属市场（A/HK/US）当前是否盘中：
 - 美股冬夏令时（DST）由系统时区库 `Intl.DateTimeFormat('America/New_York')` 自动处理
 
 **Q: 能做到 100% 实时吗（每秒刷新）？**
-A: 基金不像股票有秒级盘口。`fundgz` 是按分钟粒度的盘中估值 / 收盘后真实净值，ETF 腾讯行情是 T+0 但个人开发者没必要秒级轮询。当前方案（"打开页面即最新 + 5 分钟自动轮询 + 手动刷新按钮"）已经覆盖 99% 使用场景。
+A: 基金不像股票有秒级盘口。`fundgz` 是按分钟粒度的盘中估值 / 收盘后真实净值，ETF 腾讯行情是 T+0 但个人开发者没必要秒级轮询。当前方案（"打开即见仓库 + 盘后兜底每 15 分钟 + 手动刷新按钮"）已经覆盖 99% 使用场景。
 
 **Q: 某只基金数据不对？**
 A: 依次检查：

@@ -1,8 +1,10 @@
 # supercronic 格式（和 crontab 几乎一样）
 # 容器默认时区已设为 Asia/Shanghai（见 Dockerfile）
 
-# 工作日 17:30 增量刷新（净值 + YTD + 股价）
-30 17 * * 1-5 cd /app/scripts && python fill_missing.py && python fetch_stocks.py
+# 工作日 22:30 日常增量（净值 + YTD + 股价）
+# 为什么 22:30：QDII 跨境结算 T+1，基金公司 20-22 点才把当日净值披露到 fundgz
+#                22:30 是最佳时间点——绝大多数已披露
+30 22 * * 1-5 cd /app/scripts && python fill_missing.py && python fetch_stocks.py
 
 # 每月 1 日 02:00 完整流水线（含持仓、费率等慢数据）
 0 2 1 * * cd /app/scripts && python scan_funds.py && python enrich_data.py && python fill_missing.py && python fetch_holdings.py && python fetch_stocks.py

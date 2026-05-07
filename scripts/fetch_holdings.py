@@ -68,20 +68,10 @@ def fetch_holdings(code: str, year: str = None):
 
 def main():
     project_root = Path(__file__).parent.parent
-    data_dir = project_root / "data"
-    web_data_dir = project_root / "web" / "data"
+    # 统一：直接读写 web/data/（前端消费目录）
+    data_dir = project_root / "web" / "data"
     holdings_dir = data_dir / "holdings"
     holdings_dir.mkdir(parents=True, exist_ok=True)
-
-    # Seed：data/ 缺文件时从 web/data/ 拷贝过来（新克隆仓库/CI 也能直接跑）
-    import shutil as _shutil
-    for cat in ["active", "global_other"]:
-        dst = data_dir / f"{cat}.json"
-        if not dst.exists():
-            src = web_data_dir / f"{cat}.json"
-            if src.exists():
-                _shutil.copy2(src, dst)
-                print(f"🌱 seed: data/{cat}.json ← web/data/{cat}.json")
 
     # 抓主动基金 + 全球/其他 QDII（两个都是主动型，都值得看持仓；被动指数无意义）
     target_codes = []
@@ -125,17 +115,6 @@ def main():
 
     print()
     print(f"✅ 完成：成功 {success} 失败 {fail}")
-
-    # 同步到 web/data/holdings/（前端消费目录）
-    web_holdings_dir = project_root / "web" / "data" / "holdings"
-    if (project_root / "web" / "data").exists():
-        import shutil
-        web_holdings_dir.mkdir(exist_ok=True)
-        count = 0
-        for f in holdings_dir.glob("*.json"):
-            shutil.copy2(f, web_holdings_dir / f.name)
-            count += 1
-        print(f"🔄 同步 {count} 个持仓文件到 web/data/holdings/")
 
 
 if __name__ == "__main__":

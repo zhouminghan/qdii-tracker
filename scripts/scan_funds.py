@@ -396,8 +396,9 @@ def extract_currency(full_name: str) -> str:
 
 def main():
     project_root = Path(__file__).parent.parent
-    data_dir = project_root / "data"
-    data_dir.mkdir(exist_ok=True)
+    # 所有产物直接写 web/data/（前端消费目录）
+    data_dir = project_root / "web" / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
 
     print("🔍 从 AKShare 获取全量基金名称表...")
     df_all = ak.fund_name_em()
@@ -527,20 +528,6 @@ def main():
     }
     with open(data_dir / "meta.json", "w", encoding="utf-8") as f:
         json.dump(meta, f, ensure_ascii=False, indent=2)
-
-    with open(data_dir / "funds-raw.json", "w", encoding="utf-8") as f:
-        json.dump({"generated_at": now, "classified": classified}, f, ensure_ascii=False, indent=2)
-
-    # 同步到 web/data/（前端消费目录；funds-raw.json 太大且前端不用，不同步）
-    web_data_dir = project_root / "web" / "data"
-    if web_data_dir.exists():
-        import shutil as _shutil
-        for cat in ["sp500", "nasdaq_passive", "active", "global_other", "etf"]:
-            src = data_dir / f"{cat}.json"
-            if src.exists():
-                _shutil.copy2(src, web_data_dir / f"{cat}.json")
-        _shutil.copy2(data_dir / "meta.json", web_data_dir / "meta.json")
-        print(f"🔄 已同步到 {web_data_dir}")
 
     print("\n✅ 扫描完成！")
 

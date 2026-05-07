@@ -166,8 +166,8 @@
         <button class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 transition text-xs sm:text-sm" data-tab="etf">📈 <span class="hidden sm:inline">场内 ETF</span><span class="sm:hidden">ETF</span></button>
         <button id="btn-refresh-live"
                 class="ml-1 sm:ml-2 px-2 sm:px-3 py-2 rounded-lg border border-stone-200 hover:bg-stone-50 transition text-xs sm:text-sm flex items-center gap-1 text-stone-600"
-                title="重新拉取最新净值/估值/行情"
-                onclick="refreshLive()">
+                title="重新拉取最新净值/估值/行情（强制全量）"
+                onclick="STATE.forceRefresh=true; refreshLive()">
           <svg id="refresh-icon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5M20 20v-5h-5M5.5 9A7 7 0 0118.5 7M18.5 15a7 7 0 01-13 2"/>
           </svg>
@@ -609,18 +609,52 @@
         console.warn('股票行情加载失败（不影响主页）:', e.message);
       }
 
-      // 首屏完成后立即触发"实时净值/行情"刷新（不阻塞首屏）
+      // 首屏数据加载完毕。
+      // 策略：data.json（Actions 产出）是主数据源；前端 refreshLive 只在"仓库数据落后"时才兜底打 fundgz
+      //   · 打开即见 data.json 里的值
+      //   · 用户点刷新按钮 / 启动时自动刷一次 → 先重拉 data.json，再对缺当日净值的基金补拉 fundgz
+      //   · Actions 跑完后 data.json 里都是当日值 → 补拉队列为空，0 fundgz 请求
+      //   · fundgz 限频时自动冷却（详见 fetchOffshoreLive），不破坏体验
       refreshLive();
 
-      // 自动定时刷新：交易日里每 5 分钟拉一次，让长停留页面也能尽快看到 fundgz 披露的新净值
-      // 节约：仅在交易日 + 页面可见 + 当前不在刷新中时才触发；切换到后台标签自动暂停
+      // 智能懒加载：仅在"交易日 15:00-22:30"窗口里轮询，data.json 已是当日的基金会被跳过
+      //   · < 15:00：基金公司还没出当日净值 → 白拉，跳过
+      //   · 15:00-22:30：基金公司陆续披露 → 兜底补拉（Actions 17:30 那一枪之外的时段）
+      //   · >= 22:30：Actions 收官已跑 → data.json 最新，前端刷新时补拉队列自然为空
+      //   · 非交易日：不触发
+      //   · 页面不可见（切后台）：暂停；回前台立即刷一次
       setInterval(() => {
-        if (!isTradingDay()) return;
+        if (!shouldPollLive()) return;
         if (document.hidden) return;
         const btn = document.getElementById('btn-refresh-live');
         if (btn?.dataset.busy === '1') return;
         refreshLive();
-      }, 5 * 60 * 1000);
+      }, 15 * 60 * 1000);
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) return;
+        if (!shouldPollLive()) return;
+        const btn = document.getElementById('btn-refresh-live');
+        if (btn?.dataset.busy === '1') return;
+        refreshLive();
+      });
+    }
+
+    // 判断当前是否在"需要自动补拉"的窗口里（交易日 15:00-22:30）
+    function shouldPollLive() {
+      if (!isTradingDay()) return false;
+      const now = new Date();
+      const mins = now.getHours() * 60 + now.getMinutes();
+      return mins >= 15 * 60 && mins < 22 * 60 + 30;
+    }
+
+    // 今日日期（YYYY-MM-DD，北京本地）——用来判断 share.nav_date 是否已是今天
+    function todayStr() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${dd}`;
     }
 
     // ==================== 动态拉取最新净值/行情 ====================
@@ -661,27 +695,72 @@
       });
     }
 
-    // 场外基金单只：仅取「最新真实净值」（dwjz/jzrq）
-    // fundgz 返回 jsonpgz({"fundcode":"...","jzrq":"2026-04-29","dwjz":"5.6878","gsz":"...","gszzl":"...","gztime":"..."})
-    //   · dwjz/jzrq 永远是最新一次收盘公布的真实单位净值
-    //   · 估值字段（gsz/gszzl/gztime）已弃用——估值不准、和净值口径混淆，不再展示
+    // 场外基金单只：取「最新真实净值 + 当日涨跌幅」
+    // 数据来源：双通道叠加
+    //   · fundgz（快，~600B）：jsonpgz({...}) 含 dwjz/jzrq —— 最新单位净值+日期，但无 daily_change
+    //   · pingzhongdata（慢，~600KB-1.5MB）：Data_netWorthTrend 末尾条目的 equityReturn 就是当日涨跌%
+    // 策略：先用 fundgz 拿净值（快），若该净值日期已是今天，再用 pingzhongdata 补 daily_change
+    // 为什么不全用 pingzhongdata：避免流量膨胀 10-20 倍，只有"nav_date == 今天"才值得补拉
+    //
+    // 限频保护：fundgz 单 IP 频控严格（超了返 HTTP 514 Frequency Capped）
+    //   · 失败后设置 5 分钟全局冷却（STATE.fundgzCooldownUntil），期间直接跳过所有 fundgz 请求
+    //   · 冷却期内仍然可以刷 ETF 行情（腾讯 qt.gtimg.cn 是不同域名，限频独立）
     async function fetchOffshoreLive(code) {
+      // 检查全局冷却：被限频期间直接返回 null（沿用 data.json 里的快照值）
+      if (STATE.fundgzCooldownUntil && Date.now() < STATE.fundgzCooldownUntil) {
+        return null;
+      }
       window.jsonpgz = function (payload) { window.__lastGz = payload; };
+      let result = null;
       try {
         await loadScript(`https://fundgz.1234567.com.cn/js/${code}.js?rt=${Date.now()}`, 4000);
         const p = window.__lastGz;
         window.__lastGz = null;
-        if (!p || !p.fundcode) return null;
-        if (p.dwjz && p.jzrq) {
-          return {
+        if (p && p.fundcode && p.dwjz && p.jzrq) {
+          result = {
             nav: parseFloat(p.dwjz),
             nav_date: p.jzrq,
+            daily_change: null,
           };
         }
       } catch (e) {
-        // 静默降级
+        // loadScript 失败大概率是 514 限频或网络问题——触发 5 分钟冷却
+        // 即便是偶发网络错，冷却 5 分钟也无大碍（下一轮自动恢复）
+        STATE.fundgzCooldownUntil = Date.now() + 5 * 60 * 1000;
+        console.warn(`[fundgz] ${code} 失败，触发 5 分钟冷却:`, e.message || e);
       }
-      return null;
+      if (!result) return null;
+
+      // 仅当 fundgz 拿到的净值日期是"今天"时，才去 pingzhongdata 补 daily_change
+      // 其他情况（昨天/前天的净值）data.json 里早就有 daily_change 了，没必要多拉
+      if (result.nav_date === todayStr()) {
+        const change = await fetchPzdDailyChange(code);
+        if (change != null) result.daily_change = change;
+      }
+      return result;
+    }
+
+    // pingzhongdata 末尾条目的 equityReturn = 当日涨跌%
+    // 返回 null 表示失败 / 末尾日期对不上 fundgz
+    async function fetchPzdDailyChange(code) {
+      return new Promise((resolve) => {
+        const s = document.createElement('script');
+        s.src = `https://fund.eastmoney.com/pingzhongdata/${code}.js?rt=${Date.now()}`;
+        s.async = true;
+        const timer = setTimeout(() => { s.remove(); resolve(null); }, 6000);
+        s.onload = () => {
+          clearTimeout(timer);
+          s.remove();
+          const arr = window.Data_netWorthTrend;
+          if (!Array.isArray(arr) || !arr.length) { resolve(null); return; }
+          const last = arr[arr.length - 1];
+          // equityReturn 已经是"%"口径的数字，例如 1.23 表示涨 1.23%
+          const chg = parseFloat(last.equityReturn);
+          resolve(isNaN(chg) ? null : chg);
+        };
+        s.onerror = () => { clearTimeout(timer); s.remove(); resolve(null); };
+        document.head.appendChild(s);
+      });
     }
 
     // 场内 ETF 批量：腾讯行情 qt.gtimg.cn 支持一次查多个：q=sh510300,sz159941,...
@@ -802,8 +881,11 @@
       });
     }
 
-    // 并发控制（避免一次性发 40+ 请求被限流）
-    async function parallelMap(items, worker, concurrency = 8) {
+    // 并发控制 + 限频保护
+    //   · concurrency：并发数。天天基金 fundgz 对单 IP 限频约 2-3 路并发 + 几十次/分钟，超了直接返 HTTP 514
+    //   · interval：每只基金之间的间隔（ms），避免瞬间打爆
+    //   · STATE.fundgzCooldownUntil：被限频时设置，到期前所有 fundgz 请求都跳过
+    async function parallelMap(items, worker, concurrency = 3, interval = 250) {
       const results = new Array(items.length);
       let idx = 0;
       await Promise.all(Array.from({ length: Math.min(concurrency, items.length) }, async () => {
@@ -811,6 +893,9 @@
           const i = idx++;
           try { results[i] = await worker(items[i], i); }
           catch { results[i] = null; }
+          if (idx < items.length && interval > 0) {
+            await new Promise(r => setTimeout(r, interval + Math.random() * 150));
+          }
         }
       }));
       return results;
@@ -944,7 +1029,35 @@
       }
       if (icon) icon.classList.add('animate-spin');
 
-      // --- 1) 收集所有要刷新的份额 ---
+      // --- 0) 先重拉 data.json 静态文件（权威数据源，GitHub Pages CDN 几乎零延迟）---
+      // 思路：Actions 每日 17:30 + 22:30 会把最新净值 commit 回 data 目录
+      //       用户点刷新时，哪怕刚好 Actions 跑完了，前端也能立即看到新数据，不用刷新浏览器
+      //       之后再对"data.json 里 nav_date 仍非今天"的基金兜底打 fundgz
+      let dataReloaded = 0;
+      if (status) status.innerHTML = `<span class="text-stone-400">⏳ 正在拉取最新数据...</span>`;
+      for (const cat of DATA_CATEGORIES) {
+        try {
+          const res = await fetch(`./data/${cat}.json?t=${Date.now()}`);
+          if (res.ok) {
+            STATE.data[cat] = await res.json();
+            dataReloaded++;
+          }
+        } catch (e) { /* 某个 json 失败不阻塞其他 */ }
+      }
+      // meta.json 一起刷新
+      try {
+        const meta = await (await fetch(`./data/meta.json?t=${Date.now()}`)).json();
+        updateKPI(meta);
+      } catch (e) { /* meta 失败不阻塞 */ }
+
+      // --- 1) 收集"data.json 仍未到今日"的份额，才去补拉 fundgz ---
+      // 过滤规则：
+      //   · share.nav_date 已经是今天 → data.json 已是最新，跳过 fundgz
+      //   · 手动点刷新按钮（STATE.forceRefresh=true）：绕过过滤全量拉一遍
+      //   · 通过层层过滤后，通常只剩 3-10 只"还没披露当日净值"的 QDII，打 fundgz 压力可控
+      const today = todayStr();
+      const force = STATE.forceRefresh === true;
+      STATE.forceRefresh = false;  // 一次性
       const offshoreShares = [];  // [{shareObj, code}]
       const etfShares = [];
       for (const cat of ['sp500', 'nasdaq_passive', 'active', 'global_other']) {
@@ -953,8 +1066,10 @@
         for (const s of d.series) {
           // 每个 series 刷新 default_share（外层表展示它）+ 展开行里的所有份额
           for (const sh of s.shares) {
-            // QDII 只在支持 fundgz 的基金上刷（一般 6 位代码都行）
-            if (/^\d{6}$/.test(sh.code)) offshoreShares.push(sh);
+            if (!/^\d{6}$/.test(sh.code)) continue;
+            // 已是当日净值且不是强制刷新 → 跳过
+            if (!force && sh.nav_date === today) continue;
+            offshoreShares.push(sh);
           }
         }
       }
@@ -968,20 +1083,27 @@
       }
 
       if (status) {
-        status.innerHTML = `<span class="text-stone-400">⏳ 正在拉取最新净值/行情（${offshoreShares.length} 只场外 + ${etfShares.length} 只 ETF）...</span>`;
+        if (offshoreShares.length === 0 && etfShares.length === 0) {
+          status.innerHTML = `<span class="text-stone-500">✓ 所有基金净值已是当日，无需补拉</span>`;
+        } else {
+          status.innerHTML = `<span class="text-stone-400">⏳ 正在拉取最新净值/行情（${offshoreShares.length} 只场外 + ${etfShares.length} 只 ETF）...</span>`;
+        }
       }
 
       // --- 2) 并发拉取 ---
       let okOffshore = 0, okEtf = 0;
 
-      // 场外：一只一个 JSONP，只更新真实净值 + 日期
+      // 场外：一只一个 JSONP，更新真实净值 + 日期 + 当日涨跌幅
+      // daily_change 只在 fetchOffshoreLive 判定"净值日期==今天"时才会有值（避免白拉 pingzhongdata）
+      // 并发=3 + 间隔 250ms：fundgz 限频严格（超了返 HTTP 514），宁可慢点也别被封
       await parallelMap(offshoreShares, async (sh) => {
         const r = await fetchOffshoreLive(sh.code);
         if (!r) return;
         if (r.nav != null && !isNaN(r.nav)) sh.nav = r.nav;
         if (r.nav_date) sh.nav_date = r.nav_date;
+        if (r.daily_change != null && !isNaN(r.daily_change)) sh.daily_change = r.daily_change;
         okOffshore++;
-      }, 8);
+      }, 3, 250);
 
       // ETF：腾讯支持一次查多只，但太多也可能被截断，每批 30 只
       const BATCH = 30;
@@ -1007,20 +1129,29 @@
       const cost = ((Date.now() - t0) / 1000).toFixed(1);
       const now = new Date();
       const hhmmss = now.toTimeString().slice(0, 8);
+      const cooldownLeft = STATE.fundgzCooldownUntil ? Math.max(0, STATE.fundgzCooldownUntil - Date.now()) : 0;
       if (status) {
-        const hasAny = okOffshore + okEtf > 0;
-        if (hasAny) {
-          const tradingDay = isTradingDay();
+        const tradingDay = isTradingDay();
+        // 数据来源三档：
+        //   A. 全员已是当日净值（offshoreShares 初始为空）→ 仅显示"仓库已是最新"
+        //   B. 部分补拉成功 → 显示"仓库+兜底" 双数据源
+        //   C. fundgz 限频冷却 → 橙色提示，但仓库数据仍正常显示
+        if (cooldownLeft > 0) {
+          const mins = Math.ceil(cooldownLeft / 60000);
+          status.innerHTML = `<span class="text-amber-600">⏸ 天天基金接口暂时限频（${mins} 分钟后自动恢复）</span>
+            <span class="text-stone-400 ml-1">· 仓库数据已重拉（${dataReloaded}/${DATA_CATEGORIES.length}），仅"未披露当日净值"的 QDII 本轮未兜底</span>`;
+        } else if (offshoreShares.length === 0 && etfShares.length === 0) {
+          status.innerHTML = `<span class="text-green-600">🟢 仓库数据已是最新于 ${hhmmss}</span>
+            <span class="text-stone-400 ml-1">（data.json 里 ${dataReloaded} 个分类均已更新到当日净值，无需兜底补拉）</span>`;
+        } else {
           const dataDesc = tradingDay
-            ? '场外基金显示 fundgz 拉取的最近一次收盘真实净值；QDII 因跨境结算 T+1（甚至 T+2）披露，当日数据需次日 9~10 点后才会更新到接口'
-            : '今日休市，所有数据沿用最近一次收盘真实值（净值/ETF 行情/持仓股票均按收盘数据展示）';
+            ? 'QDII 因跨境结算 T+1（甚至 T+2）披露，当日数据次日 9~10 点后才会稳定出现；仓库（Actions 产出）为主，fundgz 仅兜底当日缺失'
+            : '今日休市，所有数据沿用最近一次收盘真实值';
           status.innerHTML = `
-            <span class="text-green-600">🟢 实时净值/行情已刷新于 ${hhmmss}</span>
-            <span class="text-stone-400 ml-1">（场外 ${okOffshore}/${offshoreShares.length} · ETF ${okEtf}/${etfShares.length} · 耗时 ${cost}s）</span>
+            <span class="text-green-600">🟢 数据已刷新于 ${hhmmss}</span>
+            <span class="text-stone-400 ml-1">（仓库 ${dataReloaded}/${DATA_CATEGORIES.length} · 兜底补拉 ${okOffshore}/${offshoreShares.length} 场外 + ${okEtf}/${etfShares.length} ETF · 耗时 ${cost}s）</span>
             <br/><span class="text-stone-400 text-[11px]">${dataDesc}</span>
           `;
-        } else {
-          status.innerHTML = `<span class="text-stone-500">⚠️ 实时拉取失败，显示的是仓库中的快照数据 · <a href="javascript:refreshLive()" class="underline">重试</a></span>`;
         }
       }
       if (btn) {
