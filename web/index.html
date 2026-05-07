@@ -522,7 +522,7 @@
     // 每个基金公司配一个固定的品牌色（参考真实公司主色）
     const COMPANY_BRAND = {
       '易方达': { color: '#d4351c', letter: '易' },  // 红
-      '华夏':   { color: '#0e5ba6', letter: '华' },  // 蓝
+      '华夏':   { color: '#0e5ba6', letter: '华夏' },  // 蓝（与华安/华泰/华宝都冲突，统一两字）
       '南方':   { color: '#c8102e', letter: '南' },  // 红
       '嘉实':   { color: '#e87500', letter: '嘉' },  // 橙
       '广发':   { color: '#d92027', letter: '广' },
@@ -1349,8 +1349,8 @@
                 <div class="text-xs text-stone-500 num mt-0.5">
                   ${def.code} · ${isEtf ? '场内 ETF' : (def.share_class + (def.currency === '美元' ? ' · 美元' : ''))}
                   <span class="badge ${isEtf ? 'badge-qdii' : 'badge-qdii'} ml-1">${isEtf ? 'ETF' : 'QDII'}</span>
-                  ${isActive && def.manager ? `<span class="text-stone-400 ml-1">· ${def.manager}</span>` : ''}
                 </div>
+                ${isActive && def.manager ? `<div class="text-[11px] text-stone-400 mt-0.5 truncate">👤 ${def.manager}</div>` : ''}
               </div>
             </div>
           </td>
@@ -1534,10 +1534,20 @@
       return 'badge bg-stone-100 text-stone-600';
     }
 
+    // 申购限额金额格式化，与基金公司/天天基金/支付宝 APP 对齐：
+    //   · < 1 万   → 纯数字（100 / 1000 / 5000），上下文的 ¥ 已表达货币单位
+    //   · ≥ 1 万   → 「N 万」（1万 / 5万 / 100万）；非整万时保留 1 位小数（1.5 万）
+    //   · ≥ 1 亿   → 「N 亿」（理论上限，个人看板极少见）
     function formatLimit(v) {
       if (!v) return '--';
-      if (v >= 10000) return `${(v / 10000).toFixed(0)}万`;
-      if (v >= 1000) return `${(v / 1000).toFixed(0)}k`;
+      if (v >= 1e8) {
+        const n = v / 1e8;
+        return (n % 1 === 0 ? n.toFixed(0) : n.toFixed(1)) + '亿';
+      }
+      if (v >= 1e4) {
+        const n = v / 1e4;
+        return (n % 1 === 0 ? n.toFixed(0) : n.toFixed(1)) + '万';
+      }
       return v.toFixed(0);
     }
 
