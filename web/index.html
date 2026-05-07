@@ -33,6 +33,19 @@
     .badge-cny { background: #f1f5f9; color: #475569; padding: 1px 6px; font-size: 10px; }
     .fade-in { animation: fade 0.2s ease; }
     @keyframes fade { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* 市场状态指示点 */
+    .mkt-dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+      vertical-align: middle; margin-right: 4px;
+    }
+    .mkt-dot.open  { background: #10b981; box-shadow: 0 0 0 0 rgba(16,185,129,0.6); animation: mkt-pulse 1.6s ease-out infinite; }
+    .mkt-dot.closed { background: #d1d5db; }
+    @keyframes mkt-pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(16,185,129,0.55); }
+      70%  { box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+      100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+    }
     .tab-active {
       background: #1c1917;
       color: white;
@@ -151,6 +164,15 @@
       <nav class="flex items-center gap-1 sm:gap-2 text-sm flex-shrink-0">
         <button class="tab-btn tab-active px-3 sm:px-4 py-2 rounded-lg transition text-xs sm:text-sm" data-tab="offshore">🏦 <span class="hidden sm:inline">场外基金</span><span class="sm:hidden">场外</span></button>
         <button class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 transition text-xs sm:text-sm" data-tab="etf">📈 <span class="hidden sm:inline">场内 ETF</span><span class="sm:hidden">ETF</span></button>
+        <button id="btn-refresh-live"
+                class="ml-1 sm:ml-2 px-2 sm:px-3 py-2 rounded-lg border border-stone-200 hover:bg-stone-50 transition text-xs sm:text-sm flex items-center gap-1 text-stone-600"
+                title="重新拉取最新净值/估值/行情"
+                onclick="refreshLive()">
+          <svg id="refresh-icon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5M20 20v-5h-5M5.5 9A7 7 0 0118.5 7M18.5 15a7 7 0 01-13 2"/>
+          </svg>
+          <span class="hidden sm:inline">刷新</span>
+        </button>
       </nav>
     </div>
   </header>
@@ -386,6 +408,38 @@
     </div>
   </div>
 
+  <!-- 历史净值走势 Modal -->
+  <div id="trendModal" class="hidden fixed inset-0 z-50 overflow-y-auto" style="background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);">
+    <div class="modal-overlay min-h-screen flex items-start justify-center p-2 sm:p-4 md:p-8">
+      <div class="bg-stone-50 rounded-2xl w-full max-w-3xl shadow-2xl overflow-hidden">
+        <div class="bg-white border-b border-stone-200 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between sticky top-0 z-10">
+          <div class="min-w-0">
+            <h2 id="trend-title" class="text-base sm:text-xl font-bold truncate">--</h2>
+            <div id="trend-subtitle" class="text-[11px] sm:text-xs text-stone-500 mt-1">--</div>
+          </div>
+          <button onclick="closeTrend()" class="w-9 h-9 rounded-full hover:bg-stone-100 flex items-center justify-center transition text-stone-500 hover:text-stone-900 flex-shrink-0 ml-3 sm:ml-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+        <div class="p-3 sm:p-6 space-y-4">
+          <!-- 时间区间 chips -->
+          <div id="trend-ranges" class="flex flex-wrap gap-2"></div>
+          <!-- 图表区 -->
+          <div id="trend-chart" class="bg-white rounded-xl border border-stone-200 p-3 sm:p-5">
+            <div class="text-center py-12 text-stone-400 text-sm">加载中...</div>
+          </div>
+          <!-- 最近净值列表 -->
+          <div>
+            <div class="text-xs tracking-widest text-stone-500 uppercase mb-2">RECENT · 最近净值</div>
+            <div id="trend-recent" class="bg-white rounded-xl border border-stone-200 overflow-hidden text-xs"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer class="max-w-7xl mx-auto px-3 sm:px-6 pb-8">
     <div class="bg-stone-50 rounded-xl p-5 text-xs text-stone-500 leading-relaxed border border-stone-200">
       <div class="font-semibold text-stone-700 mb-2">⚠️ 风险提示与免责声明</div>
@@ -408,7 +462,61 @@
       { key: 'active',         label: '🎯 美股主动基金',      desc: '精选 18 只重仓美股的主动 QDII' },
       { key: 'global_other',   label: '🌐 全球/其他 QDII',    desc: '全球配置型 / 非美股核心方向' },
     ];
-    const STATE = { data: {} };
+    const STATE = {
+      data: {},
+    };
+
+    // 排序状态（仅作用于大分类外层行；子分类是父行展开内嵌表，不独立排序）
+    // key 取自 default share 上的字段：
+    //   series_scale / nav / chg_1m / chg_ytd / chg_1y / chg_since_inception / buy_status
+    // dir: 'desc'（默认大→小）/ 'asc'
+    const SORT_STATE = {
+      offshore: { key: 'series_scale', dir: 'desc' },
+      etf:      { key: 'series_scale', dir: 'desc' },
+    };
+
+    // 申购状态排序权重：暂停 = 0，其他按 daily_limit 数额（金额越大越靠前）
+    //   · 暂停申购                    → 0
+    //   · 限购但未给出 daily_limit    → 1
+    //   · 限购 ¥100 / ¥1000 / ¥10万    → daily_limit 数值（小额沉底，大额靠前）
+    //   · 开放申购（无限制）           → +∞（用 Number.MAX_SAFE_INTEGER 代替）
+    function buyStatusRank(st, limit) {
+      if (!st) return 1;
+      if (st.includes('暂停')) return 0;
+      if (st.includes('开放') && !limit) return Number.MAX_SAFE_INTEGER;
+      // 限购或开放但带 daily_limit：直接用金额做权重（500 < 1000 < 100 万）
+      if (limit && Number.isFinite(limit)) return limit;
+      return 1;
+    }
+
+    // 取 series 上某排序字段的值（series_scale 在 series 本身，其他都是 default share 上的）
+    function getSortValue(series, key) {
+      if (key === 'series_scale') return series.series_scale ?? null;
+      const def = series.shares.find(s => s.code === series.default_share_code) || series.shares[0];
+      if (!def) return null;
+      // 净值列点击排序时，排的是「该列对应的当日涨跌幅」
+      //   · 场内 ETF —— etf_change_pct（腾讯实时涨跌）
+      //   · 场外     —— daily_change（最近收盘日涨跌）
+      if (key === 'nav') {
+        if (def.etf_change_pct != null) return def.etf_change_pct;
+        return def.daily_change ?? null;
+      }
+      if (key === 'buy_status') return buyStatusRank(def.buy_status, def.daily_limit);
+      return def[key] ?? null;
+    }
+
+    function sortSeries(items, key, dir) {
+      const mult = dir === 'asc' ? 1 : -1;
+      return [...items].sort((a, b) => {
+        const va = getSortValue(a, key);
+        const vb = getSortValue(b, key);
+        // null 永远排在最后（无论升降序）
+        if (va == null && vb == null) return 0;
+        if (va == null) return 1;
+        if (vb == null) return -1;
+        return (va - vb) * mult;
+      });
+    }
 
     // ==================== 基金公司 Logo（彩色方块 + 公司汉字缩写） ====================
     // 每个基金公司配一个固定的品牌色（参考真实公司主色）
@@ -503,6 +611,16 @@
 
       // 首屏完成后立即触发"实时净值/行情"刷新（不阻塞首屏）
       refreshLive();
+
+      // 自动定时刷新：交易日里每 5 分钟拉一次，让长停留页面也能尽快看到 fundgz 披露的新净值
+      // 节约：仅在交易日 + 页面可见 + 当前不在刷新中时才触发；切换到后台标签自动暂停
+      setInterval(() => {
+        if (!isTradingDay()) return;
+        if (document.hidden) return;
+        const btn = document.getElementById('btn-refresh-live');
+        if (btn?.dataset.busy === '1') return;
+        refreshLive();
+      }, 5 * 60 * 1000);
     }
 
     // ==================== 动态拉取最新净值/行情 ====================
@@ -543,10 +661,10 @@
       });
     }
 
-    // 场外基金单只：只取"最新真实净值"（dwjz + jzrq），不用估值
+    // 场外基金单只：仅取「最新真实净值」（dwjz/jzrq）
     // fundgz 返回 jsonpgz({"fundcode":"...","jzrq":"2026-04-29","dwjz":"5.6878","gsz":"...","gszzl":"...","gztime":"..."})
     //   · dwjz/jzrq 永远是最新一次收盘公布的真实单位净值
-    //   · 估值字段不用，展示上统一按"真实净值"处理
+    //   · 估值字段（gsz/gszzl/gztime）已弃用——估值不准、和净值口径混淆，不再展示
     async function fetchOffshoreLive(code) {
       window.jsonpgz = function (payload) { window.__lastGz = payload; };
       try {
@@ -698,9 +816,133 @@
       return results;
     }
 
+    // 简易交易时段判定（粗粒度，用户视觉提示用）
+    //   · A 股 / ETF 交易时段：周一到周五 9:30-11:30 + 13:00-15:00（北京时间）
+    //   · 美股盘前/盘中/盘后跨时段比较复杂，用「美东 04:00-20:00」近似
+    //   · 港股：09:30-12:00 + 13:00-16:00
+    // 用户基金多半在 A/H/US 三市场之一，只要其一开盘就视作"交易时段"
+    function isMarketOpen() {
+      const now = new Date();
+      const dayCN = now.getDay();  // 周日=0
+      // 北京时间小时分钟（直接用本机当作 UTC+8 近似；用户基本都在国内）
+      const hCN = now.getHours();
+      const mCN = now.getMinutes();
+      const tCN = hCN * 60 + mCN;
+      const cnOpen = (dayCN >= 1 && dayCN <= 5) &&
+                     ((tCN >= 9 * 60 + 30 && tCN <= 11 * 60 + 30) ||
+                      (tCN >= 13 * 60 && tCN <= 15 * 60));
+      const hkOpen = (dayCN >= 1 && dayCN <= 5) &&
+                     ((tCN >= 9 * 60 + 30 && tCN <= 12 * 60) ||
+                      (tCN >= 13 * 60 && tCN <= 16 * 60));
+      // 美东时间（UTC-5/-4），简单按北京时间换算 -12/-13；这里取 -12 偏保守
+      // 美东 04:00-20:00 对应北京 16:00-次日 08:00
+      const usOpen = (() => {
+        // 周日北京 16:00 ~ 周六 08:00 大致对应美东周一开盘前 ~ 周五收盘后
+        if (dayCN === 6) return tCN < 8 * 60;            // 周六凌晨 = 美东周五尾盘
+        if (dayCN === 0) return tCN >= 16 * 60;          // 周日下午 = 美东周一盘前
+        // 周一~周五：北京 16:00 之后 || 次日 08:00 前
+        return tCN >= 16 * 60 || tCN < 8 * 60;
+      })();
+      return cnOpen || hkOpen || usOpen;
+    }
+
+    // 是否「A 股交易日」（粗判：周一~周五 = 交易日，周末 = 非交易日）
+    // 用途：决定大分类显示估值还是净值，决定持仓股票是否拉腾讯实时行情
+    // 边角情况：法定假日（如劳动节）也是非交易日；本地无节假日表，不细究——
+    //         非交易日时 fundgz 可能仍返回上一交易日的估值，此时回退用 nav 反而更稳
+    function isTradingDay() {
+      const day = new Date().getDay();  // 周日=0，周六=6
+      return day >= 1 && day <= 5;
+    }
+
+    // 当前 A 股交易状态：'pre' 盘前 / 'open' 盘中 / 'post' 盘后 / null 非交易日
+    // A 股盘时间：09:30-11:30 + 13:00-15:00（北京时间，无夏令时）
+    //   · 大分类「净值」列展示用：仅"盘前"加后缀，其他时段（盘中/盘后/非交易日）只显示日期
+    //   · 美股冬夏令时不影响这里：fundgz 的 gztime 都是北京时间标记，统一按 A 股口径
+    function getCnSession() {
+      if (!isTradingDay()) return null;
+      const now = new Date();
+      const t = now.getHours() * 60 + now.getMinutes();
+      if (t < 9 * 60 + 30) return 'pre';
+      if (t >= 15 * 60) return 'post';
+      // 9:30-15:00 之间（含午休 11:30-13:00）一律算「盘中」
+      return 'open';
+    }
+    // 仅在"盘前"返回后缀，其他所有时段返回空（用户期望仅两枚举：盘前 / 无）
+    function sessionLabel(s) {
+      return s === 'pre' ? '盘前' : '';
+    }
+
+    // YYYY-MM-DD → MM-DD（去掉年前缀，列表头省空间）
+    function fmtMD(dateStr) {
+      if (!dateStr || typeof dateStr !== 'string') return '';
+      const m = dateStr.match(/^\d{4}-(\d{2}-\d{2})/);
+      return m ? m[1] : dateStr;
+    }
+
+    // 取某市场（A/HK/US）的当地时间 {weekday, hh, mm}
+    // 用 Intl.DateTimeFormat 直接换算到目标时区，自动处理美股冬夏令时（DST）
+    //   · A 股：Asia/Shanghai
+    //   · 港股：Asia/Hong_Kong
+    //   · 美股：America/New_York（DST 由系统库自动处理）
+    function getLocalParts(timeZone) {
+      const now = new Date();
+      const fmt = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        weekday: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+        hourCycle: 'h23',
+      });
+      const parts = fmt.formatToParts(now);
+      const get = (t) => parts.find(p => p.type === t)?.value || '';
+      const wd = get('weekday');  // 'Mon' / 'Tue' / ... / 'Sun'
+      const hh = parseInt(get('hour'), 10);
+      const mm = parseInt(get('minute'), 10);
+      const wdMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+      return { day: wdMap[wd] ?? 0, hh, mm, t: hh * 60 + mm };
+    }
+
+    // 判断指定市场当前是不是盘中（含集合竞价不算，仅连续竞价时段）
+    // 返回 'open' / 'closed'（粗判：法定假日不细究，库里没这个表）
+    function getMarketSession(market) {
+      const m = (market || 'US').toUpperCase();
+      if (m === 'A') {
+        const p = getLocalParts('Asia/Shanghai');
+        if (p.day < 1 || p.day > 5) return 'closed';
+        const morning = (p.t >= 9 * 60 + 30 && p.t < 11 * 60 + 30);
+        const afternoon = (p.t >= 13 * 60 && p.t < 15 * 60);
+        return (morning || afternoon) ? 'open' : 'closed';
+      }
+      if (m === 'HK') {
+        const p = getLocalParts('Asia/Hong_Kong');
+        if (p.day < 1 || p.day > 5) return 'closed';
+        const morning = (p.t >= 9 * 60 + 30 && p.t < 12 * 60);
+        const afternoon = (p.t >= 13 * 60 && p.t < 16 * 60);
+        return (morning || afternoon) ? 'open' : 'closed';
+      }
+      // 默认按美股
+      const p = getLocalParts('America/New_York');
+      if (p.day < 1 || p.day > 5) return 'closed';
+      // 美股常规交易时段 09:30-16:00（DST 由 Intl 自动处理）
+      const open = (p.t >= 9 * 60 + 30 && p.t < 16 * 60);
+      return open ? 'open' : 'closed';
+    }
+
     async function refreshLive() {
       const status = document.getElementById('live-refresh-status');
+      const btn = document.getElementById('btn-refresh-live');
+      const icon = document.getElementById('refresh-icon');
       const t0 = Date.now();
+
+      // 防重入：刷新中按钮禁用 + 图标旋转
+      if (btn) {
+        if (btn.dataset.busy === '1') return;
+        btn.dataset.busy = '1';
+        btn.disabled = true;
+        btn.classList.add('opacity-60', 'cursor-not-allowed');
+      }
+      if (icon) icon.classList.add('animate-spin');
 
       // --- 1) 收集所有要刷新的份额 ---
       const offshoreShares = [];  // [{shareObj, code}]
@@ -761,22 +1003,32 @@
       // --- 3) 重渲染（renderChips 会自动从 CHIP_STATE 恢复选中状态）---
       RENDER_TABS.forEach(renderCategory);
 
-      // --- 4) 更新 footer 状态 ---
+      // --- 4) 更新 footer 状态 + 解锁按钮 ---
       const cost = ((Date.now() - t0) / 1000).toFixed(1);
       const now = new Date();
       const hhmmss = now.toTimeString().slice(0, 8);
       if (status) {
         const hasAny = okOffshore + okEtf > 0;
         if (hasAny) {
+          const tradingDay = isTradingDay();
+          const dataDesc = tradingDay
+            ? '场外基金显示 fundgz 拉取的最近一次收盘真实净值；QDII 因跨境结算 T+1（甚至 T+2）披露，当日数据需次日 9~10 点后才会更新到接口'
+            : '今日休市，所有数据沿用最近一次收盘真实值（净值/ETF 行情/持仓股票均按收盘数据展示）';
           status.innerHTML = `
             <span class="text-green-600">🟢 实时净值/行情已刷新于 ${hhmmss}</span>
-            <span class="text-stone-400 ml-1">（场外 ${okOffshore}/${offshoreShares.length} · ETF ${okEtf}/${etfShares.length} · 耗时 ${cost}s · <a href="javascript:refreshLive()" class="underline hover:text-stone-700">手动刷新</a>）</span>
-            <br/><span class="text-stone-400 text-[11px]">净值/最新价每次打开页面动态拉取；历史收益/规模/限购/日涨跌等走后端 Actions 每日定时更新</span>
+            <span class="text-stone-400 ml-1">（场外 ${okOffshore}/${offshoreShares.length} · ETF ${okEtf}/${etfShares.length} · 耗时 ${cost}s）</span>
+            <br/><span class="text-stone-400 text-[11px]">${dataDesc}</span>
           `;
         } else {
           status.innerHTML = `<span class="text-stone-500">⚠️ 实时拉取失败，显示的是仓库中的快照数据 · <a href="javascript:refreshLive()" class="underline">重试</a></span>`;
         }
       }
+      if (btn) {
+        btn.dataset.busy = '';
+        btn.disabled = false;
+        btn.classList.remove('opacity-60', 'cursor-not-allowed');
+      }
+      if (icon) icon.classList.remove('animate-spin');
     }
 
     function updateKPI(meta) {
@@ -834,6 +1086,12 @@
           .filter(g => g.items.length);
       }
 
+      // 应用排序（每个分组内独立排序，不跨组）
+      const sortConf = SORT_STATE[tab] || { key: 'series_scale', dir: 'desc' };
+      groups.forEach(g => {
+        g.items = sortSeries(g.items, sortConf.key, sortConf.dir);
+      });
+
       // 统计
       groups.forEach(g => {
         totalSeries += g.items.length;
@@ -845,21 +1103,22 @@
       document.getElementById(`count-${tab}`).textContent =
         `${totalSeries} 个系列 · ${totalShares} 只份额 · 总规模 ${totalScale.toFixed(0)} 亿`;
 
-      // 表头"净值/最新价"列的代表性日期：
-      //  · 场内 ETF 优先用腾讯行情的交易日（_live_etf_date），否则 nav_date
-      //  · 场外 QDII 用 nav_date（动态刷新会覆盖为最新真实净值日期）
+      // 表头第二行说明（动态，仅日期 MM-DD 格式，不含年份）：
+      //   · ETF —— 取腾讯行情交易日（_live_etf_date），否则 nav_date
+      //   · 场外 QDII 大分类 —— nav_date（fundgz 拉到的最近一次收盘真实净值日期）
+      //   · 场外 QDII 子分类（展开内嵌表头）—— 始终用 nav_date，MM-DD
+      //   日期一律来自数据，不写死
       const firstSeries = groups[0]?.items?.[0];
       const firstDef = firstSeries?.shares?.find(s => s.code === firstSeries.default_share_code) || firstSeries?.shares?.[0];
-      const navHeaderDate = isEtf
-        ? (firstDef?._live_etf_date || firstDef?.nav_date || '')
-        : (firstDef?.nav_date || '');
+      const navHeaderSub = isEtf
+        ? fmtMD(firstDef?._live_etf_date || firstDef?.nav_date)
+        : fmtMD(firstDef?.nav_date);
 
       // 列数（用于分组标题行 colspan）
-      // 基础 10 列：展开+名称+规模+净值+1月+YTD+1年+成立+(申购)+份额
-      // 场外 = 10 列（含申购，无持仓）
-      // 场外+主动 = 11 列（含申购 + 持仓）
-      // ETF = 10 列（无申购，有持仓占位）
-      const colspan = showHoldings ? 11 : 10;
+      // 基础 10 列 + 走势列（所有基金都有）+ 持仓列（仅主动基金有，否则占位）
+      // 场外 = 11（含申购）+ 走势 + 持仓 = 12
+      // ETF  = 10（无申购）+ 走势 + 持仓占位 = 11
+      const colspan = isEtf ? 11 : 12;
 
       const pieces = [];
       for (const group of groups) {
@@ -871,24 +1130,46 @@
       }
       const bodyHtml = pieces.join('');
 
+      // 排序图标 helper：当前排序列 → 显示 ↓/↑；非当前列 → 显示淡色双向箭头 ⇅
+      const sortIcon = (key) => {
+        if (sortConf.key !== key) {
+          return '<span class="ml-0.5 text-stone-300">⇅</span>';
+        }
+        return sortConf.dir === 'desc'
+          ? '<span class="ml-0.5 text-indigo-500">↓</span>'
+          : '<span class="ml-0.5 text-indigo-500">↑</span>';
+      };
+      const sortableTh = (key, label, align = 'right', extra = '') => `
+        <th class="text-${align} py-3 px-3 font-medium cursor-pointer hover:bg-stone-100 select-none" data-sort-key="${key}" title="点击按${label}排序">
+          ${label}${sortIcon(key)}${extra}
+        </th>`;
+
+      // 「净值」列头：场外 QDII / 场内 ETF 共用结构
+      //   · 标题：场外 = "净值"，ETF = "最新价"
+      //   · 副标 = nav_date（MM-DD 格式）
+      //   · 整列可点击 → 按当日涨跌幅排序（不是按净值数字本身）
+      const priceHeaderHtml = `
+              <th class="text-right py-3 px-3 font-medium cursor-pointer hover:bg-stone-100 select-none" data-sort-key="nav" title="点击按当日涨跌排序">
+                <div>${isEtf ? '最新价' : '净值'}${sortIcon('nav')}</div>
+                ${navHeaderSub ? `<div class="text-[10px] text-stone-400 font-normal mt-0.5">${navHeaderSub}</div>` : ''}
+              </th>`;
+
       container.innerHTML = `
         <table class="w-full text-sm min-w-[780px]">
           <thead class="bg-stone-50 border-b border-stone-200 text-stone-600 text-xs">
             <tr>
               <th class="text-left py-3 px-3 font-medium w-8"></th>
               <th class="text-left py-3 px-3 font-medium">基金系列</th>
-              <th class="text-right py-3 px-3 font-medium">规模</th>
-              <th class="text-right py-3 px-3 font-medium">
-                <div>${isEtf ? '最新价' : '净值'}</div>
-                ${navHeaderDate ? `<div class="text-[10px] text-stone-400 font-normal mt-0.5">${navHeaderDate}</div>` : ''}
-              </th>
-              <th class="text-right py-3 px-3 font-medium">近1月</th>
-              <th class="text-right py-3 px-3 font-medium">今年来</th>
-              <th class="text-right py-3 px-3 font-medium">近1年</th>
-              <th class="text-right py-3 px-3 font-medium">成立来</th>
-              ${isEtf ? '' : '<th class="text-center py-3 px-3 font-medium">申购</th>'}
+              ${sortableTh('series_scale', '规模', 'right')}
+              ${priceHeaderHtml}
+              ${sortableTh('chg_1m', '近1月')}
+              ${sortableTh('chg_ytd', '今年来')}
+              ${sortableTh('chg_1y', '近1年')}
+              ${sortableTh('chg_since_inception', '成立来')}
+              ${isEtf ? '' : sortableTh('buy_status', '申购', 'center')}
               <th class="text-center py-3 px-3 font-medium">份额</th>
-              ${showHoldings ? '<th class="text-center py-3 px-3 font-medium">持仓</th>' : ''}
+              <th class="text-center py-3 px-3 font-medium">走势</th>
+              <th class="text-center py-3 px-3 font-medium">持仓</th>
             </tr>
           </thead>
           <tbody>
@@ -896,6 +1177,24 @@
           </tbody>
         </table>
       `;
+
+      // 绑定排序点击（th 整体或 th 内嵌的 ↓/↑ span 都触发）
+      container.querySelectorAll('[data-sort-key]').forEach(el => {
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const key = el.dataset.sortKey;
+          const cur = SORT_STATE[tab];
+          if (cur.key === key) {
+            // 同列再次点击：切换方向
+            cur.dir = cur.dir === 'desc' ? 'asc' : 'desc';
+          } else {
+            // 切换到新列：默认 desc
+            cur.key = key;
+            cur.dir = 'desc';
+          }
+          renderCategory(tab);
+        });
+      });
 
       container.querySelectorAll('.series-row').forEach(row => {
         // ETF 行不需要展开（因为只有一只份额）
@@ -1014,9 +1313,9 @@
             : `${series.series_scale.toFixed(2)}亿`)
         : '--';
 
-      // 外层行展示：统一使用 sh.nav（前端动态拉取会更新为最新真实净值）
-      //   · 场内 ETF 用 etf_price + etf_change_pct（腾讯行情实时）
-      //   · 场外 QDII 用 nav + daily_change（fundgz dwjz 覆盖 nav，daily_change 依赖后端 Actions）
+      // 外层行展示（大分类）：
+      //   · 场内 ETF —— etf_price + etf_change_pct（腾讯行情实时）
+      //   · 场外 QDII —— nav + daily_change（最近一次收盘真实净值）
       let price, dailyChange;
       if (isEtf) {
         price = def.etf_price?.toFixed(3) ?? def.nav?.toFixed(4) ?? '--';
@@ -1026,13 +1325,14 @@
         dailyChange = def.daily_change;
       }
 
-      // 持仓列的 td：如果表格有持仓列，就要输出；主动基金给按钮，其他给 —
-      const holdingsTd = showHoldings
-        ? (isActive ? `<td class="py-3 px-3 text-center">${holdingsBtn(defCode)}</td>` : '<td class="py-3 px-3 text-center text-stone-300">—</td>')
-        : '';
+      // 走势 td（所有基金都有）+ 持仓 td（仅主动基金有按钮，其他占位）
+      const trendTd = `<td class="py-3 px-3 text-center">${trendBtn(defCode)}</td>`;
+      const holdingsTd = isActive
+        ? `<td class="py-3 px-3 text-center">${holdingsBtn(defCode)}</td>`
+        : '<td class="py-3 px-3 text-center text-stone-300">—</td>';
 
-      // 展开后的子表格 colspan
-      const expandColspan = showHoldings ? 11 : 10;
+      // 展开后的子表格 colspan（与外层列数一致：ETF=11，场外=12）
+      const expandColspan = isEtf ? 11 : 12;
 
       return `
         <tr class="series-row border-b border-stone-100 ${isEtf ? '' : 'hover:bg-stone-50 cursor-pointer'} transition" data-series-id="${series.series_id}" data-is-etf="${isEtf ? '1' : '0'}"${grpAttr}>
@@ -1065,6 +1365,7 @@
           ${changeCell(def.chg_since_inception)}
           ${isEtf ? '' : `<td class="py-3 px-3 text-center">${statusBadge(def)}</td>`}
           <td class="py-3 px-3 text-center text-stone-500 num text-xs">${isEtf ? '—' : series.shares.length}</td>
+          ${trendTd}
           ${holdingsTd}
         </tr>
         ${isEtf ? '' : `<tr class="share-rows hidden bg-stone-50/60" data-parent="${series.series_id}">
@@ -1081,7 +1382,7 @@
                     <th class="text-right py-2 font-medium">规模</th>
                     <th class="text-right py-2 font-medium">
                       <div>净值</div>
-                      ${def.nav_date ? `<div class="text-[10px] text-stone-400 font-normal mt-0.5">${def.nav_date}</div>` : ''}
+                      ${def.nav_date ? `<div class="text-[10px] text-stone-400 font-normal mt-0.5">${fmtMD(def.nav_date)}</div>` : ''}
                     </th>
                     <th class="text-right py-2 font-medium">近1年</th>
                     ${isEtf ? '' : `
@@ -1264,6 +1565,15 @@
               </button>`;
     }
 
+    function trendBtn(code) {
+      // 走势按钮：所有 6 位代码的场外基金都能拉 pingzhongdata
+      return `<button class="trend-btn text-xs px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition font-medium"
+                data-code="${code}"
+                onclick="event.stopPropagation(); openTrend('${code}', event);">
+                📈 走势
+              </button>`;
+    }
+
     async function openDetail(code, evt) {
       if (evt) evt.stopPropagation();
 
@@ -1297,8 +1607,9 @@
         if (!res.ok) throw new Error('持仓数据未抓取');
         const holdings = await res.json();
 
-        // 🟢 动态刷新 Top10 股票"当日涨跌"——腾讯行情批量拉（US/HK/A 股通吃）
-        // 单次请求、失败静默降级（沿用静态 us_stocks.json）
+        // 🟢 动态刷新 Top10 股票"当日涨跌"——按各股票所在市场分别拉腾讯行情
+        // 即便部分市场休市，腾讯 gtimg 会返回最近一次成交价，可用于显示「已收盘」状态
+        // 视觉上由 getMarketSession() 给每行打 ●/○ 点区分该市场是否盘中
         try {
           const codes = (holdings.holdings || [])
             .map(h => h.stock_code)
@@ -1330,6 +1641,391 @@
       document.getElementById('detailModal').classList.add('hidden');
       document.body.style.overflow = '';
     }
+
+    // ==================== 历史净值走势 ====================
+    // 数据来源：fund.eastmoney.com/pingzhongdata/{code}.js（JSONP）
+    //   · Data_netWorthTrend: [{x: ts_ms, y: 单位净值, equityReturn: 日涨跌%}, ...]
+    //   · 数据从基金成立日起算（多则 10+ 年），可支持 1 月 ~ 全部 各档区间筛选
+    const TREND_RANGES = [
+      { key: '1m',  label: '近1月',  days: 30 },
+      { key: '3m',  label: '近3月',  days: 90 },
+      { key: '6m',  label: '近6月',  days: 180 },
+      { key: 'ytd', label: '今年来', days: null }, // 特殊处理
+      { key: '1y',  label: '近1年',  days: 365 },
+      { key: '3y',  label: '近3年',  days: 365 * 3 },
+      { key: 'all', label: '全部',   days: null }, // 特殊处理
+    ];
+    const TREND_STATE = { code: null, fullSeries: null, range: '3m', expanded: false };
+
+    async function fetchPzdHistory(code) {
+      // 重用 pingzhongdata 接口；返回 [{date, nav, change}, ...] 升序
+      return new Promise((resolve) => {
+        const s = document.createElement('script');
+        s.src = `https://fund.eastmoney.com/pingzhongdata/${code}.js?rt=${Date.now()}`;
+        s.async = true;
+        const timer = setTimeout(() => { s.remove(); resolve(null); }, 8000);
+        s.onload = () => {
+          clearTimeout(timer);
+          s.remove();
+          // pingzhongdata 是脚本直接给全局变量赋值，读 window.Data_netWorthTrend
+          const arr = window.Data_netWorthTrend;
+          if (!Array.isArray(arr) || !arr.length) { resolve(null); return; }
+          const out = arr.map(p => ({
+            date: new Date(p.x),
+            nav: parseFloat(p.y),
+            change: p.equityReturn != null ? parseFloat(p.equityReturn) : null,
+          })).filter(p => Number.isFinite(p.nav));
+          resolve(out);
+        };
+        s.onerror = () => { clearTimeout(timer); s.remove(); resolve(null); };
+        document.head.appendChild(s);
+      });
+    }
+
+    function filterTrendRange(series, rangeKey) {
+      if (!series?.length) return [];
+      if (rangeKey === 'all') return series;
+      const last = series[series.length - 1].date;
+      let start;
+      if (rangeKey === 'ytd') {
+        start = new Date(last.getFullYear(), 0, 1);
+      } else {
+        const r = TREND_RANGES.find(x => x.key === rangeKey);
+        if (!r || !r.days) return series;
+        start = new Date(last.getTime() - r.days * 86400 * 1000);
+      }
+      return series.filter(p => p.date >= start);
+    }
+
+    function renderTrendChart() {
+      // 每次重渲染图表（首次/区间切换）都把列表收回为 5 条预览
+      TREND_STATE.expanded = false;
+      const wrap = document.getElementById('trend-chart');
+      const recent = document.getElementById('trend-recent');
+      const data = filterTrendRange(TREND_STATE.fullSeries, TREND_STATE.range);
+      if (!data.length) {
+        wrap.innerHTML = '<div class="text-center py-12 text-stone-400 text-sm">所选区间无数据</div>';
+        recent.innerHTML = '';
+        return;
+      }
+
+      // y 轴改用「区间累计涨跌幅 %」（以区间起点 nav 为基准 = 0%）
+      // 这样多档对比时尺度一致；hover 也能直观看到从某天起的涨幅
+      const baseNav = data[0].nav;
+      const pts = data.map(p => ({
+        date: p.date,
+        nav: p.nav,
+        change: p.change,                        // 当日涨跌（来自 pzd）
+        ret: (p.nav / baseNav - 1) * 100,        // 累计涨跌 %
+      }));
+
+      // SVG 尺寸
+      const W = 720, H = 260, PAD_L = 50, PAD_R = 16, PAD_T = 16, PAD_B = 28;
+      const rets = pts.map(p => p.ret);
+      const minR = Math.min(...rets), maxR = Math.max(...rets);
+      const padR = (maxR - minR) * 0.08 || 0.5;
+      const lo = minR - padR, hi = maxR + padR;
+      const xOf = (i) => PAD_L + (W - PAD_L - PAD_R) * (i / Math.max(1, pts.length - 1));
+      const yOf = (v) => PAD_T + (H - PAD_T - PAD_B) * (1 - (v - lo) / (hi - lo));
+
+      const totalChg = pts[pts.length - 1].ret;
+      // A 股口径：红涨 / 绿跌（与表格 .up/.down 类一致）
+      const upColor = '#dc2626';   // red-600
+      const downColor = '#16a34a'; // green-600
+      const lineColor = totalChg >= 0 ? upColor : downColor;
+
+      // 折线 path（用累计涨跌幅）
+      const path = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${xOf(i).toFixed(1)},${yOf(p.ret).toFixed(1)}`).join(' ');
+      const area = `${path} L${xOf(pts.length - 1).toFixed(1)},${yOf(lo).toFixed(1)} L${xOf(0).toFixed(1)},${yOf(lo).toFixed(1)} Z`;
+
+      // 0% 基准线（如果在 lo~hi 区间内）
+      const zeroY = (0 >= lo && 0 <= hi) ? yOf(0) : null;
+
+      // 5 道横向网格（含 0% 基准）
+      const gridLines = [];
+      const gridLabels = [];
+      for (let i = 0; i <= 4; i++) {
+        const v = lo + (hi - lo) * (i / 4);
+        const y = yOf(v);
+        gridLines.push(`<line x1="${PAD_L}" y1="${y.toFixed(1)}" x2="${W - PAD_R}" y2="${y.toFixed(1)}" stroke="#e7e5e4" stroke-dasharray="2 3"/>`);
+        gridLabels.push(`<text x="${PAD_L - 6}" y="${(y + 3).toFixed(1)}" font-size="10" fill="#a8a29e" text-anchor="end">${(v >= 0 ? '+' : '') + v.toFixed(1)}%</text>`);
+      }
+
+      const fmtD = (d) => `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      const fmtFullD = (d) => `${d.getFullYear()}-${fmtD(d)}`;
+      const xLabels = [
+        { i: 0, label: fmtD(pts[0].date) },
+        { i: Math.floor(pts.length / 2), label: fmtD(pts[Math.floor(pts.length / 2)].date) },
+        { i: pts.length - 1, label: fmtD(pts[pts.length - 1].date) },
+      ];
+
+      // 区间累计涨跌：A 股口径（红涨绿跌），与全站 .up/.down 一致
+      const totalChgCls = totalChg > 0 ? 'up' : totalChg < 0 ? 'down' : 'text-stone-400';
+      const totalChgStr = `${totalChg >= 0 ? '+' : ''}${totalChg.toFixed(2)}%`;
+
+      wrap.innerHTML = `
+        <div class="flex items-baseline justify-between flex-wrap gap-2 mb-2">
+          <div class="text-sm text-stone-500">区间累计 <span class="font-bold ${totalChgCls} num text-base ml-1">${totalChgStr}</span></div>
+          <div class="text-xs text-stone-400 num">${fmtFullD(pts[0].date)} ~ ${fmtFullD(pts[pts.length - 1].date)} · ${pts.length} 个交易日</div>
+        </div>
+        <div class="relative" id="trend-chart-inner">
+          <svg viewBox="0 0 ${W} ${H}" class="w-full" style="height:auto; display:block;" id="trend-svg">
+            <defs>
+              <linearGradient id="trend-grad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="${lineColor}" stop-opacity="0.18"/>
+                <stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            ${gridLines.join('')}
+            ${gridLabels.join('')}
+            ${zeroY != null ? `<line x1="${PAD_L}" y1="${zeroY.toFixed(1)}" x2="${W - PAD_R}" y2="${zeroY.toFixed(1)}" stroke="#a8a29e" stroke-width="0.6" stroke-dasharray="3 3"/>` : ''}
+            <path d="${area}" fill="url(#trend-grad)" />
+            <path d="${path}" fill="none" stroke="${lineColor}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+            ${xLabels.map(l => `<text x="${xOf(l.i).toFixed(1)}" y="${H - 8}" font-size="10" fill="#a8a29e" text-anchor="middle">${l.label}</text>`).join('')}
+            <!-- crosshair（默认隐藏，hover 时显示） -->
+            <g id="trend-cursor" style="display:none;">
+              <line id="trend-cursor-line" y1="${PAD_T}" y2="${H - PAD_B}" stroke="#525252" stroke-width="0.8" stroke-dasharray="2 2"/>
+              <circle id="trend-cursor-dot" r="3.5" fill="${lineColor}" stroke="#fff" stroke-width="1.5"/>
+            </g>
+          </svg>
+          <!-- tooltip：浅色卡片，文字直接用全站 .up/.down（红涨绿跌）保持一致 -->
+          <div id="trend-tooltip" class="absolute pointer-events-none hidden bg-white border border-stone-200 rounded-lg px-3 py-2 shadow-md text-xs whitespace-nowrap" style="transition:opacity .12s; min-width:160px;"></div>
+        </div>
+      `;
+
+      // 最近净值列表：默认 5 条预览，点「加载更多」展开为完整列表（带滚动）
+      // 切换区间时强制收回，因为基准点变了，区间累计也跟着变
+      renderTrendList(pts);
+
+      // ===== Hover 交互 =====
+      const svg = document.getElementById('trend-svg');
+      const wrapInner = document.getElementById('trend-chart-inner');
+      const cursor = document.getElementById('trend-cursor');
+      const cursorLine = document.getElementById('trend-cursor-line');
+      const cursorDot = document.getElementById('trend-cursor-dot');
+      const tooltip = document.getElementById('trend-tooltip');
+
+      function findIndex(viewX) {
+        // viewX 是 SVG viewBox 坐标系下的 x；二分查最接近的 i
+        let lo = 0, hi = pts.length - 1;
+        while (lo < hi) {
+          const mid = (lo + hi) >> 1;
+          if (xOf(mid) < viewX) lo = mid + 1;
+          else hi = mid;
+        }
+        // 在 lo 和 lo-1 之间选更近的
+        if (lo > 0 && Math.abs(xOf(lo - 1) - viewX) < Math.abs(xOf(lo) - viewX)) return lo - 1;
+        return lo;
+      }
+
+      function onMove(e) {
+        const rect = svg.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        // 屏幕像素 → viewBox 坐标
+        const viewX = (clientX - rect.left) * (W / rect.width);
+        if (viewX < PAD_L || viewX > W - PAD_R) {
+          cursor.style.display = 'none';
+          tooltip.classList.add('hidden');
+          return;
+        }
+        const i = findIndex(viewX);
+        const p = pts[i];
+        const cx = xOf(i), cy = yOf(p.ret);
+        cursor.style.display = '';
+        cursorLine.setAttribute('x1', cx.toFixed(1));
+        cursorLine.setAttribute('x2', cx.toFixed(1));
+        cursorDot.setAttribute('cx', cx.toFixed(1));
+        cursorDot.setAttribute('cy', cy.toFixed(1));
+
+        // tooltip 显示（浅色卡片 + .up/.down 保持站点统一红涨绿跌口径）
+        const chgTxt = p.change == null ? '--' : `${p.change > 0 ? '+' : ''}${p.change.toFixed(2)}%`;
+        const chgCls = p.change == null ? 'text-stone-400' : p.change > 0 ? 'up' : p.change < 0 ? 'down' : 'text-stone-400';
+        const retCls = p.ret > 0 ? 'up' : p.ret < 0 ? 'down' : 'text-stone-400';
+        const retTxt = `${p.ret >= 0 ? '+' : ''}${p.ret.toFixed(2)}%`;
+        tooltip.innerHTML = `
+          <div class="font-semibold text-stone-900 num">${fmtFullD(p.date)}</div>
+          <div class="mt-1.5 flex justify-between gap-4"><span class="text-stone-500">净值</span><span class="num font-medium text-stone-900">${p.nav.toFixed(4)}</span></div>
+          <div class="mt-0.5 flex justify-between gap-4"><span class="text-stone-500">日涨跌</span><span class="num font-medium ${chgCls}">${chgTxt}</span></div>
+          <div class="mt-0.5 flex justify-between gap-4 pt-1 border-t border-stone-100"><span class="text-stone-500">区间累计</span><span class="num font-bold ${retCls}">${retTxt}</span></div>
+        `;
+        tooltip.classList.remove('hidden');
+        // tooltip 定位（基于内层 wrap 的相对坐标）
+        const wrapRect = wrapInner.getBoundingClientRect();
+        // 屏幕坐标转 wrap 内坐标
+        const localX = (cx / W) * rect.width;
+        const localY = (cy / H) * rect.height;
+        // 默认放在数据点右侧；超出右边界时切到左侧
+        const ttW = tooltip.offsetWidth || 160;
+        const ttH = tooltip.offsetHeight || 80;
+        let tx = localX + 12;
+        if (tx + ttW > rect.width) tx = localX - ttW - 12;
+        let ty = localY - ttH / 2;
+        if (ty < 0) ty = 4;
+        if (ty + ttH > rect.height) ty = rect.height - ttH - 4;
+        tooltip.style.left = tx + 'px';
+        tooltip.style.top = ty + 'px';
+      }
+      function onLeave() {
+        cursor.style.display = 'none';
+        tooltip.classList.add('hidden');
+      }
+      svg.addEventListener('mousemove', onMove);
+      svg.addEventListener('mouseleave', onLeave);
+      svg.addEventListener('touchstart', onMove, { passive: true });
+      svg.addEventListener('touchmove', onMove, { passive: true });
+      svg.addEventListener('touchend', onLeave);
+    }
+
+    // 渲染走势 modal 底部的「最近净值」列表
+    //   · 默认显示 5 条预览 + 「加载更多」按钮
+    //   · 点击「加载更多」展开为完整历史（按日期降序，最新在最上），带 max-height 滚动
+    //   · 数据来自当前区间已计算好的 pts（含 ret 字段），无需再请求接口
+    function renderTrendList(pts) {
+      const recent = document.getElementById('trend-recent');
+      if (!recent) return;
+      const expanded = TREND_STATE.expanded;
+      const all = pts.slice().reverse();  // 最新在前
+      const view = expanded ? all : all.slice(0, 5);
+      const fmtFullD = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+      const rows = view.map(p => {
+        const chgCls = p.change == null ? 'text-stone-400' : p.change > 0 ? 'up' : p.change < 0 ? 'down' : '';
+        const chgTxt = p.change == null ? '--' : `${p.change > 0 ? '+' : ''}${p.change.toFixed(2)}%`;
+        const retCls = p.ret > 0 ? 'up' : p.ret < 0 ? 'down' : 'text-stone-400';
+        const retTxt = `${p.ret > 0 ? '+' : ''}${p.ret.toFixed(2)}%`;
+        return `<tr class="border-t border-stone-100">
+          <td class="py-2 px-3 num">${fmtFullD(p.date)}</td>
+          <td class="py-2 px-3 text-right num font-medium">${p.nav.toFixed(4)}</td>
+          <td class="py-2 px-3 text-right num ${chgCls}">${chgTxt}</td>
+          <td class="py-2 px-3 text-right num ${retCls}">${retTxt}</td>
+        </tr>`;
+      }).join('');
+
+      const tableHtml = `
+        <table class="w-full">
+          <thead class="bg-stone-50 text-stone-500 ${expanded ? 'sticky top-0 z-10' : ''}">
+            <tr>
+              <th class="text-left py-2 px-3 font-medium">日期</th>
+              <th class="text-right py-2 px-3 font-medium">单位净值</th>
+              <th class="text-right py-2 px-3 font-medium">日涨跌</th>
+              <th class="text-right py-2 px-3 font-medium">区间累计</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+
+      // 加载更多/收起按钮（仅当总条数 > 5 才显示）
+      const showToggle = all.length > 5;
+      let toggleHtml = '';
+      if (showToggle) {
+        if (!expanded) {
+          toggleHtml = `
+            <button id="trend-list-more"
+                    class="w-full py-2.5 text-xs text-stone-500 hover:text-stone-900 hover:bg-stone-50 transition border-t border-stone-100 flex items-center justify-center gap-1">
+              <span>加载全部历史净值（共 ${all.length} 条）</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>`;
+        } else {
+          toggleHtml = `
+            <button id="trend-list-more"
+                    class="w-full py-2.5 text-xs text-stone-500 hover:text-stone-900 hover:bg-stone-50 transition border-t border-stone-100 sticky bottom-0 bg-white flex items-center justify-center gap-1">
+              <span>收起（仅看最近 5 条）</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+              </svg>
+            </button>`;
+        }
+      }
+
+      // 展开模式下加最大高度 + 滚动
+      if (expanded) {
+        recent.innerHTML = `
+          <div class="max-h-[420px] overflow-y-auto text-xs">${tableHtml}</div>
+          ${toggleHtml}
+        `;
+      } else {
+        recent.innerHTML = `${tableHtml}${toggleHtml}`;
+      }
+
+      const btn = document.getElementById('trend-list-more');
+      if (btn) {
+        btn.addEventListener('click', () => {
+          TREND_STATE.expanded = !TREND_STATE.expanded;
+          renderTrendList(pts);
+        });
+      }
+    }
+
+    function renderTrendRanges() {
+      const box = document.getElementById('trend-ranges');
+      box.innerHTML = TREND_RANGES.map(r => `
+        <button data-range="${r.key}" class="px-3 py-1.5 rounded-md text-xs transition ${TREND_STATE.range === r.key ? 'bg-stone-900 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}">
+          ${r.label}
+        </button>
+      `).join('');
+      box.querySelectorAll('button[data-range]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          TREND_STATE.range = btn.dataset.range;
+          renderTrendRanges();
+          renderTrendChart();
+        });
+      });
+    }
+
+    async function openTrend(code, evt) {
+      if (evt) evt.stopPropagation();
+      // 找基金信息（场外 4 个 cat + ETF）
+      let series = null, share = null;
+      for (const cat of ['sp500', 'nasdaq_passive', 'active', 'global_other', 'etf']) {
+        const d = STATE.data[cat];
+        if (!d) continue;
+        for (const s of d.series) {
+          const sh = s.shares.find(x => x.code === code);
+          if (sh) { series = s; share = sh; break; }
+        }
+        if (series) break;
+      }
+      const modal = document.getElementById('trendModal');
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('trend-title').textContent = series?.display_name || share?.name || `基金 ${code}`;
+      document.getElementById('trend-subtitle').innerHTML = `
+        <span class="num">${code}</span>
+        ${share?.share_class ? ` · ${share.share_class}` : ''}
+        ${share?.nav != null ? ` · 当前净值 <span class="font-medium num text-stone-700">${share.nav.toFixed(4)}</span>` : ''}
+        ${share?.nav_date ? ` <span class="text-stone-400">(${share.nav_date})</span>` : ''}
+      `;
+      document.getElementById('trend-chart').innerHTML = '<div class="text-center py-12 text-stone-400 text-sm">⏳ 拉取历史净值中...</div>';
+      document.getElementById('trend-recent').innerHTML = '';
+      TREND_STATE.code = code;
+      TREND_STATE.fullSeries = null;
+      TREND_STATE.range = '3m';
+      TREND_STATE.expanded = false;
+      renderTrendRanges();
+
+      const data = await fetchPzdHistory(code);
+      if (!data || !data.length) {
+        document.getElementById('trend-chart').innerHTML = '<div class="text-center py-12 text-stone-400 text-sm">无法拉取历史净值（数据源临时不可用）</div>';
+        return;
+      }
+      TREND_STATE.fullSeries = data;
+      renderTrendChart();
+    }
+
+    function closeTrend() {
+      document.getElementById('trendModal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+    // 点 trendModal 背景关闭
+    document.addEventListener('click', (e) => {
+      const m = document.getElementById('trendModal');
+      if (!m || m.classList.contains('hidden')) return;
+      if (e.target === m) closeTrend();
+    });
 
     function renderDetailBasic(series, share) {
       // 标题
@@ -1425,10 +2121,21 @@
       // 最大权重用于做条形图
       const maxW = Math.max(...data.holdings.map(h => h.weight || 0));
 
+      // 持仓行的「市场状态点」逻辑：
+      //   · 该市场盘中 → 绿点 ●（CSS pulse 动画）+ tooltip "盘中实时"
+      //   · 该市场已收盘/休市 → 灰点 ○ + tooltip "已收盘"
+      // 一只组合可能跨美股/港股/A股，分别按各自市场判定（含美股冬夏令时，由 Intl 自动处理）
+      // 用户场景：广发全球精选 = 美股 + 港股，09:51 港股盘中（绿点）、美股已收盘（灰点）
+
       const listHtml = `
-        <div class="text-xs text-stone-500 mb-2 flex justify-between">
-          <span>${data.latest_quarter || '最新季报'} · 当日涨跌基于实时行情</span>
-          <span>持仓数据截至 ${(data.fetched_at || '').slice(0, 10)}</span>
+        <div class="text-xs text-stone-500 mb-2 flex justify-between flex-wrap gap-2">
+          <span>${data.latest_quarter || '最新季报'} · 当日涨跌按持仓股票所属市场分别取实时行情</span>
+          <span class="text-stone-400">
+            <span class="mkt-dot open"></span>盘中实时
+            <span class="ml-2"><span class="mkt-dot closed"></span>已收盘</span>
+            <span class="ml-2 text-stone-300">·</span>
+            <span class="ml-2">持仓截至 ${(data.fetched_at || '').slice(0, 10)}</span>
+          </span>
         </div>
         <table class="w-full text-sm">
           <thead class="text-xs text-stone-500 border-b border-stone-200">
@@ -1446,9 +2153,14 @@
             ${data.holdings.map((h, i) => {
               const stock = STATE.stocks?.[h.stock_code];
               const chg = stock?.change_pct;
-              const chgCell = chg == null
+              const market = stock?.market || (/^\d{5}$/.test(h.stock_code) ? 'HK' : /^\d{6}$/.test(h.stock_code) ? 'A' : 'US');
+              const sess = getMarketSession(market);
+              const dotTitle = sess === 'open' ? `${market} 市场盘中实时` : `${market} 市场已收盘 · 显示最近成交`;
+              const dot = `<span class="mkt-dot ${sess}" title="${dotTitle}"></span>`;
+              const chgInner = chg == null
                 ? '<span class="text-stone-300">--</span>'
                 : `<span class="${chg > 0 ? 'up' : chg < 0 ? 'down' : ''}">${chg > 0 ? '+' : ''}${chg.toFixed(2)}%</span>`;
+              const chgCell = `${dot}${chgInner}`;
               return `
                 <tr class="border-b border-stone-50 hover:bg-stone-50/50">
                   <td class="py-2.5 text-stone-400 num">${h.rank || (i + 1)}</td>

@@ -1,8 +1,8 @@
 """
 用天天基金 pingzhongdata 接口补全缺失字段：
-- 净值 nav / 净值日期 nav_date（场外）
-- 日涨跌 daily_change（场外 · 按净值算）
-- 近1月 / 近3月 / 近6月 / 近1年（场外 + ETF 都补）
+- 净值 nav / 净值日期 nav_date（场外）—— 每日强制覆盖（修复"已有值就锁死"的 bug）
+- 日涨跌 daily_change（场外 · 按净值算）—— 每日强制覆盖
+- 近1月 / 近3月 / 近6月 / 近1年（场外 + ETF 都补）—— 仅填漏，避免异常返回污染
 - 今年来 chg_ytd（Pass 3 · AKShare 累计收益率走势推算）
 - 基金名（带份额类型）—— 已有
 
@@ -12,10 +12,15 @@
   syl_6y = 近6月
   syl_1y = 近1月
 
-说明：
-- 场外基金：抓全量字段（nav / daily_change / 历史收益）
-- 场内 ETF：只补历史收益字段（nav/daily_change 用 etf_price/etf_change_pct，不复用净值）
-- 成立来收益（chg_since_inception）不在本脚本范围内，pingzhongdata 没有该字段
+合并策略（merge_share_data）：
+- 场外基金：每天强制刷新 nav/nav_date/daily_change（否则后续 Actions 永远拿不到新交易日数据）；
+            历史收益字段仅在缺失时填充
+- 场内 ETF：只补历史收益（nav/daily_change 用 etf_price/etf_change_pct，不复用净值）
+- 成立来收益（chg_since_inception）不在本脚本范围，pingzhongdata 没有该字段
+
+Pass1 选基逻辑：
+- 场外 QDII：无条件加入（每天都要刷新最新净值，不再依赖"字段缺失"判定）
+- 场内 ETF：只在历史收益缺失时加入
 """
 import json
 import re
@@ -34,6 +39,10 @@ HEADERS = {
 # 对场内 ETF，这些字段不应被 pingzhongdata 的净值数据覆盖
 # （场内 ETF 前端用的是 etf_price / etf_change_pct，净值口径不同）
 ETF_SKIP_FIELDS = {"nav", "nav_date", "daily_change"}
+
+# 这些字段每天都会变，pingzhongdata 取到新值时必须强制覆盖
+# （否则首次跑完后旧值被锁死，后续 Actions 永远不会更新到新交易日）
+ALWAYS_OVERWRITE_FIELDS = {"nav", "nav_date", "daily_change"}
 
 
 def _to_float(v):
@@ -140,7 +149,10 @@ def fetch_pzd(code: str):
 
 
 def merge_share_data(share: dict, pzd: dict, is_etf: bool = False):
-    """只覆盖空字段，不影响已有数据。is_etf=True 时跳过 nav/daily_change。"""
+    """合并 pzd 数据到 share。
+    - nav/nav_date/daily_change：每天都会变 → 强制覆盖（ETF 跳过这三个字段）
+    - 历史收益（chg_1m/3m/6m/1y）：只填空白，避免旧值被异常返回污染
+    """
     updated = []
     candidate_keys = [
         "nav", "nav_date", "daily_change",
@@ -149,11 +161,19 @@ def merge_share_data(share: dict, pzd: dict, is_etf: bool = False):
     for key in candidate_keys:
         if is_etf and key in ETF_SKIP_FIELDS:
             continue
-        if pzd.get(key) is not None:
-            cur = share.get(key)
-            # 仅当缺失时填充
+        new_val = pzd.get(key)
+        if new_val is None:
+            continue
+        cur = share.get(key)
+        if key in ALWAYS_OVERWRITE_FIELDS:
+            # 强制覆盖：只要新值非空就写入（不论旧值是否存在）
+            if cur != new_val:
+                share[key] = new_val
+                updated.append(key)
+        else:
+            # 历史收益：仅当缺失时填充
             if cur in (None, "", 0):
-                share[key] = pzd[key]
+                share[key] = new_val
                 updated.append(key)
     return updated
 
@@ -222,19 +242,27 @@ def main():
                 loaded_data[cat] = json.load(f)
 
     # ------------------------- Pass 1：pingzhongdata 历史收益 -------------------------
+    # 场外 QDII：每天都跑（要刷新 nav/nav_date/daily_change），pzd 抓不到再降级
+    # 场内 ETF：只在历史收益缺失时跑（净值字段不用，ETF 用 etf_price/etf_change_pct）
     targets = []
     for cat, d in loaded_data.items():
         is_etf = (cat == "etf")
-        # 缺失判据：场外看净值+收益；ETF 只看历史收益（净值字段本就不该用）
-        probe_keys = ["chg_1m", "chg_1y"] if is_etf else ["nav", "daily_change", "chg_1m", "chg_1y"]
         for s in d["series"]:
             for sh in s["shares"]:
-                missing = [k for k in probe_keys if sh.get(k) in (None, "", 0)]
-                if missing:
-                    targets.append((cat, sh["code"], sh, missing, is_etf))
+                if is_etf:
+                    # ETF 仅看历史收益是否缺
+                    probe_keys = ["chg_1m", "chg_1y"]
+                    missing = [k for k in probe_keys if sh.get(k) in (None, "", 0)]
+                    if missing:
+                        targets.append((cat, sh["code"], sh, missing, is_etf))
+                else:
+                    # 场外 QDII 每天都要更新最新净值，无条件加入
+                    probe_keys = ["chg_1m", "chg_1y"]
+                    missing = [k for k in probe_keys if sh.get(k) in (None, "", 0)]
+                    targets.append((cat, sh["code"], sh, missing or ["daily-refresh"], is_etf))
 
     total = len(targets)
-    print(f"🎯 Pass 1: {total} 只基金有字段缺失（含 ETF）")
+    print(f"🎯 Pass 1: {total} 只基金需处理（场外每日刷新 nav/daily_change + 历史收益补漏；ETF 仅补漏历史收益）")
     print()
 
     success = 0
