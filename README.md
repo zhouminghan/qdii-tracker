@@ -6,9 +6,9 @@
 📦 **源码仓库**：<https://github.com/zhouminghan/qdii-tracker>
 ⚙️ **自动更新**：[![Update Fund Data](https://github.com/zhouminghan/qdii-tracker/actions/workflows/update-data.yml/badge.svg)](https://github.com/zhouminghan/qdii-tracker/actions/workflows/update-data.yml)
 
-![US Fund Tracker](https://img.shields.io/badge/status-running-success) ![Data](https://img.shields.io/badge/data-static-blue) ![Deploy](https://img.shields.io/badge/deploy-GitHub%20Pages%20%7C%20Docker-black) ![License](https://img.shields.io/badge/license-MIT-green)
+![US Fund Tracker](https://img.shields.io/badge/status-running-success) ![Data](https://img.shields.io/badge/data-static-blue) ![Deploy](https://img.shields.io/badge/deploy-GitHub%20Pages-black) ![License](https://img.shields.io/badge/license-MIT-green)
 
-> 🚀 **想快速用起来？** 直接跳到 [👉 部署方式](#-部署方式)：GitHub Pages 零服务器 or Docker 一键容器化，任选其一。
+> 🚀 **想快速用起来？** 直接跳到 [👉 部署方式](#-部署方式)：GitHub Pages 零服务器、零成本、自动更新。仅自用场景，无需任何后端服务（无数据库、无 Docker）。
 
 ---
 
@@ -85,7 +85,7 @@
 - 22:30 之后：Actions 已跑 → 仓库就是最新 → 前端兜底队列自动为空，不再打 fundgz
 - 非交易日 / 交易日 15:00 前：不轮询（没新数据）
 
-> 两种部署方案已把这个时间表默认配好（GitHub Actions / 容器内 cron），不用手动。
+> 这个时间表 GitHub Actions 已经配好（见 `.github/workflows/update-data.yml`），不用手动维护。
 
 ---
 
@@ -119,16 +119,9 @@ qdii-tracker/
 ├── docs/                         # 运维 SOP 文档
 │   └── ADDING-FUNDS.md           # 新增基金操作手册
 │
-├── .github/workflows/
-│   ├── update-data.yml           # GitHub Actions 自动更新数据
-│   └── deploy-pages.yml          # 发布 web/ 到 GitHub Pages
-│
-├── Dockerfile                    # Docker 镜像定义（一键容器化）
-├── docker-compose.yml            # docker compose 启动配置
-└── docker/
-    ├── nginx.conf                # 容器内 Nginx 站点配置
-    ├── crontab                   # 容器内 cron 计划（supercronic）
-    └── entrypoint.sh             # 容器启动脚本
+└── .github/workflows/
+    ├── update-data.yml           # GitHub Actions 自动更新数据
+    └── deploy-pages.yml          # 发布 web/ 到 GitHub Pages
 ```
 
 ---
@@ -273,18 +266,11 @@ python fetch_stocks.py        # 更新股价（~1 分钟）
 
 ## 🚀 部署方式
 
-两种方案，按需选一种 **或组合使用**：
-
-| 方案 | 成本 | 自动更新 | 适合谁 |
-|---|---|---|---|
-| **① GitHub Pages + Actions** | 免费 | ✅ Actions 定时跑 | 想完全零运维、零服务器 |
-| **② Docker（一键容器化）** | 有服务器/Mac/NAS 都行 | ✅ 容器内 supercronic | 有机器想自己掌控 / 内网使用 / 不想依赖 GitHub |
-
-> 💡 **两种可以组合**：GitHub Pages 给外网看板，Docker 跑在家里 NAS 当备份——都读同一份代码，数据不冲突。
+**GitHub Pages + Actions 自动更新**：免费 / 零服务器 / 自动定时刷数据。仅自用场景下没有比这更省心的方案。
 
 ---
 
-## 🌐 方案 ① GitHub Pages + Actions 自动更新
+## 🌐 GitHub Pages + Actions 自动更新
 
 **适合**：没有服务器、希望全部免费、完全不碰命令行日常维护。
 
@@ -413,199 +399,6 @@ git push
 
 ---
 
-## 🐳 方案 ② Docker（一键容器化，自有机器）
-
-**适合**：有 Mac / Linux 服务器 / 群晖 NAS / 树莓派 / 公司内网机，想完全掌控、不依赖 GitHub 也能跑。
-
-### 你将得到什么
-
-- 容器里自带 **Python 脚本 + Nginx + 定时任务**，一键起一个完整应用
-- **浏览器访问** `http://<机器 IP>:8080` 就能看
-- **首次启动自动跑一次完整流水线**（容器发现 `web/data/` 空就跑）
-- **工作日 22:30 + 每月 1 日** 自动刷新数据（用容器里的 supercronic）
-- 升级镜像或重启容器都**不丢数据**（数据挂到宿主机 `./web/data/`）
-
-### 🧰 前置准备
-
-| 要装的东西 | 说明 |
-|---|---|
-| **Docker Desktop**（Mac/Win） 或 **docker + docker-compose**（Linux） | <https://www.docker.com/products/docker-desktop> 直接下载 |
-| Git（拉代码用，可选） | Mac 默认有，Linux `sudo apt install git` |
-
-### 📋 首次配置步骤
-
-#### 步骤 1 · 拉代码
-
-```bash
-git clone https://github.com/zhouminghan/qdii-tracker.git
-cd qdii-tracker
-```
-
-> 没用 GitHub 也行，把项目文件夹直接拷到机器上也一样。
-
-#### 步骤 2 · 一键起容器
-
-```bash
-docker compose up -d --build
-```
-
-第一次会构建镜像（约 3~5 分钟，下 Python 镜像 + 装依赖）。
-
-构建完成后容器立刻启动，并**在后台跑一次完整流水线**（约 10~15 分钟）。跑完就能看到数据。
-
-#### 步骤 3 · 查看运行日志
-
-```bash
-docker compose logs -f qdii-tracker
-```
-
-你会看到：
-
-```
-🚀 [entrypoint] starting QDII Tracker container...
-📥 [entrypoint] web/data/ 为空，先跑一次完整流水线（预计 10~15 分钟，请耐心）...
-🔍 [scan] 扫描全量基金...
-...
-✅ [entrypoint] 首次流水线完成
-🌐 [entrypoint] starting nginx...
-⏰ [entrypoint] starting supercronic...
-```
-
-按 `Ctrl+C` 退出 logs（容器仍在后台跑）。
-
-#### 步骤 4 · 打开看板
-
-浏览器访问：
-
-```
-http://<机器 IP>:8080
-```
-
-- 本机跑：`http://localhost:8080`
-- 服务器 / NAS：查 IP 后 `http://192.168.x.x:8080`
-
-看到看板就说明成功了。
-
-#### 步骤 5 · 验证自动刷新（可选）
-
-容器里已经装好 cron，不需要额外配置。想手动触发一次：
-
-```bash
-# 进容器
-docker compose exec qdii-tracker bash
-
-# 跑增量刷新
-cd /app/scripts && python fill_missing.py
-
-# 退出
-exit
-```
-
-刷新网页就能看到最新数据。
-
----
-
-### 🎯 Docker 方案的日常使用
-
-| 操作 | 命令 |
-|---|---|
-| 启动 | `docker compose up -d` |
-| 停止 | `docker compose stop` |
-| 重启 | `docker compose restart` |
-| 看日志 | `docker compose logs -f qdii-tracker` |
-| 手动触发增量更新 | `docker compose exec qdii-tracker python /app/scripts/fill_missing.py` |
-| 手动触发完整流水线 | `docker compose exec qdii-tracker bash -c "cd /app/scripts && python scan_funds.py && python enrich_data.py && python fill_missing.py && python fetch_holdings.py && python fetch_stocks.py"` |
-| 进容器排查 | `docker compose exec qdii-tracker bash` |
-| 更新代码后重建镜像 | `git pull && docker compose up -d --build` |
-
-### ⏰ 容器内的自动更新
-
-定时规则在 `docker/crontab`：
-
-```cron
-# 工作日 22:30 增量更新（北京时间）
-30 22 * * 1-5 cd /app/scripts && python fill_missing.py && python fetch_stocks.py
-
-# 每月 1 日 02:00 完整流水线
-0 2 1 * * cd /app/scripts && python scan_funds.py && python enrich_data.py && ...
-```
-
-改时间直接编辑 `docker/crontab` 然后 `docker compose up -d --build`。
-
-### 📁 数据持久化
-
-`docker-compose.yml` 里挂了卷：
-
-```yaml
-volumes:
-  - ./web/data:/app/web/data
-```
-
-所有 JSON 数据实际落在**宿主机的 `./web/data/`**。含义：
-
-- 删容器 / 重建镜像**不丢数据**
-- 手动看数据：`cat web/data/sp500.json`
-- 想重新跑一次首次流水线：`rm -rf web/data/*.json && docker compose restart`
-
-### 🌍 对外暴露 / 自定义域名（可选）
-
-**改端口**：默认绑 `8080`，改 `docker-compose.yml` 里 `"8080:80"` 为 `"80:80"` 就用标准 80 端口。
-
-**加域名 + HTTPS**：在前面套一层 Nginx 反向代理 / Caddy / Traefik：
-
-```nginx
-# 宿主机 Nginx 示例
-server {
-    listen 443 ssl;
-    server_name fund.example.com;
-    ssl_certificate     /etc/letsencrypt/live/fund.example.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/fund.example.com/privkey.pem;
-
-    location / {
-        proxy_pass http://localhost:8080;
-    }
-}
-```
-
-或直接用 **Caddy**（一行配置自动 HTTPS）：
-
-```caddy
-fund.example.com {
-    reverse_proxy localhost:8080
-}
-```
-
-### 🔧 镜像仓库（进阶）
-
-想把镜像推到 Docker Hub / 私有仓库，方便其它机器拉：
-
-```bash
-docker tag qdii-tracker:latest <你的账号>/qdii-tracker:latest
-docker push <你的账号>/qdii-tracker:latest
-
-# 别的机器上
-docker pull <你的账号>/qdii-tracker:latest
-docker compose up -d
-```
-
----
-
-### 🎁 两种方案对比
-
-| 指标 | GitHub Pages | Docker |
-|---|---|---|
-| 成本 | 免费 | 电费 / 云服务器租金 |
-| 需要机器 | ❌ | ✅（Mac / NAS / 树莓派都行） |
-| 访问速度（国内） | 一般（偶尔慢） | 内网极快 |
-| 公网访问 | ✅ 自带 | 需自己配端口映射 / 反代 |
-| 备案（国内公网） | 不需要 | 公网暴露需要 |
-| HTTPS | 自动 | 需自己配（Caddy 一行搞定） |
-| 改代码后生效 | git push 几分钟 | `docker compose up -d --build` |
-| 数据隐私 | 仓库公开可见 | 完全在自己机器 |
-| 离线可用 | ❌ | ✅ |
-
----
-
 ## 📱 移动端访问（手机/iPad）
 
 Web 版**已经是响应式设计**，手机浏览器打开网址就能看。两种更好的体验：
@@ -630,12 +423,14 @@ Android Chrome：打开网址 → 右上角菜单 → **添加到主屏幕**
 - ~~**加历史净值图**：完整历史 + 区间筛选（1月/3月/...）+ hover 详情~~ ✅ 已做
 - ~~**加列头排序**：规模 / 涨跌 / 收益 / 申购状态~~ ✅ 已做
 - ~~**加持仓股票市场状态指示**：含美股冬夏令时~~ ✅ 已做
-- **加数据库**：PostgreSQL / DuckDB 存历史净值，做真正的图表（而不是单时间点快照）
+- **历史归档**：在 `web/data/history/{yyyymm}/` 存按月快照，纯静态实现"时间轴对比"（仍不引入数据库，保持零成本）
 - **加策略回测**：给每只基金算年化、夏普比率、最大回撤
 - **加提醒**：通过 Server 酱 / Telegram Bot 推送"某基金今日跌超 3%"
 - **加对比**：两只基金叠加曲线对比
 - **加七姐妹浓度打分**：现在只识别"有没有"，可以做加权评分
 - **做成公众号菜单**：公众号的 H5 链接不受小程序的域名限制，可以直接跳 Web 版（这是比小程序靠谱的"微信生态"方案）
+
+> 设计原则：**不引入数据库、不引入后端服务**。所有功能都通过 Actions 生成静态 JSON + 前端按需加载实现。
 
 这些不急，现在这版先稳定用半年再说。
 

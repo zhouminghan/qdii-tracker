@@ -8,7 +8,8 @@
 ## 📐 项目定位
 
 美股 QDII 基金追踪看板 —— 纯静态部署、零后端运行时。
-数据由 Python 流水线（GitHub Actions / Docker cron）定时抓取，前端直接消费 `web/data/*.json`。
+数据由 Python 流水线（GitHub Actions）定时抓取，前端直接消费 `web/data/*.json`。
+**仅自用场景**：仅 GitHub Pages 一种部署方式，无数据库、无 Docker、无任何长驻服务。
 
 在线地址：https://zhouminghan.github.io/qdii-tracker/
 
@@ -59,16 +60,10 @@ qdii-tracker/
 ├── CLAUDE.md                  ← 你正在读的文件
 ├── README.md                  ← 项目说明 + 分类规则
 ├── .gitignore
-├── Dockerfile / docker-compose.yml
 │
 ├── .github/workflows/
 │   ├── deploy-pages.yml       ← Pages 部署
 │   └── update-data.yml        ← 定时数据更新
-│
-├── docker/
-│   ├── crontab                ← supercronic 定时配置
-│   ├── entrypoint.sh          ← 容器入口（首次空数据→完整流水线）
-│   └── nginx.conf             ← Nginx 配置
 │
 ├── docs/
 │   └── ADDING-FUNDS.md        ← 新增基金操作手册
@@ -240,8 +235,8 @@ qdii-tracker/
 
 ### 修改流水线
 
-- `docker/entrypoint.sh` 和 `.github/workflows/update-data.yml` **必须同步更新**
-- 新增脚本要同时加入两处
+- 修改/新增脚本时，需同步更新 `.github/workflows/update-data.yml` 中的步骤
+- 新增脚本要追加到 incremental 或 full 对应的步骤列表里
 - 增量/完整 模式都要覆盖
 
 ---

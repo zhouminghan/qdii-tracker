@@ -32,6 +32,11 @@ name: Update Fund Data
 permissions:
   contents: write
 
+# 防并发：避免手动跑的 full（~20 分钟）和定时增量同时操作 web/data/ 导致 push 冲突
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-latest

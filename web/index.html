@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>US Fund Tracker · 美股基金看板</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="data:,">
+  <script src="./tailwind.min.js"></script>
   <style>
     body {
       font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -595,18 +596,33 @@
     }
 
     // ==================== 数据加载 ====================
-    async function loadData() {
-      for (const cat of DATA_CATEGORIES) {
-        const res = await fetch(`./data/${cat}.json?t=${Date.now()}`);
-        STATE.data[cat] = await res.json();
+    // 版本号策略：先拉 meta.json（绕缓存），用其 generated_at 当所有数据文件的 query 版本号
+    //   · 数据没变 → query 一致 → 浏览器/Pages CDN 缓存命中，秒开
+    //   · Actions 推了新数据 → meta.generated_at 变 → query 变 → 自动失效
+    // 比单纯用 Date.now() 更友好（既破旧缓存又能享受 CDN 加速）
+    async function fetchDataVersion() {
+      try {
+        const meta = await (await fetch(`./data/meta.json?t=${Date.now()}`)).json();
+        return { meta, ver: encodeURIComponent(meta.generated_at || Date.now()) };
+      } catch (_) {
+        return { meta: null, ver: String(Date.now()) };
       }
-      const meta = await (await fetch(`./data/meta.json?t=${Date.now()}`)).json();
-      updateKPI(meta);
+    }
+
+    async function loadData() {
+      const { meta, ver } = await fetchDataVersion();
+      STATE.dataVer = ver;
+
+      await Promise.all(DATA_CATEGORIES.map(async (cat) => {
+        const res = await fetch(`./data/${cat}.json?v=${ver}`);
+        STATE.data[cat] = await res.json();
+      }));
+      if (meta) updateKPI(meta);
       RENDER_TABS.forEach(renderCategory);
 
       // 异步加载股票行情（不阻塞主页）
       try {
-        const stockRes = await fetch(`./data/us_stocks.json?t=${Date.now()}`);
+        const stockRes = await fetch(`./data/us_stocks.json?v=${ver}`);
         if (stockRes.ok) {
           const stockData = await stockRes.json();
           STATE.stocks = stockData.stocks || {};
@@ -618,7 +634,7 @@
 
       // 异步加载估值数据（不阻塞主页）
       try {
-        const estRes = await fetch(`./data/estimates.json?t=${Date.now()}`);
+        const estRes = await fetch(`./data/estimates.json?v=${ver}`);
         if (estRes.ok) {
           const estData = await estRes.json();
           STATE.estimates = estData.funds || {};
@@ -780,6 +796,42 @@
         s.onerror = () => { clearTimeout(timer); s.remove(); resolve(null); };
         document.head.appendChild(s);
       });
+    }
+
+    // 场外基金批量：申购状态 + 日限额（天天基金移动端 JSONP 接口）
+    // 接口支持一次查多只（逗号分隔），返回 BUY/SELL/LIMITBUYS 等字段
+    // 静默降级：CORS 失败或超时则沿用 data.json 中的快照值
+    async function fetchPurchaseStatus(codes) {
+      if (!codes.length) return {};
+      const BATCH = 30;
+      const results = {};
+      for (let i = 0; i < codes.length; i += BATCH) {
+        const batch = codes.slice(i, i + BATCH);
+        const fcodes = batch.join(',');
+        try {
+          const data = await new Promise((resolve) => {
+            const cbName = 'jsonpPurchase' + Date.now() + '_' + i;
+            const s = document.createElement('script');
+            s.src = `https://fundmobapi.eastmoney.com/FundMNewApi/FundMNFInfo?callback=${cbName}&pageIndex=1&pageSize=${batch.length}&plat=Iphone&product=EFund&deviceid=1&Version=1&Fcodes=${fcodes}`;
+            s.async = true;
+            const timer = setTimeout(() => { s.remove(); resolve(null); }, 6000);
+            window[cbName] = (payload) => {
+              delete window[cbName];
+              clearTimeout(timer);
+              s.remove();
+              resolve(payload);
+            };
+            s.onerror = () => { clearTimeout(timer); s.remove(); delete window[cbName]; resolve(null); };
+            document.head.appendChild(s);
+          });
+          if (data?.Datas) {
+            for (const fund of data.Datas) {
+              if (fund.FCODE) results[fund.FCODE] = fund;
+            }
+          }
+        } catch (_) { /* 静默 */ }
+      }
+      return results;
     }
 
     // 场内 ETF 批量：腾讯行情 qt.gtimg.cn 支持一次查多个：q=sh510300,sz159941,...
@@ -1075,7 +1127,7 @@
         if (!est) return;
         const imp = est.estimated_impact;
         const impCls = imp > 0 ? 'up' : imp < 0 ? 'down' : 'text-stone-400';
-        td.innerHTML = `<div class="text-sm font-bold ${impCls}">${imp > 0 ? '+' : ''}${imp.toFixed(2)}%</div><div class="text-[10px] text-stone-400">估</div>`;
+        td.innerHTML = `<div class="text-sm font-bold ${impCls}">${imp > 0 ? '+' : ''}${imp.toFixed(2)}%</div>`;
       });
     }
 
@@ -1100,20 +1152,20 @@
       //       之后再对"data.json 里 nav_date 仍非今天"的基金兜底打 fundgz
       let dataReloaded = 0;
       if (status) status.innerHTML = `<span class="text-stone-400">⏳ 正在拉取最新数据...</span>`;
-      for (const cat of DATA_CATEGORIES) {
+      // 先刷一次版本号（基于 meta.generated_at），然后并发拉 5 个分类
+      const { meta, ver } = await fetchDataVersion();
+      STATE.dataVer = ver;
+      await Promise.all(DATA_CATEGORIES.map(async (cat) => {
         try {
-          const res = await fetch(`./data/${cat}.json?t=${Date.now()}`);
+          const res = await fetch(`./data/${cat}.json?v=${ver}`);
           if (res.ok) {
             STATE.data[cat] = await res.json();
             dataReloaded++;
           }
         } catch (e) { /* 某个 json 失败不阻塞其他 */ }
-      }
-      // meta.json 一起刷新
-      try {
-        const meta = await (await fetch(`./data/meta.json?t=${Date.now()}`)).json();
-        updateKPI(meta);
-      } catch (e) { /* meta 失败不阻塞 */ }
+      }));
+      // meta 已在 fetchDataVersion 取到，直接用
+      try { if (meta) updateKPI(meta); } catch (e) { /* meta 失败不阻塞 */ }
 
       // --- 1) 收集"data.json 仍未到今日"的份额，才去补拉 fundgz ---
       // 过滤规则：
@@ -1187,6 +1239,47 @@
         }
       }
 
+      // --- 2.5) 刷新申购状态 + 日限额（天天基金移动端 API）---
+      const allOffshoreCodes = [];
+      for (const cat of ['sp500', 'nasdaq_passive', 'active', 'global_other']) {
+        const d = STATE.data[cat];
+        if (!d?.series) continue;
+        for (const s of d.series) {
+          for (const sh of s.shares) {
+            if (/^\d{6}$/.test(sh.code)) allOffshoreCodes.push(sh.code);
+          }
+        }
+      }
+      let purchaseUpdated = 0;
+      const purchaseData = await fetchPurchaseStatus(allOffshoreCodes);
+      if (Object.keys(purchaseData).length > 0) {
+        for (const cat of ['sp500', 'nasdaq_passive', 'active', 'global_other']) {
+          const d = STATE.data[cat];
+          if (!d?.series) continue;
+          for (const s of d.series) {
+            for (const sh of s.shares) {
+              const pInfo = purchaseData[sh.code];
+              if (!pInfo) continue;
+              // 申购状态
+              if (pInfo.BUY) {
+                // 统一映射：API 返回 "开放申购"/"暂停申购"/"限额申购" 等
+                sh.buy_status = pInfo.BUY.replace('限额申购', '限大额');
+              }
+              if (pInfo.SELL) sh.sell_status = pInfo.SELL;
+              // 日限额
+              const limitVal = parseFloat(pInfo.LIMITBUYS);
+              if (pInfo.LIMITBUYS && !isNaN(limitVal) && limitVal > 0) {
+                sh.daily_limit = limitVal;
+              } else if (pInfo.BUY && pInfo.BUY.includes('开放') && !pInfo.LIMITBUYS) {
+                // 开放申购且无限额字段 → 不限
+                sh.daily_limit = null;
+              }
+              purchaseUpdated++;
+            }
+          }
+        }
+      }
+
       // --- 3) 动态刷新持仓股票行情 + 重算估值 ---
       // 收集 estimates 中所有持仓股票代码，从腾讯行情拉最新涨跌幅
       const estStockCodes = new Set();
@@ -1219,7 +1312,7 @@
 
       // 重拉 estimates.json（后端可能已更新）
       try {
-        const estRes = await fetch(`./data/estimates.json?t=${Date.now()}`);
+        const estRes = await fetch(`./data/estimates.json?v=${STATE.dataVer || Date.now()}`);
         if (estRes.ok) {
           const estData = await estRes.json();
           STATE.estimates = estData.funds || {};
@@ -1261,7 +1354,7 @@
             : '今日休市，所有数据沿用最近一次收盘真实值';
           status.innerHTML = `
             <span class="text-green-600">🟢 数据已刷新于 ${hhmmss}</span>
-            <span class="text-stone-400 ml-1">（仓库 ${dataReloaded}/${DATA_CATEGORIES.length} · 兜底补拉 ${okOffshore}/${offshoreShares.length} 场外 + ${okEtf}/${etfShares.length} ETF · 耗时 ${cost}s）</span>
+            <span class="text-stone-400 ml-1">（仓库 ${dataReloaded}/${DATA_CATEGORIES.length} · 兜底补拉 ${okOffshore}/${offshoreShares.length} 场外 + ${okEtf}/${etfShares.length} ETF · 申购 ${purchaseUpdated} · 耗时 ${cost}s）</span>
             <br/><span class="text-stone-400 text-[11px]">${dataDesc}</span>
           `;
         }
@@ -1390,7 +1483,7 @@
       const estimateHeaderHtml = !isEtf ? `
               <th class="col-estimate text-right py-3 px-3 font-medium">
                 <div>估值</div>
-                <div class="text-[10px] text-stone-400 font-normal mt-0.5">${STATE.estimatesUpdatedAt ? fmtMD(STATE.estimatesUpdatedAt.slice(0, 10)) + ' 估' : ''}</div>
+                <div class="text-[10px] text-stone-400 font-normal mt-0.5">${STATE.estimatesUpdatedAt ? fmtMD(STATE.estimatesUpdatedAt.slice(0, 10)) : ''}</div>
               </th>` : '';
 
       // 「净值」列头：场外 QDII / 场内 ETF 共用结构
@@ -1605,7 +1698,7 @@
           ? (() => {
               const imp = estimateInfo.estimated_impact;
               const impCls = imp > 0 ? 'up' : imp < 0 ? 'down' : 'text-stone-400';
-              return `<td class="col-estimate py-3 px-3 text-right num" data-est-code="${defCode}"><div class="text-sm font-bold ${impCls}">${imp > 0 ? '+' : ''}${imp.toFixed(2)}%</div><div class="text-[10px] text-stone-400">估</div></td>`;
+              return `<td class="col-estimate py-3 px-3 text-right num" data-est-code="${defCode}"><div class="text-sm font-bold ${impCls}">${imp > 0 ? '+' : ''}${imp.toFixed(2)}%</div></td>`;
             })()
           : '<td class="col-estimate py-3 px-3 text-right text-stone-300">—</td>')
         : '';
