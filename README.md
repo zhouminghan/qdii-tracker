@@ -17,13 +17,15 @@
 - **2 大 Tab**：🏦 场外基金 / 📈 场内 ETF
 - **场外 4 分组**（Chips 筛选）：标普500 / 纳指100 / 美股主动（精选 18 只白名单）/ 全球其他 QDII
 - **场内 ETF 3 分组**（Chips 筛选）：标普500 / 纳指100 / 全球·其他 ETF（含美国50 等）
+- **🟣 主动基金盘中估值**：基于最新一期 Top10 持仓 × 实时美股行情秒级重算，估值列显示如 `-0.37%`，跟随持仓股价变化
 - **主动基金详情页**：Top10 重仓 + 当日涨跌 + 基金经理 + 业绩表现（近1月/今年来/近1年/...）+ 费率结构
 - **📈 历史净值走势图**：每只基金可弹窗查看完整历史，支持 7 档区间（1月/3月/6月/今年来/1年/3年/全部），y 轴累计涨跌幅，鼠标 hover 显示日期/净值/日涨跌/区间累计；底部「加载全部历史净值」展开完整逐日列表
 - **A/C/E/F/I 份额对比**：同一只基金不同份额的费率结构一目了然
 - **列头排序**：规模 / 净值（按当日涨跌） / 近1月 / 今年来 / 近1年 / 成立来 / 申购状态 都可点击切换升降序
-- **手动刷新按钮**：右上角一键重拉 `web/data/*.json` + 对缺当日净值的基金兜底打 fundgz；交易日 15:00-22:30 每 15 分钟自动轮询
+- **手动刷新按钮**：右上角一键重拉 `web/data/*.json` + 申购状态 + 估值 + 缺当日净值的基金兜底打 fundgz；交易日 15:00-22:30 每 15 分钟自动轮询
+- **申购状态/日限额实时刷新**：每次打开页面 / 点刷新都重新拉 `fundmobapi.eastmoney.com`，无需等 Actions
 - **持仓股票市场状态指示**：每只持仓股票按所属市场（A/HK/US）显示 ●（盘中实时）/ ○（已收盘）状态点，含**美股冬夏令时自动判定**
-- **展示指标**：规模 / 净值 / 日涨跌 / 近1月 / 今年来(YTD) / 近1年 / 成立来 / 基金经理 / 日限额 / 买卖费率 / 七姐妹含量
+- **展示指标**：规模 / 净值 / 估值 / 日涨跌 / 近1月 / 今年来(YTD) / 近1年 / 成立来 / 基金经理 / 日限额 / 买卖费率 / 七姐妹含量
 
 ---
 
@@ -35,9 +37,10 @@
 │   web/data/                                        │
 │   ├── sp500.json / nasdaq_passive.json             │
 │   ├── active.json / global_other.json / etf.json   │
-│   ├── holdings/{code}.json    # 54 只基金的持仓     │
+│   ├── holdings/{code}.json    # 主动基金 Top10 持仓 │
 │   ├── us_stocks.json          # 持仓股票实时行情    │
-│   └── meta.json               # 扫描元信息         │
+│   ├── estimates.json          # 主动基金盘中估值    │
+│   └── meta.json               # 扫描元信息+版本号   │
 └──────────▲──────────────────────────┬──────────────┘
            │ 生成                     │ 读取（首屏）
 ┌──────────┴──────────────┐    ┌──────▼──────────────┐
@@ -45,9 +48,11 @@
 │  scripts/               │    │  web/index.html     │
 │  ├── scan_funds.py      │    │                     │
 │  ├── enrich_data.py     │    │  - 纯 Vanilla JS    │
-│  ├── fill_missing.py    │◄───┼─ - Tailwind CDN     │
+│  ├── fill_missing.py    │◄───┼─ - Tailwind 本地化  │
+│  ├── refresh_purchase.py│    │    (tailwind.min.js)│
 │  ├── fetch_holdings.py  │    │  - JSONP 动态拉净值 ─┐
-│  └── fetch_stocks.py    │    │  - 腾讯 ETF 实时价 ─┤
+│  ├── fetch_stocks.py    │    │  - 腾讯 ETF 实时价 ─┤
+│  └── calc_estimate.py   │    │  - 申购状态实时刷新 ─┤
 └──────────▲──────────────┘    └─────────────────────┘
            │ 拉取                           动态刷新 │
 ┌──────────┴──────────────────────────────────────┬──┘
@@ -56,28 +61,34 @@
 │  天天基金（pingzhongdata.js / F10 概况页）        │
 │  雪球（美股实时行情 / 基金基础信息）             │
 │  ★ fundgz.1234567.com.cn（前端 JSONP 拉最新净值）│
+│  ★ fundmobapi.eastmoney.com（前端拉申购状态）    │
 │  ★ qt.gtimg.cn（前端批量拉 ETF 最新价）          │
 └──────────────────────────────────────────────────┘
 ```
 
-**双数据源策略**：
-- 🔵 **静态层（权威）**：GitHub Actions 每交易日 **22:30** 跑完整增量脚本，产出 `web/data/*.json` 快照（commit 回仓库）
-- 🟢 **动态层（兜底）**：前端打开页面时先读 `web/data/*.json`；对"仓库里 nav_date 还不是今天"的基金，再兜底直接调 fundgz / 腾讯行情补拉
+> 🚀 **部署形态**：纯 GitHub Pages 静态托管，**无后端运行时、无数据库、无 Docker**。Tailwind 本地打包（`web/tailwind.min.js`），不依赖任何外部 CDN，国内访问无白屏。
 
-### ⚡ 数据更新方式：**Actions 主力 + 前端智能兜底**
+**三层数据策略**：
+- 🔵 **静态层（权威）**：GitHub Actions 工作日 **08:30 / 17:30 / 22:30** 三时段 + 每月 1 日全量，产出 `web/data/*.json` 快照（commit 回仓库）
+- 🟢 **前端兜底**：打开页面时，对"仓库 nav_date 还不是今天"的基金兜底拉 fundgz；ETF 行情打开即拉腾讯
+- 🟣 **前端实时刷新**：申购状态 / 日限额 / 主动基金估值，每次刷新页面/点手动刷新都重算（直连天天基金移动端 API）
 
-- **静态部分**：Actions 22:30 定时跑 → 权威数据源，所有基金规模/净值/持仓都以此为准
+### ⚡ 数据更新方式：**Actions 主力 + 前端智能兜底 + 前端实时刷新**
+
+- **静态部分**：Actions 三时段定时跑 → 权威数据源，所有基金规模/净值/持仓都以此为准
 - **动态部分**：前端**仅在"仓库数据落后于今日"时**调 fundgz/腾讯兜底，**打开即见最新**
+- **实时部分**：申购状态 / 日限额 / 估值由前端每次直连接口刷新，无需等 Actions
 
 | 数据类型 | 刷新方式 | 新鲜度 |
 |---|---|---|
-| 场外基金**最新净值 + 日期** | 🔵 Actions 22:30 写入 data.json；🟢 前端仅在缺当日净值时兜底拉 `fundgz.1234567.com.cn` | 22:30 后是当日最新；盘后 15-22:30 之间前端自动补拉 |
+| 场外基金**最新净值 + 日期** | 🔵 Actions 22:30 写入 data.json；🟢 前端缺当日时兜底拉 `fundgz.1234567.com.cn` | 22:30 后是当日最新；盘后 15-22:30 之间前端自动补拉 |
 | 场内 ETF **最新价 + 涨跌** | 🟢 前端动态拉 `qt.gtimg.cn` | 打开即最新（盘中 T+0 实时） |
 | 持仓股票**当日涨跌** | 🟢 前端动态拉 `qt.gtimg.cn`（点击「📊 持仓」时） | 按各市场（A/HK/US）盘时自动判定盘中/收盘 |
 | 历史净值走势（图表） | 🟢 前端动态拉 `pingzhongdata.js`（点击「📈 走势」时） | 实时拉取，覆盖基金成立至今全量 |
+| **申购状态 / 日限额** | 🟣 前端实时拉 `fundmobapi.eastmoney.com`（每次刷新页面） | 几乎实时（API 是分钟级） |
+| **主动基金估值（盘中）** | 🟣 前端用最新持仓行情重算 + Actions calc_estimate.py 兜底 | 盘中跟随持仓股价秒变 |
 | 基金规模、基金经理、费率 | 🔵 Actions 脚本 | 每月 1 日完整更新 |
-| 历史收益（近1月/YTD/1年/成立来） | 🔵 Actions 脚本 | 每交易日 22:30 |
-| 申购状态、日限额 | 🔵 Actions 脚本 | 每月 1 日完整更新 |
+| 历史收益（近1月/YTD/1年/成立来） | 🔵 Actions 脚本 | 每个工作日 22:30 |
 | 持仓（Top10 重仓） | 🔵 Actions 脚本 | 每月 1 日完整更新（季报周期披露） |
 
 **刷新窗口**（前端兜底逻辑）：
@@ -94,33 +105,39 @@
 ```
 qdii-tracker/
 ├── README.md
+├── CLAUDE.md                     # AI 协作上下文
 ├── .gitignore
 │
 ├── scripts/                      # 数据流水线（Python）
 │   ├── scan_funds.py             # [1] 扫描全量基金、分类
 │   ├── enrich_data.py            # [2] 补充规模/费率/基金经理
 │   ├── fill_missing.py           # [3] 补齐漏掉的净值/YTD/历史收益
-│   ├── fetch_holdings.py         # [4] 抓主动基金 Top10 重仓
-│   ├── fetch_stocks.py           # [5] 抓持仓股票实时行情
+│   ├── refresh_purchase.py       # [4] 申购状态 + 日限额（也可前端实时拉）
+│   ├── fetch_holdings.py         # [5] 抓主动基金 Top10 重仓
+│   ├── fetch_stocks.py           # [6] 抓持仓股票实时行情
+│   ├── calc_estimate.py          # [7] 主动基金盘中估值（持仓 × 行情）
 │   └── requirements.txt
 │
 ├── web/                          # 前端（纯静态）
 │   ├── index.html                # 单文件应用
+│   ├── tailwind.min.js           # 本地化 Tailwind（避免 CDN 白屏）
+│   ├── .nojekyll                 # 禁用 GitHub Pages 的 Jekyll 解析
 │   └── data/                     # 前端消费的 JSON（git 追踪，也是脚本写入目标）
-│       ├── sp500.json            # 🏦 场外 · 标普500（7 系列）
-│       ├── nasdaq_passive.json   # 🏦 场外 · 纳指100（17 系列）
-│       ├── active.json           # 🏦 场外 · 美股主动精选（18 系列，白名单）
-│       ├── global_other.json     # 🏦 场外 · 全球/其他 QDII（24 系列）
-│       ├── etf.json              # 📈 场内 ETF（18 系列）
+│       ├── sp500.json            # 🏦 场外 · 标普500
+│       ├── nasdaq_passive.json   # 🏦 场外 · 纳指100
+│       ├── active.json           # 🏦 场外 · 美股主动精选（白名单）
+│       ├── global_other.json     # 🏦 场外 · 全球/其他 QDII
+│       ├── etf.json              # 📈 场内 ETF
 │       ├── us_stocks.json        # 持仓股票实时行情
-│       ├── meta.json             # 扫描元信息
-│       └── holdings/{code}.json  # 基金持仓详情（54 只）
+│       ├── estimates.json        # 主动基金盘中估值
+│       ├── meta.json             # 扫描元信息 + 数据版本号（generated_at）
+│       └── holdings/{code}.json  # 主动基金 Top10 持仓
 │
 ├── docs/                         # 运维 SOP 文档
 │   └── ADDING-FUNDS.md           # 新增基金操作手册
 │
 └── .github/workflows/
-    ├── update-data.yml           # GitHub Actions 自动更新数据
+    ├── update-data.yml           # GitHub Actions 自动更新数据（多时段 + 月初全量）
     └── deploy-pages.yml          # 发布 web/ 到 GitHub Pages
 ```
 
@@ -191,7 +208,19 @@ qdii-tracker/
 
 ---
 
-### [4] `fetch_holdings.py` — 主动基金持仓
+### [4] `refresh_purchase.py` — 申购状态 + 日限额
+
+**输入**：5 个分类 JSON 中的所有场外基金代码
+
+**做什么**：批量调天天基金移动端 API（`fundmobapi.eastmoney.com`），更新 `buy_status` / `sell_status` / `daily_limit` 字段。
+
+> 💡 **前端也直接调同一个 API**：每次刷新页面、点手动刷新都会拉一次最新申购状态。所以这个脚本其实是"兜底快照"，让首屏加载就能看到正确的申购状态，而不用等前端 API 回包。
+
+**耗时**：~30 秒
+
+---
+
+### [5] `fetch_holdings.py` — 主动基金持仓
 
 **输入**：`active.json` + `global_other.json` 的默认份额代码
 
@@ -217,7 +246,7 @@ qdii-tracker/
 
 ---
 
-### [5] `fetch_stocks.py` — 持仓股票实时行情
+### [6] `fetch_stocks.py` — 持仓股票实时行情
 
 **输入**：所有持仓 JSON 去重后的股票代码
 
@@ -226,7 +255,21 @@ qdii-tracker/
 - 港股、A 股：`stock_individual_spot_xq`（雪球接口，逐只调）
 - 输出 `{stock_code: {change_pct, market, price, ...}}`
 
-**输出**：`web/data/us_stocks.json`（前端加载时用作"持仓当日涨跌"的红绿标色）
+**输出**：`web/data/us_stocks.json`（前端加载时用作"持仓当日涨跌"的红绿标色 + 主动基金估值的输入）
+
+---
+
+### [7] `calc_estimate.py` — 主动基金盘中估值
+
+**输入**：`active.json` + `global_other.json` 的默认份额代码 + `holdings/{code}.json` + `us_stocks.json`
+
+**做什么**：对每只主动基金，把 Top10 持仓的"个股当日涨跌 × 持仓权重"加权汇总，估算当日基金涨跌幅。
+
+**输出**：`web/data/estimates.json`，前端读取后展示在估值列。
+
+> 💡 **前端也会用最新行情重算一次**：打开页面/点手动刷新时，前端会用刚拉到的最新美股行情把估值再算一遍，比 Actions 写死的快照更新鲜。这个脚本是"首屏兜底"。
+
+**耗时**：~10 秒
 
 ---
 
@@ -242,9 +285,11 @@ pip install -r requirements.txt
 # 2. 跑一次数据流水线（首次，~10 分钟）
 python scan_funds.py
 python enrich_data.py
-python fill_missing.py        # 直接写 web/data/（2026-05 重构后不再有 data/→web/data/ 同步步骤）
+python fill_missing.py
+python refresh_purchase.py
 python fetch_holdings.py
 python fetch_stocks.py
+python calc_estimate.py
 
 # 3. 启动前端
 cd ../web
@@ -257,10 +302,12 @@ python3 -m http.server 8765
 ```bash
 cd scripts
 python fill_missing.py        # 更新净值 + YTD + 收益（~2 分钟）
+python refresh_purchase.py    # 申购状态（~30 秒）
 python fetch_stocks.py        # 更新股价（~1 分钟）
+python calc_estimate.py       # 重算估值（~10 秒）
 ```
 
-> 💡 真正的长期使用请看下面两种**部署方式**——让它自动跑，人不用管。
+> 💡 真正的长期使用请看下面的**部署方式**——让 Actions 自动跑，人不用管。
 
 ---
 
@@ -277,8 +324,8 @@ python fetch_stocks.py        # 更新股价（~1 分钟）
 ### 你将得到什么
 
 - 一个公网可访问的网址：`https://zhouminghan.github.io/qdii-tracker/`
-- **工作日 22:30 自动更新数据**（QDII 净值 T+1 披露，20-22 点基金公司陆续发布，22:30 跑最稳）
-- **每月 1 日凌晨自动跑完整流水线**（更新持仓等慢数据）
+- **工作日三时段自动更新数据**（08:30 / 17:30 / 22:30 北京时间，覆盖早中晚，22:30 是 QDII 披露的关键窗口）
+- **每月 2 日凌晨自动跑完整流水线**（更新持仓、规模、费率等慢数据）
 - **想立刻更新** → GitHub 网页上点一个按钮就触发
 - 配置完之后 **完全不用再碰命令行**，日常在浏览器里用即可
 
@@ -376,12 +423,14 @@ git push -u origin main
 
 ### ⏰ 自动更新的时间表
 
-workflow 文件已写好（`.github/workflows/update-data.yml`），开箱即用：
+workflow 文件已写好（`.github/workflows/update-data.yml`），开箱即用。已配置 `concurrency: update-data` 防并发，避免手动 full 跑和定时增量同时操作 `web/data/` 导致 push 冲突。
 
 | 触发时机 | 模式 | 做什么 | 耗时 |
 |---|---|---|---|
-| 🗓️ **工作日 22:30**（北京时间） | 增量 | 更新净值 / YTD / 股价 | ~3 分钟 |
-| 🗓️ **每月 1 日 02:00** | 完整 | 额外更新：基金列表、持仓、费率 | ~15 分钟 |
+| 🗓️ **工作日 08:30**（北京时间） | 增量 | 早间补拉昨晚遗漏的净值 + 早披露的 QDII | ~3 分钟 |
+| 🗓️ **工作日 17:30** | 增量 | 午后 A 股收盘后再补一轮 | ~3 分钟 |
+| 🗓️ **工作日 22:30** | 增量 | 晚间最关键一轮（绝大多数 QDII 已披露） | ~3 分钟 |
+| 🗓️ **每月 2 日 02:00** | 完整 | 额外更新：基金列表、持仓、费率、规模 | ~15 分钟 |
 | 🖱️ 手动点 Run workflow | 可选 | 按你选 | 按模式 |
 
 需要改时间？修改 yaml 里的 `cron` 表达式即可（<https://crontab.guru/> 可视化生成）。
@@ -442,20 +491,23 @@ Android Chrome：打开网址 → 右上角菜单 → **添加到主屏幕**
 |---|---|---|---|---|
 | **AKShare** | `ak.fund_name_em()` | 全量基金列表 | ⭐⭐⭐⭐⭐ | 后端脚本 |
 | AKShare | `ak.fund_em_open_fund_rank()` | 排行榜数据（净值、各期收益、今年来、成立来） | ⭐⭐⭐⭐ | 后端脚本 |
-| AKShare | `ak.fund_purchase_em()` | 申购状态、日限额 | ⭐⭐⭐⭐ | 后端脚本 |
+| AKShare | `ak.fund_purchase_em()` | 申购状态、日限额（兜底，主用前端 API） | ⭐⭐⭐⭐ | 后端脚本 |
 | AKShare | `ak.fund_portfolio_hold_em()` | Top10 重仓 | ⭐⭐⭐⭐ | 后端脚本 |
 | AKShare | `ak.fund_open_fund_info_em(indicator='累计收益率走势')` | 成立日起每日累计收益（用来算 YTD） | ⭐⭐⭐⭐ | 后端脚本 |
 | AKShare | `ak.fund_etf_spot_em()` | 场内 ETF 实时价（快照） | ⭐⭐⭐⭐⭐ | 后端脚本 |
-| AKShare | `ak.stock_us_spot_em()` | 美股实时行情（大批量） | ⭐⭐⭐⭐ | 后端脚本 |
+| AKShare | `ak.stock_us_spot_em()` | 美股实时行情（大批量，估值计算输入） | ⭐⭐⭐⭐ | 后端脚本 |
 | **天天基金** | `pingzhongdata/{code}.js` | 净值曲线、近期收益、资产配置 | ⭐⭐⭐⭐ | 后端脚本 + **前端走势图** |
 | 天天基金 | `fundf10.eastmoney.com/jbgk_{code}.html` | 规模、成立日、基金经理 | ⭐⭐⭐ | 后端脚本 |
 | 天天基金 | `fundgz.1234567.com.cn/js/{code}.js` | 最新真实净值 / 日期 | ⭐⭐⭐⭐⭐ | **前端兜底**（仅在仓库缺当日净值时拉，15 分钟轮询） |
+| 天天基金 | `fundmobapi.eastmoney.com/FundMNewApi/FundMNFInfo` | 申购状态 / 日限额（移动端 JSONP） | ⭐⭐⭐⭐ | **前端实时**（每次刷新页面拉一次） + 后端脚本 |
 | **雪球** | 基金页 HTML | 规模、管理费、费率详情 | ⭐⭐⭐ | 后端脚本 |
 | 雪球 | `stock_individual_spot_xq` | 港股 / A 股实时 | ⭐⭐⭐ | 后端脚本 |
 | **腾讯财经** | `qt.gtimg.cn/q=sh510300,sz159941,...` | ETF 最新价 / 涨跌 / 交易日 | ⭐⭐⭐⭐⭐ | **前端动态**（批量） |
 | 腾讯财经 | `qt.gtimg.cn/q=usAAPL,hk00700,...` | 美股/港股/A 股持仓行情 | ⭐⭐⭐⭐⭐ | **前端动态**（点击「📊 持仓」时拉） |
 
-> ⚠️ **限频注意**：天天基金对高频请求有 IP 级限频（403 / 返回空）。脚本里统一设 `time.sleep(0.15~0.3)` 限速，部署到海外服务器要注意代理。
+> ⚠️ **限频注意**：天天基金对高频请求有 IP 级限频（403 / 返回空）。脚本里统一设 `time.sleep(0.15~0.3)` 限速。前端 fundgz 兜底已经做了"仅缺当日净值才拉"的过滤，正常使用不会触发限频。
+
+> 🔒 **前端依赖说明**：Tailwind CSS 已本地化到 `web/tailwind.min.js`（267KB），不依赖任何外部 CDN。整个看板首屏只读取自己仓库的资源，国内访问无白屏。
 
 ---
 
@@ -483,8 +535,8 @@ QDII 基金入口
 ## ➕ 运维手册（新增基金 / 数据修复）
 
 - **[新增基金操作手册 → docs/ADDING-FUNDS.md](docs/ADDING-FUNDS.md)**
-  手工加一只/一个系列基金到看板，包含：查同系列份额的方法、骨架字段模板、三个补字段脚本的作用和顺序、本地验证清单、常见坑速查表。
-  - **最短路径**：编辑 `web/data/{分类}.json` 追加 series → 依次跑 `enrich_data.py` → `fill_missing.py` → `fetch_holdings.py` → commit。
+  手工加一只/一个系列基金到看板，包含：查同系列份额的方法、骨架字段模板、补字段脚本的作用和顺序、本地验证清单、常见坑速查表。
+  - **最短路径**：编辑 `web/data/{分类}.json` 追加 series → 依次跑 `enrich_data.py` → `fill_missing.py` → `refresh_purchase.py` → `fetch_holdings.py`（仅主动）→ `calc_estimate.py`（仅主动）→ commit。
 
 > 📂 所有运维类 SOP 统一沉淀在 `docs/` 目录下，方便人/AI 照着做。
 
@@ -493,12 +545,16 @@ QDII 基金入口
 ## 🛠 常见问题
 
 **Q: 前端看到数据和基金 APP 不一致？**
-A: 分两类看：
+A: 分三类看：
 - **净值 / ETF 最新价**：先看 footer 提示
   - 🟢 "数据已刷新于 xx:xx" → 仓库 + 兜底都正常
   - 🟢 "仓库数据已是最新" → Actions 已跑完，data.json 就是当日权威值
   - ⏸ "天天基金接口暂时限频" → fundgz 短时封 IP（5 分钟自动恢复，不影响仓库数据展示）
+- **估值列**：盘中跟随持仓股价秒变；非美股交易时段显示最近一次 calc_estimate.py 的快照
 - **规模 / 费率 / 历史收益 / 持仓等**：脚本快照，看 `web/data/meta.json` 的 `generated_at` / `enriched_at` 确认数据时间
+
+**Q: 浏览器里看到的数据老不更新？是不是有缓存？**
+A: 不会。前端每次刷新都会先拉一次 `meta.json`（`?t=Date.now()` 强破缓存），然后用其中的 `generated_at` 当所有数据 JSON 的版本号 query（`?v=xxx`）。**只要 Actions 推了新数据，meta.generated_at 一变，所有 JSON 的 query 串就跟着变，浏览器/Pages CDN 自动失效。** 数据没变时反而能命中缓存，秒开。
 
 **Q: 为什么 QDII 子分类净值不是今天的？**
 A: 这是 QDII 客观规则不是 bug：
