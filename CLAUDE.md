@@ -38,18 +38,27 @@
                               ▼
 ┌──────────────────────────────────────────────────┐
 │  web/index.html  （单文件前端，~2400 行）          │
-│  · Tailwind CDN + Vanilla JS                     │
-│  · 双数据源：静态 JSON 为主 + 前端 JSONP 兜底      │
+│  · Tailwind 本地化 + Vanilla JS                   │
+│  · 三层数据：静态 JSON 为主 + 前端 JSONP 兜底 + 前端实时刷新 │
 │  · 场外/场内双 Tab · 分组 Chips · 展开行 · Modal  │
 └──────────────────────────────────────────────────┘
 ```
 
-### 双数据源策略
+### 三层数据策略
 
 | 层级 | 来源 | 作用 |
 |------|------|------|
-| **静态层（权威）** | GitHub Actions 每交易日 22:30 → `web/data/*.json` | 所有基金规模/净值/持仓/估值以此为准 |
+| **静态层（权威）** | GitHub Actions 工作日 08:30/17:30/22:30 + 每月 2 日 02:00 → `web/data/*.json` | 所有基金规模/净值/持仓/估值以此为准 |
 | **动态层（兜底）** | 前端直接调 fundgz / 腾讯行情 | 仅在"仓库数据落后于今日"时补拉 |
+| **实时层（前端刷新）** | 前端调 fundmobapi / 前端重算估值 | 申购状态/日限额/主动基金估值，每次刷新都重算 |
+
+### 数据版本号机制
+
+前端加载数据时：
+1. 先拉 `meta.json`（`?t=Date.now()` 强破缓存），取其 `generated_at` 字段
+2. 后续所有数据 JSON 用 `?v=${meta.generated_at}` 作版本号
+3. Actions 推新数据 → `generated_at` 变 → 所有 JSON 的 query 变 → 浏览器/Pages CDN 自动失效
+4. 数据没变时 query 不变，命中缓存秒开
 
 ---
 
@@ -80,6 +89,8 @@ qdii-tracker/
 │
 └── web/
     ├── index.html             ← 单文件前端（HTML + CSS + JS 全内联）
+    ├── tailwind.min.js         ← 本地化 Tailwind（避免 CDN 白屏，267KB）
+    ├── .nojekyll               ← 禁用 GitHub Pages Jekyll 解析
     └── data/
         ├── sp500.json         ← 场外·标普500
         ├── nasdaq_passive.json← 场外·纳指100
@@ -120,12 +131,13 @@ qdii-tracker/
 |--------|------|------|--------|
 | AKShare | `fund_name_em()` | 全量基金列表 | 后端 |
 | AKShare | `fund_open_fund_rank_em()` | 排行榜（净值/收益） | 后端 |
-| AKShare | `fund_purchase_em()` | 申购状态/日限额 | 后端 |
+| AKShare | `fund_purchase_em()` | 申购状态/日限额（后端兜底，前端直连 fundmobapi 更实时） | 后端+前端 |
 | AKShare | `fund_portfolio_hold_em()` | Top10 重仓 | 后端 |
 | AKShare | `fund_open_fund_info_em()` | 累计收益率 | 后端 |
 | AKShare | `stock_us/hk/a_spot_em()` | 美股/港股/A股行情 | 后端 |
 | 天天基金 | `pingzhongdata/{code}.js` | 净值曲线 | 后端+前端 |
 | 天天基金 | `fundgz.1234567.com.cn` | 最新真实净值 | 前端兜底 |
+| 天天基金 | `fundmobapi.eastmoney.com` | 申购状态/日限额（移动端 JSONP） | 前端实时+后端兜底 |
 | 雪球 | `fund_individual_basic_info_xq` | 规模/费率 | 后端 |
 | 腾讯财经 | `qt.gtimg.cn` | ETF/股票实时行情 | 前端动态 |
 
@@ -182,7 +194,7 @@ qdii-tracker/
 ### 单文件架构
 
 - **所有 HTML / CSS / JS 都在 `web/index.html`**，不拆分文件
-- CSS 用 Tailwind CDN + `<style>` 自定义
+- CSS 用 Tailwind 本地化（`tailwind.min.js`）+ `<style>` 自定义，不依赖外部 CDN
 - JS 用 `<script>` 内联，不使用构建工具
 
 ### 配色（A 股口径）
@@ -246,11 +258,13 @@ qdii-tracker/
 | 决策 | 原因 |
 |------|------|
 | 单文件前端 | 零构建部署到 GitHub Pages，简单可靠 |
-| 双数据源 | 解决 Actions 日频 vs 用户实时需求的矛盾 |
+| 三层数据 | 解决 Actions 日频 vs 用户实时需求的矛盾（静态权威 + 兜底 + 实时刷新） |
 | fundgz 限频保护 | 被封 514 后设 5 分钟冷却，用户体验不中断 |
 | 份额归组 | A/C/E/F 只是费率不同，持仓/走势完全一样 |
-| 纯静态部署 | 无服务器成本，Pages + Actions 免费额度足够 |
+| 纯静态部署 | 无服务器成本，Public repo Actions 完全免费、无分钟限制 |
 | 估值预计算 + 前端重算 | 预算结果进 JSON 保底；前端有实时行情时重算更准 |
+| 数据版本号（meta.generated_at） | 静态 JSON 缓存友好：数据没变命中缓存秒开，变了自动失效 |
+| Tailwind 本地化 | 避免 cdn.tailwindcss.com 国内白屏，离线也能用 |
 
 ---
 
@@ -268,7 +282,7 @@ qdii-tracker/
 
 ## 🚫 禁止事项
 
-1. **不要在 `web/` 下创建新文件**（除 `web/data/` 下的 JSON）
+1. **不要在 `web/` 下创建新文件**（除 `web/data/` 下的 JSON、`tailwind.min.js`、`.nojekyll`）
 2. **不要引入 npm / webpack / vite 等构建工具**
 3. **不要修改已有 JSON 数据的手工字段**（脚本会覆盖）
 4. **不要删除 `web/data/holdings/` 下的 JSON**（脚本只增不删）
