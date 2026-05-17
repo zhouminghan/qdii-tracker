@@ -58,7 +58,7 @@
           "share_class": "默认",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "buy_status": "场内交易",
+          "buy_status": "暂停申购",
           "sell_status": "场内交易",
           "buy_min": 0.0,
           "daily_limit": 0.0,

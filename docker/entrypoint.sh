@@ -12,8 +12,10 @@ if [ -z "$(ls -A /app/web/data 2>/dev/null | grep -v holdings)" ]; then
   python scan_funds.py       || echo "⚠️  scan_funds.py failed"
   python enrich_data.py      || echo "⚠️  enrich_data.py failed"
   python fill_missing.py     || echo "⚠️  fill_missing.py failed"
+  python refresh_purchase.py || echo "⚠️  refresh_purchase.py failed"
   python fetch_holdings.py   || echo "⚠️  fetch_holdings.py failed"
   python fetch_stocks.py     || echo "⚠️  fetch_stocks.py failed"
+  python calc_estimate.py    || echo "⚠️  calc_estimate.py failed"
   echo "✅ [entrypoint] 首次流水线完成"
 else
   echo "📂 [entrypoint] web/data/ 已有数据，跳过首次流水线"

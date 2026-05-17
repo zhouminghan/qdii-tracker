@@ -1,16 +1,20 @@
 name: Update Fund Data
 
 # 自动更新基金数据 workflow
-# 触发：工作日 22:30（日常增量）+ 每月 1 日 02:00（完整）+ 手动
-# 为什么选 22:30：QDII 因跨境结算 T+1/T+2，很多基金公司 20-22 点才把当日净值披露到 fundgz
-#                22:30 跑一次是最佳时间点——绝大多数已披露，且离开盘前有充足空档
-#                比 17:30 跑更合适（17:30 时很多 QDII 还没披露当日净值，白跑一次）
+# 触发：工作日多时段增量 + 每月 2 日完整 + 手动
+# 多时段：08:30 / 17:30 / 22:30（北京时间）→ 覆盖早中晚，打开网页数据尽量新
+# QDII 净值披露节奏：T 日美股收盘 → T+1 日晚间（北京时间）基金公司披露 T 日净值
 "on":
   schedule:
-    # 每交易日 22:30（北京时间）= 14:30 UTC，跑"日常增量更新"
-    # cron 字段： 分 时 日 月 周几
+    # 工作日多时段增量更新（北京时间）：
+    #   08:30 = 00:30 UTC → 早间更新（补拉昨晚遗漏 + 早披露的 QDII 净值）
+    #   17:30 = 09:30 UTC → 午后更新（A 股收盘后，部分 QDII 已披露）
+    #   22:30 = 14:30 UTC → 晚间更新（绝大多数 QDII 已披露，最关键的一轮）
+    - cron: '30 0 * * 1-5'
+    - cron: '30 9 * * 1-5'
     - cron: '30 14 * * 1-5'
-    # 每月 1 日凌晨 2:00（北京时间）= 18:00 UTC（前一天），跑"完整流水线"
+    # 每月 2 日凌晨 2:00（北京时间）= 18:00 UTC 1日，跑"完整流水线"
+    # 注：cron 0 18 1 * * = UTC 18:00 于每月1日 = 北京时间 02:00 于每月2日
     - cron: '0 18 1 * *'
   # 允许手动在 GitHub 网页上点按钮触发
   workflow_dispatch:
@@ -76,26 +80,36 @@ jobs:
         if: steps.mode.outputs.mode == 'incremental'
         run: |
           cd scripts
-          echo "=== [1/2] fill_missing.py（净值 + YTD + 历史收益）==="
+          echo "=== [1/5] fill_missing.py（净值 + YTD + 历史收益）==="
           python fill_missing.py
-          echo "=== [2/2] fetch_stocks.py（持仓股票实时行情）==="
+          echo "=== [2/5] refresh_purchase.py（申购状态 + 涨跌幅，批量快接口）==="
+          python refresh_purchase.py
+          echo "=== [3/5] fetch_stocks.py（持仓股票实时行情）==="
           python fetch_stocks.py
+          echo "=== [4/5] calc_estimate.py（主动基金估值）==="
+          python calc_estimate.py
+          echo "=== [5/5] enrich_data.py（费率 + 基金经理，逐只慢接口）==="
+          python enrich_data.py
 
       # 5b. 完整流水线（慢）
       - name: 🚀 Full pipeline
         if: steps.mode.outputs.mode == 'full'
         run: |
           cd scripts
-          echo "=== [1/5] scan_funds.py（扫描+分类）==="
+          echo "=== [1/7] scan_funds.py（扫描+分类）==="
           python scan_funds.py
-          echo "=== [2/5] enrich_data.py（规模+费率+基金经理）==="
+          echo "=== [2/7] enrich_data.py（规模+费率+基金经理）==="
           python enrich_data.py
-          echo "=== [3/5] fill_missing.py（补漏）==="
+          echo "=== [3/7] fill_missing.py（补漏）==="
           python fill_missing.py
-          echo "=== [4/5] fetch_holdings.py（主动基金持仓）==="
+          echo "=== [4/7] refresh_purchase.py（申购状态+限额）==="
+          python refresh_purchase.py
+          echo "=== [5/7] fetch_holdings.py（主动基金持仓）==="
           python fetch_holdings.py
-          echo "=== [5/5] fetch_stocks.py（股票行情）==="
+          echo "=== [6/7] fetch_stocks.py（股票行情）==="
           python fetch_stocks.py
+          echo "=== [7/7] calc_estimate.py（主动基金估值）==="
+          python calc_estimate.py
 
       # 6. 如果 web/data 有变化，commit 回主分支
       - name: 💾 Commit data changes

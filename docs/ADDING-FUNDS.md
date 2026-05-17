@@ -198,6 +198,14 @@ cd scripts && python3 fetch_stocks.py
 ```
 耗时：约 2-3 分钟（拉美股全量 + 单只股票接口补齐）
 
+### 3.5 `calc_estimate.py`（主动基金估值）
+根据持仓权重 × 股票涨跌幅 + 汇率变动，计算每只主动基金的实时估值影响：
+```bash
+cd scripts && python3 calc_estimate.py
+```
+耗时：<5 秒（纯计算，不抓新数据）。依赖 `holdings/*.json` + `us_stocks.json`，所以必须在 ④⑤ 之后跑。
+输出：`web/data/estimates.json`
+
 ---
 
 ## 4️⃣ 本地验证
@@ -214,6 +222,7 @@ cd web && python3 -m http.server 8181
 - [ ] 规模 / 申购状态 / 成立时间 / 基金经理 都不是"--"
 - [ ] 走势图能正常加载（按钮 → 弹出图表）
 - [ ] 持仓（如果是 active/global_other）点开有 TOP10 股票
+- [ ] 估值（如果是 active/global_other）列表行显示"估"标记 + 估值涨跌
 
 **如果字段有空值**：
 - 规模/经理为空 → 雪球接口有时抽风，重跑 `enrich_data.py`

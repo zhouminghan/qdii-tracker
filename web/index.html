@@ -31,6 +31,9 @@
     .badge-qdii { background: #e0e7ff; color: #3730a3; padding: 1px 6px; font-size: 10px; }
     .badge-usd { background: #fef3c7; color: #78350f; padding: 1px 6px; font-size: 10px; }
     .badge-cny { background: #f1f5f9; color: #475569; padding: 1px 6px; font-size: 10px; }
+    .badge-estimate { background: #faf5ff; color: #7c3aed; padding: 1px 6px; font-size: 10px; font-weight: 600; border: 1px solid #e9d5ff; }
+    /* 估值列动态显隐：非 active 分组时隐藏估值列 */
+    .hide-est .col-estimate { display: none; }
     .fade-in { animation: fade 0.2s ease; }
     @keyframes fade { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -464,6 +467,9 @@
     ];
     const STATE = {
       data: {},
+      stocks: {},
+      estimates: {},  // code -> { estimated_impact, top_movers, fx_contribution, ... }
+      estimatesUpdatedAt: null,
     };
 
     // 排序状态（仅作用于大分类外层行；子分类是父行展开内嵌表，不独立排序）
@@ -474,6 +480,7 @@
       offshore: { key: 'series_scale', dir: 'desc' },
       etf:      { key: 'series_scale', dir: 'desc' },
     };
+    let DETAIL_REFRESH_TIMER = null;  // 持仓弹窗自动刷新定时器
 
     // 申购状态排序权重：暂停 = 0，其他按 daily_limit 数额（金额越大越靠前）
     //   · 暂停申购                    → 0
@@ -607,6 +614,18 @@
         }
       } catch (e) {
         console.warn('股票行情加载失败（不影响主页）:', e.message);
+      }
+
+      // 异步加载估值数据（不阻塞主页）
+      try {
+        const estRes = await fetch(`./data/estimates.json?t=${Date.now()}`);
+        if (estRes.ok) {
+          const estData = await estRes.json();
+          STATE.estimates = estData.funds || {};
+          STATE.estimatesUpdatedAt = estData.generated_at;
+        }
+      } catch (e) {
+        console.warn('估值数据加载失败（不影响主页）:', e.message);
       }
 
       // 首屏数据加载完毕。
@@ -1014,6 +1033,52 @@
       return open ? 'open' : 'closed';
     }
 
+    // 前端重算主动基金估值（与 calc_estimate.py 同公式）
+    // 遍历 STATE.estimates 中所有基金，用 STATE.stocks 最新行情重算 estimated_impact
+    function recalcEstimates() {
+      const stocksMap = STATE.stocks;
+      if (!Object.keys(stocksMap).length) return;  // 无行情数据则跳过
+
+      for (const [code, est] of Object.entries(STATE.estimates)) {
+        if (!est.top_movers || !est.top_movers.length) continue;
+
+        let stockContribution = 0;
+        let updatedAny = false;
+
+        // 用 STATE.stocks 中的实时行情重算每只持仓的贡献
+        for (const mover of est.top_movers) {
+          const liveStock = stocksMap[mover.code];
+          if (liveStock && liveStock.change_pct != null) {
+            const newImpact = mover.weight * liveStock.change_pct / 100;
+            mover.change = liveStock.change_pct;
+            mover.impact = Math.round(newImpact * 10000) / 10000;
+            stockContribution += newImpact;
+            updatedAny = true;
+          } else {
+            // 无实时数据，沿用上次计算的贡献
+            stockContribution += mover.impact;
+          }
+        }
+
+        if (updatedAny) {
+          est.stock_contribution = Math.round(stockContribution * 10000) / 10000;
+          est.estimated_impact = Math.round((est.stock_contribution + (est.fx_contribution || 0)) * 10000) / 10000;
+        }
+      }
+    }
+
+    // 仅刷新估值列的 DOM（不重渲染整个表格，避免丢失展开状态）
+    function refreshEstimateCells() {
+      document.querySelectorAll('td[data-est-code]').forEach(td => {
+        const code = td.dataset.estCode;
+        const est = STATE.estimates[code];
+        if (!est) return;
+        const imp = est.estimated_impact;
+        const impCls = imp > 0 ? 'up' : imp < 0 ? 'down' : 'text-stone-400';
+        td.innerHTML = `<div class="text-sm font-bold ${impCls}">${imp > 0 ? '+' : ''}${imp.toFixed(2)}%</div><div class="text-[10px] text-stone-400">估</div>`;
+      });
+    }
+
     async function refreshLive() {
       const status = document.getElementById('live-refresh-status');
       const btn = document.getElementById('btn-refresh-live');
@@ -1122,7 +1187,54 @@
         }
       }
 
-      // --- 3) 重渲染（renderChips 会自动从 CHIP_STATE 恢复选中状态）---
+      // --- 3) 动态刷新持仓股票行情 + 重算估值 ---
+      // 收集 estimates 中所有持仓股票代码，从腾讯行情拉最新涨跌幅
+      const estStockCodes = new Set();
+      for (const est of Object.values(STATE.estimates)) {
+        for (const mover of (est.top_movers || [])) {
+          if (mover.code) estStockCodes.add(mover.code);
+        }
+      }
+      // 同时拉取 holdings 中引用的股票代码（如有）
+      if (Object.keys(STATE.stocks).length > 0) {
+        for (const code of Object.keys(STATE.stocks)) {
+          estStockCodes.add(code);
+        }
+      }
+      let estStockUpdated = 0;
+      if (estStockCodes.size > 0) {
+        const estCodes = [...estStockCodes];
+        for (let i = 0; i < estCodes.length; i += 30) {
+          const batch = estCodes.slice(i, i + 30);
+          try {
+            const liveStocks = await fetchStocksLive(batch);
+            for (const [c, r] of Object.entries(liveStocks)) {
+              const existing = STATE.stocks[c] || {};
+              STATE.stocks[c] = { ...existing, ...r, code: c };
+              estStockUpdated++;
+            }
+          } catch (_) { /* 静默降级 */ }
+        }
+      }
+
+      // 重拉 estimates.json（后端可能已更新）
+      try {
+        const estRes = await fetch(`./data/estimates.json?t=${Date.now()}`);
+        if (estRes.ok) {
+          const estData = await estRes.json();
+          STATE.estimates = estData.funds || {};
+          STATE.estimatesUpdatedAt = estData.generated_at;
+        }
+      } catch (_) {}
+
+      // 用最新行情重算估值
+      recalcEstimates();
+      // 更新估值时间为当前（前端动态重算后，估值时间 = now）
+      if (estStockUpdated > 0) {
+        STATE.estimatesUpdatedAt = new Date().toISOString();
+      }
+
+      // --- 4) 重渲染（renderChips 会自动从 CHIP_STATE 恢复选中状态）---
       RENDER_TABS.forEach(renderCategory);
 
       // --- 4) 更新 footer 状态 + 解锁按钮 ---
@@ -1246,10 +1358,9 @@
         : fmtMD(firstDef?.nav_date);
 
       // 列数（用于分组标题行 colspan）
-      // 基础 10 列 + 走势列（所有基金都有）+ 持仓列（仅主动基金有，否则占位）
-      // 场外 = 11（含申购）+ 走势 + 持仓 = 12
-      // ETF  = 10（无申购）+ 走势 + 持仓占位 = 11
-      const colspan = isEtf ? 11 : 12;
+      // 场外 = 10 + 1(估值) + 1(申购) + 走势 + 持仓 = 13
+      // ETF  = 10 + 走势 + 持仓占位 = 11（无估值、无申购）
+      const colspan = isEtf ? 11 : 13;
 
       const pieces = [];
       for (const group of groups) {
@@ -1275,6 +1386,13 @@
           ${label}${sortIcon(key)}${extra}
         </th>`;
 
+      // 估值列头（仅场外 Tab，CSS 按分组动态显隐）
+      const estimateHeaderHtml = !isEtf ? `
+              <th class="col-estimate text-right py-3 px-3 font-medium">
+                <div>估值</div>
+                <div class="text-[10px] text-stone-400 font-normal mt-0.5">${STATE.estimatesUpdatedAt ? fmtMD(STATE.estimatesUpdatedAt.slice(0, 10)) + ' 估' : ''}</div>
+              </th>` : '';
+
       // 「净值」列头：场外 QDII / 场内 ETF 共用结构
       //   · 标题：场外 = "净值"，ETF = "最新价"
       //   · 副标 = nav_date（MM-DD 格式）
@@ -1286,12 +1404,13 @@
               </th>`;
 
       container.innerHTML = `
-        <table class="w-full text-sm min-w-[780px]">
+        <table class="w-full text-sm min-w-[840px]">
           <thead class="bg-stone-50 border-b border-stone-200 text-stone-600 text-xs">
             <tr>
               <th class="text-left py-3 px-3 font-medium w-8"></th>
               <th class="text-left py-3 px-3 font-medium">基金系列</th>
               ${sortableTh('series_scale', '规模', 'right')}
+              ${estimateHeaderHtml}
               ${priceHeaderHtml}
               ${sortableTh('chg_1m', '近1月')}
               ${sortableTh('chg_ytd', '今年来')}
@@ -1368,6 +1487,20 @@
       CHIP_STATE[tab] = filter;
       const table = document.getElementById(`table-${tab}`);
       if (!table) return;
+
+      // 估值列动态显隐：场外 tab + active 分组 → 显示估值列，其他 → 隐藏
+      if (tab === 'offshore') {
+        if (filter === 'active') {
+          table.classList.remove('hide-est');
+        } else {
+          table.classList.add('hide-est');
+        }
+        // 同步调整展开行的 colspan（隐藏估值列时少1列）
+        const estCols = filter === 'active' ? 13 : 12;
+        table.querySelectorAll('.share-rows td[colspan]').forEach(td => {
+          td.colSpan = estCols;
+        });
+      }
 
       // series 行：控制显隐
       // 展开行（share-rows）：不匹配时强制隐藏并重置状态；匹配时清 inline display，让 .hidden 类主宰
@@ -1456,14 +1589,29 @@
         dailyChange = def.daily_change;
       }
 
+      // 主动基金估值（仅美股主动 = active 分组）
+      const estimateInfo = (groupKey === 'active') ? STATE.estimates[defCode] : null;
+      const hasEstimate = estimateInfo && (estimateInfo.matched_count > 0 || estimateInfo.estimated_impact !== 0);
+
       // 走势 td（所有基金都有）+ 持仓 td（仅主动基金有按钮，其他占位）
       const trendTd = `<td class="py-3 px-3 text-center">${trendBtn(defCode)}</td>`;
       const holdingsTd = isActive
         ? `<td class="py-3 px-3 text-center">${holdingsBtn(defCode)}</td>`
         : '<td class="py-3 px-3 text-center text-stone-300">—</td>';
 
+      // 估值 td：所有场外行都渲染（带 col-estimate class），CSS 按分组显隐
+      const estimateTd = !isEtf
+        ? (hasEstimate
+          ? (() => {
+              const imp = estimateInfo.estimated_impact;
+              const impCls = imp > 0 ? 'up' : imp < 0 ? 'down' : 'text-stone-400';
+              return `<td class="col-estimate py-3 px-3 text-right num" data-est-code="${defCode}"><div class="text-sm font-bold ${impCls}">${imp > 0 ? '+' : ''}${imp.toFixed(2)}%</div><div class="text-[10px] text-stone-400">估</div></td>`;
+            })()
+          : '<td class="col-estimate py-3 px-3 text-right text-stone-300">—</td>')
+        : '';
+
       // 展开后的子表格 colspan（与外层列数一致：ETF=11，场外=12）
-      const expandColspan = isEtf ? 11 : 12;
+      const expandColspan = isEtf ? 11 : 13;
 
       return `
         <tr class="series-row border-b border-stone-100 ${isEtf ? '' : 'hover:bg-stone-50 cursor-pointer'} transition" data-series-id="${series.series_id}" data-is-etf="${isEtf ? '1' : '0'}"${grpAttr}>
@@ -1486,6 +1634,7 @@
             </div>
           </td>
           <td class="py-3 px-3 text-right num font-medium">${seriesScale}</td>
+          ${estimateTd}
           <td class="py-3 px-3 text-right num">
             <div class="font-medium">${price}</div>
             <div class="text-xs ${dailyChange > 0 ? 'up' : dailyChange < 0 ? 'down' : 'text-stone-400'}">${dailyChange == null ? '--' : (dailyChange > 0 ? '+' : '') + dailyChange.toFixed(2) + '%'}</div>
@@ -1742,45 +1891,72 @@
       // 先填基础信息（来自列表数据）
       renderDetailBasic(series, share);
 
-      // 再异步加载持仓
-      try {
-        const res = await fetch(`./data/holdings/${code}.json`);
-        if (!res.ok) throw new Error('持仓数据未抓取');
-        const holdings = await res.json();
+      // 持仓加载 + 自动刷新
+      const _detailCode = code;
+      const _detailSeries = series;
+      const _detailShare = share;
 
-        // 🟢 动态刷新 Top10 股票"当日涨跌"——按各股票所在市场分别拉腾讯行情
-        // 即便部分市场休市，腾讯 gtimg 会返回最近一次成交价，可用于显示「已收盘」状态
-        // 视觉上由 getMarketSession() 给每行打 ●/○ 点区分该市场是否盘中
+      async function loadHoldings() {
         try {
-          const codes = (holdings.holdings || [])
-            .map(h => h.stock_code)
-            .filter(Boolean);
-          if (codes.length) {
-            const live = await fetchStocksLive(codes);
-            // 合并到 STATE.stocks：保留原 name 等字段，只更新 price / change_pct / market
-            for (const [c, r] of Object.entries(live)) {
-              const existing = STATE.stocks[c] || {};
-              STATE.stocks[c] = {
-                ...existing,
-                code: c,
-                market: r.market || existing.market,
-                price: r.price != null ? r.price : existing.price,
-                change_pct: r.change_pct != null ? r.change_pct : existing.change_pct,
-              };
-            }
-          }
-        } catch (_) { /* 静默降级，使用 us_stocks.json */ }
+          const res = await fetch(`./data/holdings/${_detailCode}.json`);
+          if (!res.ok) throw new Error('持仓数据未抓取');
+          const holdings = await res.json();
 
-        renderDetailHoldings(holdings);
-      } catch (e) {
-        document.getElementById('detail-holdings').innerHTML =
-          `<div class="text-center py-12 text-stone-400 text-sm">暂无持仓数据（可能是新基金或季报未披露）</div>`;
+          // 🟢 动态刷新 Top10 股票"当日涨跌"——按各股票所在市场分别拉腾讯行情
+          try {
+            const codes = (holdings.holdings || [])
+              .map(h => h.stock_code)
+              .filter(Boolean);
+            if (codes.length) {
+              const live = await fetchStocksLive(codes);
+              for (const [c, r] of Object.entries(live)) {
+                const existing = STATE.stocks[c] || {};
+                STATE.stocks[c] = {
+                  ...existing,
+                  code: c,
+                  market: r.market || existing.market,
+                  price: r.price != null ? r.price : existing.price,
+                  change_pct: r.change_pct != null ? r.change_pct : existing.change_pct,
+                };
+              }
+              // 持仓行情已更新 → 用最新数据重算估值并刷新估值列
+              recalcEstimates();
+              refreshEstimateCells();
+            }
+          } catch (_) { /* 静默降级 */ }
+
+          renderDetailHoldings(holdings, _detailCode);
+        } catch (e) {
+          document.getElementById('detail-holdings').innerHTML =
+            `<div class="text-center py-12 text-stone-400 text-sm">暂无持仓数据（可能是新基金或季报未披露）</div>`;
+        }
       }
+
+      await loadHoldings();
+
+      // 自动刷新：盘中时每 5 分钟刷新持仓行情
+      if (DETAIL_REFRESH_TIMER) clearInterval(DETAIL_REFRESH_TIMER);
+      DETAIL_REFRESH_TIMER = setInterval(() => {
+        // Modal 已关闭 → 停止刷新
+        if (document.getElementById('detailModal').classList.contains('hidden')) {
+          clearInterval(DETAIL_REFRESH_TIMER);
+          DETAIL_REFRESH_TIMER = null;
+          return;
+        }
+        // 非交易日或页面不可见 → 跳过本轮
+        if (!isTradingDay() || document.hidden) return;
+        loadHoldings();
+      }, 5 * 60 * 1000);
     }
 
     function closeDetail() {
       document.getElementById('detailModal').classList.add('hidden');
       document.body.style.overflow = '';
+      // 停止持仓自动刷新
+      if (DETAIL_REFRESH_TIMER) {
+        clearInterval(DETAIL_REFRESH_TIMER);
+        DETAIL_REFRESH_TIMER = null;
+      }
     }
 
     // ==================== 历史净值走势 ====================
@@ -2232,9 +2408,11 @@
           <span class="text-sm font-medium num ${f.highlight ? 'text-indigo-600' : ''}">${f.value}</span>
         </div>
       `).join('') || '<div class="text-sm text-stone-400 text-center py-4">暂无费率数据</div>';
+
+      // 估值信息已整合到持仓汇总条中
     }
 
-    function renderDetailHoldings(data) {
+    function renderDetailHoldings(data, fundCode) {
       const container = document.getElementById('detail-holdings');
       if (!data.holdings || data.holdings.length === 0) {
         container.innerHTML = '<div class="text-center py-12 text-stone-400 text-sm">暂无持仓数据</div>';
@@ -2262,12 +2440,7 @@
       // 最大权重用于做条形图
       const maxW = Math.max(...data.holdings.map(h => h.weight || 0));
 
-      // 持仓行的「市场状态点」逻辑：
-      //   · 该市场盘中 → 绿点 ●（CSS pulse 动画）+ tooltip "盘中实时"
-      //   · 该市场已收盘/休市 → 灰点 ○ + tooltip "已收盘"
-      // 一只组合可能跨美股/港股/A股，分别按各自市场判定（含美股冬夏令时，由 Intl 自动处理）
-      // 用户场景：广发全球精选 = 美股 + 港股，09:51 港股盘中（绿点）、美股已收盘（灰点）
-
+      // 持仓行的「市场状态点」逻辑
       const listHtml = `
         <div class="text-xs text-stone-500 mb-2 flex justify-between flex-wrap gap-2">
           <span>${data.latest_quarter || '最新季报'} · 当日涨跌按持仓股票所属市场分别取实时行情</span>
@@ -2302,6 +2475,7 @@
                 ? '<span class="text-stone-300">--</span>'
                 : `<span class="${chg > 0 ? 'up' : chg < 0 ? 'down' : ''}">${chg > 0 ? '+' : ''}${chg.toFixed(2)}%</span>`;
               const chgCell = `${dot}${chgInner}`;
+
               return `
                 <tr class="border-b border-stone-50 hover:bg-stone-50/50">
                   <td class="py-2.5 text-stone-400 num">${h.rank || (i + 1)}</td>
