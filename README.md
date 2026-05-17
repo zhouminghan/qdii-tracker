@@ -399,7 +399,7 @@ git push -u origin main
 1. 仓库顶部 **Actions** 标签
 2. 左侧选 **🔄 Update Fund Data**
 3. 右边点 **Run workflow** 下拉按钮 → 选择 `incremental` → **Run workflow**
-4. 等 3~5 分钟。看到绿色 ✅ 就表示成功了
+4. 等 ~12 分钟。看到绿色 ✅ 就表示成功了
 
 点进跑完的这次任务可以看到每一步的日志。
 
@@ -417,7 +417,7 @@ git push -u origin main
 
 1. **打开书签看**：`https://zhouminghan.github.io/qdii-tracker/`
 2. **想立刻更新数据**：
-   - 进仓库 → **Actions** → **Update Fund Data** → **Run workflow** → 选 `incremental` → 等几分钟刷新网页
+   - 进仓库 → **Actions** → **Update Fund Data** → **Run workflow** → 选 `incremental` → 等 ~12 分钟刷新网页
 
 **手机 / iPad / 朋友也能看**：把网址发出去即可。
 
@@ -427,13 +427,17 @@ workflow 文件已写好（`.github/workflows/update-data.yml`），开箱即用
 
 | 触发时机 | 模式 | 做什么 | 耗时 |
 |---|---|---|---|
-| 🗓️ **工作日 08:30**（北京时间） | 增量 | 早间补拉昨晚遗漏的净值 + 早披露的 QDII | ~3 分钟 |
-| 🗓️ **工作日 17:30** | 增量 | 午后 A 股收盘后再补一轮 | ~3 分钟 |
-| 🗓️ **工作日 22:30** | 增量 | 晚间最关键一轮（绝大多数 QDII 已披露） | ~3 分钟 |
-| 🗓️ **每月 2 日 02:00** | 完整 | 额外更新：基金列表、持仓、费率、规模 | ~15 分钟 |
+| 🗓️ **工作日 08:30**（北京时间） | 增量 | 早间补拉昨晚遗漏的净值 + 早披露的 QDII | ~12 分钟 |
+| 🗓️ **工作日 17:30** | 增量 | 午后 A 股收盘后再补一轮 | ~12 分钟 |
+| 🗓️ **工作日 22:30** | 增量 | 晚间最关键一轮（绝大多数 QDII 已披露） | ~15 分钟 |
+| 🗓️ **每月 2 日 02:00** | 完整 | 额外更新：基金列表、持仓、费率、规模 | ~20 分钟 |
 | 🖱️ 手动点 Run workflow | 可选 | 按你选 | 按模式 |
 
 需要改时间？修改 yaml 里的 `cron` 表达式即可（<https://crontab.guru/> 可视化生成）。
+
+> 💰 **成本说明**：本项目部署在 **public 仓库**，根据 [GitHub Actions 2025-12 官方政策](https://github.blog/changelog/2025-12-16-coming-soon-simpler-pricing-and-a-better-experience-for-github-actions/)，**public repo 的 Actions 完全免费、无分钟数限制**。本项目实际月度用量约 1000 分钟（含 deploy-pages 触发），即使将来扩展到 10 倍也不会产生任何费用。
+> 
+> ⚠️ 如果你**改成 private 仓库**：Free plan 有 2000 分钟/月免费额度，本项目用量约 1000 分钟（占 ~50%）仍然够用；但要注意 GitHub Pages 在 private 仓库上需要付费版（Pro+）才能用。
 
 ### 📝 改了本地代码之后
 
