@@ -150,10 +150,10 @@
           "buy_min": 500.0,
           "daily_limit": 0.0,
           "fee": "",
-          "scale": 10.99,
-          "scale_raw": "10.99亿",
-          "established": "2024-08-14",
-          "manager": "刘杰",
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
@@ -207,10 +207,10 @@
           "buy_min": 1.0,
           "daily_limit": 0.0,
           "fee": "",
-          "scale": 53.93,
-          "scale_raw": "53.93亿",
-          "established": "2018-10-25",
-          "manager": "刘杰",
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
@@ -226,6 +226,197 @@
       ],
       "default_share_code": "270042",
       "series_scale": 248.25
+    },
+    {
+      "series_id": "华安__纳斯达克100ETF联接__nasdaq_passive",
+      "company": "华安",
+      "company_display": "华安",
+      "series_name": "纳斯达克100ETF联接",
+      "display_name": "华安纳斯达克100ETF联接",
+      "category": "nasdaq_passive",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "040046",
+          "name": "华安纳斯达克100ETF联接(QDII)A",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "nav_date": "2026-05-14",
+          "nav": 8.3453,
+          "nav_cum": 8.3453,
+          "daily_change": 0.68,
+          "chg_1w": 3.44,
+          "chg_1m": 14.08,
+          "chg_3m": 17.77,
+          "chg_6m": 14.03,
+          "chg_1y": 30.76,
+          "chg_2y": 47.86,
+          "chg_3y": 104.89,
+          "chg_ytd": 13.91,
+          "chg_since_inception": 734.53,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10.0,
+          "fee": "0.12",
+          "scale": 47.03,
+          "scale_raw": "47.03亿",
+          "established": "2013-08-02",
+          "manager": "倪斌",
+          "fund_company": "华安基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "华安纳斯达克100交易型开放式指数证券投资基金联接基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.2
+            },
+            {
+              "condition": "100.0万<=买入金额<300.0万",
+              "rate": 0.8
+            },
+            {
+              "condition": "300.0万<=买入金额<500.0万",
+              "rate": 0.4
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.2,
+          "free_hold_days": 7,
+          "first_buy_rate": 1.2,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "014978",
+          "name": "华安纳斯达克100ETF联接(QDII)C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "nav_date": "2026-05-14",
+          "nav": 8.178,
+          "nav_cum": 8.178,
+          "daily_change": 0.68,
+          "chg_1w": 3.43,
+          "chg_1m": 14.07,
+          "chg_3m": 17.71,
+          "chg_6m": 13.92,
+          "chg_1y": 30.5,
+          "chg_2y": 47.27,
+          "chg_3y": 103.64,
+          "chg_ytd": 13.83,
+          "chg_since_inception": 106.72,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10.0,
+          "fee": "",
+          "scale": 11.64,
+          "scale_raw": "11.64亿",
+          "established": "2022-02-22",
+          "manager": "倪斌",
+          "fund_company": "华安基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "华安纳斯达克100交易型开放式指数证券投资基金联接基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.2,
+          "free_hold_days": 7,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "040047",
+          "name": "华安纳斯达克100ETF联接(QDII)A美元现钞",
+          "share_class": "A",
+          "currency": "美元",
+          "fund_type": "指数型-海外股票",
+          "nav": 1.2201,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.73,
+          "chg_1m": 14.41,
+          "chg_3m": 19.49,
+          "chg_6m": 18.08,
+          "chg_1y": 37.57,
+          "scale": 47.03,
+          "scale_raw": "47.03亿",
+          "established": "2013-08-02",
+          "manager": "倪斌",
+          "chg_ytd": 15.79,
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 0.0,
+          "daily_limit": 0.0,
+          "fee": "1.2",
+          "fund_company": "华安基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "华安纳斯达克100交易型开放式指数证券投资基金联接基金(QDII)",
+          "buy_rules": [],
+          "sell_rules": [],
+          "error": "'declare_rate_table'"
+        },
+        {
+          "code": "040048",
+          "name": "华安纳斯达克100ETF联接(QDII)A美元现汇",
+          "share_class": "A",
+          "currency": "美元",
+          "fund_type": "指数型-海外股票",
+          "nav": 1.2201,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.73,
+          "chg_1m": 14.41,
+          "chg_3m": 19.49,
+          "chg_6m": 18.08,
+          "chg_1y": 37.57,
+          "scale": 47.03,
+          "scale_raw": "47.03亿",
+          "established": "2013-08-02",
+          "manager": "倪斌",
+          "chg_ytd": 15.79,
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 0.0,
+          "daily_limit": 0.0,
+          "fee": "1.2",
+          "fund_company": "华安基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "华安纳斯达克100交易型开放式指数证券投资基金联接基金(QDII)",
+          "buy_rules": [],
+          "sell_rules": [],
+          "error": "'declare_rate_table'"
+        }
+      ],
+      "default_share_code": "040046",
+      "series_scale": 152.73000000000002
     },
     {
       "series_id": "南方__纳斯达克100指数__nasdaq_passive",
@@ -365,10 +556,10 @@
           "buy_min": 10.0,
           "daily_limit": 0.0,
           "fee": "",
-          "scale": 15.69,
-          "scale_raw": "15.69亿",
-          "established": "2024-03-19",
-          "manager": "张其思",
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
@@ -384,151 +575,6 @@
       ],
       "default_share_code": "016452",
       "series_scale": 63.61
-    },
-    {
-      "series_id": "华安__纳斯达克100ETF联接__nasdaq_passive",
-      "company": "华安",
-      "company_display": "华安",
-      "series_name": "纳斯达克100ETF联接",
-      "display_name": "华安纳斯达克100ETF联接",
-      "category": "nasdaq_passive",
-      "etf_target": null,
-      "shares": [
-        {
-          "code": "040046",
-          "name": "华安纳斯达克100ETF联接(QDII)A",
-          "share_class": "A",
-          "currency": "人民币",
-          "fund_type": "指数型-海外股票",
-          "nav_date": "2026-05-14",
-          "nav": 8.3453,
-          "nav_cum": 8.3453,
-          "daily_change": 0.68,
-          "chg_1w": 3.44,
-          "chg_1m": 14.08,
-          "chg_3m": 17.77,
-          "chg_6m": 14.03,
-          "chg_1y": 30.76,
-          "chg_2y": 47.86,
-          "chg_3y": 104.89,
-          "chg_ytd": 13.91,
-          "chg_since_inception": 734.53,
-          "buy_status": "限大额",
-          "sell_status": "开放赎回",
-          "buy_min": 10.0,
-          "daily_limit": 10.0,
-          "fee": "0.12",
-          "scale": 47.03,
-          "scale_raw": "47.03亿",
-          "established": "2013-08-02",
-          "manager": "倪斌",
-          "fund_company": "华安基金管理有限公司",
-          "fund_type_xq": "QDII-股票",
-          "full_name": "华安纳斯达克100交易型开放式指数证券投资基金联接基金(QDII)",
-          "buy_rules": [
-            {
-              "condition": "0.0万<买入金额<100.0万",
-              "rate": 1.2
-            },
-            {
-              "condition": "100.0万<=买入金额<300.0万",
-              "rate": 0.8
-            },
-            {
-              "condition": "300.0万<=买入金额<500.0万",
-              "rate": 0.4
-            },
-            {
-              "condition": "500.0万<=买入金额",
-              "rate": 1000.0
-            }
-          ],
-          "sell_rules": [
-            {
-              "condition": "0.0天<持有期限<7.0天",
-              "rate": 1.5
-            },
-            {
-              "condition": "7.0天<=持有期限",
-              "rate": 0.0
-            }
-          ],
-          "mgmt_fee": 0.6,
-          "custody_fee": 0.2,
-          "free_hold_days": 7,
-          "first_buy_rate": 1.2,
-          "max_sell_rate": 1.5
-        },
-        {
-          "code": "014978",
-          "name": "华安纳斯达克100ETF联接(QDII)C",
-          "share_class": "C",
-          "currency": "人民币",
-          "fund_type": "指数型-海外股票",
-          "nav_date": "2026-05-14",
-          "nav": 8.178,
-          "nav_cum": 8.178,
-          "daily_change": 0.68,
-          "chg_1w": 3.43,
-          "chg_1m": 14.07,
-          "chg_3m": 17.71,
-          "chg_6m": 13.92,
-          "chg_1y": 30.5,
-          "chg_2y": 47.27,
-          "chg_3y": 103.64,
-          "chg_ytd": 13.83,
-          "chg_since_inception": 106.72,
-          "buy_status": "限大额",
-          "sell_status": "开放赎回",
-          "buy_min": 10.0,
-          "daily_limit": 10.0,
-          "fee": "",
-          "scale": 11.64,
-          "scale_raw": "11.64亿",
-          "established": "2022-02-22",
-          "manager": "倪斌",
-          "fund_company": "华安基金管理有限公司",
-          "fund_type_xq": "QDII-股票",
-          "full_name": "华安纳斯达克100交易型开放式指数证券投资基金联接基金(QDII)",
-          "buy_rules": [
-            {
-              "condition": "0.0万<买入金额",
-              "rate": 0.0
-            }
-          ],
-          "sell_rules": [
-            {
-              "condition": "0.0天<持有期限<7.0天",
-              "rate": 1.5
-            },
-            {
-              "condition": "7.0天<=持有期限",
-              "rate": 0.0
-            }
-          ],
-          "mgmt_fee": 0.6,
-          "custody_fee": 0.2,
-          "free_hold_days": 7,
-          "first_buy_rate": 0.0,
-          "max_sell_rate": 1.5
-        },
-        {
-          "code": "040047",
-          "name": "华安纳斯达克100ETF联接(QDII)A美元现钞",
-          "share_class": "A",
-          "currency": "美元",
-          "fund_type": "指数型-海外股票"
-        },
-        {
-          "code": "040048",
-          "name": "华安纳斯达克100ETF联接(QDII)A美元现汇",
-          "share_class": "A",
-          "currency": "美元",
-          "fund_type": "指数型-海外股票"
-        }
-      ],
-      "default_share_code": "040046",
-      "series_scale": 58.67
     },
     {
       "series_id": "天弘__纳斯达克100指数__nasdaq_passive",
@@ -984,10 +1030,10 @@
           "buy_min": 1.0,
           "daily_limit": 0.0,
           "fee": "",
-          "scale": 0.24,
-          "scale_raw": "0.24亿",
-          "established": "2024-07-18",
-          "manager": "张钟玉",
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
@@ -1003,6 +1049,192 @@
       ],
       "default_share_code": "016532",
       "series_scale": 34.64
+    },
+    {
+      "series_id": "易方达__纳斯达克100ETF联接__nasdaq_passive",
+      "company": "易方达",
+      "company_display": "易方达",
+      "series_name": "纳斯达克100ETF联接",
+      "display_name": "易方达纳斯达克100ETF联接",
+      "category": "nasdaq_passive",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "161130",
+          "name": "易方达纳斯达克100ETF联接(QDII-LOF)A(人民币)",
+          "share_class": "A",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10.0,
+          "fee": "0.12",
+          "scale": 15.17,
+          "scale_raw": "15.17亿",
+          "established": "2017-06-23",
+          "manager": "伍臣东",
+          "fund_company": "易方达基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "易方达纳斯达克100交易型开放式指数证券投资基金联接基金(LOF)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.2
+            },
+            {
+              "condition": "100.0万<=买入金额<200.0万",
+              "rate": 0.8
+            },
+            {
+              "condition": "200.0万<=买入金额<500.0万",
+              "rate": 0.5
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限<2.0年",
+              "rate": 0.25
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.1,
+          "free_hold_days": null,
+          "first_buy_rate": 1.2,
+          "max_sell_rate": 1.5,
+          "nav": 4.4835,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.65,
+          "chg_1m": 15.73,
+          "chg_3m": 3.19,
+          "chg_6m": 0.31,
+          "chg_1y": 29.43,
+          "chg_ytd": 3.08
+        },
+        {
+          "code": "012870",
+          "name": "易方达纳斯达克100ETF联接(QDII-LOF)C(人民币)",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10.0,
+          "fee": "",
+          "scale": 1.86,
+          "scale_raw": "1.86亿",
+          "established": "2021-07-23",
+          "manager": "伍臣东",
+          "fund_company": "易方达基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "易方达纳斯达克100交易型开放式指数证券投资基金联接基金(LOF)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.1,
+          "free_hold_days": 7,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5,
+          "nav": 4.4088,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.65,
+          "chg_1m": 15.7,
+          "chg_3m": 3.11,
+          "chg_6m": 0.15,
+          "chg_1y": 29.03,
+          "chg_ytd": 3.04
+        },
+        {
+          "code": "003722",
+          "name": "易方达纳斯达克100ETF联接(QDII-LOF)A(美元现汇)",
+          "share_class": "A",
+          "currency": "美元",
+          "fund_type": "指数型-海外股票",
+          "nav": 0.6555,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.71,
+          "chg_1m": 13.76,
+          "chg_3m": 18.71,
+          "chg_6m": 17.2,
+          "chg_1y": 35.66,
+          "established": "2017-06-23",
+          "manager": "伍臣东",
+          "chg_ytd": 14.2,
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 0.01,
+          "fee": "0.12",
+          "scale": 15.17,
+          "scale_raw": "15.17亿",
+          "fund_company": "易方达基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "易方达纳斯达克100交易型开放式指数证券投资基金联接基金(LOF)",
+          "buy_rules": [],
+          "sell_rules": [],
+          "error": "'declare_rate_table'"
+        },
+        {
+          "code": "012871",
+          "name": "易方达纳斯达克100ETF联接(QDII-LOF)C(美元现汇)",
+          "share_class": "C",
+          "currency": "美元",
+          "fund_type": "指数型-海外股票",
+          "nav": 0.6446,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.7,
+          "chg_1m": 13.75,
+          "chg_3m": 18.62,
+          "chg_6m": 17.03,
+          "chg_1y": 35.22,
+          "established": "",
+          "manager": "",
+          "chg_ytd": 14.17,
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 0.01,
+          "fee": "",
+          "scale": null,
+          "scale_raw": "",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
+        }
+      ],
+      "default_share_code": "161130",
+      "series_scale": 32.2
     },
     {
       "series_id": "摩根__纳斯达克100指数__nasdaq_passive",
@@ -1136,14 +1368,54 @@
           "name": "摩根纳斯达克100指数(QDII)美元现汇A",
           "share_class": "A",
           "currency": "美元",
-          "fund_type": "指数型-海外股票"
+          "fund_type": "指数型-海外股票",
+          "nav": 1.8481,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.68,
+          "chg_1m": 13.51,
+          "chg_3m": 18.24,
+          "chg_6m": 17.38,
+          "chg_1y": 36.37,
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
+          "chg_ytd": 15.15,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "1.2",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         },
         {
           "code": "019175",
           "name": "摩根纳斯达克100指数(QDII)美元现汇C",
           "share_class": "C",
           "currency": "美元",
-          "fund_type": "指数型-海外股票"
+          "fund_type": "指数型-海外股票",
+          "nav": 1.8415,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.68,
+          "chg_1m": 13.48,
+          "chg_3m": 18.15,
+          "chg_6m": 17.21,
+          "chg_1y": 35.96,
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
+          "chg_ytd": 15.03,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         }
       ],
       "default_share_code": "019172",
@@ -1439,10 +1711,10 @@
           "buy_min": 10.0,
           "daily_limit": 100.0,
           "fee": "",
-          "scale": 0.52,
-          "scale_raw": "0.52亿",
-          "established": "2025-02-12",
-          "manager": "李博涵",
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": []
@@ -1452,14 +1724,54 @@
           "name": "建信纳斯达克100指数(QDII)A美元现汇",
           "share_class": "A",
           "currency": "美元",
-          "fund_type": "指数型-海外股票"
+          "fund_type": "指数型-海外股票",
+          "nav": 0.5099,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.73,
+          "chg_1m": 13.41,
+          "chg_3m": 18.91,
+          "chg_6m": 16.52,
+          "chg_1y": 35.5,
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
+          "chg_ytd": 14.56,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 100.0,
+          "daily_limit": 0.0,
+          "fee": "1.2",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         },
         {
           "code": "012753",
           "name": "建信纳斯达克100指数(QDII)C美元现汇",
           "share_class": "C",
           "currency": "美元",
-          "fund_type": "指数型-海外股票"
+          "fund_type": "指数型-海外股票",
+          "nav": 0.4938,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.73,
+          "chg_1m": 13.39,
+          "chg_3m": 18.84,
+          "chg_6m": 16.33,
+          "chg_1y": 35.1,
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
+          "chg_ytd": 14.44,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 100.0,
+          "daily_limit": 0.0,
+          "fee": "",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         }
       ],
       "default_share_code": "539001",
@@ -1769,10 +2081,10 @@
           "buy_min": 1.0,
           "daily_limit": 0.0,
           "fee": "",
-          "scale": 1.57,
-          "scale_raw": "1.57亿",
-          "established": "2025-05-12",
-          "manager": "万琼",
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
@@ -1788,149 +2100,6 @@
       ],
       "default_share_code": "016055",
       "series_scale": 19.53
-    },
-    {
-      "series_id": "易方达__纳斯达克100ETF联接__nasdaq_passive",
-      "company": "易方达",
-      "company_display": "易方达",
-      "series_name": "纳斯达克100ETF联接",
-      "display_name": "易方达纳斯达克100ETF联接",
-      "category": "nasdaq_passive",
-      "etf_target": null,
-      "shares": [
-        {
-          "code": "161130",
-          "name": "易方达纳斯达克100ETF联接(QDII-LOF)A(人民币)",
-          "share_class": "A",
-          "currency": "人民币",
-          "fund_type": "指数型-海外股票",
-          "buy_status": "暂停申购",
-          "sell_status": "开放赎回",
-          "buy_min": 10.0,
-          "daily_limit": 10.0,
-          "fee": "0.12",
-          "scale": 15.17,
-          "scale_raw": "15.17亿",
-          "established": "2017-06-23",
-          "manager": "伍臣东",
-          "fund_company": "易方达基金管理有限公司",
-          "fund_type_xq": "QDII-股票",
-          "full_name": "易方达纳斯达克100交易型开放式指数证券投资基金联接基金(LOF)",
-          "buy_rules": [
-            {
-              "condition": "0.0万<买入金额<100.0万",
-              "rate": 1.2
-            },
-            {
-              "condition": "100.0万<=买入金额<200.0万",
-              "rate": 0.8
-            },
-            {
-              "condition": "200.0万<=买入金额<500.0万",
-              "rate": 0.5
-            },
-            {
-              "condition": "500.0万<=买入金额",
-              "rate": 1000.0
-            }
-          ],
-          "sell_rules": [
-            {
-              "condition": "0.0天<持有期限<7.0天",
-              "rate": 1.5
-            },
-            {
-              "condition": "7.0天<=持有期限<365.0天",
-              "rate": 0.5
-            },
-            {
-              "condition": "365.0天<=持有期限<2.0年",
-              "rate": 0.25
-            },
-            {
-              "condition": "2.0年<=持有期限",
-              "rate": 0.0
-            }
-          ],
-          "mgmt_fee": 0.5,
-          "custody_fee": 0.1,
-          "free_hold_days": null,
-          "first_buy_rate": 1.2,
-          "max_sell_rate": 1.5,
-          "nav": 4.4835,
-          "nav_date": "2026-05-13",
-          "daily_change": 0.65,
-          "chg_1m": 15.73,
-          "chg_3m": 3.19,
-          "chg_6m": 0.31,
-          "chg_1y": 29.43,
-          "chg_ytd": 3.08
-        },
-        {
-          "code": "012870",
-          "name": "易方达纳斯达克100ETF联接(QDII-LOF)C(人民币)",
-          "share_class": "C",
-          "currency": "人民币",
-          "fund_type": "指数型-海外股票",
-          "buy_status": "暂停申购",
-          "sell_status": "开放赎回",
-          "buy_min": 10.0,
-          "daily_limit": 10.0,
-          "fee": "",
-          "scale": 1.86,
-          "scale_raw": "1.86亿",
-          "established": "2021-07-23",
-          "manager": "伍臣东",
-          "fund_company": "易方达基金管理有限公司",
-          "fund_type_xq": "QDII-股票",
-          "full_name": "易方达纳斯达克100交易型开放式指数证券投资基金联接基金(LOF)",
-          "buy_rules": [
-            {
-              "condition": "0.0万<买入金额",
-              "rate": 0.0
-            }
-          ],
-          "sell_rules": [
-            {
-              "condition": "0.0天<持有期限<7.0天",
-              "rate": 1.5
-            },
-            {
-              "condition": "7.0天<=持有期限",
-              "rate": 0.0
-            }
-          ],
-          "mgmt_fee": 0.5,
-          "custody_fee": 0.1,
-          "free_hold_days": 7,
-          "first_buy_rate": 0.0,
-          "max_sell_rate": 1.5,
-          "nav": 4.4088,
-          "nav_date": "2026-05-13",
-          "daily_change": 0.65,
-          "chg_1m": 15.7,
-          "chg_3m": 3.11,
-          "chg_6m": 0.15,
-          "chg_1y": 29.03,
-          "chg_ytd": 3.04
-        },
-        {
-          "code": "003722",
-          "name": "易方达纳斯达克100ETF联接(QDII-LOF)A(美元现汇)",
-          "share_class": "A",
-          "currency": "美元",
-          "fund_type": "指数型-海外股票"
-        },
-        {
-          "code": "012871",
-          "name": "易方达纳斯达克100ETF联接(QDII-LOF)C(美元现汇)",
-          "share_class": "C",
-          "currency": "美元",
-          "fund_type": "指数型-海外股票"
-        }
-      ],
-      "default_share_code": "161130",
-      "series_scale": 17.03
     },
     {
       "series_id": "国泰__纳斯达克100指数__nasdaq_passive",
@@ -2329,14 +2498,38 @@
           "name": "宝盈纳斯达克100指数发起(QDII)A美元现汇",
           "share_class": "A",
           "currency": "美元",
-          "fund_type": "指数型-海外股票"
+          "fund_type": "指数型-海外股票",
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
+          "buy_status": "封闭期",
+          "sell_status": "封闭期",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "1.2",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         },
         {
           "code": "019739",
           "name": "宝盈纳斯达克100指数发起(QDII)C美元现汇",
           "share_class": "C",
           "currency": "美元",
-          "fund_type": "指数型-海外股票"
+          "fund_type": "指数型-海外股票",
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
+          "buy_status": "封闭期",
+          "sell_status": "封闭期",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         }
       ],
       "default_share_code": "019736",
@@ -2599,6 +2792,6 @@
       "series_scale": 4.82
     }
   ],
-  "total_scale": 688.26,
-  "enriched_at": "2026-05-08T01:53:23.388555"
+  "total_scale": 797.49,
+  "enriched_at": "2026-05-18T05:02:41.051107"
 }

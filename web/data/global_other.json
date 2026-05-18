@@ -144,14 +144,54 @@
           "name": "易方达全球优质企业混合(QDII)A(美元现汇份额)",
           "share_class": "A",
           "currency": "美元",
-          "fund_type": "QDII-混合偏股"
+          "fund_type": "QDII-混合偏股",
+          "nav": 0.3235,
+          "nav_date": "2026-05-13",
+          "daily_change": -1.25,
+          "chg_1m": 19.11,
+          "chg_3m": 31.02,
+          "chg_6m": 55.68,
+          "chg_1y": 110.34,
+          "established": "",
+          "manager": "",
+          "chg_ytd": 46.44,
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 0.01,
+          "fee": "0.15",
+          "scale": null,
+          "scale_raw": "",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         },
         {
           "code": "018232",
           "name": "易方达全球优质企业混合(QDII)C(美元现汇份额)",
           "share_class": "C",
           "currency": "美元",
-          "fund_type": "QDII-混合偏股"
+          "fund_type": "QDII-混合偏股",
+          "nav": 0.3192,
+          "nav_date": "2026-05-13",
+          "daily_change": -1.24,
+          "chg_1m": 19.1,
+          "chg_3m": 30.87,
+          "chg_6m": 55.33,
+          "chg_1y": 109.31,
+          "established": "",
+          "manager": "",
+          "chg_ytd": 46.23,
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 0.01,
+          "fee": "",
+          "scale": null,
+          "scale_raw": "",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         }
       ],
       "default_share_code": "018229",
@@ -236,14 +276,54 @@
           "name": "华夏全球股票美元现汇(QDII)",
           "share_class": "默认",
           "currency": "美元",
-          "fund_type": "QDII-普通股票"
+          "fund_type": "QDII-普通股票",
+          "nav": 0.2261,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.49,
+          "chg_1m": 10.62,
+          "chg_3m": 16.19,
+          "chg_6m": 19.57,
+          "chg_1y": 36.7,
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
+          "chg_ytd": 16.43,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "1.6",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         },
         {
           "code": "019550",
           "name": "华夏全球股票美元现钞(QDII)",
           "share_class": "默认",
           "currency": "美元",
-          "fund_type": "QDII-普通股票"
+          "fund_type": "QDII-普通股票",
+          "nav": 0.2261,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.49,
+          "chg_1m": 10.62,
+          "chg_3m": 16.19,
+          "chg_6m": 19.57,
+          "chg_1y": 36.7,
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
+          "chg_ytd": 16.43,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "1.6",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         }
       ],
       "default_share_code": "000041",
@@ -393,6 +473,213 @@
       "series_scale": 24.07
     },
     {
+      "series_id": "摩根__全球多元配置__global_other",
+      "company": "摩根",
+      "company_display": "摩根",
+      "series_name": "全球多元配置",
+      "display_name": "摩根全球多元配置",
+      "category": "global_other",
+      "etf_target": null,
+      "shares": [
+        {
+          "code": "003629",
+          "name": "摩根全球多元配置(QDII-FOF)人民币A",
+          "share_class": "FOF",
+          "currency": "人民币",
+          "fund_type": "QDII-混合平衡",
+          "nav_date": "2026-05-14",
+          "nav": 1.875,
+          "nav_cum": 1.875,
+          "daily_change": 0.46,
+          "chg_1w": 0.1,
+          "chg_1m": 3.08,
+          "chg_3m": 2.01,
+          "chg_6m": 3.18,
+          "chg_1y": 9.53,
+          "chg_2y": 16.01,
+          "chg_3y": 34.0,
+          "chg_ytd": 2.62,
+          "chg_since_inception": 87.5,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100000.0,
+          "fee": "1.5",
+          "scale": 6.17,
+          "scale_raw": "6.17亿",
+          "established": "2016-12-19",
+          "manager": "张军",
+          "fund_company": "摩根基金管理（中国）有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "摩根全球多元配置证券投资基金(QDII-FOF)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<500.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "500.0万<=买入金额<1000.0万",
+              "rate": 1.0
+            },
+            {
+              "condition": "1000.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限<2.0年",
+              "rate": 0.35
+            },
+            {
+              "condition": "2.0年<=持有期限<3.0年",
+              "rate": 0.2
+            },
+            {
+              "condition": "3.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": null,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "019512",
+          "name": "摩根全球多元配置(QDII-FOF)人民币C",
+          "share_class": "FOF",
+          "currency": "人民币",
+          "fund_type": "QDII-混合平衡",
+          "nav_date": "2026-05-14",
+          "nav": 1.873,
+          "nav_cum": 1.873,
+          "daily_change": 0.46,
+          "chg_1w": 0.1,
+          "chg_1m": 3.05,
+          "chg_3m": 1.94,
+          "chg_6m": 3.03,
+          "chg_1y": 9.18,
+          "chg_2y": 15.3,
+          "chg_3y": null,
+          "chg_ytd": 2.52,
+          "chg_since_inception": 26.43,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 100000.0,
+          "fee": "",
+          "scale": 3.53,
+          "scale_raw": "3.53亿",
+          "established": "2023-09-15",
+          "manager": "张军",
+          "fund_company": "摩根基金管理（中国）有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "摩根全球多元配置证券投资基金(QDII-FOF)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "003630",
+          "name": "摩根全球多元配置(QDII-FOF)美元现钞",
+          "share_class": "默认",
+          "currency": "美元",
+          "fund_type": "QDII-混合平衡",
+          "nav": 0.2741,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.48,
+          "chg_1m": 3.36,
+          "chg_3m": 3.47,
+          "chg_6m": 6.82,
+          "chg_1y": 15.22,
+          "scale": 6.17,
+          "scale_raw": "6.17亿",
+          "established": "2016-12-19",
+          "manager": "张军",
+          "chg_ytd": 4.9,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "1.5",
+          "fund_company": "摩根基金管理(中国)有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "摩根全球多元配置证券投资基金(QDII-FOF)",
+          "buy_rules": [],
+          "sell_rules": [],
+          "error": "'declare_rate_table'"
+        },
+        {
+          "code": "003631",
+          "name": "摩根全球多元配置(QDII-FOF)美元现汇",
+          "share_class": "默认",
+          "currency": "美元",
+          "fund_type": "QDII-混合平衡",
+          "nav": 0.2741,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.48,
+          "chg_1m": 3.36,
+          "chg_3m": 3.47,
+          "chg_6m": 6.82,
+          "chg_1y": 15.22,
+          "scale": 6.17,
+          "scale_raw": "6.17亿",
+          "established": "2016-12-19",
+          "manager": "张军",
+          "chg_ytd": 4.9,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "1.5",
+          "fund_company": "摩根基金管理(中国)有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "摩根全球多元配置证券投资基金(QDII-FOF)",
+          "buy_rules": [],
+          "sell_rules": [],
+          "error": "'declare_rate_table'"
+        }
+      ],
+      "default_share_code": "003629",
+      "series_scale": 22.04
+    },
+    {
       "series_id": "富国__全球科技互联网股票__global_other",
       "company": "富国",
       "company_display": "富国",
@@ -482,8 +769,8 @@
           "fund_type": "QDII-普通股票",
           "scale": null,
           "scale_raw": "",
-          "established": "2011-07-13",
-          "manager": "赵年珅",
+          "established": "",
+          "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": []
@@ -556,10 +843,10 @@
           "buy_min": 1.0,
           "daily_limit": 0.0,
           "fee": "1.5",
-          "scale": 0.12,
-          "scale_raw": "0.12亿",
-          "established": "2025-12-02",
-          "manager": "赵年珅",
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
@@ -721,6 +1008,149 @@
       ]
     },
     {
+      "series_id": "国富__亚洲机会股票__global_other",
+      "series_name": "亚洲机会股票",
+      "display_name": "国富亚洲机会股票",
+      "company": "国富",
+      "company_display": "国富",
+      "category": "global_other",
+      "etf_target": null,
+      "default_share_code": "457001",
+      "series_scale": 18.57,
+      "shares": [
+        {
+          "code": "457001",
+          "name": "国富亚洲机会股票(QDII)A",
+          "fund_type": "QDII-普通股票",
+          "share_class": "A",
+          "currency": "人民币",
+          "nav_date": "2026-05-14",
+          "nav": 3.027,
+          "nav_cum": 3.194,
+          "daily_change": -0.49,
+          "chg_1w": 2.31,
+          "chg_1m": 31.96,
+          "chg_3m": 41.96,
+          "chg_6m": 75.22,
+          "chg_1y": 136.28,
+          "chg_2y": 144.9,
+          "chg_3y": 155.01,
+          "chg_ytd": 67.63,
+          "chg_since_inception": 243.51,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 200.0,
+          "fee": "0.15",
+          "scale": 6.08,
+          "scale_raw": "6.08亿",
+          "established": "2012-02-22",
+          "manager": "徐成",
+          "fund_company": "国海富兰克林基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "富兰克林国海亚洲(除日本)机会股票型证券投资基金",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<50.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "50.0万<=买入金额<100.0万",
+              "rate": 1.2
+            },
+            {
+              "condition": "100.0万<=买入金额<500.0万",
+              "rate": 0.6
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限<2.0年",
+              "rate": 0.2
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": null,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5
+        },
+        {
+          "code": "021662",
+          "name": "国富亚洲机会股票(QDII)C",
+          "share_class": "C",
+          "currency": "人民币",
+          "fund_type": "QDII-普通股票",
+          "nav": 2.987,
+          "nav_date": "2026-05-14",
+          "daily_change": -0.49,
+          "chg_1m": 31.91,
+          "chg_3m": 41.73,
+          "chg_6m": 74.78,
+          "chg_1y": 135.16,
+          "scale": 12.49,
+          "scale_raw": "12.49亿",
+          "established": "2024-09-12",
+          "manager": "徐成",
+          "chg_ytd": 67.29,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 200.0,
+          "fee": "",
+          "nav_cum": 2.987,
+          "chg_1w": 2.31,
+          "chg_since_inception": 160.78,
+          "chg_2y": null,
+          "chg_3y": null,
+          "fund_company": "国海富兰克林基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "富兰克林国海亚洲(除日本)机会股票型证券投资基金",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5
+        }
+      ]
+    },
+    {
       "series_id": "摩根__海外稳健配置混合__global_other",
       "company": "摩根",
       "company_display": "摩根",
@@ -864,14 +1294,54 @@
           "name": "摩根海外稳健配置混合(QDII-FOF)美元现汇",
           "share_class": "默认",
           "currency": "美元",
-          "fund_type": "QDII-FOF"
+          "fund_type": "QDII-FOF",
+          "nav": 0.1555,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.0,
+          "chg_1m": 0.06,
+          "chg_3m": 0.19,
+          "chg_6m": 1.11,
+          "chg_1y": 3.19,
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
+          "chg_ytd": 0.51,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "0.2",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         },
         {
           "code": "017972",
           "name": "摩根海外稳健配置混合(QDII-FOF)美元现钞",
           "share_class": "默认",
           "currency": "美元",
-          "fund_type": "QDII-FOF"
+          "fund_type": "QDII-FOF",
+          "nav": 0.1555,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.0,
+          "chg_1m": 0.06,
+          "chg_3m": 0.19,
+          "chg_6m": 1.11,
+          "chg_1y": 3.19,
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
+          "chg_ytd": 0.51,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "0.2",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         }
       ],
       "default_share_code": "017970",
@@ -964,56 +1434,60 @@
       "series_scale": 12.27
     },
     {
-      "series_id": "摩根__全球多元配置__global_other",
-      "company": "摩根",
-      "company_display": "摩根",
-      "series_name": "全球多元配置",
-      "display_name": "摩根全球多元配置",
+      "series_id": "嘉实__全球互联网股票__global_other",
+      "company": "嘉实",
+      "company_display": "嘉实",
+      "series_name": "全球互联网股票",
+      "display_name": "嘉实全球互联网股票",
       "category": "global_other",
       "etf_target": null,
       "shares": [
         {
-          "code": "003629",
-          "name": "摩根全球多元配置(QDII-FOF)人民币A",
-          "share_class": "FOF",
+          "code": "000988",
+          "name": "嘉实全球互联网股票人民币",
+          "share_class": "默认",
           "currency": "人民币",
-          "fund_type": "QDII-混合平衡",
+          "fund_type": "QDII-普通股票",
           "nav_date": "2026-05-14",
-          "nav": 1.875,
-          "nav_cum": 1.875,
-          "daily_change": 0.46,
-          "chg_1w": 0.1,
-          "chg_1m": 3.08,
-          "chg_3m": 2.01,
-          "chg_6m": 3.18,
-          "chg_1y": 9.53,
-          "chg_2y": 16.01,
-          "chg_3y": 34.0,
-          "chg_ytd": 2.62,
-          "chg_since_inception": 87.5,
+          "nav": 2.444,
+          "nav_cum": 2.444,
+          "daily_change": -1.01,
+          "chg_1w": -1.05,
+          "chg_1m": 4.89,
+          "chg_3m": 4.58,
+          "chg_6m": -0.08,
+          "chg_1y": 8.62,
+          "chg_2y": -6.14,
+          "chg_3y": 38.63,
+          "chg_ytd": 1.62,
+          "chg_since_inception": 144.4,
           "buy_status": "限大额",
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "daily_limit": 100000.0,
-          "fee": "1.5",
-          "scale": 6.17,
-          "scale_raw": "6.17亿",
-          "established": "2016-12-19",
-          "manager": "张军",
-          "fund_company": "摩根基金管理（中国）有限公司",
-          "fund_type_xq": "QDII-混合",
-          "full_name": "摩根全球多元配置证券投资基金(QDII-FOF)",
+          "daily_limit": 100.0,
+          "fee": "0.15",
+          "scale": 4.42,
+          "scale_raw": "4.42亿",
+          "established": "2015-04-15",
+          "manager": "王鑫晨",
+          "fund_company": "嘉实基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "嘉实全球互联网股票型证券投资基金",
           "buy_rules": [
             {
-              "condition": "0.0万<买入金额<500.0万",
+              "condition": "0.0万<买入金额<50.0万",
               "rate": 1.5
             },
             {
-              "condition": "500.0万<=买入金额<1000.0万",
-              "rate": 1.0
+              "condition": "50.0万<=买入金额<200.0万",
+              "rate": 1.2
             },
             {
-              "condition": "1000.0万<=买入金额",
+              "condition": "200.0万<=买入金额<500.0万",
+              "rate": 0.8
+            },
+            {
+              "condition": "500.0万<=买入金额",
               "rate": 1000.0
             }
           ],
@@ -1032,14 +1506,10 @@
             },
             {
               "condition": "365.0天<=持有期限<2.0年",
-              "rate": 0.35
+              "rate": 0.3
             },
             {
-              "condition": "2.0年<=持有期限<3.0年",
-              "rate": 0.2
-            },
-            {
-              "condition": "3.0年<=持有期限",
+              "condition": "2.0年<=持有期限",
               "rate": 0.0
             }
           ],
@@ -1050,79 +1520,68 @@
           "max_sell_rate": 1.5
         },
         {
-          "code": "019512",
-          "name": "摩根全球多元配置(QDII-FOF)人民币C",
-          "share_class": "FOF",
-          "currency": "人民币",
-          "fund_type": "QDII-混合平衡",
-          "nav_date": "2026-05-14",
-          "nav": 1.873,
-          "nav_cum": 1.873,
-          "daily_change": 0.46,
-          "chg_1w": 0.1,
-          "chg_1m": 3.05,
-          "chg_3m": 1.94,
-          "chg_6m": 3.03,
-          "chg_1y": 9.18,
-          "chg_2y": 15.3,
-          "chg_3y": null,
-          "chg_ytd": 2.52,
-          "chg_since_inception": 26.43,
-          "buy_status": "限大额",
+          "code": "000989",
+          "name": "嘉实全球互联网股票美元现汇",
+          "share_class": "默认",
+          "currency": "美元",
+          "fund_type": "QDII-普通股票",
+          "nav": 2.178,
+          "nav_date": "2026-05-13",
+          "daily_change": -0.95,
+          "chg_1m": 5.17,
+          "chg_3m": 6.09,
+          "chg_6m": 3.42,
+          "chg_1y": 14.27,
+          "established": "2015-04-15",
+          "manager": "王鑫晨",
+          "chg_ytd": 0.32,
+          "buy_status": "暂停申购",
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "daily_limit": 100000.0,
-          "fee": "",
-          "scale": 3.53,
-          "scale_raw": "3.53亿",
-          "established": "2023-09-15",
-          "manager": "张军",
-          "fund_company": "摩根基金管理（中国）有限公司",
-          "fund_type_xq": "QDII-混合",
-          "full_name": "摩根全球多元配置证券投资基金(QDII-FOF)",
-          "buy_rules": [
-            {
-              "condition": "0.0万<买入金额",
-              "rate": 0.0
-            }
-          ],
-          "sell_rules": [
-            {
-              "condition": "0.0天<持有期限<7.0天",
-              "rate": 1.5
-            },
-            {
-              "condition": "7.0天<=持有期限<30.0天",
-              "rate": 0.5
-            },
-            {
-              "condition": "30.0天<=持有期限",
-              "rate": 0.0
-            }
-          ],
-          "mgmt_fee": 1.2,
-          "custody_fee": 0.2,
-          "free_hold_days": 30,
-          "first_buy_rate": 0.0,
-          "max_sell_rate": 1.5
+          "daily_limit": 0.01,
+          "fee": "0.15",
+          "scale": 2.61,
+          "scale_raw": "2.61亿",
+          "fund_company": "嘉实基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "嘉实全球互联网股票型证券投资基金",
+          "buy_rules": [],
+          "sell_rules": [],
+          "error": "'declare_rate_table'"
         },
         {
-          "code": "003630",
-          "name": "摩根全球多元配置(QDII-FOF)美元现钞",
+          "code": "000990",
+          "name": "嘉实全球互联网股票美元现钞",
           "share_class": "默认",
           "currency": "美元",
-          "fund_type": "QDII-混合平衡"
-        },
-        {
-          "code": "003631",
-          "name": "摩根全球多元配置(QDII-FOF)美元现汇",
-          "share_class": "默认",
-          "currency": "美元",
-          "fund_type": "QDII-混合平衡"
+          "fund_type": "QDII-普通股票",
+          "nav": 2.178,
+          "nav_date": "2026-05-13",
+          "daily_change": -0.95,
+          "chg_1m": 5.17,
+          "chg_3m": 6.09,
+          "chg_6m": 3.42,
+          "chg_1y": 14.27,
+          "established": "2015-04-15",
+          "manager": "王鑫晨",
+          "chg_ytd": 0.28,
+          "buy_status": "暂停申购",
+          "sell_status": "暂停赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.01,
+          "fee": "0.15",
+          "scale": 4.42,
+          "scale_raw": "4.42亿",
+          "fund_company": "嘉实基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "嘉实全球互联网股票型证券投资基金",
+          "buy_rules": [],
+          "sell_rules": [],
+          "error": "'declare_rate_table'"
         }
       ],
-      "default_share_code": "003629",
-      "series_scale": 9.7
+      "default_share_code": "000988",
+      "series_scale": 11.45
     },
     {
       "series_id": "摩根__全球天然资源混合__global_other",
@@ -1407,14 +1866,54 @@
           "name": "广发全球科技三个月定开混合(QDII)美元A",
           "share_class": "A",
           "currency": "美元",
-          "fund_type": "QDII-混合偏股"
+          "fund_type": "QDII-混合偏股",
+          "nav": 0.1991,
+          "nav_date": "2026-05-13",
+          "daily_change": -0.2,
+          "chg_1m": 3.91,
+          "chg_3m": 6.19,
+          "chg_6m": 4.3,
+          "chg_1y": 24.2,
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
+          "chg_ytd": 2.52,
+          "buy_status": "开放申购",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "1.5",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         },
         {
           "code": "011423",
           "name": "广发全球科技三个月定开混合(QDII)美元C",
           "share_class": "C",
           "currency": "美元",
-          "fund_type": "QDII-混合偏股"
+          "fund_type": "QDII-混合偏股",
+          "nav": 0.1949,
+          "nav_date": "2026-05-13",
+          "daily_change": -0.2,
+          "chg_1m": 3.89,
+          "chg_3m": 6.04,
+          "chg_6m": 4.06,
+          "chg_1y": 23.67,
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
+          "chg_ytd": 2.36,
+          "buy_status": "开放申购",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         }
       ],
       "default_share_code": "011420",
@@ -1554,104 +2053,31 @@
           "name": "景顺长城全球半导体芯片股票A(QDII-LOF)(美元现汇)",
           "share_class": "A",
           "currency": "美元",
-          "fund_type": "QDII-普通股票"
+          "fund_type": "QDII-普通股票",
+          "nav": 0.4526,
+          "nav_date": "2026-05-13",
+          "daily_change": -0.04,
+          "chg_1m": 28.07,
+          "chg_3m": 38.66,
+          "chg_6m": 67.75,
+          "chg_1y": 124.73,
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
+          "chg_ytd": 49.13,
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 200.0,
+          "daily_limit": 0.0,
+          "fee": "1.6",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         }
       ],
       "default_share_code": "501225",
       "series_scale": 7.1
-    },
-    {
-      "series_id": "国富__亚洲机会股票__global_other",
-      "series_name": "亚洲机会股票",
-      "display_name": "国富亚洲机会股票",
-      "company": "国富",
-      "company_display": "国富",
-      "category": "global_other",
-      "etf_target": null,
-      "default_share_code": "457001",
-      "series_scale": 6.08,
-      "shares": [
-        {
-          "code": "457001",
-          "name": "国富亚洲机会股票(QDII)A",
-          "fund_type": "QDII-普通股票",
-          "share_class": "A",
-          "currency": "人民币",
-          "nav_date": "2026-05-14",
-          "nav": 3.027,
-          "nav_cum": 3.194,
-          "daily_change": -0.49,
-          "chg_1w": 2.31,
-          "chg_1m": 31.96,
-          "chg_3m": 41.96,
-          "chg_6m": 75.22,
-          "chg_1y": 136.28,
-          "chg_2y": 144.9,
-          "chg_3y": 155.01,
-          "chg_ytd": 67.63,
-          "chg_since_inception": 243.51,
-          "buy_status": "限大额",
-          "sell_status": "开放赎回",
-          "buy_min": 10.0,
-          "daily_limit": 200.0,
-          "fee": "0.15",
-          "scale": 6.08,
-          "scale_raw": "6.08亿",
-          "established": "2012-02-22",
-          "manager": "徐成",
-          "fund_company": "国海富兰克林基金管理有限公司",
-          "fund_type_xq": "QDII-股票",
-          "full_name": "富兰克林国海亚洲(除日本)机会股票型证券投资基金",
-          "buy_rules": [
-            {
-              "condition": "0.0万<买入金额<50.0万",
-              "rate": 1.5
-            },
-            {
-              "condition": "50.0万<=买入金额<100.0万",
-              "rate": 1.2
-            },
-            {
-              "condition": "100.0万<=买入金额<500.0万",
-              "rate": 0.6
-            },
-            {
-              "condition": "500.0万<=买入金额",
-              "rate": 1000.0
-            }
-          ],
-          "sell_rules": [
-            {
-              "condition": "0.0天<持有期限<7.0天",
-              "rate": 1.5
-            },
-            {
-              "condition": "7.0天<=持有期限<365.0天",
-              "rate": 0.5
-            },
-            {
-              "condition": "365.0天<=持有期限<2.0年",
-              "rate": 0.2
-            },
-            {
-              "condition": "2.0年<=持有期限",
-              "rate": 0.0
-            }
-          ],
-          "mgmt_fee": 1.2,
-          "custody_fee": 0.2,
-          "free_hold_days": null,
-          "first_buy_rate": 1.5,
-          "max_sell_rate": 1.5
-        },
-        {
-          "code": "021662",
-          "name": "国富亚洲机会股票(QDII)C",
-          "share_class": "C",
-          "currency": "人民币",
-          "fund_type": "QDII-普通股票"
-        }
-      ]
     },
     {
       "series_id": "中银__全球策略__global_other",
@@ -1936,14 +2362,54 @@
           "name": "易方达全球配置混合(QDII)A(美元现汇)",
           "share_class": "A",
           "currency": "美元",
-          "fund_type": "QDII-混合灵活"
+          "fund_type": "QDII-混合灵活",
+          "nav": 0.3004,
+          "nav_date": "2026-05-13",
+          "daily_change": -1.83,
+          "chg_1m": 21.23,
+          "chg_3m": 41.23,
+          "chg_6m": 62.55,
+          "chg_1y": 109.19,
+          "established": "",
+          "manager": "",
+          "chg_ytd": 59.95,
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 0.01,
+          "fee": "0.15",
+          "scale": null,
+          "scale_raw": "",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         },
         {
           "code": "019158",
           "name": "易方达全球配置混合(QDII)C(美元现汇)",
           "share_class": "C",
           "currency": "美元",
-          "fund_type": "QDII-混合灵活"
+          "fund_type": "QDII-混合灵活",
+          "nav": 0.2963,
+          "nav_date": "2026-05-13",
+          "daily_change": -1.85,
+          "chg_1m": 21.14,
+          "chg_3m": 40.96,
+          "chg_6m": 62.09,
+          "chg_1y": 107.93,
+          "established": "",
+          "manager": "",
+          "chg_ytd": 59.64,
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 0.01,
+          "fee": "",
+          "scale": null,
+          "scale_raw": "",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         }
       ],
       "default_share_code": "019155",
@@ -2097,8 +2563,8 @@
           "fee": "1.2",
           "scale": null,
           "scale_raw": "",
-          "established": "2025-08-23",
-          "manager": "范刚强",
+          "established": "",
+          "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
@@ -2115,122 +2581,58 @@
           "name": "招商普盛全球配置(QDII-FOF)美元现汇",
           "share_class": "默认",
           "currency": "美元",
-          "fund_type": "QDII-混合灵活"
+          "fund_type": "QDII-混合灵活",
+          "nav": 0.2056,
+          "nav_date": "2026-05-13",
+          "daily_change": -0.34,
+          "chg_1m": 3.94,
+          "chg_3m": 3.11,
+          "chg_6m": 8.32,
+          "chg_1y": 16.49,
+          "established": "",
+          "manager": "",
+          "chg_ytd": 5.06,
+          "buy_status": "暂停申购",
+          "sell_status": "暂停赎回",
+          "buy_min": 0.0,
+          "daily_limit": 0.01,
+          "fee": "0.15",
+          "scale": null,
+          "scale_raw": "",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         },
         {
           "code": "008183",
           "name": "招商普盛全球配置(QDII-FOF)美元现钞",
           "share_class": "默认",
           "currency": "美元",
-          "fund_type": "QDII-混合灵活"
+          "fund_type": "QDII-混合灵活",
+          "nav": 0.2056,
+          "nav_date": "2026-05-13",
+          "daily_change": -0.34,
+          "chg_1m": 3.94,
+          "chg_3m": 3.11,
+          "chg_6m": 8.32,
+          "chg_1y": 16.49,
+          "established": "",
+          "manager": "",
+          "chg_ytd": 5.06,
+          "buy_status": "暂停申购",
+          "sell_status": "暂停赎回",
+          "buy_min": 0.0,
+          "daily_limit": 0.01,
+          "fee": "0.15",
+          "scale": null,
+          "scale_raw": "",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         }
       ],
       "default_share_code": "007729",
       "series_scale": 5.0318309999999995
-    },
-    {
-      "series_id": "嘉实__全球互联网股票__global_other",
-      "company": "嘉实",
-      "company_display": "嘉实",
-      "series_name": "全球互联网股票",
-      "display_name": "嘉实全球互联网股票",
-      "category": "global_other",
-      "etf_target": null,
-      "shares": [
-        {
-          "code": "000988",
-          "name": "嘉实全球互联网股票人民币",
-          "share_class": "默认",
-          "currency": "人民币",
-          "fund_type": "QDII-普通股票",
-          "nav_date": "2026-05-14",
-          "nav": 2.444,
-          "nav_cum": 2.444,
-          "daily_change": -1.01,
-          "chg_1w": -1.05,
-          "chg_1m": 4.89,
-          "chg_3m": 4.58,
-          "chg_6m": -0.08,
-          "chg_1y": 8.62,
-          "chg_2y": -6.14,
-          "chg_3y": 38.63,
-          "chg_ytd": 1.62,
-          "chg_since_inception": 144.4,
-          "buy_status": "限大额",
-          "sell_status": "开放赎回",
-          "buy_min": 10.0,
-          "daily_limit": 100.0,
-          "fee": "0.15",
-          "scale": 4.42,
-          "scale_raw": "4.42亿",
-          "established": "2015-04-15",
-          "manager": "王鑫晨",
-          "fund_company": "嘉实基金管理有限公司",
-          "fund_type_xq": "QDII-股票",
-          "full_name": "嘉实全球互联网股票型证券投资基金",
-          "buy_rules": [
-            {
-              "condition": "0.0万<买入金额<50.0万",
-              "rate": 1.5
-            },
-            {
-              "condition": "50.0万<=买入金额<200.0万",
-              "rate": 1.2
-            },
-            {
-              "condition": "200.0万<=买入金额<500.0万",
-              "rate": 0.8
-            },
-            {
-              "condition": "500.0万<=买入金额",
-              "rate": 1000.0
-            }
-          ],
-          "sell_rules": [
-            {
-              "condition": "0.0天<持有期限<7.0天",
-              "rate": 1.5
-            },
-            {
-              "condition": "7.0天<=持有期限<30.0天",
-              "rate": 0.75
-            },
-            {
-              "condition": "30.0天<=持有期限<365.0天",
-              "rate": 0.5
-            },
-            {
-              "condition": "365.0天<=持有期限<2.0年",
-              "rate": 0.3
-            },
-            {
-              "condition": "2.0年<=持有期限",
-              "rate": 0.0
-            }
-          ],
-          "mgmt_fee": 1.2,
-          "custody_fee": 0.2,
-          "free_hold_days": null,
-          "first_buy_rate": 1.5,
-          "max_sell_rate": 1.5
-        },
-        {
-          "code": "000989",
-          "name": "嘉实全球互联网股票美元现汇",
-          "share_class": "默认",
-          "currency": "美元",
-          "fund_type": "QDII-普通股票"
-        },
-        {
-          "code": "000990",
-          "name": "嘉实全球互联网股票美元现钞",
-          "share_class": "默认",
-          "currency": "美元",
-          "fund_type": "QDII-普通股票"
-        }
-      ],
-      "default_share_code": "000988",
-      "series_scale": 4.42
     },
     {
       "series_id": "南方__道琼斯美国精选__global_other",
@@ -2463,10 +2865,10 @@
           "buy_min": 2.0,
           "daily_limit": 0.0,
           "fee": "1.6",
-          "scale": 3.65,
-          "scale_raw": "3.65亿",
-          "established": "2021-04-06",
-          "manager": "林念",
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
@@ -2484,7 +2886,19 @@
           "name": "工银全球股票(QDII)港币",
           "share_class": "默认",
           "currency": "港币",
-          "fund_type": "QDII-普通股票"
+          "fund_type": "QDII-普通股票",
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
+          "buy_status": "",
+          "sell_status": "",
+          "buy_min": 15.0,
+          "daily_limit": 0.0,
+          "fee": "1.6",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         }
       ],
       "default_share_code": "486001",
@@ -2634,14 +3048,54 @@
           "name": "华夏海外聚享混合发起式(QDII-FOF)A美元现汇",
           "share_class": "A",
           "currency": "美元",
-          "fund_type": "QDII-混合平衡"
+          "fund_type": "QDII-混合平衡",
+          "nav": 0.2491,
+          "nav_date": "2026-05-13",
+          "daily_change": -0.16,
+          "chg_1m": 0.69,
+          "chg_3m": -0.08,
+          "chg_6m": 2.64,
+          "chg_1y": 9.3,
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
+          "chg_ytd": 1.43,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "1.0",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         },
         {
           "code": "006447",
           "name": "华夏海外聚享混合发起式(QDII-FOF)A美元现钞",
           "share_class": "A",
           "currency": "美元",
-          "fund_type": "QDII-混合平衡"
+          "fund_type": "QDII-混合平衡",
+          "nav": 0.2491,
+          "nav_date": "2026-05-13",
+          "daily_change": -0.16,
+          "chg_1m": 0.69,
+          "chg_3m": -0.08,
+          "chg_6m": 2.64,
+          "chg_1y": 9.3,
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
+          "chg_ytd": 1.75,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "1.0",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         }
       ],
       "default_share_code": "006445",
@@ -2830,7 +3284,7 @@
           "scale": 1.69,
           "scale_raw": "1.69亿",
           "established": "2021-11-23",
-          "manager": "张楠 张琴",
+          "manager": "张琴",
           "fund_company": "嘉实基金管理有限公司",
           "fund_type_xq": "QDII-股票",
           "full_name": "嘉实全球价值机会股票型证券投资基金(QDII)",
@@ -2885,7 +3339,27 @@
           "name": "嘉实全球价值股票(QDII)美元现汇",
           "share_class": "默认",
           "currency": "美元",
-          "fund_type": "QDII-普通股票"
+          "fund_type": "QDII-普通股票",
+          "nav": 1.5753,
+          "nav_date": "2026-05-13",
+          "daily_change": 0.09,
+          "chg_1m": 9.85,
+          "chg_3m": 13.93,
+          "chg_6m": 20.86,
+          "chg_1y": 42.05,
+          "established": "",
+          "manager": "",
+          "chg_ytd": 15.53,
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 0.01,
+          "fee": "0.15",
+          "scale": null,
+          "scale_raw": "",
+          "error": "'data'",
+          "buy_rules": [],
+          "sell_rules": []
         }
       ],
       "default_share_code": "013328",
@@ -3043,8 +3517,8 @@
           "fee": "0.15",
           "scale": null,
           "scale_raw": "",
-          "established": "2023-03-14",
-          "manager": "邓云龙",
+          "established": "",
+          "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
@@ -3152,8 +3626,8 @@
           "fee": "0.15",
           "scale": null,
           "scale_raw": "",
-          "established": "2023-11-13",
-          "manager": "张琴",
+          "established": "",
+          "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
@@ -3190,10 +3664,10 @@
           "buy_min": 15.0,
           "daily_limit": 0.0,
           "fee": "1.6",
-          "scale": 3.65,
-          "scale_raw": "3.65亿",
-          "established": "2021-04-06",
-          "manager": "林念",
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": []
@@ -3203,6 +3677,6 @@
       "series_scale": 0
     }
   ],
-  "total_scale": 229.18,
-  "enriched_at": "2026-05-08T01:53:23.400175"
+  "total_scale": 261.04,
+  "enriched_at": "2026-05-18T05:02:41.057540"
 }
