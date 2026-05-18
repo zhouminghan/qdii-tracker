@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T04:57:00.932660",
+  "generated_at": "2026-05-18T17:23:21.769742",
   "fx_change": 0.0,
   "total_funds": 16,
   "funds": {
@@ -79,6 +79,32 @@
         "AMZN",
         "META",
         "MRVL"
+      ],
+      "latest_quarter": "2026年1季度股票投资明细"
+    },
+    "161128": {
+      "code": "161128",
+      "name": "易方达标普信息科技指数",
+      "estimated_impact": 0.0,
+      "total_weight": 66.95,
+      "stock_ratio": 90.0,
+      "stock_contribution": 0.0,
+      "fx_contribution": 0.0,
+      "matched_count": 0,
+      "holdings_count": 10,
+      "top_movers": [],
+      "top_movers_display": [],
+      "unmatched_codes": [
+        "NVDA",
+        "AAPL",
+        "MSFT",
+        "AVGO",
+        "MU",
+        "PLTR",
+        "AMD",
+        "CSCO",
+        "AMAT",
+        "LRCX"
       ],
       "latest_quarter": "2026年1季度股票投资明细"
     },
@@ -184,32 +210,6 @@
         "MKSI",
         "TTMI",
         "INTC"
-      ],
-      "latest_quarter": "2026年1季度股票投资明细"
-    },
-    "161128": {
-      "code": "161128",
-      "name": "易方达标普信息科技指数",
-      "estimated_impact": 0.0,
-      "total_weight": 66.95,
-      "stock_ratio": 90.0,
-      "stock_contribution": 0.0,
-      "fx_contribution": 0.0,
-      "matched_count": 0,
-      "holdings_count": 10,
-      "top_movers": [],
-      "top_movers_display": [],
-      "unmatched_codes": [
-        "NVDA",
-        "AAPL",
-        "MSFT",
-        "AVGO",
-        "MU",
-        "PLTR",
-        "AMD",
-        "CSCO",
-        "AMAT",
-        "LRCX"
       ],
       "latest_quarter": "2026年1季度股票投资明细"
     },
