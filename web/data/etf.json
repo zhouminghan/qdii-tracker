@@ -24,8 +24,8 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 341.20063468,
-          "scale_raw": "341.20亿",
+          "scale": 341.18087516,
+          "scale_raw": "341.18亿",
           "established": "",
           "manager": "",
           "error": "'data'",
@@ -41,7 +41,7 @@
         }
       ],
       "default_share_code": "159941",
-      "series_scale": 341.20063468
+      "series_scale": 341.18087516
     },
     {
       "series_id": "博时__标普500ETF博时__etf",
@@ -707,6 +707,6 @@
       "series_scale": 8.43527852
     }
   ],
-  "total_scale": 1654.77,
-  "enriched_at": "2026-05-19T12:42:56.113586"
+  "total_scale": 1654.75,
+  "enriched_at": "2026-05-19T17:39:11.168472"
 }
