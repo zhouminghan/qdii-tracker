@@ -24,15 +24,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 344.13872651,
-          "scale_raw": "344.14亿",
+          "scale": 350.89365805,
+          "scale_raw": "350.89亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 1.533,
-          "etf_change_pct": 0.86,
+          "etf_price": 1.563,
+          "etf_change_pct": 1.96,
           "chg_1m": 16.37,
           "chg_3m": 3.1,
           "chg_6m": 0.6,
@@ -41,7 +41,7 @@
         }
       ],
       "default_share_code": "159941",
-      "series_scale": 344.13872651
+      "series_scale": 350.89365805
     },
     {
       "series_id": "博时__标普500ETF博时__etf",
@@ -63,15 +63,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 241.537449,
-          "scale_raw": "241.54亿",
+          "scale": 244.81488972,
+          "scale_raw": "244.81亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 2.432,
-          "etf_change_pct": -0.33,
+          "etf_price": 2.465,
+          "etf_change_pct": 1.36,
           "chg_1m": 11.3,
           "chg_3m": 0.81,
           "chg_6m": 0.35,
@@ -80,7 +80,7 @@
         }
       ],
       "default_share_code": "513500",
-      "series_scale": 241.537449
+      "series_scale": 244.81488972
     },
     {
       "series_id": "国泰__纳斯达克ETF国泰__etf",
@@ -102,15 +102,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 194.81255862,
-          "scale_raw": "194.81亿",
+          "scale": 198.31501958,
+          "scale_raw": "198.32亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 2.058,
-          "etf_change_pct": 0.54,
+          "etf_price": 2.095,
+          "etf_change_pct": 1.8,
           "chg_1m": 16.54,
           "chg_3m": 3.24,
           "chg_6m": 0.68,
@@ -119,7 +119,7 @@
         }
       ],
       "default_share_code": "513100",
-      "series_scale": 194.81255862
+      "series_scale": 198.31501958
     },
     {
       "series_id": "华夏__纳斯达克ETF华夏__etf",
@@ -141,15 +141,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 130.12552974,
-          "scale_raw": "130.13亿",
+          "scale": 132.16174344,
+          "scale_raw": "132.16亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 2.516,
-          "etf_change_pct": 0.68,
+          "etf_price": 2.555,
+          "etf_change_pct": 1.55,
           "chg_1m": 16.08,
           "chg_3m": 3.22,
           "chg_6m": -0.01,
@@ -158,7 +158,7 @@
         }
       ],
       "default_share_code": "513300",
-      "series_scale": 130.12552974
+      "series_scale": 132.16174344
     },
     {
       "series_id": "嘉实__纳斯达克ETF嘉实__etf",
@@ -180,15 +180,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 120.34023086,
-          "scale_raw": "120.34亿",
+          "scale": 122.05286095,
+          "scale_raw": "122.05亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 1.919,
-          "etf_change_pct": 0.68,
+          "etf_price": 1.946,
+          "etf_change_pct": 1.41,
           "chg_1m": 16.56,
           "chg_3m": 3.29,
           "chg_6m": 0.8,
@@ -197,7 +197,7 @@
         }
       ],
       "default_share_code": "159501",
-      "series_scale": 120.34023086
+      "series_scale": 122.05286095
     },
     {
       "series_id": "华安__纳斯达克ETF华安__etf",
@@ -219,15 +219,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 110.18840412,
-          "scale_raw": "110.19亿",
+          "scale": 112.0401365,
+          "scale_raw": "112.04亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 2.29,
-          "etf_change_pct": 0.62,
+          "etf_price": 2.328,
+          "etf_change_pct": 1.66,
           "chg_1m": 16.5,
           "chg_3m": 3.19,
           "chg_6m": 0.61,
@@ -236,7 +236,7 @@
         }
       ],
       "default_share_code": "159632",
-      "series_scale": 110.18840412
+      "series_scale": 112.0401365
     },
     {
       "series_id": "招商__纳斯达克100ETF招商__etf",
@@ -258,15 +258,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 93.86666688,
-          "scale_raw": "93.87亿",
+          "scale": 95.2685192,
+          "scale_raw": "95.27亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 2.177,
-          "etf_change_pct": 0.74,
+          "etf_price": 2.209,
+          "etf_change_pct": 1.47,
           "chg_1m": 16.5,
           "chg_3m": 3.26,
           "chg_6m": 0.73,
@@ -275,7 +275,7 @@
         }
       ],
       "default_share_code": "159659",
-      "series_scale": 93.86666688
+      "series_scale": 95.2685192
     },
     {
       "series_id": "南方__标普500ETF南方__etf",
@@ -297,15 +297,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 71.0297588,
-          "scale_raw": "71.03亿",
+          "scale": 71.95517826,
+          "scale_raw": "71.96亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 1.82,
-          "etf_change_pct": -0.11,
+          "etf_price": 1.839,
+          "etf_change_pct": 1.04,
           "chg_1m": 11.12,
           "chg_3m": 0.72,
           "chg_6m": 0.38,
@@ -314,7 +314,7 @@
         }
       ],
       "default_share_code": "513650",
-      "series_scale": 71.0297588
+      "series_scale": 71.95517826
     },
     {
       "series_id": "大成__纳斯达克100ETF大成__etf",
@@ -336,15 +336,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 70.11974379,
-          "scale_raw": "70.12亿",
+          "scale": 71.0900891,
+          "scale_raw": "71.09亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 1.698,
-          "etf_change_pct": 0.35,
+          "etf_price": 1.719,
+          "etf_change_pct": 1.24,
           "chg_1m": 16.43,
           "chg_3m": 3.18,
           "chg_6m": 0.7,
@@ -353,7 +353,7 @@
         }
       ],
       "default_share_code": "159513",
-      "series_scale": 70.11974379
+      "series_scale": 71.0900891
     },
     {
       "series_id": "华泰柏瑞__纳斯达克ETF华泰柏瑞__etf",
@@ -375,15 +375,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 49.36217914,
-          "scale_raw": "49.36亿",
+          "scale": 50.13135139,
+          "scale_raw": "50.13亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 2.317,
-          "etf_change_pct": 0.48,
+          "etf_price": 2.352,
+          "etf_change_pct": 1.51,
           "chg_1m": 16.47,
           "chg_3m": 3.16,
           "chg_6m": 0.46,
@@ -392,7 +392,7 @@
         }
       ],
       "default_share_code": "513110",
-      "series_scale": 49.36217914
+      "series_scale": 50.13135139
     },
     {
       "series_id": "易方达__纳斯达克ETF易方达__etf",
@@ -414,15 +414,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 47.33278013,
-          "scale_raw": "47.33亿",
+          "scale": 47.92556965,
+          "scale_raw": "47.93亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 1.898,
-          "etf_change_pct": 0.37,
+          "etf_price": 1.921,
+          "etf_change_pct": 1.21,
           "chg_1m": 16.57,
           "chg_3m": 3.31,
           "chg_6m": 0.86,
@@ -431,7 +431,7 @@
         }
       ],
       "default_share_code": "159696",
-      "series_scale": 47.33278013
+      "series_scale": 47.92556965
     },
     {
       "series_id": "汇添富__纳斯达克ETF汇添富__etf",
@@ -453,15 +453,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 46.72369354,
-          "scale_raw": "46.72亿",
+          "scale": 47.37939046,
+          "scale_raw": "47.38亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 2.209,
-          "etf_change_pct": 0.5,
+          "etf_price": 2.24,
+          "etf_change_pct": 1.4,
           "chg_1m": 16.51,
           "chg_3m": 3.17,
           "chg_6m": 0.75,
@@ -470,7 +470,7 @@
         }
       ],
       "default_share_code": "159660",
-      "series_scale": 46.72369354
+      "series_scale": 47.37939046
     },
     {
       "series_id": "博时__纳斯达克100ETF博时__etf",
@@ -492,15 +492,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 41.82200566,
-          "scale_raw": "41.82亿",
+          "scale": 42.41156697,
+          "scale_raw": "42.41亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 2.27,
-          "etf_change_pct": 0.4,
+          "etf_price": 2.302,
+          "etf_change_pct": 1.41,
           "chg_1m": 16.54,
           "chg_3m": 3.24,
           "chg_6m": 0.66,
@@ -509,7 +509,7 @@
         }
       ],
       "default_share_code": "513390",
-      "series_scale": 41.82200566
+      "series_scale": 42.41156697
     },
     {
       "series_id": "华夏__标普500ETF华夏__etf",
@@ -531,15 +531,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 38.56646051,
-          "scale_raw": "38.57亿",
+          "scale": 38.89957196,
+          "scale_raw": "38.90亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 1.839,
-          "etf_change_pct": -0.16,
+          "etf_price": 1.854,
+          "etf_change_pct": 0.82,
           "chg_1m": 10.93,
           "chg_3m": 0.91,
           "chg_6m": -0.17,
@@ -548,7 +548,7 @@
         }
       ],
       "default_share_code": "159655",
-      "series_scale": 38.56646051
+      "series_scale": 38.89957196
     },
     {
       "series_id": "富国__纳斯达克ETF富国__etf",
@@ -570,15 +570,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 23.79055045,
-          "scale_raw": "23.79亿",
+          "scale": 24.14802505,
+          "scale_raw": "24.15亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 1.93,
-          "etf_change_pct": 0.47,
+          "etf_price": 1.959,
+          "etf_change_pct": 1.5,
           "chg_1m": 16.53,
           "chg_3m": 3.27,
           "chg_6m": 0.82,
@@ -587,7 +587,7 @@
         }
       ],
       "default_share_code": "513870",
-      "series_scale": 23.79055045
+      "series_scale": 24.14802505
     },
     {
       "series_id": "易方达__美国50ETF易方达__etf",
@@ -609,15 +609,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 20.16202393,
-          "scale_raw": "20.16亿",
+          "scale": 20.35529782,
+          "scale_raw": "20.36亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 1.719,
-          "etf_change_pct": 0.29,
+          "etf_price": 1.734,
+          "etf_change_pct": 0.87,
           "chg_1m": 14.65,
           "chg_3m": 1.78,
           "chg_6m": -1.0,
@@ -626,7 +626,7 @@
         }
       ],
       "default_share_code": "513850",
-      "series_scale": 20.16202393
+      "series_scale": 20.35529782
     },
     {
       "series_id": "汇添富__美国50ETF汇添富__etf",
@@ -648,15 +648,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 10.21162646,
-          "scale_raw": "10.21亿",
+          "scale": 10.27099638,
+          "scale_raw": "10.27亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 1.548,
-          "etf_change_pct": 0.26,
+          "etf_price": 1.557,
+          "etf_change_pct": 0.58,
           "chg_1m": 15.01,
           "chg_3m": 1.93,
           "chg_6m": -1.08,
@@ -665,7 +665,7 @@
         }
       ],
       "default_share_code": "159577",
-      "series_scale": 10.21162646
+      "series_scale": 10.27099638
     },
     {
       "series_id": "国泰__标普500ETF国泰__etf",
@@ -687,15 +687,15 @@
           "buy_min": 0.0,
           "daily_limit": 0.0,
           "fee": "nan",
-          "scale": 8.41748257,
-          "scale_raw": "8.42亿",
+          "scale": 8.47976838,
+          "scale_raw": "8.48亿",
           "established": "",
           "manager": "",
           "error": "'data'",
           "buy_rules": [],
           "sell_rules": [],
-          "etf_price": 1.892,
-          "etf_change_pct": -0.21,
+          "etf_price": 1.906,
+          "etf_change_pct": 0.74,
           "chg_1m": 11.35,
           "chg_3m": 0.89,
           "chg_6m": 0.43,
@@ -704,9 +704,9 @@
         }
       ],
       "default_share_code": "159612",
-      "series_scale": 8.41748257
+      "series_scale": 8.47976838
     }
   ],
-  "total_scale": 1662.55,
-  "enriched_at": "2026-05-20T17:52:19.706042"
+  "total_scale": 1688.59,
+  "enriched_at": "2026-05-21T05:04:59.314029"
 }
