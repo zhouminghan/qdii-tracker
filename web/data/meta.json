@@ -18,7 +18,7 @@
     "funds": 18
   },
   "excluded_count": 26475,
-  "enriched_at": "2026-05-22T16:53:53.412255",
+  "enriched_at": "2026-05-25T05:14:09.175898",
   "enriched_fields": [
     "涨跌幅",
     "规模",
@@ -26,5 +26,5 @@
     "基金经理",
     "成立时间"
   ],
-  "purchase_refreshed_at": "2026-05-22T16:46:13.624062"
+  "purchase_refreshed_at": "2026-05-25T05:06:17.614148"
 }
