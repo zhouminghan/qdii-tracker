@@ -265,7 +265,20 @@ def main():
         for series in data["series"]:
             for share in series["shares"]:
                 code = share["code"]
-                share.update(rank_map.get(code, {}))
+                # 涨跌幅数据：防回退（nav_date 只允许前进）
+                rank_info = rank_map.get(code, {})
+                if rank_info:
+                    new_nav_date = rank_info.get("nav_date")
+                    cur_nav_date = share.get("nav_date", "")
+                    if new_nav_date and cur_nav_date and new_nav_date < cur_nav_date:
+                        # 接口返回了更旧的日期 → 跳过 nav 相关字段
+                        for k, v in rank_info.items():
+                            if v is not None and k not in ("nav_date", "nav", "nav_cum", "daily_change"):
+                                share[k] = v
+                    else:
+                        for k, v in rank_info.items():
+                            if v is not None:
+                                share[k] = v
                 share.update(purchase_map.get(code, {}))
                 share.update(basic_info_map.get(code, {}))
                 # 费率详情

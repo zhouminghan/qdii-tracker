@@ -152,6 +152,9 @@ def merge_share_data(share: dict, pzd: dict, is_etf: bool = False):
     """合并 pzd 数据到 share。
     - nav/nav_date/daily_change：每天都会变 → 强制覆盖（ETF 跳过这三个字段）
     - 历史收益（chg_1m/3m/6m/1y）：只填空白，避免旧值被异常返回污染
+
+    防回退机制：nav_date 只允许前进（新值 >= 旧值），
+    防止 pingzhongdata CDN 缓存返回旧数据导致日期倒退。
     """
     updated = []
     candidate_keys = [
@@ -166,7 +169,13 @@ def merge_share_data(share: dict, pzd: dict, is_etf: bool = False):
             continue
         cur = share.get(key)
         if key in ALWAYS_OVERWRITE_FIELDS:
-            # 强制覆盖：只要新值非空就写入（不论旧值是否存在）
+            # 防回退：nav_date 只允许前进，不允许从新日期回退到旧日期
+            # 原因：pingzhongdata CDN 可能返回尚未更新的旧缓存
+            if key == "nav_date":
+                if cur and new_val < cur:
+                    # 新日期比已有日期更早 → 跳过整组 nav 相关字段
+                    # （nav 和 daily_change 必须和 nav_date 配套）
+                    return updated  # 直接返回，不更新任何 nav 相关字段
             if cur != new_val:
                 share[key] = new_val
                 updated.append(key)

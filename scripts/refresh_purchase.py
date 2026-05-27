@@ -79,10 +79,18 @@ def main():
                     updated += 1
                 # 涨跌幅数据
                 if code in rank_map:
-                    # 只更新涨跌幅相关字段，不覆盖 scale/manager 等
-                    for k, v in rank_map[code].items():
-                        if v is not None:
-                            share[k] = v
+                    # 防回退：nav_date 只允许前进，不允许接口返回旧日期覆盖新日期
+                    new_nav_date = rank_map[code].get("nav_date")
+                    cur_nav_date = share.get("nav_date", "")
+                    if new_nav_date and cur_nav_date and new_nav_date < cur_nav_date:
+                        # 接口返回了更旧的日期 → 跳过 nav 相关字段，只更新涨跌幅
+                        for k, v in rank_map[code].items():
+                            if v is not None and k not in ("nav_date", "nav", "nav_cum", "daily_change"):
+                                share[k] = v
+                    else:
+                        for k, v in rank_map[code].items():
+                            if v is not None:
+                                share[k] = v
         with open(fp, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
         print(f"  💾 {cat}.json  更新 {updated} 只份额的申购状态 + 涨跌幅")
