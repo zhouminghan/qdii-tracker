@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-05-27T05:00:13.088032",
+  "generated_at": "2026-05-27T10:45:51.001100",
   "fx_change": 0.0,
-  "total_funds": 16,
+  "total_funds": 20,
   "funds": {
     "270023": {
       "code": "270023",
@@ -79,32 +79,6 @@
         "AMZN",
         "META",
         "MRVL"
-      ],
-      "latest_quarter": "2026年1季度股票投资明细"
-    },
-    "161128": {
-      "code": "161128",
-      "name": "易方达标普信息科技指数",
-      "estimated_impact": 0.0,
-      "total_weight": 66.95,
-      "stock_ratio": 90.0,
-      "stock_contribution": 0.0,
-      "fx_contribution": 0.0,
-      "matched_count": 0,
-      "holdings_count": 10,
-      "top_movers": [],
-      "top_movers_display": [],
-      "unmatched_codes": [
-        "NVDA",
-        "AAPL",
-        "MSFT",
-        "AVGO",
-        "MU",
-        "PLTR",
-        "AMD",
-        "CSCO",
-        "AMAT",
-        "LRCX"
       ],
       "latest_quarter": "2026年1季度股票投资明细"
     },
@@ -210,6 +184,32 @@
         "MKSI",
         "TTMI",
         "INTC"
+      ],
+      "latest_quarter": "2026年1季度股票投资明细"
+    },
+    "161128": {
+      "code": "161128",
+      "name": "易方达标普信息科技指数",
+      "estimated_impact": 0.0,
+      "total_weight": 66.95,
+      "stock_ratio": 90.0,
+      "stock_contribution": 0.0,
+      "fx_contribution": 0.0,
+      "matched_count": 0,
+      "holdings_count": 10,
+      "top_movers": [],
+      "top_movers_display": [],
+      "unmatched_codes": [
+        "NVDA",
+        "AAPL",
+        "MSFT",
+        "AVGO",
+        "MU",
+        "PLTR",
+        "AMD",
+        "CSCO",
+        "AMAT",
+        "LRCX"
       ],
       "latest_quarter": "2026年1季度股票投资明细"
     },
@@ -419,6 +419,111 @@
         "PONY",
         "03750",
         "MRVL"
+      ],
+      "latest_quarter": "2026年1季度股票投资明细"
+    },
+    "000044": {
+      "code": "000044",
+      "name": "嘉实美国成长股票现汇",
+      "estimated_impact": 0.0,
+      "total_weight": 53.99,
+      "stock_ratio": 90.0,
+      "stock_contribution": 0.0,
+      "fx_contribution": 0.0,
+      "matched_count": 0,
+      "holdings_count": 11,
+      "top_movers": [],
+      "top_movers_display": [],
+      "unmatched_codes": [
+        "NVDA",
+        "AAPL",
+        "GOOGL",
+        "MSFT",
+        "AVGO",
+        "AMZN",
+        "TSLA",
+        "GOOG",
+        "META",
+        "LLY",
+        "TSM"
+      ],
+      "latest_quarter": "2026年1季度股票投资明细"
+    },
+    "006374": {
+      "code": "006374",
+      "name": "国富全球科技互联混合现汇",
+      "estimated_impact": 0.0,
+      "total_weight": 58.21,
+      "stock_ratio": 90.0,
+      "stock_contribution": 0.0,
+      "fx_contribution": 0.0,
+      "matched_count": 0,
+      "holdings_count": 10,
+      "top_movers": [],
+      "top_movers_display": [],
+      "unmatched_codes": [
+        "MU",
+        "TSM",
+        "LRCX",
+        "GLW",
+        "GOOG",
+        "NVDA",
+        "TSEM",
+        "MKSI",
+        "TTMI",
+        "INTC"
+      ],
+      "latest_quarter": "2026年1季度股票投资明细"
+    },
+    "012921": {
+      "code": "012921",
+      "name": "易方达全球成长精选混合现汇",
+      "estimated_impact": 0.0,
+      "total_weight": 51.83,
+      "stock_ratio": 90.0,
+      "stock_contribution": 0.0,
+      "fx_contribution": 0.0,
+      "matched_count": 0,
+      "holdings_count": 10,
+      "top_movers": [],
+      "top_movers_display": [],
+      "unmatched_codes": [
+        "TSM",
+        "LITE",
+        "300502",
+        "GLW",
+        "AXTI",
+        "300308",
+        "688498",
+        "TSEM",
+        "GOOGL",
+        "002384"
+      ],
+      "latest_quarter": "2026年1季度股票投资明细"
+    },
+    "006426": {
+      "code": "006426",
+      "name": "汇添富全球移动互联混合现汇",
+      "estimated_impact": 0.0,
+      "total_weight": 46.67,
+      "stock_ratio": 90.0,
+      "stock_contribution": 0.0,
+      "fx_contribution": 0.0,
+      "matched_count": 0,
+      "holdings_count": 10,
+      "top_movers": [],
+      "top_movers_display": [],
+      "unmatched_codes": [
+        "NVDA",
+        "GOOGL",
+        "MSFT",
+        "AMZN",
+        "AAPL",
+        "AVGO",
+        "META",
+        "TSM",
+        "NFLX",
+        "MU"
       ],
       "latest_quarter": "2026年1季度股票投资明细"
     }
