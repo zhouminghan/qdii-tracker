@@ -1,34 +1,25 @@
 {
-  "generated_at": "2026-05-27T10:26:02.644710",
-  "total_scanned": 26843,
+  "generated_at": "2026-05-27T22:38:11.770772",
+  "total_scanned": 26878,
   "sp500": {
-    "series": 9,
+    "series": 7,
     "funds": 25
   },
   "nasdaq_passive": {
-    "series": 31,
+    "series": 17,
     "funds": 60
   },
   "active": {
-    "series": 23,
-    "funds": 48
+    "series": 19,
+    "funds": 51
   },
   "global_other": {
-    "series": 36,
-    "funds": 65
+    "series": 21,
+    "funds": 62
   },
   "etf": {
     "series": 18,
     "funds": 18
   },
-  "excluded_count": 26627,
-  "enriched_at": "2026-05-27T12:52:41.793982",
-  "enriched_fields": [
-    "涨跌幅",
-    "规模",
-    "限额",
-    "基金经理",
-    "成立时间"
-  ],
-  "purchase_refreshed_at": "2026-05-27T12:46:22.855452"
+  "excluded_count": 26662
 }

@@ -1,4 +1,4 @@
-name: Update Fund Data
+name: 🔄 更新基金数据
 
 # 自动更新基金数据 workflow
 # 触发：工作日多时段增量 + 每月 2 日完整 + 手动
@@ -6,33 +6,32 @@ name: Update Fund Data
 # QDII 净值披露节奏：T 日美股收盘 → T+1 日晚间（北京时间）基金公司披露 T 日净值
 "on":
   schedule:
-    # 工作日多时段增量更新（北京时间）：
-    #   08:30 = 00:30 UTC → 早间更新（补拉昨晚遗漏 + 早披露的 QDII 净值）
-    #   17:30 = 09:30 UTC → 午后更新（A 股收盘后，部分 QDII 已披露）
-    #   22:30 = 14:30 UTC → 晚间更新（绝大多数 QDII 已披露，最关键的一轮）
+    # 工作日多时段增量更新（北京时间 = UTC+8）：
+    #   北京 08:30 = UTC 00:30 → 早间（补拉昨晚遗漏）
+    #   北京 17:30 = UTC 09:30 → 午后（A 股收盘后）
+    #   北京 22:30 = UTC 14:30 → 晚间（绝大多数 QDII 已披露，最关键）
     - cron: '30 0 * * 1-5'
     - cron: '30 9 * * 1-5'
     - cron: '30 14 * * 1-5'
-    # 每月 2 日凌晨 2:00（北京时间）= 18:00 UTC 1日，跑"完整流水线"
-    # 注：cron 0 18 1 * * = UTC 18:00 于每月1日 = 北京时间 02:00 于每月2日
+    # 每月 2 日凌晨 2:00 北京 = UTC 18:00 于 1 日，跑"完整流水线"
     - cron: '0 18 1 * *'
-  # 允许手动在 GitHub 网页上点按钮触发
+  # 手动触发
   workflow_dispatch:
     inputs:
       mode:
         description: '运行模式'
         required: true
-        default: 'incremental'
+        default: '增量更新（快速·净值+申购）'
         type: choice
         options:
-          - incremental   # 增量（快速）
-          - full          # 完整流水线（~20 分钟）
+          - '增量更新（快速·净值+申购）'
+          - '完整流水线（慢·含扫描+持仓）'
 
 # 授权：需要 write 权限才能 commit/push 数据文件回仓库
 permissions:
   contents: write
 
-# 防并发：避免手动跑的 full（~20 分钟）和定时增量同时操作 web/data/ 导致 push 冲突
+# 防并发：避免多任务同时操作 web/data/ 导致 push 冲突
 concurrency:
   group: update-data
   cancel-in-progress: false
@@ -44,15 +43,14 @@ jobs:
 
     steps:
       # 1. 拉代码
-      - name: 📥 Checkout
+      - name: 📥 拉取代码
         uses: actions/checkout@v4
         with:
-          # 需要完整 history 才能 push 成功
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # 2. 装 Python
-      - name: 🐍 Setup Python
+      - name: 🐍 安装 Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -60,73 +58,74 @@ jobs:
           cache-dependency-path: scripts/requirements.txt
 
       # 3. 装依赖
-      - name: 📦 Install dependencies
+      - name: 📦 安装依赖
         run: |
           cd scripts
           pip install --upgrade pip
           pip install -r requirements.txt
 
       # 4. 判断运行模式
-      #    手动触发用 inputs.mode；定时触发根据 cron 表达式判断
-      - name: 🧭 Decide run mode
+      - name: 🧭 判断运行模式
         id: mode
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "mode=${{ inputs.mode }}" >> $GITHUB_OUTPUT
+            INPUT="${{ inputs.mode }}"
+            if [[ "$INPUT" == *"完整"* ]]; then
+              echo "mode=full" >> $GITHUB_OUTPUT
+            else
+              echo "mode=incremental" >> $GITHUB_OUTPUT
+            fi
           elif [ "${{ github.event.schedule }}" = "0 18 1 * *" ]; then
             echo "mode=full" >> $GITHUB_OUTPUT
           else
             echo "mode=incremental" >> $GITHUB_OUTPUT
           fi
-          echo "触发模式: $(cat $GITHUB_OUTPUT)"
+          echo "✅ 运行模式: $(grep mode $GITHUB_OUTPUT | cut -d= -f2)"
 
-      # 5a. 增量更新（快）
-      - name: ⚡ Incremental update
+      # 5a. 增量更新（快，~3 分钟）
+      #     只更新每日变化的数据：净值 + 申购状态
+      - name: ⚡ 增量更新（净值 + 申购状态）
         if: steps.mode.outputs.mode == 'incremental'
         run: |
           cd scripts
-          echo "=== [1/5] fill_missing.py（净值 + YTD + 历史收益）==="
+          echo "=== [1/2] fill_missing.py（净值 + 涨跌幅 + YTD）==="
           python fill_missing.py
-          echo "=== [2/5] refresh_purchase.py（申购状态 + 涨跌幅，批量快接口）==="
+          echo "=== [2/2] refresh_purchase.py（申购状态 + 限额）==="
           python refresh_purchase.py
-          echo "=== [3/5] fetch_stocks.py（持仓股票实时行情）==="
-          python fetch_stocks.py
-          echo "=== [4/5] calc_estimate.py（主动基金估值）==="
-          python calc_estimate.py
-          echo "=== [5/5] enrich_data.py（费率 + 基金经理，逐只慢接口）==="
-          python enrich_data.py
 
-      # 5b. 完整流水线（慢）
-      - name: 🚀 Full pipeline
+      # 5b. 完整流水线（慢，~12 分钟）
+      #     重新扫描基金池 + 补全所有字段 + 更新持仓
+      - name: 🚀 完整流水线（扫描 + 补全 + 持仓）
         if: steps.mode.outputs.mode == 'full'
         run: |
           cd scripts
-          echo "=== [1/7] scan_funds.py（扫描+分类）==="
+          echo "=== [1/5] scan_funds.py（扫描 + 分类）==="
           python scan_funds.py
-          echo "=== [2/7] enrich_data.py（规模+费率+基金经理）==="
+          echo "=== [2/5] enrich_data.py（规模 + 费率 + 基金经理）==="
           python enrich_data.py
-          echo "=== [3/7] fill_missing.py（补漏）==="
+          echo "=== [3/5] fill_missing.py（净值 + 涨跌幅）==="
           python fill_missing.py
-          echo "=== [4/7] refresh_purchase.py（申购状态+限额）==="
+          echo "=== [4/5] refresh_purchase.py（申购状态 + 限额）==="
           python refresh_purchase.py
-          echo "=== [5/7] fetch_holdings.py（主动基金持仓）==="
+          echo "=== [5/5] fetch_holdings.py（主动基金持仓）==="
           python fetch_holdings.py
-          echo "=== [6/7] fetch_stocks.py（股票行情）==="
-          python fetch_stocks.py
-          echo "=== [7/7] calc_estimate.py（主动基金估值）==="
-          python calc_estimate.py
 
       # 6. 如果 web/data 有变化，commit 回主分支
-      - name: 💾 Commit data changes
+      - name: 💾 提交数据变更
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git add web/data/
           if git diff --cached --quiet; then
-            echo "⚠️  数据无变化，跳过 commit"
+            echo "⚠️  数据无变化，跳过提交"
           else
             TS=$(date -u '+%Y-%m-%d %H:%M UTC')
-            git commit -m "chore(data): auto-update @ $TS [${{ steps.mode.outputs.mode }}]"
+            MODE="${{ steps.mode.outputs.mode }}"
+            if [ "$MODE" = "full" ]; then
+              git commit -m "chore(data): 完整更新 @ $TS"
+            else
+              git commit -m "chore(data): 增量更新 @ $TS"
+            fi
             git push
             echo "✅ 数据已更新并推送"
           fi

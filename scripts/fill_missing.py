@@ -89,6 +89,19 @@ def fetch_f10(code: str):
             result["scale"] = scale_num
             result["scale_raw"] = f"{scale_num}亿"
 
+    # 从费率页抓取销售服务费（管理费/托管费已由雪球接口覆盖，这里只补销售服务费）
+    try:
+        fee_url = f"https://fundf10.eastmoney.com/jjfl_{code}.html"
+        fr = requests.get(fee_url, headers=HEADERS, timeout=8)
+        if fr.status_code == 200:
+            fr.encoding = "utf-8"
+            fee_text = fr.text
+            fm = re.search(r"销售服务费[率]?.*?<td[^>]*>([\d.]+)%", fee_text, re.DOTALL)
+            if fm:
+                result["sale_service_fee"] = float(fm.group(1))
+    except Exception:
+        pass
+
     return result if result else None
 
 
@@ -155,8 +168,23 @@ def merge_share_data(share: dict, pzd: dict, is_etf: bool = False):
 
     防回退机制：nav_date 只允许前进（新值 >= 旧值），
     防止 pingzhongdata CDN 缓存返回旧数据导致日期倒退。
+    nav_date 检查必须在任何字段写入之前完成，避免 nav 被旧值污染。
     """
     updated = []
+
+    # 防回退前置检查：如果接口返回了更旧的 nav_date，整组 nav 字段都不更新
+    if not is_etf:
+        new_nav_date = pzd.get("nav_date")
+        cur_nav_date = share.get("nav_date", "")
+        if new_nav_date and cur_nav_date and new_nav_date < cur_nav_date:
+            # 接口返回旧日期 → 只更新历史收益，跳过 nav 相关字段
+            for key in ("chg_1m", "chg_3m", "chg_6m", "chg_1y"):
+                new_val = pzd.get(key)
+                if new_val is not None and share.get(key) in (None, "", 0):
+                    share[key] = new_val
+                    updated.append(key)
+            return updated
+
     candidate_keys = [
         "nav", "nav_date", "daily_change",
         "chg_1m", "chg_3m", "chg_6m", "chg_1y",
@@ -169,13 +197,6 @@ def merge_share_data(share: dict, pzd: dict, is_etf: bool = False):
             continue
         cur = share.get(key)
         if key in ALWAYS_OVERWRITE_FIELDS:
-            # 防回退：nav_date 只允许前进，不允许从新日期回退到旧日期
-            # 原因：pingzhongdata CDN 可能返回尚未更新的旧缓存
-            if key == "nav_date":
-                if cur and new_val < cur:
-                    # 新日期比已有日期更早 → 跳过整组 nav 相关字段
-                    # （nav 和 daily_change 必须和 nav_date 配套）
-                    return updated  # 直接返回，不更新任何 nav 相关字段
             if cur != new_val:
                 share[key] = new_val
                 updated.append(key)
@@ -283,10 +304,10 @@ def main():
             print(f"  [{i}/{total}] ❌ {code} pzd 抓取失败")
         time.sleep(0.15)
 
-    # ------------------------- Pass 2：F10 基础信息 -------------------------
+    # ------------------------- Pass 2：F10 基础信息 + 销售服务费 -------------------------
     print()
     print("=" * 50)
-    print("Pass 2: 从 F10 补充规模/成立日期/基金经理")
+    print("Pass 2: 从 F10 补充规模/成立日期/基金经理/销售服务费")
     print("=" * 50)
     f10_targets = []
     for cat, d in loaded_data.items():
@@ -294,7 +315,8 @@ def main():
             for sh in s["shares"]:
                 if sh.get("scale") in (None, "", 0) or \
                    sh.get("established") in (None, "") or \
-                   sh.get("manager") in (None, ""):
+                   sh.get("manager") in (None, "") or \
+                   sh.get("sale_service_fee") is None:
                     f10_targets.append((cat, sh["code"], sh))
     total2 = len(f10_targets)
     print(f"🎯 目标：{total2} 只缺基础信息")
@@ -303,8 +325,8 @@ def main():
         info = fetch_f10(code)
         if info:
             changed = []
-            for key in ["scale", "scale_raw", "established", "manager"]:
-                if info.get(key) and sh.get(key) in (None, "", 0):
+            for key in ["scale", "scale_raw", "established", "manager", "sale_service_fee"]:
+                if info.get(key) is not None and sh.get(key) in (None, "", 0):
                     sh[key] = info[key]
                     changed.append(key)
             if changed:

@@ -261,7 +261,6 @@ def main():
         if cat not in series_by_cat:
             continue
         data = series_by_cat[cat]
-        total_scale = 0
         for series in data["series"]:
             for share in series["shares"]:
                 code = share["code"]
@@ -293,9 +292,6 @@ def main():
                     share["etf_price"] = etf_info.get("etf_price")
                     share["etf_change_pct"] = etf_info.get("etf_change_pct")
 
-                if share.get("scale"):
-                    total_scale += share["scale"]
-
             # v3: 份额排序 —— 先人民币后美元、A<C<I<LOF
             series["shares"].sort(key=share_sort_key)
 
@@ -303,10 +299,19 @@ def main():
             # 原因：A 类才是普通投资者首选（长期持有划算），即使 C 类规模更大也不该作为默认
             # shares 已按 share_sort_key 排好序，直接取第一个即可
             series["default_share_code"] = series["shares"][0]["code"] if series["shares"] else None
-            series["series_scale"] = sum(s.get("scale") or 0 for s in series["shares"])
+            # v6: series_scale 取 A 类人民币份额规模（同系列各份额共享底层资产，加和会重复计算）
+            a_rmb = [s for s in series["shares"]
+                     if s.get("share_class") in ("A", "默认", "A(后端)")
+                     and s.get("currency", "人民币") == "人民币"]
+            if a_rmb:
+                series["series_scale"] = a_rmb[0].get("scale") or 0
+            else:
+                # fallback: 没有 A 类人民币，取第一个有规模的份额
+                series["series_scale"] = next((s.get("scale") for s in series["shares"] if s.get("scale")), 0)
 
         # 系列按规模排序
         data["series"].sort(key=lambda s: -(s.get("series_scale") or 0))
+        total_scale = sum(s.get("series_scale") or 0 for s in data["series"])
         data["total_scale"] = round(total_scale, 2)
         data["enriched_at"] = datetime.now().isoformat()
 

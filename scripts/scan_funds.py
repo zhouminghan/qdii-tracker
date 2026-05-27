@@ -81,6 +81,7 @@ ACTIVE_WHITELIST_KEYWORDS = [
     "华宝致远",
     "景顺长城纳斯达克科技",
     "天弘全球高端制造",
+    "华夏移动互联",
 ]
 
 
@@ -210,6 +211,14 @@ FORCE_INCLUDE_CODES = {
     # 华宝致远混合（重仓美股的主动 QDII，但名字无识别关键词）
     "008253": "active",  # A
     "008254": "active",  # C
+
+    # 华夏移动互联混合（重仓美股科技，但名字不含"全球/美国/科技"等关键词）
+    "002891": "active",  # 人民币
+    "002892": "active",  # 美元现汇
+    "002893": "active",  # 美元现钞
+
+    # 鹏华全球高收益债（160644，全球/其他 QDII，名字不触发关键词）
+    "160644": "global_other",
 }
 
 
@@ -226,6 +235,9 @@ FORCE_EXCLUDE_CODES = {
 
     # 万家全球成长一年持有期混合（Top3 寒武纪/深信服，主要投 A 股科技）
     "012535", "012536",
+
+    # 工银全球系列（持仓偏港股/A股，非纯美股方向）
+    "486001", "486002", "009562", "009563",
 }
 
 
@@ -264,10 +276,12 @@ def make_display_name(share_name: str) -> str:
     # 去括号及其内容
     name = re.sub(r"\([^)]*\)", "", name)
     name = re.sub(r"（[^）]*）", "", name)
-    # 去币种（含摩根系的"美钞/美汇"特殊写法）
-    name = re.sub(r"(人民币|美元|美钞|美汇|美现汇|美现钞|欧元|港币|港元)", "", name)
+    # 去币种（含摩根系的"美钞/美汇"特殊写法 + 独立"现汇/现钞"）
+    name = re.sub(r"(人民币|美元现汇|美元现钞|美现汇|美现钞|美元|美钞|美汇|现汇|现钞|欧元|港币|港元)", "", name)
     # 去尾部份额字母（A/B/C/D/E/F/H/I/Q/R），允许前面有空格
     name = re.sub(r"\s*[ABCDEFHIQR]\s*$", "", name)
+    # 去末尾残留的"汇"/"钞"（如"美元汇"去掉"美元"后剩"汇"）
+    name = re.sub(r"[汇钞]$", "", name.strip())
     # 去后端/发起式等
     name = re.sub(r"\(?后端\)?", "", name)
     name = re.sub(r"发起(式)?", "", name)
@@ -313,12 +327,16 @@ def extract_company_and_series(full_name: str) -> tuple[str, str]:
 
     # 去除货币标识（让人民币/美元/美钞/美汇份额合并到同系列）
     remaining = re.sub(r"人民币", "", remaining)
+    remaining = re.sub(r"美元现汇", "", remaining)
+    remaining = re.sub(r"美元现钞", "", remaining)
+    remaining = re.sub(r"美现汇", "", remaining)
+    remaining = re.sub(r"美现钞", "", remaining)
     remaining = re.sub(r"美元", "", remaining)
     remaining = re.sub(r"美钞", "", remaining)
     remaining = re.sub(r"美汇", "", remaining)
-    remaining = re.sub(r"美现汇", "", remaining)
-    remaining = re.sub(r"美现钞", "", remaining)
     remaining = re.sub(r"欧元", "", remaining)
+    remaining = re.sub(r"现汇", "", remaining)
+    remaining = re.sub(r"现钞", "", remaining)
 
     # 【v3 新增】"纳指"规范化为"纳斯达克"
     remaining = re.sub(r"纳指100", "纳斯达克100", remaining)
@@ -329,6 +347,9 @@ def extract_company_and_series(full_name: str) -> tuple[str, str]:
 
     # 去除末尾份额字母
     remaining = re.sub(r"\s*[ABCDEFHIQR]\s*$", "", remaining)
+
+    # 去掉末尾单独的"汇"/"钞"字（部分基金用"联接汇"表示美元份额，须在去份额字母后处理）
+    remaining = re.sub(r"[汇钞]$", "", remaining.strip())
 
     # 去除尾部非主题说明
     remaining = re.sub(r"\(后端\)", "", remaining)
