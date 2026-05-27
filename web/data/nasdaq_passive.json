@@ -79,7 +79,10 @@
           "mgmt_fee": 0.8,
           "custody_fee": 0.2,
           "fee": "0.13",
-          "first_buy_rate": 1.3
+          "first_buy_rate": 1.3,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.92
         },
         {
           "code": "006479",
@@ -128,7 +131,11 @@
           "custody_fee": 0.2,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.2,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.91
         },
         {
           "code": "021778",
@@ -136,22 +143,26 @@
           "share_class": "F",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 8.2542,
-          "nav_date": "2026-05-24",
-          "daily_change": -0.08,
+          "nav": 8.3938,
+          "nav_date": "2026-05-25",
+          "daily_change": 1.69,
           "chg_1m": 7.33,
           "chg_3m": 14.47,
           "chg_6m": 13.35,
           "chg_ytd": 12.53,
           "chg_1y": 31.89,
-          "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "scale_raw": "10.99亿",
+          "established": "2024-08-14",
+          "manager": "刘杰",
           "buy_status": "限大额",
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": ""
+          "fee": "",
+          "scale": 10.99,
+          "sale_service_fee": 0.18,
+          "sell_status": "开放赎回",
+          "buy_min": 500.0
         },
         {
           "code": "000055",
@@ -159,9 +170,9 @@
           "share_class": "A",
           "currency": "美元",
           "fund_type": "指数型-海外股票",
-          "nav": 1.212,
-          "nav_date": "2026-05-24",
-          "daily_change": 0.0,
+          "nav": 1.233,
+          "nav_date": "2026-05-25",
+          "daily_change": 1.73,
           "chg_1m": 7.91,
           "chg_3m": 16.2,
           "chg_6m": 17.62,
@@ -178,7 +189,10 @@
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": "1.3"
+          "fee": "1.3",
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 1.0
         },
         {
           "code": "006480",
@@ -194,14 +208,18 @@
           "chg_6m": 17.51,
           "chg_ytd": 13.97,
           "chg_1y": 38.81,
-          "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "scale_raw": "53.93亿",
+          "established": "2018-10-25",
+          "manager": "刘杰",
           "buy_status": "限大额",
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": ""
+          "fee": "",
+          "scale": 53.93,
+          "sale_service_fee": 0.2,
+          "sell_status": "开放赎回",
+          "buy_min": 1.0
         }
       ],
       "default_share_code": "270042",
@@ -275,7 +293,11 @@
           "custody_fee": 0.2,
           "fee": "0.12",
           "first_buy_rate": 1.2,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.97
         },
         {
           "code": "014978",
@@ -324,7 +346,11 @@
           "custody_fee": 0.2,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.2,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.97
         },
         {
           "code": "040047",
@@ -351,7 +377,10 @@
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": "1.2"
+          "fee": "1.2",
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 0.0
         },
         {
           "code": "040048",
@@ -378,7 +407,10 @@
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": "1.2"
+          "fee": "1.2",
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 0.0
         }
       ],
       "default_share_code": "040046",
@@ -463,7 +495,11 @@
           "mgmt_fee": 0.8,
           "custody_fee": 0.2,
           "fee": "0.12",
-          "first_buy_rate": 1.2
+          "first_buy_rate": 1.2,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.82
         },
         {
           "code": "008971",
@@ -511,7 +547,11 @@
           "custody_fee": 0.2,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.3,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.81
         }
       ],
       "default_share_code": "000834",
@@ -585,7 +625,11 @@
           "custody_fee": 0.15,
           "fee": "0.12",
           "first_buy_rate": 1.2,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.76
         },
         {
           "code": "016453",
@@ -634,7 +678,11 @@
           "custody_fee": 0.15,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.1,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.76
         },
         {
           "code": "021000",
@@ -642,22 +690,25 @@
           "share_class": "I",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 2.3089,
-          "nav_date": "2026-05-24",
-          "daily_change": -0.09,
+          "nav": 2.3466,
+          "nav_date": "2026-05-25",
+          "daily_change": 1.63,
           "chg_1m": 7.12,
           "chg_3m": 14.02,
           "chg_6m": 12.86,
           "chg_ytd": 11.25,
           "chg_1y": 31.02,
-          "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "scale_raw": "15.69亿",
+          "established": "2024-03-19",
+          "manager": "张其思",
           "buy_status": "限大额",
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": ""
+          "fee": "",
+          "scale": 15.69,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0
         }
       ],
       "default_share_code": "016452",
@@ -731,7 +782,11 @@
           "custody_fee": 0.1,
           "fee": "0.1",
           "first_buy_rate": 1.0,
-          "free_hold_days": 365
+          "free_hold_days": 365,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.75
         },
         {
           "code": "018044",
@@ -780,7 +835,10 @@
           "custody_fee": 0.1,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.75
         },
         {
           "code": "022525",
@@ -788,9 +846,9 @@
           "share_class": "D",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 2.0289,
-          "nav_date": "2026-05-24",
-          "daily_change": -0.08,
+          "nav": 2.0619,
+          "nav_date": "2026-05-25",
+          "daily_change": 1.63,
           "chg_1m": 7.05,
           "chg_3m": 13.82,
           "chg_6m": 12.73,
@@ -829,7 +887,10 @@
           "custody_fee": 0.1,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 30
+          "free_hold_days": 30,
+          "sale_service_fee": 0.2,
+          "sell_status": "开放赎回",
+          "buy_min": 0.1
         }
       ],
       "default_share_code": "018043",
@@ -902,7 +963,11 @@
           "custody_fee": 0.1,
           "fee": "0.12",
           "first_buy_rate": 1.2,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.7
         },
         {
           "code": "019173",
@@ -950,7 +1015,11 @@
           "custody_fee": 0.1,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.3,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.7
         },
         {
           "code": "019174",
@@ -958,22 +1027,26 @@
           "share_class": "A",
           "currency": "美元",
           "fund_type": "指数型-海外股票",
-          "nav": 1.8429,
-          "nav_date": "2026-05-24",
-          "daily_change": -0.01,
+          "nav": 1.8733,
+          "nav_date": "2026-05-25",
+          "daily_change": 1.65,
           "chg_1m": 7.5,
           "chg_3m": 15.28,
           "chg_6m": 17.09,
           "chg_ytd": 14.83,
           "chg_1y": 38.46,
-          "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "scale_raw": "0.11亿",
+          "established": "2023-09-25",
+          "manager": "何智豪",
           "buy_status": "限大额",
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": "1.2"
+          "fee": "1.2",
+          "scale": 0.11,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 1.0
         },
         {
           "code": "019175",
@@ -981,22 +1054,26 @@
           "share_class": "C",
           "currency": "美元",
           "fund_type": "指数型-海外股票",
-          "nav": 1.8362,
-          "nav_date": "2026-05-24",
-          "daily_change": -0.01,
+          "nav": 1.8663,
+          "nav_date": "2026-05-25",
+          "daily_change": 1.64,
           "chg_1m": 7.47,
           "chg_3m": 15.2,
           "chg_6m": 16.92,
           "chg_ytd": 14.7,
           "chg_1y": 38.05,
-          "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "scale_raw": "0.11亿",
+          "established": "2023-09-25",
+          "manager": "何智豪",
           "buy_status": "限大额",
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": ""
+          "fee": "",
+          "scale": 0.11,
+          "sale_service_fee": 0.3,
+          "sell_status": "开放赎回",
+          "buy_min": 1.0
         }
       ],
       "default_share_code": "019172",
@@ -1017,9 +1094,9 @@
           "share_class": "A",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 2.1783,
-          "nav_date": "2026-05-24",
-          "daily_change": -0.08,
+          "nav": 2.2137,
+          "nav_date": "2026-05-25",
+          "daily_change": 1.63,
           "chg_1m": 7.19,
           "chg_3m": 14.39,
           "chg_6m": 13.21,
@@ -1066,7 +1143,10 @@
           "custody_fee": 0.1,
           "fee": "0.1",
           "first_buy_rate": 1.0,
-          "free_hold_days": 30
+          "free_hold_days": 30,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0
         },
         {
           "code": "016533",
@@ -1074,9 +1154,9 @@
           "share_class": "C",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 2.1551,
-          "nav_date": "2026-05-24",
-          "daily_change": -0.08,
+          "nav": 2.19,
+          "nav_date": "2026-05-25",
+          "daily_change": 1.62,
           "chg_1m": 7.17,
           "chg_3m": 14.32,
           "chg_6m": 13.07,
@@ -1111,7 +1191,10 @@
           "custody_fee": 0.1,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.25,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0
         },
         {
           "code": "021838",
@@ -1119,22 +1202,26 @@
           "share_class": "I",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 2.1596,
-          "nav_date": "2026-05-24",
-          "daily_change": -0.08,
+          "nav": 2.1946,
+          "nav_date": "2026-05-25",
+          "daily_change": 1.62,
           "chg_1m": 7.18,
           "chg_3m": 14.36,
           "chg_6m": 13.15,
           "chg_ytd": 11.76,
           "chg_1y": 30.36,
-          "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "scale_raw": "0.24亿",
+          "established": "2024-07-18",
+          "manager": "张钟玉",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": ""
+          "fee": "",
+          "scale": 0.24,
+          "sale_service_fee": 0.1,
+          "sell_status": "开放赎回",
+          "buy_min": 1.0
         },
         {
           "code": "016534",
@@ -1142,22 +1229,25 @@
           "share_class": "A",
           "currency": "美元",
           "fund_type": "指数型-海外股票",
-          "nav": 0.3188,
-          "nav_date": "2026-05-24",
-          "daily_change": -0.03,
+          "nav": 0.3242,
+          "nav_date": "2026-05-25",
+          "daily_change": 1.69,
           "chg_1m": 7.74,
           "chg_3m": 16.05,
           "chg_6m": 17.34,
           "chg_ytd": 15.84,
           "chg_1y": 37.59,
           "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "established": "2022-09-15",
+          "manager": "张钟玉",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": "0.1"
+          "fee": "0.1",
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0
         },
         {
           "code": "016535",
@@ -1165,22 +1255,24 @@
           "share_class": "C",
           "currency": "美元",
           "fund_type": "指数型-海外股票",
-          "nav": 0.3155,
-          "nav_date": "2026-05-24",
-          "daily_change": 0.0,
+          "nav": 0.3207,
+          "nav_date": "2026-05-25",
+          "daily_change": 1.65,
           "chg_1m": 7.75,
           "chg_3m": 16.04,
           "chg_6m": 17.24,
           "chg_ytd": 15.78,
           "chg_1y": 37.23,
           "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "established": "2022-09-15",
+          "manager": "张钟玉",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": ""
+          "fee": "",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0
         }
       ],
       "default_share_code": "016532",
@@ -1253,7 +1345,11 @@
           "custody_fee": 0.15,
           "fee": "0.12",
           "first_buy_rate": 1.2,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.78
         },
         {
           "code": "019548",
@@ -1301,7 +1397,11 @@
           "custody_fee": 0.15,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.4,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.77
         }
       ],
       "default_share_code": "019547",
@@ -1382,7 +1482,11 @@
           "mgmt_fee": 0.8,
           "custody_fee": 0.2,
           "fee": "0.15",
-          "first_buy_rate": 1.5
+          "first_buy_rate": 1.5,
+          "sale_service_fee": 1.2,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.9
         }
       ],
       "default_share_code": "160213",
@@ -1464,7 +1568,11 @@
           "custody_fee": 0.2,
           "fee": "0.12",
           "first_buy_rate": 1.2,
-          "free_hold_days": 90
+          "free_hold_days": 90,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.67
         },
         {
           "code": "012752",
@@ -1513,7 +1621,11 @@
           "custody_fee": 0.2,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.3,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.67
         },
         {
           "code": "023422",
@@ -1531,14 +1643,19 @@
           "chg_ytd": 13.27,
           "chg_1y": 32.05,
           "chg_since_inception": 27.54,
-          "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "scale_raw": "0.52亿",
+          "established": "2025-02-12",
+          "manager": "李博涵",
           "buy_status": "限大额",
           "daily_limit": 100.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": ""
+          "fee": "",
+          "scale": 0.52,
+          "sale_service_fee": 0.3,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.67
         },
         {
           "code": "012751",
@@ -1546,22 +1663,26 @@
           "share_class": "A",
           "currency": "美元",
           "fund_type": "指数型-海外股票",
-          "nav": 0.5074,
-          "nav_date": "2026-05-21",
-          "daily_change": 0.44,
+          "nav": 0.5158,
+          "nav_date": "2026-05-25",
+          "daily_change": 0.0,
           "chg_1m": 8.67,
           "chg_3m": 18.33,
           "chg_6m": 18.91,
           "chg_ytd": 14.0,
           "chg_1y": 36.0,
-          "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "scale_raw": "16.24亿",
+          "established": "2021-09-22",
+          "manager": "李博涵",
           "buy_status": "限大额",
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": "1.2"
+          "fee": "1.2",
+          "scale": 16.24,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 100.0
         },
         {
           "code": "012753",
@@ -1569,22 +1690,25 @@
           "share_class": "C",
           "currency": "美元",
           "fund_type": "指数型-海外股票",
-          "nav": 0.4914,
-          "nav_date": "2026-05-21",
-          "daily_change": 0.45,
+          "nav": 0.4995,
+          "nav_date": "2026-05-25",
+          "daily_change": 0.0,
           "chg_1m": 8.67,
           "chg_3m": 18.27,
           "chg_6m": 18.72,
           "chg_ytd": 13.88,
           "chg_1y": 35.6,
-          "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "scale_raw": "9.49亿",
+          "established": "2021-09-22",
+          "manager": "李博涵",
           "buy_status": "限大额",
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": ""
+          "fee": "",
+          "scale": 9.49,
+          "sell_status": "开放赎回",
+          "buy_min": 100.0
         }
       ],
       "default_share_code": "539001",
@@ -1661,7 +1785,10 @@
           "mgmt_fee": 0.5,
           "custody_fee": 0.1,
           "fee": "0.12",
-          "first_buy_rate": 1.2
+          "first_buy_rate": 1.2,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0
         },
         {
           "code": "012870",
@@ -1706,7 +1833,10 @@
           "custody_fee": 0.1,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.3,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0
         },
         {
           "code": "003722",
@@ -1733,7 +1863,9 @@
           "daily_limit": 0.01,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": "0.12"
+          "fee": "0.12",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0
         },
         {
           "code": "012871",
@@ -1756,7 +1888,9 @@
           "daily_limit": 0.01,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": ""
+          "fee": "",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0
         }
       ],
       "default_share_code": "161130",
@@ -1822,7 +1956,9 @@
           "custody_fee": 0.15,
           "fee": "0.1",
           "first_buy_rate": 1.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0
         },
         {
           "code": "016057",
@@ -1867,7 +2003,9 @@
           "custody_fee": 0.15,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0
         },
         {
           "code": "024237",
@@ -1890,7 +2028,9 @@
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": ""
+          "fee": "",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0
         },
         {
           "code": "016056",
@@ -1906,14 +2046,18 @@
           "chg_6m": 18.57,
           "chg_ytd": 16.73,
           "chg_1y": 41.19,
-          "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "scale_raw": "13.01亿",
+          "established": "2022-07-26",
+          "manager": "万琼",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": "1.0"
+          "fee": "1.0",
+          "scale": 13.01,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 100.0
         },
         {
           "code": "016058",
@@ -1929,14 +2073,17 @@
           "chg_6m": 18.4,
           "chg_ytd": 16.59,
           "chg_1y": 40.77,
-          "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "scale_raw": "6.52亿",
+          "established": "2022-07-26",
+          "manager": "万琼",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": ""
+          "fee": "",
+          "scale": 6.52,
+          "sell_status": "开放赎回",
+          "buy_min": 100.0
         }
       ],
       "default_share_code": "016055",
@@ -2005,7 +2152,11 @@
           "custody_fee": 0.15,
           "fee": "0.12",
           "first_buy_rate": 1.2,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.79
         },
         {
           "code": "018967",
@@ -2053,7 +2204,10 @@
           "custody_fee": 0.15,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.78
         },
         {
           "code": "021773",
@@ -2100,7 +2254,11 @@
           "custody_fee": 0.15,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.1,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.79
         },
         {
           "code": "018968",
@@ -2117,13 +2275,16 @@
           "chg_ytd": 15.69,
           "chg_1y": 36.35,
           "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "established": "2023-08-02",
+          "manager": "过蓓蓓",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": "0.12"
+          "fee": "0.12",
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0
         },
         {
           "code": "018969",
@@ -2140,13 +2301,16 @@
           "chg_ytd": 15.77,
           "chg_1y": 36.35,
           "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "established": "2023-08-02",
+          "manager": "过蓓蓓",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": "0.12"
+          "fee": "0.12",
+          "sale_service_fee": 0.0,
+          "sell_status": "暂停赎回",
+          "buy_min": 1.0
         }
       ],
       "default_share_code": "018966",
@@ -2219,7 +2383,11 @@
           "custody_fee": 0.15,
           "fee": "0.12",
           "first_buy_rate": 1.2,
-          "free_hold_days": 30
+          "free_hold_days": 30,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.77
         },
         {
           "code": "019525",
@@ -2267,7 +2435,11 @@
           "custody_fee": 0.15,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.25,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.76
         },
         {
           "code": "022664",
@@ -2314,7 +2486,11 @@
           "custody_fee": 0.15,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.1,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.76
         }
       ],
       "default_share_code": "019524",
@@ -2387,7 +2563,11 @@
           "custody_fee": 0.15,
           "fee": "0.12",
           "first_buy_rate": 1.2,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.75
         },
         {
           "code": "019737",
@@ -2435,7 +2615,11 @@
           "custody_fee": 0.15,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.25,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.74
         },
         {
           "code": "019738",
@@ -2443,14 +2627,18 @@
           "share_class": "A",
           "currency": "美元",
           "fund_type": "指数型-海外股票",
-          "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "scale_raw": "5.68亿",
+          "established": "2024-03-22",
+          "manager": "蔡丹",
           "buy_status": "封闭期",
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": "1.2"
+          "fee": "1.2",
+          "scale": 5.68,
+          "sale_service_fee": 0.0,
+          "sell_status": "封闭期",
+          "buy_min": 1.0
         },
         {
           "code": "019739",
@@ -2458,14 +2646,18 @@
           "share_class": "C",
           "currency": "美元",
           "fund_type": "指数型-海外股票",
-          "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "scale_raw": "2.54亿",
+          "established": "2024-03-22",
+          "manager": "蔡丹",
           "buy_status": "封闭期",
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": ""
+          "fee": "",
+          "scale": 2.54,
+          "sale_service_fee": 0.25,
+          "sell_status": "封闭期",
+          "buy_min": 1.0
         }
       ],
       "default_share_code": "019736",
@@ -2542,7 +2734,10 @@
           "custody_fee": 0.15,
           "fee": "0.1",
           "first_buy_rate": 1.0,
-          "free_hold_days": 30
+          "free_hold_days": 30,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.73
         },
         {
           "code": "019442",
@@ -2590,7 +2785,11 @@
           "custody_fee": 0.15,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.2,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": 3.72
         }
       ],
       "default_share_code": "019441",
@@ -2611,9 +2810,9 @@
           "share_class": "A",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 2.0396,
-          "nav_date": "2026-05-24",
-          "daily_change": -0.15,
+          "nav": 2.0744,
+          "nav_date": "2026-05-25",
+          "daily_change": 1.71,
           "chg_1m": 6.94,
           "chg_3m": 14.57,
           "chg_6m": 12.6,
@@ -2660,7 +2859,10 @@
           "custody_fee": 0.2,
           "fee": "0.12",
           "first_buy_rate": 1.2,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0
         },
         {
           "code": "015300",
@@ -2668,9 +2870,9 @@
           "share_class": "C",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 2.0146,
-          "nav_date": "2026-05-24",
-          "daily_change": -0.15,
+          "nav": 2.0489,
+          "nav_date": "2026-05-25",
+          "daily_change": 1.7,
           "chg_1m": 6.92,
           "chg_3m": 14.49,
           "chg_6m": 12.43,
@@ -2705,7 +2907,10 @@
           "custody_fee": 0.2,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7
+          "free_hold_days": 7,
+          "sale_service_fee": 0.3,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0
         },
         {
           "code": "015518",
@@ -2713,22 +2918,26 @@
           "share_class": "A",
           "currency": "美元",
           "fund_type": "指数型-海外股票",
-          "nav": 0.3006,
-          "nav_date": "2026-05-24",
-          "daily_change": 0.0,
+          "nav": 0.3057,
+          "nav_date": "2026-05-25",
+          "daily_change": 1.7,
           "chg_1m": 7.7,
           "chg_3m": 15.97,
           "chg_6m": 17.74,
           "chg_ytd": 14.91,
           "chg_1y": 39.1,
-          "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "scale_raw": "3.15亿",
+          "established": "2022-04-14",
+          "manager": "赵宗庭",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
-          "fee": "1.2"
+          "fee": "1.2",
+          "scale": 3.15,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 1.0
         }
       ],
       "default_share_code": "015299",
