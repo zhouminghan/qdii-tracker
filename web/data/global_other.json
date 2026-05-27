@@ -1879,8 +1879,8 @@
           "established": "",
           "manager": "",
           "chg_ytd": 2.52,
-          "buy_status": "开放申购",
-          "sell_status": "开放赎回",
+          "buy_status": "暂停申购",
+          "sell_status": "暂停赎回",
           "buy_min": 1.0,
           "daily_limit": 0.0,
           "fee": "1.5",
@@ -1906,8 +1906,8 @@
           "established": "",
           "manager": "",
           "chg_ytd": 2.36,
-          "buy_status": "开放申购",
-          "sell_status": "开放赎回",
+          "buy_status": "暂停申购",
+          "sell_status": "暂停赎回",
           "buy_min": 1.0,
           "daily_limit": 0.0,
           "fee": "",
@@ -3678,5 +3678,5 @@
     }
   ],
   "total_scale": 261.04,
-  "enriched_at": "2026-05-26T17:54:17.103250"
+  "enriched_at": "2026-05-27T05:09:52.588810"
 }
