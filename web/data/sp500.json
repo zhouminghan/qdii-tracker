@@ -168,16 +168,18 @@
           "chg_6m": 10.44,
           "chg_ytd": 8.96,
           "chg_1y": 28.8,
-          "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "scale_raw": "59.27亿",
+          "established": "2021-09-07",
+          "manager": "万琼",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
           "fee": "1.2",
           "sell_status": "开放赎回",
-          "buy_min": 1.0
+          "buy_min": 1.0,
+          "scale": 59.27,
+          "sale_service_fee": 0.0
         },
         {
           "code": "013499",
@@ -340,7 +342,8 @@
           "free_hold_days": 7,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 1.95
+          "chg_1w": 1.95,
+          "sale_service_fee": 0.3
         },
         {
           "code": "017642",
@@ -656,7 +659,8 @@
           "fee": "0.12",
           "first_buy_rate": 1.2,
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "sale_service_fee": 0.0
         },
         {
           "code": "012860",
@@ -1064,7 +1068,8 @@
           "first_buy_rate": 0.0,
           "free_hold_days": 7,
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "sale_service_fee": 0.3
         },
         {
           "code": "018066",
@@ -1159,7 +1164,8 @@
           "first_buy_rate": 1.0,
           "free_hold_days": 7,
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "sale_service_fee": 0.0
         },
         {
           "code": "017030",

@@ -155,16 +155,17 @@
           "chg_6m": 43.28,
           "chg_ytd": 39.58,
           "chg_1y": 67.61,
-          "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "scale_raw": "4.57亿",
+          "established": "2025-02-18",
+          "manager": "李耀柱",
           "buy_status": "限大额",
           "daily_limit": 0.0,
           "buy_rules": [],
           "sell_rules": [],
           "fee": "",
           "sell_status": "开放赎回",
-          "buy_min": 500.0
+          "buy_min": 500.0,
+          "scale": 4.57
         },
         {
           "code": "000906",
@@ -2798,7 +2799,8 @@
           "free_hold_days": 180,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 4.94
+          "chg_1w": 4.94,
+          "sale_service_fee": 0.0
         },
         {
           "code": "017145",
@@ -2897,7 +2899,8 @@
           "chg_1w": 10.82,
           "chg_2y": 128.07,
           "chg_3y": 78.51,
-          "chg_since_inception": 199.0
+          "chg_since_inception": 199.0,
+          "sale_service_fee": 1.5
         },
         {
           "code": "002892",

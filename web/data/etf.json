@@ -36,7 +36,8 @@
           "etf_price": 1.649,
           "etf_change_pct": 2.17,
           "sell_status": "场内交易",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "sale_service_fee": 0.8
         }
       ],
       "default_share_code": "159941",
@@ -74,7 +75,8 @@
           "etf_price": 2.541,
           "etf_change_pct": 0.47,
           "sell_status": "场内交易",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "sale_service_fee": 0.8
         }
       ],
       "default_share_code": "513500",
@@ -268,7 +270,8 @@
           "etf_price": 2.34,
           "etf_change_pct": 1.83,
           "sell_status": "场内交易",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "sale_service_fee": 0.8
         }
       ],
       "default_share_code": "159659",
@@ -374,8 +377,8 @@
           "chg_1y": 32.9,
           "scale": 53.1474317,
           "scale_raw": "53.15亿",
-          "established": "",
-          "manager": "",
+          "established": "2023-03-01",
+          "manager": "柳军",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
           "buy_rules": [],
@@ -384,7 +387,8 @@
           "etf_price": 2.49,
           "etf_change_pct": 1.97,
           "sell_status": "场内交易",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "sale_service_fee": 0.8
         }
       ],
       "default_share_code": "513110",

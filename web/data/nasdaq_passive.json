@@ -838,7 +838,8 @@
           "free_hold_days": 7,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 3.75
+          "chg_1w": 3.75,
+          "sale_service_fee": 0.2
         },
         {
           "code": "022525",
@@ -1272,7 +1273,8 @@
           "sell_rules": [],
           "fee": "",
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "sale_service_fee": 0.25
         }
       ],
       "default_share_code": "016532",
@@ -1708,7 +1710,8 @@
           "fee": "",
           "scale": 9.49,
           "sell_status": "开放赎回",
-          "buy_min": 100.0
+          "buy_min": 100.0,
+          "sale_service_fee": 0.3
         }
       ],
       "default_share_code": "539001",
@@ -1882,15 +1885,16 @@
           "chg_ytd": 15.75,
           "chg_1y": 39.61,
           "scale_raw": "",
-          "established": "",
-          "manager": "",
+          "established": "2021-07-23",
+          "manager": "伍臣东",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
           "buy_rules": [],
           "sell_rules": [],
           "fee": "",
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "sale_service_fee": 0.3
         }
       ],
       "default_share_code": "161130",
@@ -1958,7 +1962,8 @@
           "first_buy_rate": 1.0,
           "free_hold_days": 7,
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "sale_service_fee": 0.0
         },
         {
           "code": "016057",
@@ -2083,7 +2088,8 @@
           "fee": "",
           "scale": 6.52,
           "sell_status": "开放赎回",
-          "buy_min": 100.0
+          "buy_min": 100.0,
+          "sale_service_fee": 0.3
         }
       ],
       "default_share_code": "016055",
@@ -2207,7 +2213,8 @@
           "free_hold_days": 7,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 3.78
+          "chg_1w": 3.78,
+          "sale_service_fee": 0.4
         },
         {
           "code": "021773",
