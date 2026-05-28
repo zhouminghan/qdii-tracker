@@ -63,7 +63,7 @@ def main():
         }
 
     # 3. 合并到现有 JSON 文件
-    for cat in ["sp500", "nasdaq_passive", "active", "global_other", "etf"]:
+    for cat in ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf"]:
         fp = data_dir / f"{cat}.json"
         if not fp.exists():
             continue

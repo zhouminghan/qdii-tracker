@@ -83,7 +83,8 @@
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 9.26
+          "chg_1w": 9.26,
+          "free_hold_days": 730
         },
         {
           "code": "021277",
@@ -160,13 +161,36 @@
           "manager": "李耀柱",
           "buy_status": "限大额",
           "daily_limit": 0.0,
-          "buy_rules": [],
-          "sell_rules": [],
+          "buy_rules": [
+            {
+              "condition": "---",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限<30天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30天<=持有期限",
+              "rate": 0.0
+            }
+          ],
           "fee": "",
           "sell_status": "开放赎回",
           "buy_min": 500.0,
           "scale": 4.57,
-          "sale_service_fee": 0.5
+          "sale_service_fee": 0.5,
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 0.0,
+          "free_hold_days": 30,
+          "chg_since_inception": 63.64
         },
         {
           "code": "000906",
@@ -191,12 +215,47 @@
           "full_name": "广发全球精选股票型证券投资基金",
           "buy_status": "限大额",
           "daily_limit": 0.0,
-          "buy_rules": [],
-          "sell_rules": [],
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<20万",
+              "rate": 1.6
+            },
+            {
+              "condition": "20万<=买入金额<100万",
+              "rate": 1.0
+            },
+            {
+              "condition": "100万<=买入金额<200万",
+              "rate": 0.5
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限<1年",
+              "rate": 0.5
+            },
+            {
+              "condition": "1年<=持有期限<2年",
+              "rate": 0.3
+            },
+            {
+              "condition": "2年<=持有期限",
+              "rate": 0.0
+            }
+          ],
           "fee": "1.6",
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 1.6,
+          "free_hold_days": 730,
+          "chg_since_inception": 423.32
         }
       ],
       "default_share_code": "270023",
@@ -278,10 +337,11 @@
           "custody_fee": 0.2,
           "fee": "0.15",
           "first_buy_rate": 1.5,
-          "sale_service_fee": 1.2,
+          "sale_service_fee": null,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 3.82
+          "chg_1w": 3.82,
+          "free_hold_days": 730
         },
         {
           "code": "000044",
@@ -306,12 +366,51 @@
           "full_name": "嘉实美国成长股票型证券投资基金",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
-          "buy_rules": [],
-          "sell_rules": [],
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<50万",
+              "rate": 1.5
+            },
+            {
+              "condition": "50万<=买入金额<200万",
+              "rate": 1.2
+            },
+            {
+              "condition": "200万<=买入金额<500万",
+              "rate": 0.8
+            },
+            {
+              "condition": "500万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限<1.0年",
+              "rate": 0.5
+            },
+            {
+              "condition": "1.0年<=持有期限<2.0年",
+              "rate": 0.3
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
           "fee": "0.15",
-          "sale_service_fee": 1.2,
+          "sale_service_fee": null,
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 1.5,
+          "free_hold_days": 730,
+          "chg_since_inception": 475.5
         }
       ],
       "default_share_code": "000043",
@@ -535,7 +634,8 @@
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 10.89
+          "chg_1w": 10.89,
+          "free_hold_days": 730
         },
         {
           "code": "012922",
@@ -613,12 +713,47 @@
           "manager": "郑希",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
-          "buy_rules": [],
-          "sell_rules": [],
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<20万",
+              "rate": 1.5
+            },
+            {
+              "condition": "20万<=买入金额<100万",
+              "rate": 1.2
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "小于等于6天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限",
+              "rate": 0.75
+            },
+            {
+              "condition": "30天<=持有期限",
+              "rate": 0.5
+            },
+            {
+              "condition": "1.0年<=持有期限",
+              "rate": 0.25
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
           "fee": "0.15",
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 1.5,
+          "free_hold_days": 730,
+          "chg_since_inception": 306.76
         },
         {
           "code": "012923",
@@ -639,12 +774,35 @@
           "manager": "郑希",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
-          "buy_rules": [],
-          "sell_rules": [],
+          "buy_rules": [
+            {
+              "condition": "---",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "小于等于6天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限",
+              "rate": 0.5
+            },
+            {
+              "condition": "30天<=持有期限",
+              "rate": 0.0
+            }
+          ],
           "fee": "",
           "sale_service_fee": 0.4,
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 0.0,
+          "free_hold_days": 30,
+          "chg_since_inception": 299.17
         }
       ],
       "default_share_code": "012920",
@@ -724,7 +882,9 @@
           "first_buy_rate": 1.2,
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "free_hold_days": 730,
+          "chg_since_inception": 571.12
         },
         {
           "code": "012868",
@@ -772,7 +932,8 @@
           "free_hold_days": 7,
           "sale_service_fee": 0.35,
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "chg_since_inception": 142.9
         }
       ],
       "default_share_code": "161128",
@@ -934,13 +1095,48 @@
           "manager": "李湘杰",
           "buy_status": "限大额",
           "daily_limit": 0.0,
-          "buy_rules": [],
-          "sell_rules": [],
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<10万",
+              "rate": 1.5
+            },
+            {
+              "condition": "10万<=买入金额<40万",
+              "rate": 1.2
+            },
+            {
+              "condition": "40万<=买入金额<100万",
+              "rate": 0.8
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限<30天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30天<=持有期限<1.0年",
+              "rate": 0.5
+            },
+            {
+              "condition": "1.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
           "fee": "1.5",
           "scale": 33.0,
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
-          "buy_min": 1.0
+          "buy_min": 1.0,
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 1.5,
+          "free_hold_days": 365,
+          "chg_since_inception": 205.07
         },
         {
           "code": "019448",
@@ -961,13 +1157,48 @@
           "manager": "李湘杰",
           "buy_status": "限大额",
           "daily_limit": 0.0,
-          "buy_rules": [],
-          "sell_rules": [],
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<10万",
+              "rate": 1.5
+            },
+            {
+              "condition": "10万<=买入金额<40万",
+              "rate": 1.2
+            },
+            {
+              "condition": "40万<=买入金额<100万",
+              "rate": 0.8
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限<30天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30天<=持有期限<1.0年",
+              "rate": 0.5
+            },
+            {
+              "condition": "1.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
           "fee": "1.5",
           "scale": 33.0,
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
-          "buy_min": 1.0
+          "buy_min": 1.0,
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 1.5,
+          "free_hold_days": 365,
+          "chg_since_inception": 205.07
         }
       ],
       "default_share_code": "005698",
@@ -1129,13 +1360,48 @@
           "manager": "徐成",
           "buy_status": "限大额",
           "daily_limit": 0.0,
-          "buy_rules": [],
-          "sell_rules": [],
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<20万",
+              "rate": 1.5
+            },
+            {
+              "condition": "20万<=买入金额<50万",
+              "rate": 0.8
+            },
+            {
+              "condition": "50万<=买入金额<100万",
+              "rate": 0.4
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限<30天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30天<=持有期限<180天",
+              "rate": 0.5
+            },
+            {
+              "condition": "180天<=持有期限",
+              "rate": 0.0
+            }
+          ],
           "fee": "1.5",
           "scale": 1.38,
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 1.5,
+          "free_hold_days": 180,
+          "chg_since_inception": 676.95
         },
         {
           "code": "021843",
@@ -1156,13 +1422,36 @@
           "manager": "徐成",
           "buy_status": "限大额",
           "daily_limit": 0.0,
-          "buy_rules": [],
-          "sell_rules": [],
+          "buy_rules": [
+            {
+              "condition": "---",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限<30天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30天<=持有期限",
+              "rate": 0.0
+            }
+          ],
           "fee": "",
           "scale": 0.22,
           "sale_service_fee": 0.4,
           "sell_status": "开放赎回",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 0.0,
+          "free_hold_days": 30,
+          "chg_since_inception": 161.47
         }
       ],
       "default_share_code": "006373",
@@ -1243,7 +1532,8 @@
           "free_hold_days": 180,
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "chg_since_inception": 184.01
         },
         {
           "code": "017093",
@@ -1299,7 +1589,8 @@
           "free_hold_days": 180,
           "sale_service_fee": 0.4,
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "chg_since_inception": 179.83
         },
         {
           "code": "019118",
@@ -1347,7 +1638,8 @@
           "free_hold_days": 7,
           "sale_service_fee": 0.2,
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "chg_since_inception": 121.01
         },
         {
           "code": "017092",
@@ -1368,13 +1660,48 @@
           "manager": "汪洋",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
-          "buy_rules": [],
-          "sell_rules": [],
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<20万",
+              "rate": 1.2
+            },
+            {
+              "condition": "20万<=买入金额<40万",
+              "rate": 0.8
+            },
+            {
+              "condition": "40万<=买入金额<100万",
+              "rate": 0.4
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限<30天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30天<=持有期限<180天",
+              "rate": 0.5
+            },
+            {
+              "condition": "180天<=持有期限",
+              "rate": 0.0
+            }
+          ],
           "fee": "1.2",
           "scale": 23.05,
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
-          "buy_min": 1.0
+          "buy_min": 1.0,
+          "mgmt_fee": 0.8,
+          "custody_fee": 0.2,
+          "first_buy_rate": 1.2,
+          "free_hold_days": 180,
+          "chg_since_inception": 189.42
         }
       ],
       "default_share_code": "017091",
@@ -1569,7 +1896,8 @@
           "free_hold_days": 30,
           "sale_service_fee": 0.4,
           "sell_status": "开放赎回",
-          "buy_min": 1.0
+          "buy_min": 1.0,
+          "chg_since_inception": 151.76
         },
         {
           "code": "006426",
@@ -1590,12 +1918,47 @@
           "manager": "杨瑨",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
-          "buy_rules": [],
-          "sell_rules": [],
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<20万",
+              "rate": 1.6
+            },
+            {
+              "condition": "20万<=买入金额<50万",
+              "rate": 1.0
+            },
+            {
+              "condition": "50万<=买入金额<100万",
+              "rate": 0.5
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限<30天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30天<=持有期限<180天",
+              "rate": 0.5
+            },
+            {
+              "condition": "180天<=持有期限",
+              "rate": 0.0
+            }
+          ],
           "fee": "0.16",
           "sale_service_fee": 0.0,
           "sell_status": "暂停赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 1.5,
+          "free_hold_days": 180,
+          "chg_since_inception": 70.06
         }
       ],
       "default_share_code": "001668",
@@ -1811,7 +2174,8 @@
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 9.68
+          "chg_1w": 9.68,
+          "free_hold_days": 730
         },
         {
           "code": "018147",
@@ -1952,7 +2316,9 @@
           "first_buy_rate": 1.5,
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "free_hold_days": 730,
+          "chg_since_inception": 284.75
         },
         {
           "code": "014002",
@@ -2004,7 +2370,8 @@
           "free_hold_days": 30,
           "sale_service_fee": 0.4,
           "sell_status": "开放赎回",
-          "buy_min": 10.0
+          "buy_min": 10.0,
+          "chg_since_inception": 122.31
         }
       ],
       "default_share_code": "006555",
@@ -2518,7 +2885,8 @@
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 9.09
+          "chg_1w": 9.09,
+          "free_hold_days": 730
         },
         {
           "code": "016665",
@@ -2664,7 +3032,8 @@
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 11.84
+          "chg_1w": 11.84,
+          "free_hold_days": 730
         },
         {
           "code": "008254",
@@ -2903,7 +3272,47 @@
           "chg_2y": 128.07,
           "chg_3y": 78.51,
           "chg_since_inception": 199.0,
-          "sale_service_fee": 1.5
+          "sale_service_fee": null,
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 1.5,
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<50.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "50.0万<=买入金额<200.0万",
+              "rate": 1.2
+            },
+            {
+              "condition": "200.0万<=买入金额<500.0万",
+              "rate": 0.8
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "free_hold_days": 365
         },
         {
           "code": "002892",
@@ -2922,13 +3331,50 @@
           "scale_raw": "6.69亿",
           "established": "2016-12-14",
           "manager": "刘平",
-          "sale_service_fee": 1.2,
+          "sale_service_fee": null,
           "chg_ytd": 78.66,
           "buy_status": "限大额",
           "sell_status": "开放赎回",
           "buy_min": 1.0,
           "daily_limit": 0.0,
-          "fee": "1.5"
+          "fee": "1.5",
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 1.5,
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<10万",
+              "rate": 1.5
+            },
+            {
+              "condition": "10万<=买入金额<40万",
+              "rate": 1.2
+            },
+            {
+              "condition": "40万<=买入金额<100万",
+              "rate": 0.8
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限<30天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30天<=持有期限<1.0年",
+              "rate": 0.5
+            },
+            {
+              "condition": "1.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "free_hold_days": 365,
+          "chg_since_inception": 195.68
         },
         {
           "code": "002893",
@@ -2947,17 +3393,54 @@
           "scale_raw": "6.69亿",
           "established": "2016-12-14",
           "manager": "刘平",
-          "sale_service_fee": 1.2,
+          "sale_service_fee": null,
           "chg_ytd": 75.94,
           "buy_status": "限大额",
           "sell_status": "开放赎回",
           "buy_min": 1.0,
           "daily_limit": 0.0,
-          "fee": "1.5"
+          "fee": "1.5",
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 1.5,
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<10万",
+              "rate": 1.5
+            },
+            {
+              "condition": "10万<=买入金额<40万",
+              "rate": 1.2
+            },
+            {
+              "condition": "40万<=买入金额<100万",
+              "rate": 0.8
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限<30天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30天<=持有期限<1.0年",
+              "rate": 0.5
+            },
+            {
+              "condition": "1.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "free_hold_days": 365,
+          "chg_since_inception": 195.68
         }
       ],
       "default_share_code": "002891",
-      "series_scale": 0
+      "series_scale": 6.69
     }
   ],
   "total_scale": 432.51

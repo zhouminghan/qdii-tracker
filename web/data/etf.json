@@ -2,7 +2,7 @@
   "generated_at": "2026-05-27T23:53:23.654923",
   "category": "etf",
   "label": "板块5 · 场内 ETF",
-  "series_count": 18,
+  "series_count": 17,
   "series": [
     {
       "series_id": "广发__纳斯达克ETF广发__etf",
@@ -37,7 +37,10 @@
           "etf_change_pct": 2.17,
           "sell_status": "场内交易",
           "buy_min": 0.0,
-          "sale_service_fee": 0.8
+          "sale_service_fee": 0.8,
+          "mgmt_fee": 0.8,
+          "custody_fee": 0.2,
+          "nav_date": "2026-05-28"
         }
       ],
       "default_share_code": "159941",
@@ -76,11 +79,15 @@
           "etf_change_pct": 0.47,
           "sell_status": "场内交易",
           "buy_min": 0.0,
-          "sale_service_fee": 0.8
+          "sale_service_fee": 0.8,
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.2,
+          "nav_date": "2026-05-28"
         }
       ],
       "default_share_code": "513500",
-      "series_scale": 252.362935
+      "series_scale": 252.362935,
+      "starred": true
     },
     {
       "series_id": "国泰__纳斯达克ETF国泰__etf",
@@ -115,11 +122,15 @@
           "etf_change_pct": 1.74,
           "sale_service_fee": 0.8,
           "sell_status": "场内交易",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.2,
+          "nav_date": "2026-05-28"
         }
       ],
       "default_share_code": "513100",
-      "series_scale": 210.43164131
+      "series_scale": 210.43164131,
+      "starred": true
     },
     {
       "series_id": "华夏__纳斯达克ETF华夏__etf",
@@ -154,7 +165,10 @@
           "etf_change_pct": 1.77,
           "sale_service_fee": 0.8,
           "sell_status": "场内交易",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.2,
+          "nav_date": "2026-05-28"
         }
       ],
       "default_share_code": "513300",
@@ -193,7 +207,10 @@
           "etf_change_pct": 1.82,
           "sale_service_fee": 0.8,
           "sell_status": "场内交易",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.1,
+          "nav_date": "2026-05-28"
         }
       ],
       "default_share_code": "159501",
@@ -232,7 +249,10 @@
           "etf_change_pct": 2.12,
           "sale_service_fee": 0.5,
           "sell_status": "场内交易",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.2,
+          "nav_date": "2026-05-28"
         }
       ],
       "default_share_code": "159632",
@@ -271,7 +291,10 @@
           "etf_change_pct": 1.83,
           "sell_status": "场内交易",
           "buy_min": 0.0,
-          "sale_service_fee": 0.8
+          "sale_service_fee": 0.8,
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.15,
+          "nav_date": "2026-05-28"
         }
       ],
       "default_share_code": "159659",
@@ -310,7 +333,10 @@
           "etf_change_pct": 2.35,
           "sale_service_fee": 0.8,
           "sell_status": "场内交易",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "mgmt_fee": 0.8,
+          "custody_fee": 0.2,
+          "nav_date": "2026-05-28"
         }
       ],
       "default_share_code": "159513",
@@ -349,7 +375,10 @@
           "etf_change_pct": 0.42,
           "sale_service_fee": 0.8,
           "sell_status": "场内交易",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.15,
+          "nav_date": "2026-05-28"
         }
       ],
       "default_share_code": "513650",
@@ -388,7 +417,10 @@
           "etf_change_pct": 1.97,
           "sell_status": "场内交易",
           "buy_min": 0.0,
-          "sale_service_fee": 0.8
+          "sale_service_fee": 0.8,
+          "mgmt_fee": 0.8,
+          "custody_fee": 0.2,
+          "nav_date": "2026-05-28"
         }
       ],
       "default_share_code": "513110",
@@ -427,7 +459,10 @@
           "etf_change_pct": 1.69,
           "sale_service_fee": 0.8,
           "sell_status": "场内交易",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.1,
+          "nav_date": "2026-05-28"
         }
       ],
       "default_share_code": "159696",
@@ -466,7 +501,10 @@
           "etf_change_pct": 2.19,
           "sale_service_fee": 0.8,
           "sell_status": "场内交易",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.15,
+          "nav_date": "2026-05-28"
         }
       ],
       "default_share_code": "159660",
@@ -505,7 +543,10 @@
           "etf_change_pct": 2.05,
           "sale_service_fee": 0.8,
           "sell_status": "场内交易",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.15,
+          "nav_date": "2026-05-28"
         }
       ],
       "default_share_code": "513390",
@@ -544,7 +585,10 @@
           "etf_change_pct": 0.16,
           "sale_service_fee": 0.8,
           "sell_status": "场内交易",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.15,
+          "nav_date": "2026-05-28"
         }
       ],
       "default_share_code": "159655",
@@ -583,89 +627,14 @@
           "etf_change_pct": 2.16,
           "sale_service_fee": 0.8,
           "sell_status": "场内交易",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.1,
+          "nav_date": "2026-05-28"
         }
       ],
       "default_share_code": "513870",
       "series_scale": 25.68886381
-    },
-    {
-      "series_id": "易方达__美国50ETF易方达__etf",
-      "company": "易方达",
-      "company_display": "易方达",
-      "series_name": "美国50ETF易方达",
-      "display_name": "美国50ETF易方达",
-      "category": "etf",
-      "etf_target": "us50",
-      "shares": [
-        {
-          "code": "513850",
-          "name": "美国50ETF易方达",
-          "share_class": "默认",
-          "currency": "人民币",
-          "fund_type": "指数型-海外股票",
-          "chg_1m": 5.43,
-          "chg_3m": 10.01,
-          "chg_6m": 7.41,
-          "chg_ytd": 7.51,
-          "chg_1y": 29.8,
-          "scale": 20.86630594,
-          "scale_raw": "20.87亿",
-          "established": "2023-11-06",
-          "manager": "林伟斌",
-          "buy_status": "场内交易",
-          "daily_limit": 0.0,
-          "buy_rules": [],
-          "sell_rules": [],
-          "fee": "nan",
-          "etf_price": 1.773,
-          "etf_change_pct": 0.0,
-          "sale_service_fee": 0.8,
-          "sell_status": "场内交易",
-          "buy_min": 0.0
-        }
-      ],
-      "default_share_code": "513850",
-      "series_scale": 20.86630594
-    },
-    {
-      "series_id": "汇添富__美国50ETF汇添富__etf",
-      "company": "汇添富",
-      "company_display": "汇添富",
-      "series_name": "美国50ETF汇添富",
-      "display_name": "美国50ETF汇添富",
-      "category": "etf",
-      "etf_target": "us50",
-      "shares": [
-        {
-          "code": "159577",
-          "name": "美国50ETF汇添富",
-          "share_class": "默认",
-          "currency": "人民币",
-          "fund_type": "指数型-海外股票",
-          "chg_1m": 5.65,
-          "chg_3m": 10.55,
-          "chg_6m": 7.75,
-          "chg_ytd": 8.19,
-          "chg_1y": 29.88,
-          "scale": 10.12586991,
-          "scale_raw": "10.13亿",
-          "established": "2024-02-05",
-          "manager": "乐无穹",
-          "buy_status": "场内交易",
-          "daily_limit": 0.0,
-          "buy_rules": [],
-          "sell_rules": [],
-          "fee": "nan",
-          "etf_price": 1.535,
-          "etf_change_pct": -3.46,
-          "sale_service_fee": 0.8,
-          "sell_status": "场内交易",
-          "buy_min": 0.0
-        }
-      ],
-      "default_share_code": "159577",
-      "series_scale": 10.12586991
     },
     {
       "series_id": "国泰__标普500ETF国泰__etf",
@@ -700,11 +669,49 @@
           "etf_change_pct": 0.41,
           "sale_service_fee": 0.8,
           "sell_status": "场内交易",
-          "buy_min": 0.0
+          "buy_min": 0.0,
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.15,
+          "nav_date": "2026-05-28"
         }
       ],
       "default_share_code": "159612",
       "series_scale": 8.72891163
+    },
+    {
+      "series_id": "华安__日经225ETF华安__etf",
+      "company": "华安",
+      "company_display": "华安",
+      "series_name": "日经225ETF华安",
+      "display_name": "日经225ETF华安",
+      "category": "etf",
+      "etf_target": "nikkei225",
+      "default_share_code": "513880",
+      "series_scale": 25.7087586,
+      "shares": [
+        {
+          "code": "513880",
+          "name": "日经225ETF华安",
+          "share_class": "默认",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "established": "2019-06-12",
+          "manager": "倪斌",
+          "scale": 25.7087586,
+          "scale_raw": "25.71亿",
+          "sale_service_fee": 0.5,
+          "mgmt_fee": 0.2,
+          "custody_fee": 0.05,
+          "chg_1m": 7.22,
+          "chg_3m": 7.84,
+          "chg_6m": 23.69,
+          "chg_1y": 48.77,
+          "etf_price": 2.038,
+          "etf_change_pct": -1.21,
+          "chg_ytd": 18.4,
+          "nav_date": "2026-05-28"
+        }
+      ]
     }
   ],
   "total_scale": 1778.38

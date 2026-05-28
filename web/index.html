@@ -105,8 +105,8 @@
       display: none;
       position: absolute;
       right: 0;
-      top: 100%;
-      margin-top: 4px;
+      bottom: 100%;
+      margin-bottom: 4px;
       background: white;
       border: 1px solid #e5e7eb;
       border-radius: 8px;
@@ -442,14 +442,15 @@
   </footer>
 
   <script>
-    // 数据源（后端生成的 5 个 JSON），前端渲染时前 4 个合并到"场外"Tab
-    const DATA_CATEGORIES = ['sp500', 'nasdaq_passive', 'active', 'global_other', 'etf'];
+    // 数据源（后端生成的 JSON），前端渲染时前 5 个合并到"场外"Tab
+    const DATA_CATEGORIES = ['sp500', 'nasdaq_passive', 'active', 'global_index', 'global_other', 'etf'];
     const RENDER_TABS = ['offshore', 'etf'];
-    // 场外 Tab 内部的分组配置（对应 Chips 的 4 个筛选项）
+    // 场外 Tab 内部的分组配置（对应 Chips 的 5 个筛选项）
     const OFFSHORE_GROUPS = [
       { key: 'sp500',          label: '📊 标普500 指数基金',  desc: 'S&P 500 · 被动跟踪' },
       { key: 'nasdaq_passive', label: '💻 纳指100 指数基金',  desc: 'NASDAQ 100 · 被动跟踪' },
-      { key: 'active',         label: '🎯 美股主动基金',      desc: '精选 18 只重仓美股的主动 QDII' },
+      { key: 'active',         label: '🎯 美股主动基金',      desc: '精选 19 只重仓美股的主动 QDII' },
+      { key: 'global_index',   label: '🌍 全球指数基金',      desc: '跟踪海外非美指数（日经225 等）' },
       { key: 'global_other',   label: '🌐 全球/其他 QDII',    desc: '全球配置型 / 非美股核心方向' },
     ];
     const STATE = {
@@ -1089,11 +1090,10 @@
     }
 
     // ETF 分组配置（按跟踪标的）
-    // 醒目只有标普500 和 纳指100，其余（美国50 + 其他）统一归入"全球/其他"
     const ETF_GROUPS = [
       { key: 'sp500',        label: '📊 跟踪 标普500 指数',    desc: 'S&P 500 · 美股大盘蓝筹' },
       { key: 'nasdaq100',    label: '💻 跟踪 纳斯达克100 指数', desc: 'NASDAQ 100 · 美股科技龙头' },
-      { key: 'global_other', label: '🌐 全球/其他 ETF',        desc: '美国50 / 全球配置 / 其他跨境方向' },
+      { key: 'global_other', label: '🌐 全球/其他 ETF',        desc: '日经225 / 全球配置 / 其他跨境方向' },
     ];
 
     function renderCategory(tab) {
@@ -1109,7 +1109,7 @@
       let totalSeries = 0, totalShares = 0, totalScale = 0;
 
       if (isOffshore) {
-        // 场外 = sp500 + nasdaq_passive + active 三个 source 分组
+        // 场外 = sp500 + nasdaq_passive + active + global_index + global_other 五个分组
         groups = OFFSHORE_GROUPS.map(g => {
           const src = STATE.data[g.key];
           const items = src?.series || [];
@@ -1131,8 +1131,12 @@
           (byTarget[t] = byTarget[t] || []).push(s);
         }
         for (const key in byTarget) {
-          // 组内按规模降序（与场外一致，大盘子在前）
-          byTarget[key].sort((a, b) => (b.series_scale || 0) - (a.series_scale || 0));
+          // 组内排序：starred 置顶，其余按规模降序
+          byTarget[key].sort((a, b) => {
+            if (a.starred && !b.starred) return -1;
+            if (!a.starred && b.starred) return 1;
+            return (b.series_scale || 0) - (a.series_scale || 0);
+          });
         }
         groups = ETF_GROUPS
           .map(g => ({ ...g, items: byTarget[g.key] || [], sourceCat: 'etf', isActive: false }))
@@ -1225,9 +1229,9 @@
               ${sortableTh('chg_1m', '近1月')}
               ${sortableTh('chg_ytd', '今年来')}
               ${sortableTh('chg_1y', '近1年')}
-              ${sortableTh('chg_since_inception', '成立来')}
+              ${isEtf ? '' : sortableTh('chg_since_inception', '成立来')}
               ${isEtf ? '' : sortableTh('buy_status', '申购', 'center')}
-              <th class="text-center py-3 px-3 font-medium">份额</th>
+              ${isEtf ? '' : '<th class="text-center py-3 px-3 font-medium">类型</th>'}
               <th class="text-center py-3 px-3 font-medium">走势</th>
               <th class="text-center py-3 px-3 font-medium">持仓</th>
             </tr>
@@ -1400,8 +1404,8 @@
       // 估值列已移除
       const estimateTd = '';
 
-      // 展开后的子表格 colspan（ETF=10，场外=11，去掉了估值列）
-      const expandColspan = isEtf ? 10 : 12;
+      // 展开后的子表格 colspan（ETF=9，场外=12）
+      const expandColspan = isEtf ? 9 : 12;
 
       return `
         <tr class="series-row border-b border-stone-100 ${isEtf ? '' : 'hover:bg-stone-50 cursor-pointer'} transition" data-series-id="${series.series_id}" data-is-etf="${isEtf ? '1' : '0'}"${grpAttr}>
@@ -1414,9 +1418,9 @@
             <div class="flex items-center gap-3">
               ${getLogo(series.company)}
               <div class="min-w-0">
-                <div class="font-medium truncate">${isEtf ? def.name : series.display_name}</div>
+                <div class="font-medium truncate">${isEtf && ['513500','513100'].includes(def.code) ? '⭐ ' : ''}${isEtf ? def.name : series.display_name}</div>
                 <div class="text-xs text-stone-500 num mt-0.5">
-                  ${def.code} · ${isEtf ? '场内 ETF' : (def.share_class + (def.currency === '美元' ? ' · 美元' : ''))}
+                  ${def.code}${isEtf ? '' : ' · ' + def.share_class + (def.currency === '美元' ? ' · 美元' : '')}
                   <span class="badge ${isEtf ? 'badge-qdii' : 'badge-qdii'} ml-1">${isEtf ? 'ETF' : 'QDII'}</span>
                 </div>
                 ${isActive && def.manager ? `<div class="text-[11px] text-stone-400 mt-0.5 truncate">👤 ${def.manager}</div>` : ''}
@@ -1433,9 +1437,9 @@
           ${changeCell(def.chg_1m)}
           ${changeCell(def.chg_ytd)}
           ${changeCell(def.chg_1y)}
-          ${changeCell(def.chg_since_inception)}
+          ${isEtf ? '' : changeCell(def.chg_since_inception)}
           ${isEtf ? '' : `<td class="py-3 px-3 text-center">${statusBadge(def)}</td>`}
-          <td class="py-3 px-3 text-center text-stone-500 num text-xs">${isEtf ? '—' : series.shares.length}</td>
+          ${isEtf ? '' : `<td class="py-3 px-3 text-center text-stone-500 num text-xs">${series.shares.length}</td>`}
           ${trendTd}
           ${holdingsTd}
         </tr>
@@ -1448,7 +1452,6 @@
                   <tr>
                     <th class="text-left py-2 font-medium">代码</th>
                     <th class="text-left py-2 font-medium">份额名称</th>
-                    <th class="text-center py-2 font-medium">类别</th>
                     <th class="text-center py-2 font-medium">币种</th>
                     <th class="text-right py-2 font-medium">规模</th>
                     <th class="text-right py-2 font-medium">
@@ -1486,10 +1489,7 @@
           <td class="py-2 num">${sh.code}${isDefault ? '<span class="text-amber-500 ml-1">★</span>' : ''}</td>
           <td class="py-2 text-stone-600">${sh.name}</td>
           <td class="py-2 text-center">
-            <span class="badge bg-stone-200 text-stone-700">${sh.share_class}</span>
-          </td>
-          <td class="py-2 text-center">
-            <span class="badge ${curCls}">${sh.currency || '人民币'}</span>
+            <span class="badge ${curCls}">${sh.currency === '美元' ? '$' : '¥'}</span>
           </td>
           <td class="py-2 text-right num">${sh.scale_raw || `<span class="text-stone-300" title="基金公司未单独披露此份额规模">—</span>`}</td>
           <td class="py-2 text-right num">
@@ -1506,7 +1506,7 @@
       `;
     }
 
-    // 清理费率条件中的多余小数点：0.0万→0万, 100.0万→100万, 7.0天→7天, 2.0年→2年
+    // 清理费率条件：去多余小数点（0.0万→0万, 7.0天→7天, 2.0年→2年）
     function cleanCondition(s) {
       return s.replace(/(\d+)\.0(万|天|年)/g, '$1$2');
     }
@@ -1527,7 +1527,7 @@
 
       // A 类：综合费率 = 管理费 + 托管费（无销售服务费）
       // C 类：综合费率 = 管理费 + 托管费 + 销售服务费
-      const totalNote = `${totalFee.toFixed(2)}%/年`;
+      const totalNote = `${parseFloat(totalFee.toFixed(2))}%/年`;
       const detailNote = isC
         ? `管理费 ${mgmt}% + 托管费 ${custody}%${saleFee ? ' + 销售服务费 ' + saleFee + '%（按日从净值中扣取）' : ' + 销售服务费（待更新）'}`
         : `管理费 ${mgmt}% + 托管费 ${custody}%`;
@@ -1586,11 +1586,15 @@
         </div>
       `;
 
-      // 主展示：免X天 / 最高Y%
-      const label = freeDays != null
-        ? `<span class="text-green-600 font-medium">持有${freeDays}天免</span>`
-        : `<span class="text-stone-500">${rules[0].rate}%起</span>`;
-      return `<span class="fee-tip">${label}${popHtml}</span>`;
+      // 主展示：持有X天/年免 / 最高Y%
+      let freeLabel;
+      if (freeDays != null) {
+        const freeDisp = freeDays >= 365 ? (freeDays / 365) + '年' : freeDays + '天';
+        freeLabel = `<span class="text-green-600 font-medium">持${freeDisp}免</span>`;
+      } else {
+        freeLabel = `<span class="text-stone-500">${rules[0].rate}%起</span>`;
+      }
+      return `<span class="fee-tip">${freeLabel}${popHtml}</span>`;
     }
 
     function changeCell(v, small = false) {
@@ -1604,14 +1608,21 @@
 
     function statusBadge(sh) {
       const st = sh.buy_status || '';
-      if (!st) return '<span class="text-stone-400 text-xs">--</span>';
+      if (!st) return '<span class="text-stone-400 text-xs">—</span>';
+      // 美元 / E/F/I/D 类（非主流代销份额）：申购数据不准，显示 —
+      const mainClass = ['A','C','A(后端)','默认','LOF','FOF'];
+      if (sh.currency === '美元' || (sh.share_class && !mainClass.includes(sh.share_class))) {
+        return '<span class="text-stone-400 text-xs">—</span>';
+      }
       const cls = buyStatusClass(st);
       if (st.includes('暂停')) {
-        return `<span class="${cls}">${st}</span>`;
+        return `<span class="${cls}">暂停</span>`;
       }
-      if (st.includes('限') && sh.daily_limit) {
-        const symbol = sh.currency === '美元' ? '$' : '¥';
-        return `<span class="${cls}">${st} ${symbol}${formatLimit(sh.daily_limit)}</span>`;
+      if (st.includes('限') && sh.daily_limit > 0) {
+        return `<span class="${cls}">限 ¥${formatLimit(sh.daily_limit)}</span>`;
+      }
+      if (st.includes('限') && !sh.daily_limit) {
+        return '<span class="text-stone-400 text-xs">—</span>';
       }
       return `<span class="${cls}">${st}</span>`;
     }

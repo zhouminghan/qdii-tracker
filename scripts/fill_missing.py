@@ -89,16 +89,29 @@ def fetch_f10(code: str):
             result["scale"] = scale_num
             result["scale_raw"] = f"{scale_num}亿"
 
-    # 从费率页抓取销售服务费（管理费/托管费已由雪球接口覆盖，这里只补销售服务费）
+    # 从费率页抓取管理费/托管费/销售服务费/首档买入费率
     try:
         fee_url = f"https://fundf10.eastmoney.com/jjfl_{code}.html"
         fr = requests.get(fee_url, headers=HEADERS, timeout=8)
         if fr.status_code == 200:
             fr.encoding = "utf-8"
             fee_text = fr.text
+            # 销售服务费（注意：A类/默认类不应有高额销售服务费，写入时需校验 share_class）
             fm = re.search(r"销售服务费[率]?.*?<td[^>]*>([\d.]+)%", fee_text, re.DOTALL)
             if fm:
                 result["sale_service_fee"] = float(fm.group(1))
+            # 管理费
+            fm = re.search(r"管理费[率]?.*?<td[^>]*>([\d.]+)%", fee_text, re.DOTALL)
+            if fm:
+                result["mgmt_fee"] = float(fm.group(1))
+            # 托管费
+            fm = re.search(r"托管费[率]?.*?<td[^>]*>([\d.]+)%", fee_text, re.DOTALL)
+            if fm:
+                result["custody_fee"] = float(fm.group(1))
+            # 首档买入费率（申购费率表第一档）
+            fm = re.search(r"申购费率.*?<td[^>]*>([\d.]+)%", fee_text, re.DOTALL)
+            if fm:
+                result["first_buy_rate"] = float(fm.group(1))
     except Exception:
         pass
 
@@ -260,7 +273,7 @@ def main():
     data_dir = project_root / "web" / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
 
-    ALL_CATS = ["sp500", "nasdaq_passive", "active", "global_other", "etf"]
+    ALL_CATS = ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf"]
 
     loaded_data = {}
     for cat in ALL_CATS:
@@ -312,10 +325,10 @@ def main():
             print(f"  [{i}/{total}] ❌ {code} pzd 抓取失败")
         time.sleep(0.15)
 
-    # ------------------------- Pass 2：F10 基础信息 + 销售服务费 -------------------------
+    # ------------------------- Pass 2：F10 基础信息 + 费率 -------------------------
     print()
     print("=" * 50)
-    print("Pass 2: 从 F10 补充规模/成立日期/基金经理/销售服务费")
+    print("Pass 2: 从 F10 补充规模/成立日期/基金经理/费率")
     print("=" * 50)
     f10_targets = []
     for cat, d in loaded_data.items():
@@ -324,17 +337,24 @@ def main():
                 if sh.get("scale") in (None, "", 0) or \
                    sh.get("established") in (None, "") or \
                    sh.get("manager") in (None, "") or \
-                   sh.get("sale_service_fee") is None:
+                   sh.get("sale_service_fee") is None or \
+                   sh.get("mgmt_fee") is None or \
+                   sh.get("first_buy_rate") is None:
                     f10_targets.append((cat, sh["code"], sh))
     total2 = len(f10_targets)
-    print(f"🎯 目标：{total2} 只缺基础信息")
+    print(f"🎯 目标：{total2} 只缺基础信息/费率")
     success2 = 0
     for i, (cat, code, sh) in enumerate(f10_targets, 1):
         info = fetch_f10(code)
         if info:
             changed = []
-            for key in ["scale", "scale_raw", "established", "manager", "sale_service_fee"]:
+            for key in ["scale", "scale_raw", "established", "manager",
+                        "sale_service_fee", "mgmt_fee", "custody_fee", "first_buy_rate"]:
                 if info.get(key) is not None and sh.get(key) in (None, "", 0):
+                    # A类/默认类不应有高额销售服务费（>0.05%说明是误抓）
+                    if key == "sale_service_fee" and sh.get("share_class") in ("A", "默认", "A(后端)"):
+                        if info[key] > 0.05:
+                            continue
                     sh[key] = info[key]
                     changed.append(key)
             if changed:
@@ -343,6 +363,126 @@ def main():
         else:
             print(f"  [{i}/{total2}] ❌ {code} F10 失败")
         time.sleep(0.2)
+
+    # ------------------------- Pass 2b：补 buy_rules / sell_rules -------------------------
+
+    def normalize_condition(cond: str, is_buy: bool = True) -> str:
+        """统一费率条件格式：中文描述 → 远端符号格式
+        远端格式示例：'0.0万<买入金额<50.0万' / '7.0天<=持有期限<2.0年'
+        """
+        if not cond or cond == "---":
+            return cond
+        unit_field = "买入金额" if is_buy else "持有期限"
+
+        def _days_to_unit(val_str, unit):
+            """天数转年：365→1.0年, 730→2.0年, 1095→3.0年；其余保持天"""
+            unit = unit.rstrip("元")
+            if unit == "天":
+                days = float(val_str)
+                if days == 365:
+                    return "1.0", "年"
+                elif days == 730:
+                    return "2.0", "年"
+                elif days == 1095:
+                    return "3.0", "年"
+            return val_str, unit
+
+        # 处理 "大于等于X，小于Y" 格式
+        m = re.match(r"大于等于([\d.]+)(万元?|天|年)[，,]\s*小于([\d.]+)(万元?|天|年)", cond)
+        if m:
+            lo, u1, hi, u2 = m.group(1), m.group(2), m.group(3), m.group(4)
+            lo, u1 = _days_to_unit(lo, u1)
+            hi, u2 = _days_to_unit(hi, u2)
+            return f"{lo}{u1}<={unit_field}<{hi}{u2}"
+        # "小于X"
+        m = re.match(r"小于([\d.]+)(万元?|天|年)", cond)
+        if m:
+            val, u = m.group(1), m.group(2)
+            val, u = _days_to_unit(val, u)
+            return f"0.0{u}<{unit_field}<{val}{u}"
+        # "大于等于X"
+        m = re.match(r"大于等于([\d.]+)(万元?|天|年)", cond)
+        if m:
+            val, u = m.group(1), m.group(2)
+            val, u = _days_to_unit(val, u)
+            return f"{val}{u}<={unit_field}"
+        return cond
+
+    print()
+    print("=" * 50)
+    print("Pass 2b: 从天天基金费率页补充买入/卖出规则（缺失时）")
+    print("=" * 50)
+    fee_targets = []
+    for cat, d in loaded_data.items():
+        for s in d["series"]:
+            for sh in s["shares"]:
+                if not sh.get("buy_rules") and not sh.get("sell_rules"):
+                    fee_targets.append((cat, sh["code"], sh))
+    total2b = len(fee_targets)
+    print(f"🎯 目标：{total2b} 只缺买卖规则")
+    success2b = 0
+    for i, (cat, code, sh) in enumerate(fee_targets, 1):
+        try:
+            fee_url = f"https://fundf10.eastmoney.com/jjfl_{code}.html"
+            fr = requests.get(fee_url, headers=HEADERS, timeout=8)
+            if fr.status_code != 200:
+                continue
+            fr.encoding = "utf-8"
+            fee_text = fr.text
+
+            buy_rules = []
+            sell_rules = []
+
+            # 申购费率表（多档）
+            buy_section = re.search(r"申购费率.*?(<table.*?</table>)", fee_text, re.DOTALL)
+            if buy_section:
+                rows = re.findall(r"<tr>(.*?)</tr>", buy_section.group(1), re.DOTALL)
+                for row in rows:
+                    cells = re.findall(r"<td[^>]*>(.*?)</td>", row, re.DOTALL)
+                    if len(cells) >= 2:
+                        cond = re.sub(r"<[^>]+>", "", cells[0]).strip()
+                        cond = normalize_condition(cond, is_buy=True)
+                        rate_str = re.sub(r"<[^>]+>", "", cells[1]).strip()
+                        rate_m = re.search(r"([\d.]+)%", rate_str)
+                        rate_per = re.search(r"([\d.]+)元", rate_str)
+                        if rate_m:
+                            buy_rules.append({"condition": cond, "rate": float(rate_m.group(1))})
+                        elif rate_per:
+                            buy_rules.append({"condition": cond, "rate": float(rate_per.group(1))})
+
+            # 赎回费率表
+            sell_section = re.search(r"赎回费率.*?(<table.*?</table>)", fee_text, re.DOTALL)
+            if sell_section:
+                rows = re.findall(r"<tr>(.*?)</tr>", sell_section.group(1), re.DOTALL)
+                for row in rows:
+                    cells = re.findall(r"<td[^>]*>(.*?)</td>", row, re.DOTALL)
+                    if len(cells) >= 2:
+                        cond = re.sub(r"<[^>]+>", "", cells[0]).strip()
+                        cond = normalize_condition(cond, is_buy=False)
+                        rate_str = re.sub(r"<[^>]+>", "", cells[1]).strip()
+                        rate_m = re.search(r"([\d.]+)%", rate_str)
+                        if rate_m:
+                            sell_rules.append({"condition": cond, "rate": float(rate_m.group(1))})
+                        elif "0" in rate_str or "免" in rate_str:
+                            sell_rules.append({"condition": cond, "rate": 0.0})
+
+            if buy_rules or sell_rules:
+                sh["buy_rules"] = buy_rules
+                sh["sell_rules"] = sell_rules
+                # 免赎回费天数
+                for rule in sell_rules:
+                    if rule["rate"] == 0:
+                        m = re.search(r"(\d+(?:\.\d+)?)\s*[天日]", rule["condition"])
+                        if m:
+                            sh["free_hold_days"] = int(float(m.group(1)))
+                            break
+                success2b += 1
+        except Exception:
+            pass
+        if (i) % 20 == 0:
+            print(f"  进度: {i}/{total2b}")
+        time.sleep(0.2)
+    print(f"  ✅ 补上 {success2b}/{total2b} 只的买卖规则")
 
     # ------------------------- Pass 3：YTD 今年来收益 -------------------------
     print()
@@ -370,9 +510,60 @@ def main():
             print(f"  [{i}/{total3}] ❌ {code} 无累计收益率数据")
         time.sleep(0.2)
 
+    # ------------------------- Pass 4：成立来收益 chg_since_inception -------------------------
+    print()
+    print("=" * 50)
+    print("Pass 4: 补充成立来收益 chg_since_inception")
+    print("=" * 50)
+    inception_targets = []
+    for cat, d in loaded_data.items():
+        if cat == "etf":
+            continue  # ETF 不补（前端不显示该列）
+        for s in d["series"]:
+            for sh in s["shares"]:
+                if sh.get("chg_since_inception") is None:
+                    inception_targets.append((cat, sh["code"], sh))
+    total4 = len(inception_targets)
+    print(f"🎯 目标：{total4} 只缺成立来数据")
+    success4 = 0
+    fail4 = 0
+    try:
+        import akshare as ak
+        import pandas as pd
+        for i, (cat, code, sh) in enumerate(inception_targets, 1):
+            try:
+                df = ak.fund_open_fund_info_em(symbol=code, indicator="累计收益率走势")
+                if df is not None and len(df) > 0:
+                    ret_col = "累计收益率"
+                    last_val = df.iloc[-1][ret_col]
+                    if last_val is not None:
+                        sh["chg_since_inception"] = round(float(last_val), 2)
+                        success4 += 1
+                        if (i) % 10 == 0:
+                            print(f"  进度: {i}/{total4}")
+                    else:
+                        fail4 += 1
+                else:
+                    fail4 += 1
+            except Exception:
+                fail4 += 1
+            time.sleep(0.3)
+    except ImportError:
+        print("  ⚠️ akshare 未安装，跳过 Pass 4")
+    print(f"  ✅ 补上 {success4}/{total4} 只的成立来收益")
+
     # ------------------------- 统一写回 -------------------------
     print("\n💾 写回板块数据...")
     for cat, d in loaded_data.items():
+        # 重算 series_scale（fill_missing 可能补了新的 scale 数据）
+        for s in d["series"]:
+            a_rmb = [sh for sh in s["shares"]
+                     if sh.get("share_class") in ("A", "默认", "A(后端)")
+                     and sh.get("currency", "人民币") == "人民币"]
+            if a_rmb and a_rmb[0].get("scale"):
+                s["series_scale"] = a_rmb[0]["scale"]
+            elif not s.get("series_scale"):
+                s["series_scale"] = next((sh.get("scale") for sh in s["shares"] if sh.get("scale")), 0)
         fp = data_dir / f"{cat}.json"
         with open(fp, "w", encoding="utf-8") as f:
             json.dump(d, f, ensure_ascii=False, indent=2)

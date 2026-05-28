@@ -226,7 +226,7 @@ def main():
     # Step 2: 收集所有要补基础信息的基金代码
     all_codes = []
     series_by_cat = {}
-    for cat in ["sp500", "nasdaq_passive", "active", "global_other", "etf"]:
+    for cat in ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf"]:
         fp = data_dir / f"{cat}.json"
         if not fp.exists():
             continue
@@ -257,7 +257,7 @@ def main():
 
     # Step 4: 合并所有数据到 series 里
     print("\n🔀 合并数据并计算默认份额（按规模最大）...")
-    for cat in ["sp500", "nasdaq_passive", "active", "global_other", "etf"]:
+    for cat in ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf"]:
         if cat not in series_by_cat:
             continue
         data = series_by_cat[cat]
@@ -291,6 +291,8 @@ def main():
                         share["scale_raw"] = f"{etf_info['etf_scale_yi']:.2f}亿"
                     share["etf_price"] = etf_info.get("etf_price")
                     share["etf_change_pct"] = etf_info.get("etf_change_pct")
+                    # ETF 价格日期 = 抓取当天（东财快照）
+                    share["nav_date"] = datetime.now().strftime("%Y-%m-%d")
 
             # v3: 份额排序 —— 先人民币后美元、A<C<I<LOF
             series["shares"].sort(key=share_sort_key)
