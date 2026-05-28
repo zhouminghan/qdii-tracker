@@ -709,7 +709,12 @@
           "etf_price": 2.038,
           "etf_change_pct": -1.21,
           "chg_ytd": 18.4,
-          "nav_date": "2026-05-28"
+          "nav_date": "2026-05-28",
+          "buy_status": "场内交易",
+          "sell_status": "场内交易",
+          "buy_min": 0.0,
+          "daily_limit": 0.0,
+          "fee": "nan"
         }
       ]
     }
