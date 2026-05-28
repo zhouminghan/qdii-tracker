@@ -1,10 +1,14 @@
 """
-用天天基金 pingzhongdata 接口补全缺失字段：
-- 净值 nav / 净值日期 nav_date（场外）—— 每日强制覆盖（修复"已有值就锁死"的 bug）
+用天天基金 lsjz API + pingzhongdata 双数据源补全缺失字段：
+- 净值 nav / 净值日期 nav_date（场外）—— 每日强制覆盖（lsjz API 优先，更新快）
 - 日涨跌 daily_change（场外 · 按净值算）—— 每日强制覆盖
 - 近1月 / 近3月 / 近6月 / 近1年（场外 + ETF 都补）—— 仅填漏，避免异常返回污染
 - 今年来 chg_ytd（Pass 3 · AKShare 累计收益率走势推算）
 - 基金名（带份额类型）—— 已有
+
+数据源策略（2026-05-28 优化）：
+  lsjz API   → nav/nav_date/daily_change（更新速度快，基金公司发布后几分钟内可用）
+  pingzhongdata → chg_1m/3m/6m/1y 历史收益 + nav 备选（CDN 缓存重，更新比 lsjz 慢 1~2 小时）
 
 字段映射（天天基金 pingzhongdata）：
   syl_1n = 近1年
@@ -118,8 +122,51 @@ def fetch_f10(code: str):
     return result if result else None
 
 
+def fetch_lsjz(code: str):
+    """用天天基金 lsjz API 获取最新净值（更新速度比 pingzhongdata 快 1~2 小时）。
+    返回 nav / nav_date / daily_change，或 None。
+    """
+    url = (
+        f"https://api.fund.eastmoney.com/f10/lsjz"
+        f"?callback=jQuery&fundCode={code}&pageIndex=1&pageSize=1"
+    )
+    try:
+        r = requests.get(url, headers={
+            "User-Agent": "Mozilla/5.0",
+            "Referer": "https://fundf10.eastmoney.com/",
+        }, timeout=8)
+    except Exception:
+        return None
+    if r.status_code != 200:
+        return None
+    m = re.search(r"jQuery\((.*)\)", r.text, re.DOTALL)
+    if not m:
+        return None
+    try:
+        data = json.loads(m.group(1))
+        items = data.get("Data", {}).get("LSJZList", [])
+        if not items:
+            return None
+        latest = items[0]
+        result = {}
+        nav_date = latest.get("FSRQ")
+        if nav_date:
+            result["nav_date"] = nav_date
+        nav = _to_float(latest.get("DWJZ"))
+        if nav is not None:
+            result["nav"] = nav
+        chg = _to_float(latest.get("JZZZL"))
+        if chg is not None:
+            result["daily_change"] = chg
+        return result if result else None
+    except Exception:
+        return None
+
+
 def fetch_pzd(code: str):
-    """抓 pingzhongdata 关键字段"""
+    """抓 pingzhongdata：历史收益（chg_1m/3m/6m/1y）+ 备选净值。
+    净值优先用 lsjz（更快），本函数作为历史收益的补充源。
+    """
     url = f"https://fund.eastmoney.com/pingzhongdata/{code}.js"
     try:
         r = requests.get(url, headers=HEADERS, timeout=8)
@@ -143,17 +190,13 @@ def fetch_pzd(code: str):
         if m:
             result[dst] = _to_float(m.group(1))
 
-    # 备注：pingzhongdata 里 Data_grandTotal 不是"成立以来"收益（只是短期走势起点），
-    # 天天基金的"成立来收益"需要从 F10 业绩页单独抓。本脚本先不补该字段。
-
-    # 最新净值 + 日期 + 日涨跌（来自 Data_netWorthTrend 数组最后一个点）
+    # 最新净值 + 日期 + 日涨跌（备选，当 lsjz 失败时使用）
     m = re.search(r"var\s+Data_netWorthTrend\s*=\s*(\[.*?\]);", text, re.DOTALL)
     if m:
         try:
             arr = json.loads(m.group(1))
             if arr:
                 last = arr[-1]
-                # date 是 Unix 毫秒时间戳
                 ts = last.get("x")
                 if ts:
                     result["nav_date"] = datetime.fromtimestamp(ts / 1000).strftime("%Y-%m-%d")
@@ -284,8 +327,11 @@ def main():
         else:
             print(f"⚠️  {cat}.json 不存在，跳过（首次运行需先跑 scan_funds.py + enrich_data.py）")
 
-    # ------------------------- Pass 1：pingzhongdata 历史收益 -------------------------
-    # 场外 QDII：每天都跑（要刷新 nav/nav_date/daily_change），pzd 抓不到再降级
+    # ------------------------- Pass 1：净值 + 历史收益 -------------------------
+    # 数据源策略（2026-05-28 优化）：
+    #   1. lsjz API（优先）：获取 nav/nav_date/daily_change，更新速度比 pingzhongdata 快 1~2 小时
+    #   2. pingzhongdata（补充）：获取 chg_1m/3m/6m/1y 历史收益 + lsjz 失败时 fallback
+    # 场外 QDII：每天都跑（刷新 nav/nav_date/daily_change + 历史收益补漏）
     # 场内 ETF：只在历史收益缺失时跑（净值字段不用，ETF 用 etf_price/etf_change_pct）
     targets = []
     for cat, d in loaded_data.items():
@@ -306,23 +352,44 @@ def main():
 
     total = len(targets)
     print(f"🎯 Pass 1: {total} 只基金需处理（场外每日刷新 nav/daily_change + 历史收益补漏；ETF 仅补漏历史收益）")
+    print(f"   数据源：lsjz API（净值，快）+ pingzhongdata（历史收益，慢）")
     print()
 
     success = 0
     fail = 0
     for i, (cat, code, sh, missing, is_etf) in enumerate(targets, 1):
+        # Step 1: 用 lsjz API 获取最新净值（快，更新及时）
+        lsjz = fetch_lsjz(code) if not is_etf else None
+
+        # Step 2: 用 pingzhongdata 获取历史收益 + 作为净值备选
         pzd = fetch_pzd(code)
-        if pzd:
-            up = merge_share_data(sh, pzd, is_etf=is_etf)
+
+        # Step 3: 合并——lsjz 的净值字段优先覆盖 pzd（更新更快）
+        if lsjz and pzd:
+            # lsjz 的 nav/nav_date/daily_change 覆盖 pzd 的同名字段
+            for key in ("nav", "nav_date", "daily_change"):
+                if key in lsjz:
+                    pzd[key] = lsjz[key]
+            merged = pzd
+        elif lsjz:
+            merged = lsjz
+        elif pzd:
+            merged = pzd
+        else:
+            merged = None
+
+        if merged:
+            up = merge_share_data(sh, merged, is_etf=is_etf)
             if up:
                 success += 1
                 tag = "[ETF]" if is_etf else "     "
-                print(f"  [{i}/{total}] ✅ {tag} {code} 补上 {up}")
+                src = "lsjz" if lsjz else "pzd"
+                print(f"  [{i}/{total}] ✅ {tag} {code} [{src}] 补上 {up}")
             else:
                 print(f"  [{i}/{total}] ⚠️  {code} 有返回但无可用字段")
         else:
             fail += 1
-            print(f"  [{i}/{total}] ❌ {code} pzd 抓取失败")
+            print(f"  [{i}/{total}] ❌ {code} lsjz+pzd 均失败")
         time.sleep(0.15)
 
     # ------------------------- Pass 2：F10 基础信息 + 费率 -------------------------

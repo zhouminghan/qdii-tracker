@@ -1160,20 +1160,30 @@
       document.getElementById(`count-${tab}`).textContent =
         `${totalSeries} 个系列 · ${totalShares} 只份额 · 总规模 ${totalScale.toFixed(0)} 亿`;
 
-      // 表头净值日期：取当前 Tab 所有基金中最新的 nav_date（作为"数据更新到哪天"的参考）
-      // 数据行：如果某只基金 nav_date < 表头日期，则在净值后面显示灰色小字日期
-      let maxNavDate = '';
+      // 表头净值日期：按分组计算各组最大 nav_date
+      // - 场外 QDII（sp500/nasdaq_passive/active/global_other）：T+1 披露，表头显示该组最新 nav_date
+      // - global_index（日经等亚太）：T+0 当天披露，表头显示当天日期
+      // - ETF：实时行情，表头显示最新日期
+      // 行内：仅当该行 nav_date < 本组 maxNavDate 时才显示灰色旧日期
       for (const group of groups) {
+        let groupMax = '';
         for (const s of group.items) {
           for (const sh of (s.shares || [])) {
             const nd = isEtf ? (sh._live_etf_date || sh.nav_date || '') : (sh.nav_date || '');
-            if (nd > maxNavDate) maxNavDate = nd;
+            if (nd > groupMax) groupMax = nd;
           }
         }
+        group._maxNavDate = groupMax;
       }
-      const navHeaderSub = fmtMD(maxNavDate);
-      // 存到 STATE 供 renderSeries 使用（判断是否需要显示行内日期）
-      STATE._currentMaxNavDate = maxNavDate;
+      // 全局表头用当前激活 chip 的日期（默认用第一个组）
+      const activeChipKey = CHIP_STATE[tab] || (groups[0] && groups[0].key) || '';
+      const activeGroup = groups.find(g => g.key === activeChipKey) || groups[0];
+      const navHeaderSub = fmtMD(activeGroup?._maxNavDate || '');
+      // 存到 STATE 供 renderSeries 使用
+      STATE._groupMaxNavDates = {};
+      for (const group of groups) {
+        STATE._groupMaxNavDates[group.key] = group._maxNavDate;
+      }
 
       // 列数（用于分组标题行 colspan）
       // 场外 = 10 + 1(估值) + 1(申购) + 走势 + 持仓 = 13
@@ -1214,7 +1224,7 @@
       const priceHeaderHtml = `
               <th class="text-right py-3 px-3 font-medium cursor-pointer hover:bg-stone-100 select-none" data-sort-key="nav" title="点击按当日涨跌排序">
                 <div>${isEtf ? '最新价' : '净值'}${sortIcon('nav')}</div>
-                ${navHeaderSub ? `<div class="text-[10px] text-stone-400 font-normal mt-0.5">${navHeaderSub}</div>` : ''}
+                ${navHeaderSub ? `<div class="nav-date-sub text-[10px] text-stone-400 font-normal mt-0.5">${navHeaderSub}</div>` : `<div class="nav-date-sub text-[10px] text-stone-400 font-normal mt-0.5"></div>`}
               </th>`;
 
       container.innerHTML = `
@@ -1302,7 +1312,13 @@
       const table = document.getElementById(`table-${tab}`);
       if (!table) return;
 
-      // 估值列已移除，无需动态显隐
+      const currentGroup = groups.find(g => g.key === filter);
+
+      // 动态更新表头净值列的日期副标题（切 chip 时跟随分组变化）
+      const navDateSub = table.querySelector('.nav-date-sub');
+      if (navDateSub && currentGroup) {
+        navDateSub.textContent = fmtMD(currentGroup._maxNavDate || '');
+      }
 
       // series 行：控制显隐
       // 展开行（share-rows）：不匹配时强制隐藏并重置状态；匹配时清 inline display，让 .hidden 类主宰
@@ -1323,7 +1339,6 @@
       });
 
       // 更新计数：当前筛选组
-      const currentGroup = groups.find(g => g.key === filter);
       if (!currentGroup) return;
       let visibleSeries = currentGroup.items.length;
       let visibleShares = 0, visibleScale = 0;
@@ -1353,6 +1368,7 @@
         sp500:          { title: '📊 标普500 指数基金', subtitle: '被动跟踪美国大盘 500 强 · 支付宝 / 天天基金可买，按当日净值成交' },
         nasdaq_passive: { title: '💻 纳指100 指数基金', subtitle: '被动跟踪美股科技 100 强（苹果 / 微软 / 英伟达等）· 长期定投首选' },
         active:         { title: '🎯 美股主动基金',     subtitle: '精选 18 只重仓美股的主动 QDII · 基金经理择股，费率较高但可能跑赢指数' },
+        global_index:   { title: '🌍 全球指数基金',     subtitle: '跟踪海外非美指数（日经225 等）· T+0 当天披露净值' },
         global_other:   { title: '🌐 全球 / 其他 QDII', subtitle: '全球配置或非美股核心方向（医疗 / 能源 / 海外 / 混合等）· 分散投资' },
       },
       etf: {
@@ -1432,7 +1448,7 @@
           <td class="py-3 px-3 text-right num">
             <div class="font-medium">${price}</div>
             <div class="text-xs ${dailyChange > 0 ? 'up' : dailyChange < 0 ? 'down' : 'text-stone-400'}">${dailyChange == null ? '--' : (dailyChange > 0 ? '+' : '') + dailyChange.toFixed(2) + '%'}</div>
-            ${(() => { const nd = isEtf ? (def._live_etf_date || def.nav_date) : def.nav_date; return (nd && nd < (STATE._currentMaxNavDate || '')) ? `<div class="text-[10px] text-stone-400">${fmtMD(nd)}</div>` : ''; })()}
+            ${(() => { const nd = isEtf ? (def._live_etf_date || def.nav_date) : def.nav_date; const groupMax = (STATE._groupMaxNavDates || {})[groupKey] || ''; return (nd && nd < groupMax) ? `<div class="text-[10px] text-stone-400">${fmtMD(nd)}</div>` : ''; })()}
           </td>
           ${changeCell(def.chg_1m)}
           ${changeCell(def.chg_ytd)}
