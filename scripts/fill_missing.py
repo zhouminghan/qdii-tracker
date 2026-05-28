@@ -173,10 +173,15 @@ def merge_share_data(share: dict, pzd: dict, is_etf: bool = False):
     updated = []
 
     # 防回退前置检查：如果接口返回了更旧的 nav_date，整组 nav 字段都不更新
+    # 同时，如果接口没返回 nav_date，也不更新 nav/daily_change（避免日期和净值不匹配）
+    skip_nav_fields = False
     if not is_etf:
         new_nav_date = pzd.get("nav_date")
         cur_nav_date = share.get("nav_date", "")
-        if new_nav_date and cur_nav_date and new_nav_date < cur_nav_date:
+        if not new_nav_date:
+            # 接口没返回日期 → nav 三件套都不更新（防止净值和日期不匹配）
+            skip_nav_fields = True
+        elif cur_nav_date and new_nav_date < cur_nav_date:
             # 接口返回旧日期 → 只更新历史收益，跳过 nav 相关字段
             for key in ("chg_1m", "chg_3m", "chg_6m", "chg_1y"):
                 new_val = pzd.get(key)
@@ -192,13 +197,16 @@ def merge_share_data(share: dict, pzd: dict, is_etf: bool = False):
     for key in candidate_keys:
         if is_etf and key in ETF_SKIP_FIELDS:
             continue
+        if skip_nav_fields and key in ALWAYS_OVERWRITE_FIELDS:
+            continue
         new_val = pzd.get(key)
         if new_val is None:
             continue
         cur = share.get(key)
         if key in ALWAYS_OVERWRITE_FIELDS:
+            # 每日字段无条件覆盖（防回退已在前面检查过）
+            share[key] = new_val
             if cur != new_val:
-                share[key] = new_val
                 updated.append(key)
         else:
             # 历史收益：仅当缺失时填充
