@@ -453,6 +453,8 @@
       { key: 'global_index',   label: '🌍 全球指数基金',      desc: '跟踪海外非美指数（日经225 等）' },
       { key: 'global_other',   label: '🌐 全球/其他 QDII',    desc: '全球配置型 / 非美股核心方向' },
     ];
+    // 场外 starred 系列（按 default_share_code 标识，置顶 + 显示⭐）
+    const OFFSHORE_STARRED = new Set(['050025', '160213']);
     const STATE = {
       data: {},
       stocks: {},
@@ -518,6 +520,9 @@
     function sortSeries(items, key, dir) {
       const mult = dir === 'asc' ? 1 : -1;
       return [...items].sort((a, b) => {
+        // starred 永远置顶
+        if (a.starred && !b.starred) return -1;
+        if (!a.starred && b.starred) return 1;
         const va = getSortValue(a, key);
         const vb = getSortValue(b, key);
         // null 永远排在最后（无论升降序）
@@ -1112,7 +1117,10 @@
         // 场外 = sp500 + nasdaq_passive + active + global_index + global_other 五个分组
         groups = OFFSHORE_GROUPS.map(g => {
           const src = STATE.data[g.key];
-          const items = src?.series || [];
+          const items = (src?.series || []).map(s => ({
+            ...s,
+            starred: OFFSHORE_STARRED.has(s.default_share_code),
+          }));
           return {
             ...g,
             items,
@@ -1358,16 +1366,17 @@
         const titleEl = document.getElementById(`${tab}-title`);
         const subEl = document.getElementById(`${tab}-subtitle`);
         if (titleEl) titleEl.textContent = meta.title;
-        if (subEl) subEl.textContent = meta.subtitle;
+        if (subEl) subEl.textContent = meta.subtitle.replace('{count}', currentGroup.items.length);
       }
     }
 
     // 每个 Tab 下各分组的「标题 + 副标题」文案（按 tab 隔离，避免同 key 在场内外撞车）
+    // subtitle 中 {count} 会在渲染时被替换为该组实际系列数
     const GROUP_META = {
       offshore: {
         sp500:          { title: '📊 标普500 指数基金', subtitle: '被动跟踪美国大盘 500 强 · 支付宝 / 天天基金可买，按当日净值成交' },
         nasdaq_passive: { title: '💻 纳指100 指数基金', subtitle: '被动跟踪美股科技 100 强（苹果 / 微软 / 英伟达等）· 长期定投首选' },
-        active:         { title: '🎯 美股主动基金',     subtitle: '精选 18 只重仓美股的主动 QDII · 基金经理择股，费率较高但可能跑赢指数' },
+        active:         { title: '🎯 美股主动基金',     subtitle: '重仓美股的主动 QDII · 基金经理择股，费率较高但可能跑赢指数' },
         global_index:   { title: '🌍 全球指数基金',     subtitle: '跟踪海外非美指数（日经225 等）· T+0 当天披露净值' },
         global_other:   { title: '🌐 全球 / 其他 QDII', subtitle: '全球配置或非美股核心方向（医疗 / 能源 / 海外 / 混合等）· 分散投资' },
       },
@@ -1434,7 +1443,7 @@
             <div class="flex items-center gap-3">
               ${getLogo(series.company)}
               <div class="min-w-0">
-                <div class="font-medium truncate">${isEtf && ['513500','513100'].includes(def.code) ? '⭐ ' : ''}${isEtf ? def.name : series.display_name}</div>
+                <div class="font-medium truncate">${series.starred ? '⭐ ' : ''}${isEtf ? def.name : series.display_name}</div>
                 <div class="text-xs text-stone-500 num mt-0.5">
                   ${def.code}${isEtf ? '' : ' · ' + def.share_class + (def.currency === '美元' ? ' · 美元' : '')}
                   <span class="badge ${isEtf ? 'badge-qdii' : 'badge-qdii'} ml-1">${isEtf ? 'ETF' : 'QDII'}</span>
