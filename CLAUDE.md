@@ -107,11 +107,11 @@ qdii-tracker/
 | ④   | `refresh_purchase.py` | 分类 JSON             | 补申购状态/涨跌  | ~30s   |
 | ⑤   | `fetch_holdings.py`   | active + global_other | holdings/*.json  | ~2min  |
 
-**增量更新**（每工作日 09:00 / 17:30 / 22:30 北京时间）跑 ③→④（fill_missing → refresh_purchase）。
+**增量更新**（每工作日 05:00 / 17:30 / 22:30 北京时间）跑 ③→④（fill_missing → refresh_purchase）。
 **完整流水线**（每月 2 日 02:00 北京时间）跑 ①→②→③→④→⑤。
 
 注：QDII 净值 T+1 披露——T 日美股收盘后，基金公司于 T+1 日北京时间晚间陆续披露。
-22:30 那轮最关键（lsjz API 更新快，基金公司发布后几分钟可获取）；09:00 早间补漏。
+22:30 那轮最关键（lsjz API 更新快，基金公司发布后几分钟可获取）；05:00 凌晨补漏（GitHub Actions 延迟后约 07:00~09:00 实际执行）。
 
 ### `fill_missing.py` 详细逻辑（增量核心）
 

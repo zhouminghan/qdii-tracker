@@ -2,17 +2,16 @@ name: 🔄 更新基金数据
 
 # 自动更新基金数据 workflow
 # 触发：工作日多时段增量 + 每月 2 日完整 + 手动
-# 多时段：09:00 / 17:30 / 22:30（北京时间）→ 覆盖早中晚
+# 多时段：05:00 / 17:30 / 22:30（北京时间）→ 凌晨补漏 + 午后 + 晚间
 # QDII 净值披露节奏：T 日美股收盘 → T+1 日晚间（北京时间）基金公司披露 T 日净值
+# 注：GitHub Actions cron 免费仓库延迟 10min~4h，05:00 提前量确保约 09:00 前跑完
 "on":
   schedule:
-    # 工作日多时段增量更新（北京时间 = UTC+8）：
-    #   北京 09:00 = UTC 01:00 → 早间（补拉昨晚遗漏）
-    #   北京 17:30 = UTC 09:30 → 午后（A 股 / 日经收盘后）
-    #   北京 22:30 = UTC 14:30 → 晚间（QDII 主力披露时段，最关键）
-    - cron: '0 1 * * 1-5'
-    - cron: '30 9 * * 1-5'
-    - cron: '30 14 * * 1-5'
+    # 增量更新（北京时间 = UTC+8）：
+    #   北京 22:00 = UTC 14:00 → 晚间主力（QDII 净值 T+1 披露，多数基金 21:00~22:00 出）
+    #   北京 05:00 = UTC 21:00（前一天）→ 凌晨兜底（补拉前一晚遗漏）
+    - cron: '0 14 * * 1-5'
+    - cron: '0 21 * * 0-4'
     # 每月 2 日凌晨 2:00 北京 = UTC 18:00 于 1 日，跑"完整流水线"
     - cron: '0 18 1 * *'
   # 手动触发
@@ -83,14 +82,25 @@ jobs:
           echo "✅ 运行模式: $(grep mode $GITHUB_OUTPUT | cut -d= -f2)"
 
       # 5a. 增量更新（快，~3 分钟）
-      #     只更新每日变化的数据：净值 + 申购状态
+      #     fill_missing.py：
+      #       - 数据源：lsjz API（优先，快）+ pingzhongdata（备选+历史收益）
+      #       - 更新字段：nav / nav_date / daily_change（每日强制覆盖）
+      #                   chg_1m / chg_3m / chg_6m / chg_1y（仅填空）
+      #                   chg_ytd（AKShare 推算）
+      #                   mgmt_fee / custody_fee / sale_service_fee（F10 补漏）
+      #       - 策略：场外 QDII 无条件刷新净值；ETF 仅补历史收益；防回退（nav_date 只进不退）
+      #     refresh_purchase.py：
+      #       - 数据源：AKShare 批量接口（秒级拉全量）
+      #       - 更新字段：buy_status / sell_status / daily_limit / buy_min / fee
+      #                   nav / nav_date / daily_change / chg_1m~3y / chg_ytd / chg_since_inception
+      #       - 策略：三数据源兜底——lsjz → pzd → rank，确保净值不遗漏
       - name: ⚡ 增量更新（净值 + 申购状态）
         if: steps.mode.outputs.mode == 'incremental'
         run: |
           cd scripts
-          echo "=== [1/2] fill_missing.py（净值 + 涨跌幅 + YTD）==="
+          echo "=== [1/2] fill_missing.py（净值 + 涨跌幅 + YTD + 费率补漏）==="
           python fill_missing.py
-          echo "=== [2/2] refresh_purchase.py（申购状态 + 限额）==="
+          echo "=== [2/2] refresh_purchase.py（申购状态 + 限额 + 涨跌幅兜底）==="
           python refresh_purchase.py
 
       # 5b. 完整流水线（慢，~12 分钟）
