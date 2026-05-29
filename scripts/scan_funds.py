@@ -219,6 +219,11 @@ FORCE_INCLUDE_CODES = {
 
     # 鹏华全球高收益债（160644，全球/其他 QDII，名字不触发关键词）
     "160644": "global_other",
+
+    # v20 新增：亚太市场基金（日本/越南/印度），归入 global_other
+    "007280": "global_other",  # 摩根日本精选股票 A
+    "008763": "global_other",  # 天弘越南市场股票 A
+    "006105": "global_other",  # 宏利印度机会股票 A
 }
 
 

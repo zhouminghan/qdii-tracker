@@ -14,13 +14,13 @@
     "funds": 51
   },
   "global_other": {
-    "series": 21,
-    "funds": 62
+    "series": 23,
+    "funds": 65
   },
   "etf": {
     "series": 18,
     "funds": 18
   },
   "excluded_count": 26662,
-  "purchase_refreshed_at": "2026-05-29T05:24:57.888151"
+  "purchase_refreshed_at": "2026-05-29T22:58:32.608725"
 }

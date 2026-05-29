@@ -35,7 +35,8 @@
 │                   数据层（静态文件）                 │
 │   web/data/                                        │
 │   ├── sp500.json / nasdaq_passive.json             │
-│   ├── active.json / global_other.json / etf.json   │
+│   ├── active.json / global_index.json              │
+│   ├── global_other.json / etf.json                 │
 │   ├── holdings/{code}.json    # 主动基金 Top10 持仓 │
 │   └── meta.json               # 扫描元信息          │
 └──────────▲──────────────────────────┬──────────────┘
@@ -87,13 +88,10 @@ qdii-tracker/
 │       ├── nasdaq_passive.json   # 🏦 场外 · 纳指100（17 系列）
 │       ├── active.json           # 🏦 场外 · 美股主动精选（19 系列）
 │       ├── global_index.json    # 🌍 场外 · 全球指数（手动维护，1 系列）
-│       ├── global_other.json     # 🏦 场外 · 全球/其他 QDII（20 系列）
+│       ├── global_other.json     # 🏦 场外 · 全球/其他 QDII（23 系列）
 │       ├── etf.json              # 📈 场内 ETF（17 系列）
 │       ├── meta.json             # 扫描元信息
 │       └── holdings/{code}.json  # 主动基金 Top10 持仓
-│
-├── docs/                         # 运维 SOP 文档
-│   └── ADDING-FUNDS.md           # 新增基金操作手册
 │
 └── .github/workflows/
     ├── update-data.yml           # GitHub Actions 自动更新数据
@@ -111,6 +109,8 @@ qdii-tracker/
 | ③ | `fill_missing.py` | 补净值/日涨跌/YTD/历史收益（天天基金） | ~2min |
 | ④ | `refresh_purchase.py` | 补申购状态/日限额（批量接口） | ~30s |
 | ⑤ | `fetch_holdings.py` | 抓主动基金 Top10 重仓 | ~2min |
+
+> 📝 `global_index.json`（全球指数·日经225 等）**手动维护**，不参与 scan 自动扫描；其他 4 个补数据脚本（enrich/fill_missing/refresh_purchase/fetch_holdings）都覆盖该分类。
 
 ### 自动更新时间表
 
@@ -191,16 +191,29 @@ QDII 基金入口
 └── 否则                      → exclude
 ```
 
+> 📝 `global_index`（全球指数，如日经225）**不参与 scan 自动扫描**，需手动编辑 `web/data/global_index.json` 添加。
+
 ---
 
-## ➕ 运维手册
+## ➕ 新增基金
 
-- **[新增基金 → docs/ADDING-FUNDS.md](docs/ADDING-FUNDS.md)**
+**方式 A：白名单自动扫描（推荐 sp500 / nasdaq_passive / active / global_other / etf）**
 
-**最短路径**：
-1. 编辑 `scripts/scan_funds.py` 加入 `FORCE_INCLUDE_CODES` 或 `ACTIVE_WHITELIST_KEYWORDS`
-2. 跑 `scan_funds.py` → `enrich_data.py` → `fill_missing.py` → `refresh_purchase.py`
+1. 编辑 `scripts/scan_funds.py` 加白名单：
+   - 按代码：`FORCE_INCLUDE_CODES = {"002891": "active"}`
+   - 或按名字：`ACTIVE_WHITELIST_KEYWORDS = ["华夏移动互联"]`
+2. 跑完整流水线：`scan_funds.py` → `enrich_data.py` → `fill_missing.py` → `refresh_purchase.py` → `fetch_holdings.py`
 3. 本地验证 → commit
+
+**方式 B：手动编辑 JSON（`global_index` 必须用这种）**
+
+1. 用 `ak.fund_name_em()` 查同系列代码
+2. 在 `web/data/{分类}.json` 的 `series` 末尾追加骨架（参考已有的 `global_index.json`）
+3. 跑补数据脚本（enrich + fill_missing + refresh_purchase + fetch_holdings）
+
+> ⚠️ `scan_funds.py` 会**覆盖** `web/data/*.json`，方式 A 跑完 scan 后必须接 enrich + fill_missing；方式 B 补数据脚本不会覆盖已有字段。
+
+详细字段规范、踩坑列表、Bug 史 详见 [`CLAUDE.md`](./CLAUDE.md)。
 
 ---
 

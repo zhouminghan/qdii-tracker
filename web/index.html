@@ -470,9 +470,7 @@
     const OFFSHORE_STARRED = new Set(['050025', '160213']);
     const STATE = {
       data: {},
-      stocks: {},
-      estimates: {},  // code -> { estimated_impact, top_movers, fx_contribution, ... }
-      estimatesUpdatedAt: null,
+      stocks: {},  // 持仓 Top10 实时行情缓存：code -> { price, change_pct, market }
     };
 
     // 排序状态（仅作用于大分类外层行；子分类是父行展开内嵌表，不独立排序）
@@ -639,21 +637,10 @@
       }));
       if (meta) updateKPI(meta);
       RENDER_TABS.forEach(renderCategory);
-
-      // 估值功能已移除——不再加载 us_stocks.json 和 estimates.json
-
-      // 纯静态模式：首屏数据直接从 data.json 渲染，无需外部接口
+      // 纯静态模式：首屏数据全部来自 data/*.json（GitHub Actions 离线生成）
     }
 
-    // 判断当前是否在"需要自动补拉"的窗口里（交易日 15:00-22:30）
-    function shouldPollLive() {
-      if (!isTradingDay()) return false;
-      const now = new Date();
-      const mins = now.getHours() * 60 + now.getMinutes();
-      return mins >= 15 * 60 && mins < 22 * 60 + 30;
-    }
-
-    // 今日日期（YYYY-MM-DD，北京本地）——用来判断 share.nav_date 是否已是今天
+    // 今日日期（YYYY-MM-DD，北京本地）——通用工具
     function todayStr() {
       const d = new Date();
       const y = d.getFullYear();
@@ -663,197 +650,10 @@
     }
 
     // ==================== 动态拉取最新净值/行情 ====================
-    // 目的：解决"GitHub Actions 每天才跑一次，打开网页还是旧数据"的问题
-    // 思路：直接从前端调用天天基金 / 腾讯财经的公开 JSONP 接口
-    //  · 场外基金：https://fundgz.1234567.com.cn/js/{code}.js   -> 返回 jsonpgz({...}) 含估值+日期
-    //  · 场内 ETF：https://qt.gtimg.cn/q=sh{code}  或 sz{code}   -> 返回 v_sh510300="..." 逗号分隔行情串
-    // 拉取失败静默降级（沿用静态 JSON 的值）
-
-    // --- JSONP helper（同时支持天天基金 jsonpgz 回调 & 腾讯 gtimg 赋值语句）---
-    function loadScript(url, timeout = 5000) {
-      return new Promise((resolve, reject) => {
-        const s = document.createElement('script');
-        s.src = url;
-        s.async = true;
-        let done = false;
-        const timer = setTimeout(() => {
-          if (done) return;
-          done = true;
-          s.remove();
-          reject(new Error('timeout: ' + url));
-        }, timeout);
-        s.onload = () => {
-          if (done) return;
-          done = true;
-          clearTimeout(timer);
-          s.remove();
-          resolve();
-        };
-        s.onerror = () => {
-          if (done) return;
-          done = true;
-          clearTimeout(timer);
-          s.remove();
-          reject(new Error('load fail: ' + url));
-        };
-        document.head.appendChild(s);
-      });
-    }
-
-    // 场外基金单只：取「最新真实净值 + 当日涨跌幅」
-    // 数据来源：双通道叠加
-    //   · fundgz（快，~600B）：jsonpgz({...}) 含 dwjz/jzrq —— 最新单位净值+日期，但无 daily_change
-    //   · pingzhongdata（慢，~600KB-1.5MB）：Data_netWorthTrend 末尾条目的 equityReturn 就是当日涨跌%
-    // 策略：先用 fundgz 拿净值（快），若该净值日期已是今天，再用 pingzhongdata 补 daily_change
-    // 为什么不全用 pingzhongdata：避免流量膨胀 10-20 倍，只有"nav_date == 今天"才值得补拉
-    //
-    // 限频保护：fundgz 单 IP 频控严格（超了返 HTTP 514 Frequency Capped）
-    //   · 失败后设置 5 分钟全局冷却（STATE.fundgzCooldownUntil），期间直接跳过所有 fundgz 请求
-    //   · 冷却期内仍然可以刷 ETF 行情（腾讯 qt.gtimg.cn 是不同域名，限频独立）
-    async function fetchOffshoreLive(code) {
-      // 检查全局冷却：被限频期间直接返回 null（沿用 data.json 里的快照值）
-      if (STATE.fundgzCooldownUntil && Date.now() < STATE.fundgzCooldownUntil) {
-        return null;
-      }
-      window.jsonpgz = function (payload) { window.__lastGz = payload; };
-      let result = null;
-      try {
-        await loadScript(`https://fundgz.1234567.com.cn/js/${code}.js?rt=${Date.now()}`, 4000);
-        const p = window.__lastGz;
-        window.__lastGz = null;
-        if (p && p.fundcode && p.dwjz && p.jzrq) {
-          result = {
-            nav: parseFloat(p.dwjz),
-            nav_date: p.jzrq,
-            daily_change: null,
-          };
-        }
-      } catch (e) {
-        // loadScript 失败大概率是 514 限频或网络问题——触发 5 分钟冷却
-        // 即便是偶发网络错，冷却 5 分钟也无大碍（下一轮自动恢复）
-        STATE.fundgzCooldownUntil = Date.now() + 5 * 60 * 1000;
-        console.warn(`[fundgz] ${code} 失败，触发 5 分钟冷却:`, e.message || e);
-      }
-      if (!result) return null;
-
-      // 仅当 fundgz 拿到的净值日期是"今天"时，才去 pingzhongdata 补 daily_change
-      // 其他情况（昨天/前天的净值）data.json 里早就有 daily_change 了，没必要多拉
-      if (result.nav_date === todayStr()) {
-        const change = await fetchPzdDailyChange(code);
-        if (change != null) result.daily_change = change;
-      }
-      return result;
-    }
-
-    // pingzhongdata 末尾条目的 equityReturn = 当日涨跌%
-    // 返回 null 表示失败 / 末尾日期对不上 fundgz
-    async function fetchPzdDailyChange(code) {
-      return new Promise((resolve) => {
-        const s = document.createElement('script');
-        s.src = `https://fund.eastmoney.com/pingzhongdata/${code}.js?rt=${Date.now()}`;
-        s.async = true;
-        const timer = setTimeout(() => { s.remove(); resolve(null); }, 6000);
-        s.onload = () => {
-          clearTimeout(timer);
-          s.remove();
-          const arr = window.Data_netWorthTrend;
-          if (!Array.isArray(arr) || !arr.length) { resolve(null); return; }
-          const last = arr[arr.length - 1];
-          // equityReturn 已经是"%"口径的数字，例如 1.23 表示涨 1.23%
-          const chg = parseFloat(last.equityReturn);
-          resolve(isNaN(chg) ? null : chg);
-        };
-        s.onerror = () => { clearTimeout(timer); s.remove(); resolve(null); };
-        document.head.appendChild(s);
-      });
-    }
-
-    // 场外基金批量：申购状态 + 日限额（天天基金移动端 JSONP 接口）
-    // 接口支持一次查多只（逗号分隔），返回 BUY/SELL/LIMITBUYS 等字段
-    // 静默降级：CORS 失败或超时则沿用 data.json 中的快照值
-    async function fetchPurchaseStatus(codes) {
-      if (!codes.length) return {};
-      const BATCH = 30;
-      const results = {};
-      for (let i = 0; i < codes.length; i += BATCH) {
-        const batch = codes.slice(i, i + BATCH);
-        const fcodes = batch.join(',');
-        try {
-          const data = await new Promise((resolve) => {
-            const cbName = 'jsonpPurchase' + Date.now() + '_' + i;
-            const s = document.createElement('script');
-            s.src = `https://fundmobapi.eastmoney.com/FundMNewApi/FundMNFInfo?callback=${cbName}&pageIndex=1&pageSize=${batch.length}&plat=Iphone&product=EFund&deviceid=1&Version=1&Fcodes=${fcodes}`;
-            s.async = true;
-            const timer = setTimeout(() => { s.remove(); resolve(null); }, 6000);
-            window[cbName] = (payload) => {
-              delete window[cbName];
-              clearTimeout(timer);
-              s.remove();
-              resolve(payload);
-            };
-            s.onerror = () => { clearTimeout(timer); s.remove(); delete window[cbName]; resolve(null); };
-            document.head.appendChild(s);
-          });
-          if (data?.Datas) {
-            for (const fund of data.Datas) {
-              if (fund.FCODE) results[fund.FCODE] = fund;
-            }
-          }
-        } catch (_) { /* 静默 */ }
-      }
-      return results;
-    }
-
-    // 场内 ETF 批量：腾讯行情 qt.gtimg.cn 支持一次查多个：q=sh510300,sz159941,...
-    // 返回 v_sh510300="1~ETF名~510300~最新价~涨跌~涨跌幅~..."  字段 3=最新价 5=涨跌幅
-    async function fetchEtfLive(codes) {
-      if (!codes.length) return {};
-      // 给代码前加 sh/sz 前缀：5/6/9 开头沪市；0/3 开头深市
-      const query = codes.map(c => {
-        const first = c[0];
-        return (first === '5' || first === '6' || first === '9' ? 'sh' : 'sz') + c;
-      }).join(',');
-
-      return new Promise((resolve) => {
-        const sid = 'gtimg_' + Date.now();
-        const s = document.createElement('script');
-        s.src = `https://qt.gtimg.cn/q=${query}&t=${Date.now()}`;
-        s.async = true;
-        const timer = setTimeout(() => { s.remove(); resolve({}); }, 4000);
-        s.onload = () => {
-          clearTimeout(timer);
-          // gtimg 响应是一堆 var v_sh510300="..."; 语句；靠读取全局 v_xxx 变量取值
-          const result = {};
-          for (const code of codes) {
-            const prefix = (code[0] === '5' || code[0] === '6' || code[0] === '9') ? 'sh' : 'sz';
-            const key = 'v_' + prefix + code;
-            const raw = window[key];
-            if (typeof raw === 'string' && raw) {
-              const parts = raw.split('~');
-              // parts[3]=最新价 parts[32]=涨跌幅 parts[30]=YYYYMMDDHHMMSS（最后成交时间）
-              const price = parseFloat(parts[3]);
-              const chgPct = parseFloat(parts[32]);
-              const ts = parts[30] || '';
-              // 转成 YYYY-MM-DD
-              const tradeDate = ts.length >= 8
-                ? `${ts.slice(0, 4)}-${ts.slice(4, 6)}-${ts.slice(6, 8)}`
-                : '';
-              if (!isNaN(price)) {
-                result[code] = {
-                  price,
-                  chg: isNaN(chgPct) ? null : chgPct,
-                  trade_date: tradeDate,
-                };
-              }
-            }
-          }
-          s.remove();
-          resolve(result);
-        };
-        s.onerror = () => { clearTimeout(timer); s.remove(); resolve({}); };
-        document.head.appendChild(s);
-      });
-    }
+    // 当前架构：纯静态模式 —— 净值/估值/申购状态全部由 GitHub Actions 离线生成进 data/*.json
+    // 仅以下两处仍走浏览器实时请求（按需触发，不影响首屏）：
+    //   · fetchStocksLive    持仓 Top10 股票实时行情（详情 Modal 打开 + 5 分钟轮询）
+    //   · fetchPzdHistory    历史净值走势（点击「📈 走势」按钮时）
 
     // 持仓股票批量行情：支持美股 / 港股 / A 股（腾讯一个接口通吃，仅前缀不同）
     //   · 美股：us{CODE}       例 usAAPL
@@ -922,81 +722,12 @@
       });
     }
 
-    // 并发控制 + 限频保护
-    //   · concurrency：并发数。天天基金 fundgz 对单 IP 限频约 2-3 路并发 + 几十次/分钟，超了直接返 HTTP 514
-    //   · interval：每只基金之间的间隔（ms），避免瞬间打爆
-    //   · STATE.fundgzCooldownUntil：被限频时设置，到期前所有 fundgz 请求都跳过
-    async function parallelMap(items, worker, concurrency = 3, interval = 250) {
-      const results = new Array(items.length);
-      let idx = 0;
-      await Promise.all(Array.from({ length: Math.min(concurrency, items.length) }, async () => {
-        while (idx < items.length) {
-          const i = idx++;
-          try { results[i] = await worker(items[i], i); }
-          catch { results[i] = null; }
-          if (idx < items.length && interval > 0) {
-            await new Promise(r => setTimeout(r, interval + Math.random() * 150));
-          }
-        }
-      }));
-      return results;
-    }
-
-    // 简易交易时段判定（粗粒度，用户视觉提示用）
-    //   · A 股 / ETF 交易时段：周一到周五 9:30-11:30 + 13:00-15:00（北京时间）
-    //   · 美股盘前/盘中/盘后跨时段比较复杂，用「美东 04:00-20:00」近似
-    //   · 港股：09:30-12:00 + 13:00-16:00
-    // 用户基金多半在 A/H/US 三市场之一，只要其一开盘就视作"交易时段"
-    function isMarketOpen() {
-      const now = new Date();
-      const dayCN = now.getDay();  // 周日=0
-      // 北京时间小时分钟（直接用本机当作 UTC+8 近似；用户基本都在国内）
-      const hCN = now.getHours();
-      const mCN = now.getMinutes();
-      const tCN = hCN * 60 + mCN;
-      const cnOpen = (dayCN >= 1 && dayCN <= 5) &&
-                     ((tCN >= 9 * 60 + 30 && tCN <= 11 * 60 + 30) ||
-                      (tCN >= 13 * 60 && tCN <= 15 * 60));
-      const hkOpen = (dayCN >= 1 && dayCN <= 5) &&
-                     ((tCN >= 9 * 60 + 30 && tCN <= 12 * 60) ||
-                      (tCN >= 13 * 60 && tCN <= 16 * 60));
-      // 美东时间（UTC-5/-4），简单按北京时间换算 -12/-13；这里取 -12 偏保守
-      // 美东 04:00-20:00 对应北京 16:00-次日 08:00
-      const usOpen = (() => {
-        // 周日北京 16:00 ~ 周六 08:00 大致对应美东周一开盘前 ~ 周五收盘后
-        if (dayCN === 6) return tCN < 8 * 60;            // 周六凌晨 = 美东周五尾盘
-        if (dayCN === 0) return tCN >= 16 * 60;          // 周日下午 = 美东周一盘前
-        // 周一~周五：北京 16:00 之后 || 次日 08:00 前
-        return tCN >= 16 * 60 || tCN < 8 * 60;
-      })();
-      return cnOpen || hkOpen || usOpen;
-    }
-
     // 是否「A 股交易日」（粗判：周一~周五 = 交易日，周末 = 非交易日）
-    // 用途：决定大分类显示估值还是净值，决定持仓股票是否拉腾讯实时行情
-    // 边角情况：法定假日（如劳动节）也是非交易日；本地无节假日表，不细究——
-    //         非交易日时 fundgz 可能仍返回上一交易日的估值，此时回退用 nav 反而更稳
+    // 用途：详情页持仓股票 5 分钟轮询时，非交易日跳过
+    // 边角情况：法定假日（如劳动节）也是非交易日；本地无节假日表，不细究
     function isTradingDay() {
       const day = new Date().getDay();  // 周日=0，周六=6
       return day >= 1 && day <= 5;
-    }
-
-    // 当前 A 股交易状态：'pre' 盘前 / 'open' 盘中 / 'post' 盘后 / null 非交易日
-    // A 股盘时间：09:30-11:30 + 13:00-15:00（北京时间，无夏令时）
-    //   · 大分类「净值」列展示用：仅"盘前"加后缀，其他时段（盘中/盘后/非交易日）只显示日期
-    //   · 美股冬夏令时不影响这里：fundgz 的 gztime 都是北京时间标记，统一按 A 股口径
-    function getCnSession() {
-      if (!isTradingDay()) return null;
-      const now = new Date();
-      const t = now.getHours() * 60 + now.getMinutes();
-      if (t < 9 * 60 + 30) return 'pre';
-      if (t >= 15 * 60) return 'post';
-      // 9:30-15:00 之间（含午休 11:30-13:00）一律算「盘中」
-      return 'open';
-    }
-    // 仅在"盘前"返回后缀，其他所有时段返回空（用户期望仅两枚举：盘前 / 无）
-    function sessionLabel(s) {
-      return s === 'pre' ? '盘前' : '';
     }
 
     // YYYY-MM-DD → MM-DD（去掉年前缀，列表头省空间）
@@ -1054,54 +785,6 @@
       const open = (p.t >= 9 * 60 + 30 && p.t < 16 * 60);
       return open ? 'open' : 'closed';
     }
-
-    // 前端重算主动基金估值（与 calc_estimate.py 同公式）
-    // 遍历 STATE.estimates 中所有基金，用 STATE.stocks 最新行情重算 estimated_impact
-    function recalcEstimates() {
-      const stocksMap = STATE.stocks;
-      if (!Object.keys(stocksMap).length) return;  // 无行情数据则跳过
-
-      for (const [code, est] of Object.entries(STATE.estimates)) {
-        if (!est.top_movers || !est.top_movers.length) continue;
-
-        let stockContribution = 0;
-        let updatedAny = false;
-
-        // 用 STATE.stocks 中的实时行情重算每只持仓的贡献
-        for (const mover of est.top_movers) {
-          const liveStock = stocksMap[mover.code];
-          if (liveStock && liveStock.change_pct != null) {
-            const newImpact = mover.weight * liveStock.change_pct / 100;
-            mover.change = liveStock.change_pct;
-            mover.impact = Math.round(newImpact * 10000) / 10000;
-            stockContribution += newImpact;
-            updatedAny = true;
-          } else {
-            // 无实时数据，沿用上次计算的贡献
-            stockContribution += mover.impact;
-          }
-        }
-
-        if (updatedAny) {
-          est.stock_contribution = Math.round(stockContribution * 10000) / 10000;
-          est.estimated_impact = Math.round((est.stock_contribution + (est.fx_contribution || 0)) * 10000) / 10000;
-        }
-      }
-    }
-
-    // 仅刷新估值列的 DOM（不重渲染整个表格，避免丢失展开状态）
-    function refreshEstimateCells() {
-      document.querySelectorAll('td[data-est-code]').forEach(td => {
-        const code = td.dataset.estCode;
-        const est = STATE.estimates[code];
-        if (!est) return;
-        const imp = est.estimated_impact;
-        const impCls = imp > 0 ? 'up' : imp < 0 ? 'down' : 'text-stone-400';
-        td.innerHTML = `<div class="text-sm font-bold ${impCls}">${imp > 0 ? '+' : ''}${imp.toFixed(2)}%</div>`;
-      });
-    }
-
-    // refreshLive 已移除——纯静态模式，无需刷新函数
 
     function updateKPI(meta) {
       // KPI 卡片已移除，此函数保留空壳以防将来恢复
@@ -1181,30 +864,13 @@
       document.getElementById(`count-${tab}`).textContent =
         `${totalSeries} 个系列 · ${totalShares} 只份额 · 总规模 ${totalScale.toFixed(0)} 亿`;
 
-      // 表头净值日期：按分组计算各组最大 nav_date
-      // - 场外 QDII（sp500/nasdaq_passive/active/global_other）：T+1 披露，表头显示该组最新 nav_date
-      // - global_index（日经等亚太）：T+0 当天披露，表头显示当天日期
-      // - ETF：实时行情，表头显示最新日期
-      // 行内：仅当该行 nav_date < 本组 maxNavDate 时才显示灰色旧日期
-      for (const group of groups) {
-        let groupMax = '';
-        for (const s of group.items) {
-          for (const sh of (s.shares || [])) {
-            const nd = isEtf ? (sh._live_etf_date || sh.nav_date || '') : (sh.nav_date || '');
-            if (nd > groupMax) groupMax = nd;
-          }
-        }
-        group._maxNavDate = groupMax;
-      }
-      // 全局表头用当前激活 chip 的日期（默认用第一个组）
-      const activeChipKey = CHIP_STATE[tab] || (groups[0] && groups[0].key) || '';
-      const activeGroup = groups.find(g => g.key === activeChipKey) || groups[0];
-      const navHeaderSub = fmtMD(activeGroup?._maxNavDate || '');
-      // 存到 STATE 供 renderSeries 使用
-      STATE._groupMaxNavDates = {};
-      for (const group of groups) {
-        STATE._groupMaxNavDates[group.key] = group._maxNavDate;
-      }
+      // 表头净值日期：统一显示当天日期（表示"今天看到的数据"）
+      // 行内：QDII 场外基金每行标注实际 nav_date（T+1 披露，与官方一致）
+      //       日经/ETF 如果 nav_date = 今天则不标（当天数据无需额外说明）
+      const today = new Date().toISOString().slice(0, 10);
+      const navHeaderSub = fmtMD(today);
+      // 存 today 供 renderSeries 判断是否需要显示行内日期
+      STATE._today = today;
 
       // 列数（用于分组标题行 colspan）
       // 场外 = 10 + 1(估值) + 1(申购) + 走势 + 持仓 = 13
@@ -1335,12 +1001,6 @@
 
       const currentGroup = groups.find(g => g.key === filter);
 
-      // 动态更新表头净值列的日期副标题（切 chip 时跟随分组变化）
-      const navDateSub = table.querySelector('.nav-date-sub');
-      if (navDateSub && currentGroup) {
-        navDateSub.textContent = fmtMD(currentGroup._maxNavDate || '');
-      }
-
       // series 行：控制显隐
       // 展开行（share-rows）：不匹配时强制隐藏并重置状态；匹配时清 inline display，让 .hidden 类主宰
       table.querySelectorAll('tr.series-row').forEach(tr => {
@@ -1429,18 +1089,11 @@
         dailyChange = def.daily_change;
       }
 
-      // 主动基金估值（仅美股主动 = active 分组）
-      const estimateInfo = (groupKey === 'active') ? STATE.estimates[defCode] : null;
-      const hasEstimate = estimateInfo && (estimateInfo.matched_count > 0 || estimateInfo.estimated_impact !== 0);
-
       // 走势 td（所有基金都有）+ 持仓 td（仅主动基金有按钮，其他占位）
       const trendTd = `<td class="py-3 px-3 text-center">${trendBtn(defCode)}</td>`;
       const holdingsTd = isActive
         ? `<td class="py-3 px-3 text-center">${holdingsBtn(defCode)}</td>`
         : '<td class="py-3 px-3 text-center text-stone-300">—</td>';
-
-      // 估值列已移除
-      const estimateTd = '';
 
       // 展开后的子表格 colspan（ETF=9，场外=12）
       const expandColspan = isEtf ? 10 : 13;
@@ -1466,11 +1119,10 @@
             </div>
           </td>
           <td class="py-3 px-3 text-right num font-medium">${seriesScale}</td>
-          ${estimateTd}
           <td class="py-3 px-3 text-right num">
             <div class="font-medium">${price}</div>
             <div class="text-xs ${dailyChange > 0 ? 'up' : dailyChange < 0 ? 'down' : 'text-stone-400'}">${dailyChange == null ? '--' : (dailyChange > 0 ? '+' : '') + dailyChange.toFixed(2) + '%'}</div>
-            ${(() => { const nd = isEtf ? (def._live_etf_date || def.nav_date) : def.nav_date; const groupMax = (STATE._groupMaxNavDates || {})[groupKey] || ''; return (nd && nd < groupMax) ? `<div class="text-[10px] text-stone-400">${fmtMD(nd)}</div>` : ''; })()}
+            ${(() => { const nd = isEtf ? (def._live_etf_date || def.nav_date) : def.nav_date; if (!nd) return ''; if (nd === (STATE._today || '')) return ''; return `<div class="text-[10px] text-stone-400">${fmtMD(nd)}</div>`; })()}
           </td>
           ${changeCell(def.chg_1m)}
           ${changeCell(def.chg_ytd)}
@@ -1501,8 +1153,8 @@
                       <th class="text-center py-2 font-medium">申购</th>
                     `}
                     <th class="text-right py-2 font-medium">买入费</th>
-                    <th class="text-right py-2 font-medium">卖出规则</th>
                     <th class="text-right py-2 font-medium">综合费率</th>
+                    <th class="text-right py-2 font-medium">卖出规则</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1540,7 +1192,6 @@
             <td class="py-2 text-center">${statusBadge(sh)}</td>
           `}
           <td class="py-2 text-right">${renderBuyFee(sh)}</td>
-          <td class="py-2 text-right">${renderSellRule(sh)}</td>
           <td class="py-2 text-right">${(() => {
             const mgmt = sh.mgmt_fee || 0;
             const cust = sh.custody_fee || 0;
@@ -1549,8 +1200,9 @@
             if (total <= 0) return '—';
             const display = `${parseFloat(total.toFixed(2))}%/年`;
             const detail = `管理费 ${mgmt}% + 托管费 ${cust}%${sale ? ' + 销售服务费 ' + sale + '%' : ''}`;
-            return `<span class="fee-tip"><span class="num text-stone-500 text-[11px]">${display}</span><div class="fee-popover"><div class="font-medium text-stone-700">综合费率：${display}</div><div class="text-[11px] text-stone-500 mt-1">${detail}</div></div></span>`;
+            return `<span class="fee-tip"><span class="num text-stone-500 text-[11px]">${display}</span><div class="fee-popover"><div class="font-medium text-stone-700 whitespace-nowrap">综合费率：${display}</div><div class="text-[11px] text-stone-500 mt-1 whitespace-nowrap">${detail}</div></div></span>`;
           })()}</td>
+          <td class="py-2 text-right">${renderSellRule(sh)}</td>
         </tr>
       `;
     }
@@ -1815,9 +1467,7 @@
                   change_pct: r.change_pct != null ? r.change_pct : existing.change_pct,
                 };
               }
-              // 持仓行情已更新 → 用最新数据重算估值并刷新估值列
-              recalcEstimates();
-              refreshEstimateCells();
+              // 行情已更新 → 详情页持仓 Top10 的「当日涨跌」会在下次 renderDetailHoldings 时使用
             }
           } catch (_) { /* 静默降级 */ }
 

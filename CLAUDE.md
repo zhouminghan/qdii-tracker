@@ -27,7 +27,7 @@
                               ▼
 ┌──────────────────────────────────────────────────┐
 │  scripts/                                        │
-│  ① scan_funds.py     → web/data/{5个分类}.json   │
+│  ① scan_funds.py     → web/data/{6个分类}.json   │
 │  ② enrich_data.py    → 补规模/费率/经理/收益      │
 │  ③ fill_missing.py   → 补净值/YTD/历史收益        │
 │  ④ refresh_purchase.py → 补申购状态/限额          │
@@ -64,9 +64,6 @@ qdii-tracker/
 │   ├── deploy-pages.yml       ← Pages 部署
 │   └── update-data.yml        ← 定时数据更新
 │
-├── docs/
-│   └── ADDING-FUNDS.md        ← 新增基金操作手册
-│
 ├── scripts/
 │   ├── scan_funds.py          ← ① 扫描全量 QDII + 自动分类
 │   ├── enrich_data.py         ← ② 补规模/费率/经理/收益
@@ -84,12 +81,8 @@ qdii-tracker/
         ├── nasdaq_passive.json← 场外·纳指100（17 系列）
         ├── active.json        ← 场外·美股主动精选（19 系列）
         ├── global_index.json  ← 场外·全球指数（手动维护，1 系列）
-        ├── global_other.json  ← 场外·全球/其他QDII（20 系列）
+        ├── global_other.json  ← 场外·全球/其他QDII（23 系列）
         ├── etf.json           ← 场内ETF（17 系列）
-        ├── meta.json          ← 扫描元信息
-        └── holdings/          ← 主动基金持仓详情
-            └── {code}.json
-        ├── etf.json           ← 场内ETF
         ├── meta.json          ← 扫描元信息
         └── holdings/          ← 主动基金持仓详情
             └── {code}.json
@@ -143,7 +136,7 @@ qdii-tracker/
 | `global_other.json` | 全球/其他 QDII | scan 自动分类 |
 | `etf.json` | 场内跨境 ETF | scan 自动分类 |
 
-> `global_index` 不参与 `scan_funds.py` 自动扫描，需手动编辑 JSON 添加基金。其他 5 个脚本（enrich/fill_missing/refresh_purchase/fetch_holdings）都已覆盖该分类。
+> `global_index` 不参与 `scan_funds.py` 自动扫描，需手动编辑 JSON 添加基金。其他 4 个脚本（enrich/fill_missing/refresh_purchase/fetch_holdings）都已覆盖该分类。
 
 ---
 
@@ -302,8 +295,57 @@ ETF 的 `nav_date` = `enrich_data.py` 抓取东财快照时的日期（非实时
 
 ### 新增基金
 
-遵循 `docs/ADDING-FUNDS.md`，核心：加白名单 → 跑 scan → 跑 enrich → 跑 fill_missing。
-或手动编辑 JSON 骨架 → 跑补数据脚本。
+两种方式，按场景选：
+
+**方式 A：白名单自动扫描（推荐 sp500 / nasdaq_passive / active / global_other / etf）**
+
+1. 编辑 `scripts/scan_funds.py`，加白名单：
+   ```python
+   # 精准白名单（by 代码）
+   FORCE_INCLUDE_CODES = {
+       "002891": "active",  # 华夏移动互联人民币
+       "002892": "active",  # 美元现汇
+   }
+   # 关键词白名单（by 名字，自动匹配同系列）
+   ACTIVE_WHITELIST_KEYWORDS = ["华夏移动互联"]
+   ```
+2. 完整流水线：`scan_funds.py` → `enrich_data.py` → `fill_missing.py` → `refresh_purchase.py` → `fetch_holdings.py`
+3. ⚠️ scan 会**完全覆盖** `web/data/*.json`，必须接 enrich + fill_missing 补回 enriched 数据
+
+**方式 B：手动编辑 JSON 骨架（必须用于 `global_index`，或在已有数据基础上追加）**
+
+1. 用 AKShare 查同系列代码：
+   ```python
+   import akshare as ak
+   df = ak.fund_name_em()
+   df[df['基金简称'].str.contains('日经225', na=False)][['基金代码','基金简称','基金类型']]
+   ```
+2. 在 `web/data/{分类}.json` 的 `series` 数组末尾追加骨架：
+   ```json
+   {
+     "series_id": "{公司}__{系列}__{分类}",
+     "series_name": "{系列名}",
+     "display_name": "{公司}{系列}",
+     "company": "{公司}",
+     "company_display": "{公司}",
+     "category": "{分类}",
+     "etf_target": null,
+     "default_share_code": "{A类人民币代码}",
+     "series_scale": null,
+     "shares": [
+       {"code": "...", "name": "...", "fund_type": "QDII-...", "share_class": "A", "currency": "人民币"}
+     ]
+   }
+   ```
+3. shares 排序：人民币 A→C→E→... 然后 美元 A→C→...
+4. `series_scale` 留 null，脚本会自动取 A 类人民币规模
+5. 跑补数据：`enrich_data.py` → `fill_missing.py` → `refresh_purchase.py` → `fetch_holdings.py`（仅 active/global_other/global_index）
+
+**默认份额（`default_share_code`）选择**：有 A/C 选 A，有人民币/美元选人民币，单只就是它本身。
+
+**JSON 校验**：`python3 -c "import json; json.load(open('web/data/xxx.json'))"`
+
+**本地验证**：`cd web && python3 -m http.server 8080` 后核对：新基金可见 / 外层显示 A 类人民币数据 / 展开行份额排序正确 / 走势图能加载 / 费率 Tooltip 正常。
 
 ### 修改脚本
 
