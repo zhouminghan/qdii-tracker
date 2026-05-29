@@ -1,0 +1,174 @@
+{
+  "code": "006105",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 36.39,
+  "heavy_count": 2,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "ICICIBC",
+      "stock_name": "爱西爱西爱银行有限公司",
+      "weight": 6.52,
+      "shares": 118.23,
+      "market_value": 10402.97
+    },
+    {
+      "rank": 2,
+      "stock_code": "RELIANCE",
+      "stock_name": "信实工业有限公司",
+      "weight": 5.19,
+      "shares": 84.46,
+      "market_value": 8281.9
+    },
+    {
+      "rank": 3,
+      "stock_code": "BHARTI",
+      "stock_name": "巴帝电信有限公司",
+      "weight": 4.1,
+      "shares": 50.31,
+      "market_value": 6542.83
+    },
+    {
+      "rank": 4,
+      "stock_code": "MM",
+      "stock_name": "马亨德拉有限公司",
+      "weight": 3.86,
+      "shares": 28.61,
+      "market_value": 6167.94
+    },
+    {
+      "rank": 5,
+      "stock_code": "HDFCB",
+      "stock_name": "印度住房开发金融银行",
+      "weight": 3.59,
+      "shares": 107.2,
+      "market_value": 5721.91
+    },
+    {
+      "rank": 6,
+      "stock_code": "AXSB",
+      "stock_name": "Axis银行有限公司",
+      "weight": 3.04,
+      "shares": 57.27,
+      "market_value": 4853.12
+    },
+    {
+      "rank": 7,
+      "stock_code": "SBIN",
+      "stock_name": "印度国家银行有限公司",
+      "weight": 2.84,
+      "shares": 63.4,
+      "market_value": 4530.58
+    },
+    {
+      "rank": 8,
+      "stock_code": "TTAN",
+      "stock_name": "泰坦公司",
+      "weight": 2.51,
+      "shares": 13.92,
+      "market_value": 4012.3
+    },
+    {
+      "rank": 9,
+      "stock_code": "BAF",
+      "stock_name": "BAJAJ金融有限公司",
+      "weight": 2.47,
+      "shares": 67.45,
+      "market_value": 3944.95
+    },
+    {
+      "rank": 10,
+      "stock_code": "SHFL",
+      "stock_name": "Shriram金融有限公司",
+      "weight": 2.27,
+      "shares": 56.97,
+      "market_value": 3624.88
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "ICICIBC",
+        "stock_name": "爱西爱西爱银行有限公司",
+        "weight": 6.52,
+        "shares": 118.23,
+        "market_value": 10402.97
+      },
+      {
+        "rank": 2,
+        "stock_code": "RELIANCE",
+        "stock_name": "信实工业有限公司",
+        "weight": 5.19,
+        "shares": 84.46,
+        "market_value": 8281.9
+      },
+      {
+        "rank": 3,
+        "stock_code": "BHARTI",
+        "stock_name": "巴帝电信有限公司",
+        "weight": 4.1,
+        "shares": 50.31,
+        "market_value": 6542.83
+      },
+      {
+        "rank": 4,
+        "stock_code": "MM",
+        "stock_name": "马亨德拉有限公司",
+        "weight": 3.86,
+        "shares": 28.61,
+        "market_value": 6167.94
+      },
+      {
+        "rank": 5,
+        "stock_code": "HDFCB",
+        "stock_name": "印度住房开发金融银行",
+        "weight": 3.59,
+        "shares": 107.2,
+        "market_value": 5721.91
+      },
+      {
+        "rank": 6,
+        "stock_code": "AXSB",
+        "stock_name": "Axis银行有限公司",
+        "weight": 3.04,
+        "shares": 57.27,
+        "market_value": 4853.12
+      },
+      {
+        "rank": 7,
+        "stock_code": "SBIN",
+        "stock_name": "印度国家银行有限公司",
+        "weight": 2.84,
+        "shares": 63.4,
+        "market_value": 4530.58
+      },
+      {
+        "rank": 8,
+        "stock_code": "TTAN",
+        "stock_name": "泰坦公司",
+        "weight": 2.51,
+        "shares": 13.92,
+        "market_value": 4012.3
+      },
+      {
+        "rank": 9,
+        "stock_code": "BAF",
+        "stock_name": "BAJAJ金融有限公司",
+        "weight": 2.47,
+        "shares": 67.45,
+        "market_value": 3944.95
+      },
+      {
+        "rank": 10,
+        "stock_code": "SHFL",
+        "stock_name": "Shriram金融有限公司",
+        "weight": 2.27,
+        "shares": 56.97,
+        "market_value": 3624.88
+      }
+    ]
+  },
+  "fetched_at": "2026-05-30T00:38:14.785329"
+}

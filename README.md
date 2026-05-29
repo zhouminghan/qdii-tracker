@@ -87,7 +87,7 @@ qdii-tracker/
 │       ├── sp500.json            # 🏦 场外 · 标普500（7 系列）
 │       ├── nasdaq_passive.json   # 🏦 场外 · 纳指100（17 系列）
 │       ├── active.json           # 🏦 场外 · 美股主动精选（19 系列）
-│       ├── global_index.json    # 🌍 场外 · 全球指数（手动维护，1 系列）
+│       ├── global_index.json    # 🌍 场外 · 全球指数（手动维护，2 系列）
 │       ├── global_other.json     # 🏦 场外 · 全球/其他 QDII（23 系列）
 │       ├── etf.json              # 📈 场内 ETF（17 系列）
 │       ├── meta.json             # 扫描元信息

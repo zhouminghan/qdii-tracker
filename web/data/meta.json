@@ -22,5 +22,13 @@
     "funds": 18
   },
   "excluded_count": 26662,
-  "purchase_refreshed_at": "2026-05-29T22:58:32.608725"
+  "purchase_refreshed_at": "2026-05-30T01:15:29.217994",
+  "enriched_at": "2026-05-30T01:11:02.478144",
+  "enriched_fields": [
+    "涨跌幅",
+    "规模",
+    "限额",
+    "基金经理",
+    "成立时间"
+  ]
 }

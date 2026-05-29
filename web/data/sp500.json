@@ -79,8 +79,9 @@
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "free_hold_days": 1095,
-          "chg_since_inception": 479.64
+          "free_hold_days": null,
+          "chg_since_inception": 479.64,
+          "max_sell_rate": 1.5
         },
         {
           "code": "006075",
@@ -129,7 +130,8 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "sale_service_fee": 0.35,
-          "chg_since_inception": 165.23
+          "chg_since_inception": 165.23,
+          "max_sell_rate": 1.5
         },
         {
           "code": "018738",
@@ -175,7 +177,8 @@
           "custody_fee": 0.2,
           "first_buy_rate": 0.0,
           "free_hold_days": 7,
-          "chg_since_inception": 56.49
+          "chg_since_inception": 56.49,
+          "error": "'data'"
         },
         {
           "code": "013425",
@@ -202,11 +205,11 @@
               "rate": 1.2
             },
             {
-              "condition": "10万<=买入金额<20万",
+              "condition": "10万<=买入金额",
               "rate": 0.8
             },
             {
-              "condition": "20万<=买入金额<100万",
+              "condition": "20万<=买入金额",
               "rate": 0.3
             }
           ],
@@ -237,7 +240,8 @@
           "custody_fee": 0.2,
           "first_buy_rate": 1.2,
           "free_hold_days": 1095,
-          "chg_since_inception": 59.34
+          "chg_since_inception": 59.34,
+          "error": "'data'"
         },
         {
           "code": "013499",
@@ -283,7 +287,8 @@
           "custody_fee": 0.2,
           "first_buy_rate": 0.0,
           "free_hold_days": 7,
-          "chg_since_inception": 56.61
+          "chg_since_inception": 56.61,
+          "error": "'data'"
         }
       ],
       "default_share_code": "050025",
@@ -369,7 +374,8 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "chg_1w": 1.34,
-          "free_hold_days": 730
+          "free_hold_days": null,
+          "max_sell_rate": 1.5
         },
         {
           "code": "019305",
@@ -421,7 +427,8 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "chg_1w": 1.33,
-          "sale_service_fee": 0.3
+          "sale_service_fee": 0.3,
+          "max_sell_rate": 1.5
         },
         {
           "code": "017642",
@@ -448,11 +455,11 @@
               "rate": 1.2
             },
             {
-              "condition": "10万<=买入金额<20万",
+              "condition": "10万<=买入金额",
               "rate": 0.8
             },
             {
-              "condition": "20万<=买入金额<100万",
+              "condition": "20万<=买入金额",
               "rate": 0.3
             }
           ],
@@ -483,7 +490,8 @@
           "custody_fee": 0.15,
           "first_buy_rate": 1.2,
           "free_hold_days": 730,
-          "chg_since_inception": 69.28
+          "chg_since_inception": 69.28,
+          "error": "'data'"
         },
         {
           "code": "017643",
@@ -510,11 +518,11 @@
               "rate": 1.2
             },
             {
-              "condition": "10万<=买入金额<20万",
+              "condition": "10万<=买入金额",
               "rate": 0.8
             },
             {
-              "condition": "20万<=买入金额<100万",
+              "condition": "20万<=买入金额",
               "rate": 0.3
             }
           ],
@@ -545,7 +553,8 @@
           "custody_fee": 0.15,
           "first_buy_rate": 1.2,
           "free_hold_days": 730,
-          "chg_since_inception": 69.28
+          "chg_since_inception": 69.28,
+          "error": "'data'"
         }
       ],
       "default_share_code": "017641",
@@ -623,7 +632,8 @@
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 1.0
+          "chg_1w": 1.0,
+          "max_sell_rate": 1.5
         },
         {
           "code": "007722",
@@ -676,7 +686,8 @@
           "sale_service_fee": 0.25,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 1.0
+          "chg_1w": 1.0,
+          "max_sell_rate": 1.5
         },
         {
           "code": "022523",
@@ -729,7 +740,8 @@
           "sale_service_fee": 0.25,
           "sell_status": "开放赎回",
           "buy_min": 1.0,
-          "chg_since_inception": 23.3
+          "chg_since_inception": 23.3,
+          "max_sell_rate": 1.5
         }
       ],
       "default_share_code": "007721",
@@ -810,8 +822,9 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "sale_service_fee": 0.0,
-          "free_hold_days": 730,
-          "chg_since_inception": 211.32
+          "free_hold_days": null,
+          "chg_since_inception": 211.32,
+          "max_sell_rate": 1.5
         },
         {
           "code": "012860",
@@ -860,7 +873,8 @@
           "sale_service_fee": 0.35,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_since_inception": 78.88
+          "chg_since_inception": 78.88,
+          "max_sell_rate": 1.5
         },
         {
           "code": "003718",
@@ -891,11 +905,11 @@
               "rate": 1.2
             },
             {
-              "condition": "20万<=买入金额<100万",
+              "condition": "20万<=买入金额",
               "rate": 0.8
             },
             {
-              "condition": "100万<=买入金额<200万",
+              "condition": "100万<=买入金额",
               "rate": 0.5
             }
           ],
@@ -925,7 +939,8 @@
           "custody_fee": 0.2,
           "first_buy_rate": 1.5,
           "free_hold_days": 730,
-          "chg_since_inception": 213.55
+          "chg_since_inception": 213.55,
+          "error": "'declare_rate_table'"
         },
         {
           "code": "012861",
@@ -970,7 +985,9 @@
           "custody_fee": 0.2,
           "first_buy_rate": 0.0,
           "free_hold_days": 7,
-          "chg_since_inception": 69.53
+          "chg_since_inception": 69.53,
+          "scale": null,
+          "error": "'data'"
         }
       ],
       "default_share_code": "161125",
@@ -1052,7 +1069,8 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "chg_1w": 1.43,
-          "free_hold_days": 730
+          "free_hold_days": null,
+          "max_sell_rate": 1.5
         },
         {
           "code": "008401",
@@ -1104,7 +1122,8 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "chg_1w": 1.43,
-          "sale_service_fee": 0.3
+          "sale_service_fee": 0.3,
+          "max_sell_rate": 1.5
         },
         {
           "code": "013404",
@@ -1131,7 +1150,7 @@
               "rate": 1.5
             },
             {
-              "condition": "20万<=买入金额<100万",
+              "condition": "20万<=买入金额",
               "rate": 1.0
             }
           ],
@@ -1162,7 +1181,8 @@
           "custody_fee": 0.2,
           "first_buy_rate": 1.5,
           "free_hold_days": 730,
-          "chg_since_inception": 24.77
+          "chg_since_inception": 24.77,
+          "error": "'data'"
         },
         {
           "code": "015545",
@@ -1208,7 +1228,8 @@
           "custody_fee": 0.2,
           "first_buy_rate": 0.0,
           "free_hold_days": 7,
-          "chg_since_inception": 31.24
+          "chg_since_inception": 31.24,
+          "error": "'data'"
         }
       ],
       "default_share_code": "096001",
@@ -1282,7 +1303,8 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "sale_service_fee": 0.0,
-          "chg_since_inception": 68.32
+          "chg_since_inception": 68.32,
+          "max_sell_rate": 1.5
         },
         {
           "code": "018065",
@@ -1331,7 +1353,8 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "sale_service_fee": 0.3,
-          "chg_since_inception": 66.79
+          "chg_since_inception": 66.79,
+          "max_sell_rate": 1.5
         },
         {
           "code": "018066",
@@ -1358,11 +1381,11 @@
               "rate": 1.2
             },
             {
-              "condition": "20万<=买入金额<40万",
+              "condition": "20万<=买入金额",
               "rate": 0.9
             },
             {
-              "condition": "40万<=买入金额<100万",
+              "condition": "40万<=买入金额",
               "rate": 0.6
             }
           ],
@@ -1385,7 +1408,8 @@
           "custody_fee": 0.15,
           "first_buy_rate": 1.2,
           "free_hold_days": 7,
-          "chg_since_inception": 70.33
+          "chg_since_inception": 70.33,
+          "error": "'data'"
         }
       ],
       "default_share_code": "018064",
@@ -1455,7 +1479,8 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "sale_service_fee": 0.0,
-          "chg_since_inception": 69.9
+          "chg_since_inception": 69.9,
+          "max_sell_rate": 1.5
         },
         {
           "code": "017030",
@@ -1504,12 +1529,14 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "sale_service_fee": 0.3,
-          "chg_since_inception": 68.12
+          "chg_since_inception": 68.12,
+          "max_sell_rate": 1.5
         }
       ],
       "default_share_code": "017028",
       "series_scale": 1.32
     }
   ],
-  "total_scale": 143.17
+  "total_scale": 143.17,
+  "enriched_at": "2026-05-30T01:11:02.452252"
 }

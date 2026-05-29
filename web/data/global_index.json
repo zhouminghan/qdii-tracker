@@ -2,9 +2,175 @@
   "generated_at": "2026-05-28T10:53:13.927383",
   "category": "global_index",
   "label": "全球指数基金（场外）",
-  "series_count": 1,
-  "total_scale": 2.22,
+  "series_count": 2,
+  "total_scale": 0,
   "series": [
+    {
+      "series_id": "华泰柏瑞__中韩半导体ETF联接__global_index",
+      "series_name": "中韩半导体ETF联接",
+      "display_name": "华泰柏瑞中韩半导体ETF联接",
+      "company": "华泰柏瑞",
+      "company_display": "华泰柏瑞",
+      "category": "global_index",
+      "etf_target": null,
+      "default_share_code": "019454",
+      "series_scale": 0.8,
+      "shares": [
+        {
+          "code": "019454",
+          "name": "华泰柏瑞中韩半导体ETF发起式联接(QDII)A",
+          "fund_type": "指数型-海外股票",
+          "share_class": "A",
+          "currency": "人民币",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10.0,
+          "fee": "0.12",
+          "scale": 0.8,
+          "scale_raw": "0.8亿",
+          "established": "2023-09-22",
+          "manager": "李沐阳",
+          "error": "'data'",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100万",
+              "rate": 1.2
+            },
+            {
+              "condition": "100万<=买入金额<500万",
+              "rate": 0.9
+            },
+            {
+              "condition": "500万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限<30天",
+              "rate": 0.1
+            },
+            {
+              "condition": "30天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "nav": 3.937,
+          "nav_date": "2026-05-29",
+          "daily_change": -0.89,
+          "chg_1m": 29.31,
+          "chg_3m": 43.54,
+          "chg_6m": 110.87,
+          "chg_1y": 210.17,
+          "sale_service_fee": 0.0,
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.1,
+          "first_buy_rate": 1.5,
+          "free_hold_days": 30,
+          "chg_ytd": 80.33,
+          "chg_since_inception": 293.74
+        },
+        {
+          "code": "019455",
+          "name": "华泰柏瑞中韩半导体ETF发起式联接(QDII)C",
+          "fund_type": "指数型-海外股票",
+          "share_class": "C",
+          "currency": "人民币",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10.0,
+          "fee": "",
+          "scale": 1.4,
+          "scale_raw": "1.4亿",
+          "established": "2023-09-22",
+          "manager": "李沐阳",
+          "error": "'data'",
+          "buy_rules": [
+            {
+              "condition": "---",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "nav": 3.9113,
+          "nav_date": "2026-05-29",
+          "daily_change": -0.89,
+          "chg_1m": 29.28,
+          "chg_3m": 43.45,
+          "chg_6m": 110.61,
+          "chg_1y": 209.39,
+          "sale_service_fee": 0.25,
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.1,
+          "first_buy_rate": 0.0,
+          "free_hold_days": 7,
+          "chg_ytd": 80.15,
+          "chg_since_inception": 291.17
+        },
+        {
+          "code": "022681",
+          "name": "华泰柏瑞中韩半导体ETF发起式联接(QDII)I",
+          "fund_type": "指数型-海外股票",
+          "share_class": "I",
+          "currency": "人民币",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 10.0,
+          "fee": "",
+          "scale": 0.03,
+          "scale_raw": "0.03亿",
+          "established": "2024-11-26",
+          "manager": "李沐阳",
+          "error": "'data'",
+          "buy_rules": [
+            {
+              "condition": "---",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "nav": 3.9319,
+          "nav_date": "2026-05-29",
+          "daily_change": -0.89,
+          "chg_1m": 29.3,
+          "chg_3m": 43.51,
+          "chg_6m": 110.77,
+          "chg_1y": 209.87,
+          "sale_service_fee": 0.1,
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.1,
+          "first_buy_rate": 0.0,
+          "free_hold_days": 7,
+          "chg_ytd": 80.26,
+          "chg_since_inception": 237.1
+        }
+      ]
+    },
     {
       "series_id": "华安__三菱日联日经225ETF联接__global_index",
       "series_name": "三菱日联日经225ETF联接",
@@ -126,5 +292,6 @@
         }
       ]
     }
-  ]
+  ],
+  "enriched_at": "2026-05-30T01:11:02.469348"
 }

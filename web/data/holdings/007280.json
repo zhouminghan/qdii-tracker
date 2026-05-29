@@ -1,0 +1,174 @@
+{
+  "code": "007280",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 31.05,
+  "heavy_count": 0,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "6758",
+      "stock_name": "索尼集团公司",
+      "weight": 3.73,
+      "shares": 76.93,
+      "market_value": 10688.41
+    },
+    {
+      "rank": 2,
+      "stock_code": "6501",
+      "stock_name": "日立",
+      "weight": 3.59,
+      "shares": 53.25,
+      "market_value": 10291.81
+    },
+    {
+      "rank": 3,
+      "stock_code": "8316",
+      "stock_name": "三井住友金融集团",
+      "weight": 3.27,
+      "shares": 43.32,
+      "market_value": 9389.17
+    },
+    {
+      "rank": 4,
+      "stock_code": "7741",
+      "stock_name": "Hoya株式会社",
+      "weight": 3.18,
+      "shares": 7.93,
+      "market_value": 9115.6
+    },
+    {
+      "rank": 5,
+      "stock_code": "8411",
+      "stock_name": "瑞穗金融集团",
+      "weight": 3.09,
+      "shares": 33.62,
+      "market_value": 8860.31
+    },
+    {
+      "rank": 6,
+      "stock_code": "8035",
+      "stock_name": "东京电子",
+      "weight": 3.07,
+      "shares": 5.46,
+      "market_value": 8801.03
+    },
+    {
+      "rank": 7,
+      "stock_code": "6503",
+      "stock_name": "三菱电机",
+      "weight": 2.85,
+      "shares": 37.79,
+      "market_value": 8161.15
+    },
+    {
+      "rank": 8,
+      "stock_code": "7203",
+      "stock_name": "丰田汽车",
+      "weight": 2.79,
+      "shares": 58.48,
+      "market_value": 8006.03
+    },
+    {
+      "rank": 9,
+      "stock_code": "8306",
+      "stock_name": "三菱日联金融集团",
+      "weight": 2.76,
+      "shares": 70.25,
+      "market_value": 7908.01
+    },
+    {
+      "rank": 10,
+      "stock_code": "5802",
+      "stock_name": "住友电气工业有限公司",
+      "weight": 2.72,
+      "shares": 21.48,
+      "market_value": 7793.38
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "6758",
+        "stock_name": "索尼集团公司",
+        "weight": 3.73,
+        "shares": 76.93,
+        "market_value": 10688.41
+      },
+      {
+        "rank": 2,
+        "stock_code": "6501",
+        "stock_name": "日立",
+        "weight": 3.59,
+        "shares": 53.25,
+        "market_value": 10291.81
+      },
+      {
+        "rank": 3,
+        "stock_code": "8316",
+        "stock_name": "三井住友金融集团",
+        "weight": 3.27,
+        "shares": 43.32,
+        "market_value": 9389.17
+      },
+      {
+        "rank": 4,
+        "stock_code": "7741",
+        "stock_name": "Hoya株式会社",
+        "weight": 3.18,
+        "shares": 7.93,
+        "market_value": 9115.6
+      },
+      {
+        "rank": 5,
+        "stock_code": "8411",
+        "stock_name": "瑞穗金融集团",
+        "weight": 3.09,
+        "shares": 33.62,
+        "market_value": 8860.31
+      },
+      {
+        "rank": 6,
+        "stock_code": "8035",
+        "stock_name": "东京电子",
+        "weight": 3.07,
+        "shares": 5.46,
+        "market_value": 8801.03
+      },
+      {
+        "rank": 7,
+        "stock_code": "6503",
+        "stock_name": "三菱电机",
+        "weight": 2.85,
+        "shares": 37.79,
+        "market_value": 8161.15
+      },
+      {
+        "rank": 8,
+        "stock_code": "7203",
+        "stock_name": "丰田汽车",
+        "weight": 2.79,
+        "shares": 58.48,
+        "market_value": 8006.03
+      },
+      {
+        "rank": 9,
+        "stock_code": "8306",
+        "stock_name": "三菱日联金融集团",
+        "weight": 2.76,
+        "shares": 70.25,
+        "market_value": 7908.01
+      },
+      {
+        "rank": 10,
+        "stock_code": "5802",
+        "stock_name": "住友电气工业有限公司",
+        "weight": 2.72,
+        "shares": 21.48,
+        "market_value": 7793.38
+      }
+    ]
+  },
+  "fetched_at": "2026-05-30T00:38:13.797823"
+}

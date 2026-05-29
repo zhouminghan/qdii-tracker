@@ -251,11 +251,11 @@
         </div>
       </details>
 
-      <!-- 卡片 2：A/C/E/F 决策对照表（仅在场外 Tab 显示） -->
+      <!-- 卡片 2：A/C/D/E/F/I 决策对照表（仅在场外 Tab 显示） -->
       <details class="bg-amber-50 border border-amber-200 rounded-xl overflow-hidden mt-3" id="card-share-class" data-for-tabs="offshore" open>
         <summary class="cursor-pointer px-5 py-3 text-sm font-medium text-amber-900 hover:bg-amber-100 transition flex items-center gap-2 select-none">
           <span>📊</span>
-          <span>A / C / E / F 份额怎么选？—— 同一只基金不同份额的对比</span>
+          <span>A / C / D / E / F / I 份额怎么选？—— 同一只基金不同份额的对比</span>
         </summary>
         <div class="px-5 pb-4 pt-2 bg-white">
           <p class="text-xs text-stone-500 mb-3">同一只基金拆成多种"份额"，<b>投资策略和底层资产完全相同</b>，只是费率结构不同。选对份额能省下不少手续费。</p>
@@ -281,6 +281,11 @@
                 <td class="px-3 py-2 text-emerald-700"><b>短线 / 波段</b>（&lt;1 年）</td>
               </tr>
               <tr>
+                <td class="px-3 py-2"><span class="badge badge-qdii" style="padding:4px 10px;">D 类</span></td>
+                <td class="px-3 py-2 text-stone-700">C 类的<b>互联网直销版</b>，在支付宝/天天基金等平台销售<br>0 申购费 + 销售服务费更低（常 0.01~0.2%），持 7~30 天免赎回</td>
+                <td class="px-3 py-2 text-emerald-700"><b>短线省钱版</b> · 比 C 类费率更低</td>
+              </tr>
+              <tr>
                 <td class="px-3 py-2"><span class="badge badge-qdii" style="padding:4px 10px;">E 类</span></td>
                 <td class="px-3 py-2 text-stone-700">A 类的<b>互联网专属折扣版</b>，仅在支付宝/天天基金等平台销售<br>申购费更低（常 <b>1 折起</b>），销售服务费极低（0.01%）</td>
                 <td class="px-3 py-2 text-emerald-700">有 E 类就<b>优先选 E</b></td>
@@ -299,7 +304,7 @@
               📌 <b>长期定投</b><br>选 A 类（有 E 就选 E）<br><span class="text-emerald-600">代销平台 1 折申购费，长持免赎回</span>
             </div>
             <div class="bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 text-amber-800">
-              📌 <b>短线择时</b><br>选 C 类<br><span class="text-amber-600">0 申购费，持 7~30 天即免赎回</span>
+              📌 <b>短线择时</b><br>选 C 类（有 D 就选 D）<br><span class="text-amber-600">0 申购费，持 7~30 天即免赎回</span>
             </div>
             <div class="bg-sky-50 border border-sky-100 rounded-lg px-3 py-2 text-sky-800">
               📌 <b>大资金省费率</b><br>选 F / I 类（直销）<br><span class="text-sky-600">下载基金公司官方 APP 购买</span>
@@ -915,7 +920,7 @@
               </th>`;
 
       container.innerHTML = `
-        <table class="w-full text-sm min-w-[840px]">
+        <table class="w-full text-sm">
           <thead class="bg-stone-50 border-b border-stone-200 text-stone-600 text-xs">
             <tr>
               <th class="text-left py-3 px-3 font-medium w-8"></th>
@@ -1327,9 +1332,8 @@
     function statusBadge(sh) {
       const st = sh.buy_status || '';
       if (!st) return '<span class="text-stone-400 text-xs">—</span>';
-      // 美元 / E/F/I/D 类（非主流代销份额）：申购数据不准，显示 —
-      const mainClass = ['A','C','A(后端)','默认','LOF','FOF'];
-      if (sh.currency === '美元' || (sh.share_class && !mainClass.includes(sh.share_class))) {
+      // 美元份额：支付宝等代销平台不可买，申购数据无实际参考意义，显示 —
+      if (sh.currency === '美元') {
         return '<span class="text-stone-400 text-xs">—</span>';
       }
       const cls = buyStatusClass(st);
@@ -1347,6 +1351,7 @@
 
     function formatLimitForDetail(sh) {
       if (!sh.buy_status) return '--';
+      if (sh.currency === '美元') return '—';
       if (sh.buy_status.includes('暂停')) return '—';
       if (sh.daily_limit) {
         const symbol = sh.currency === '美元' ? '$' : '¥';
