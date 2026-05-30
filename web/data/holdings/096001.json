@@ -1,0 +1,174 @@
+{
+  "code": "096001",
+  "latest_quarter": "2026年1季度股票投资明细",
+  "holdings_count": 10,
+  "total_weight": 2.19,
+  "heavy_count": 0,
+  "holdings": [
+    {
+      "rank": 1,
+      "stock_code": "APA",
+      "stock_name": "阿帕奇石油",
+      "weight": 0.24,
+      "shares": 0.59,
+      "market_value": 174.2
+    },
+    {
+      "rank": 2,
+      "stock_code": "DOW",
+      "stock_name": "陶氏",
+      "weight": 0.23,
+      "shares": 0.57,
+      "market_value": 163.98
+    },
+    {
+      "rank": 3,
+      "stock_code": "LYB",
+      "stock_name": "利安德巴塞尔工业",
+      "weight": 0.23,
+      "shares": 0.29,
+      "market_value": 161.82
+    },
+    {
+      "rank": 4,
+      "stock_code": "OXY",
+      "stock_name": "西方石油",
+      "weight": 0.22,
+      "shares": 0.35,
+      "market_value": 158.27
+    },
+    {
+      "rank": 5,
+      "stock_code": "CIEN",
+      "stock_name": "Ciena科技",
+      "weight": 0.22,
+      "shares": 0.06,
+      "market_value": 154.46
+    },
+    {
+      "rank": 6,
+      "stock_code": "DELL",
+      "stock_name": "戴尔科技",
+      "weight": 0.21,
+      "shares": 0.14,
+      "market_value": 153.54
+    },
+    {
+      "rank": 7,
+      "stock_code": "COP",
+      "stock_name": "康菲石油",
+      "weight": 0.21,
+      "shares": 0.17,
+      "market_value": 152.62
+    },
+    {
+      "rank": 8,
+      "stock_code": "DAL",
+      "stock_name": "达美航空",
+      "weight": 0.21,
+      "shares": 0.33,
+      "market_value": 152.12
+    },
+    {
+      "rank": 9,
+      "stock_code": "FANG",
+      "stock_name": "Diamondback Energy Inc",
+      "weight": 0.21,
+      "shares": 0.11,
+      "market_value": 151.5
+    },
+    {
+      "rank": 10,
+      "stock_code": "EOG",
+      "stock_name": "EOG能源",
+      "weight": 0.21,
+      "shares": 0.15,
+      "market_value": 151.45
+    }
+  ],
+  "all_quarters": {
+    "2026年1季度股票投资明细": [
+      {
+        "rank": 1,
+        "stock_code": "APA",
+        "stock_name": "阿帕奇石油",
+        "weight": 0.24,
+        "shares": 0.59,
+        "market_value": 174.2
+      },
+      {
+        "rank": 2,
+        "stock_code": "DOW",
+        "stock_name": "陶氏",
+        "weight": 0.23,
+        "shares": 0.57,
+        "market_value": 163.98
+      },
+      {
+        "rank": 3,
+        "stock_code": "LYB",
+        "stock_name": "利安德巴塞尔工业",
+        "weight": 0.23,
+        "shares": 0.29,
+        "market_value": 161.82
+      },
+      {
+        "rank": 4,
+        "stock_code": "OXY",
+        "stock_name": "西方石油",
+        "weight": 0.22,
+        "shares": 0.35,
+        "market_value": 158.27
+      },
+      {
+        "rank": 5,
+        "stock_code": "CIEN",
+        "stock_name": "Ciena科技",
+        "weight": 0.22,
+        "shares": 0.06,
+        "market_value": 154.46
+      },
+      {
+        "rank": 6,
+        "stock_code": "DELL",
+        "stock_name": "戴尔科技",
+        "weight": 0.21,
+        "shares": 0.14,
+        "market_value": 153.54
+      },
+      {
+        "rank": 7,
+        "stock_code": "COP",
+        "stock_name": "康菲石油",
+        "weight": 0.21,
+        "shares": 0.17,
+        "market_value": 152.62
+      },
+      {
+        "rank": 8,
+        "stock_code": "DAL",
+        "stock_name": "达美航空",
+        "weight": 0.21,
+        "shares": 0.33,
+        "market_value": 152.12
+      },
+      {
+        "rank": 9,
+        "stock_code": "FANG",
+        "stock_name": "Diamondback Energy Inc",
+        "weight": 0.21,
+        "shares": 0.11,
+        "market_value": 151.5
+      },
+      {
+        "rank": 10,
+        "stock_code": "EOG",
+        "stock_name": "EOG能源",
+        "weight": 0.21,
+        "shares": 0.15,
+        "market_value": 151.45
+      }
+    ]
+  },
+  "fetched_at": "2026-05-30T18:55:12.306268"
+}

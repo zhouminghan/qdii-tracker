@@ -14,6 +14,38 @@ from pathlib import Path
 
 import akshare as ak
 import pandas as pd
+import requests
+
+
+LSJZ_HEADERS = {
+    "User-Agent": "Mozilla/5.0",
+    "Referer": "https://fundf10.eastmoney.com/",
+}
+
+
+def fetch_etf_nav_date_lsjz(code: str):
+    """走天天基金 lsjz API 拉 ETF 的真实净值披露日。
+    仅返回 YYYY-MM-DD 字符串或 None，用于避免 datetime.now() 在周末/节假日
+    诤报为「今天」（ETF 净值与场外同节奏，T+0 收盘后披露，非实时）。
+    """
+    url = (
+        f"https://api.fund.eastmoney.com/f10/lsjz"
+        f"?callback=jQuery&fundCode={code}&pageIndex=1&pageSize=1"
+    )
+    try:
+        r = requests.get(url, headers=LSJZ_HEADERS, timeout=8)
+        if r.status_code != 200:
+            return None
+        m = re.search(r"jQuery\((.*)\)", r.text, re.DOTALL)
+        if not m:
+            return None
+        data = json.loads(m.group(1))
+        items = data.get("Data", {}).get("LSJZList", [])
+        if not items:
+            return None
+        return items[0].get("FSRQ") or None
+    except Exception:
+        return None
 
 
 def _to_float(v):
@@ -291,8 +323,15 @@ def main():
                         share["scale_raw"] = f"{etf_info['etf_scale_yi']:.2f}亿"
                     share["etf_price"] = etf_info.get("etf_price")
                     share["etf_change_pct"] = etf_info.get("etf_change_pct")
-                    # ETF 价格日期 = 抓取当天（东财快照）
-                    share["nav_date"] = datetime.now().strftime("%Y-%m-%d")
+                    # ETF 净值日期 = lsjz API 返回的真实披露日（与场外 QDII 同节奏）
+                    # why 不用 datetime.now()：周末/节假日运行时会写入非交易日，
+                    #                     导致表头显示「最新价 5.30」这类错误（周六不交易）
+                    # 防回退：只在新日期 >= 已有日期时才写入；lsjz 失败时保留原值
+                    new_nav_date = fetch_etf_nav_date_lsjz(code)
+                    cur_nav_date = share.get("nav_date", "")
+                    if new_nav_date and (not cur_nav_date or new_nav_date >= cur_nav_date):
+                        share["nav_date"] = new_nav_date
+                    time.sleep(0.15)  # 对 lsjz 接口限速，避免被封
 
             # v3: 份额排序 —— 先人民币后美元、A<C<I<LOF
             series["shares"].sort(key=share_sort_key)

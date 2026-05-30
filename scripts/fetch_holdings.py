@@ -87,6 +87,21 @@ def main():
             if default_code:
                 target_codes.append((default_code, series.get("display_name", "")))
 
+    # 显式白名单：分类上挂在被动指数里、但实际是主动管理 / Smart Beta 的基金
+    # 这类基金会有真实重仓持股可披露，需要单独纳入抓取
+    # why 用白名单不遍历整个 sp500/nasdaq_passive：真被动指数基金的 fund_portfolio_hold_em 多返回 0 行，
+    #     批量空跑只会浪费请求；显式列出"虽分类被动但实为主动"的少数 series 最干净
+    EXTRA_HOLDINGS_CODES = [
+        ("096001", "大成标普500等权重指数"),  # Smart Beta，等权再平衡，有真实持股偏离
+        # 注：天弘标普500 (007721) 是 QDII-FOF，akshare fund_portfolio_hold_em 对 FOF 返回 0 行
+        # （FOF 持的是基金/ETF 而非个股），故不纳入白名单避免空跑。文档说明见 CLAUDE.md。
+    ]
+    # 去重：白名单代码若已在主动分类里就跳过（防止以后归类调整重复抓）
+    existing_codes = {c for c, _ in target_codes}
+    for code, name in EXTRA_HOLDINGS_CODES:
+        if code not in existing_codes:
+            target_codes.append((code, name))
+
     total = len(target_codes)
     print(f"🎯 目标：{total} 只主动基金")
     print(f"📁 输出：{holdings_dir}")

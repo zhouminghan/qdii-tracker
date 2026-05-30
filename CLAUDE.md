@@ -24,7 +24,7 @@ qdii-tracker/
 │   ├── enrich_data.py        # ② 补规模/费率/经理
 │   ├── fill_missing.py       # ③ 补净值/YTD/历史收益/费率规则
 │   ├── refresh_purchase.py   # ④ 补申购状态/限额（轻量）
-│   ├── fetch_holdings.py     # ⑤ 抓 Top10 重仓（active + global_other）
+│   ├── fetch_holdings.py     # ⑤ 抓 Top10 重仓（active + global_other + EXTRA_HOLDINGS_CODES 白名单）
 │   └── requirements.txt
 └── web/
     ├── index.html            # 单文件前端（HTML+CSS+JS 全内联）
@@ -115,11 +115,37 @@ qdii-tracker/
 - 行内净值日期 = 表头日期时不再重复展示；按 tab 隔离存到 `STATE._navDate[tab]`，避免场内外撞车
 - 数据空时 fallback 到 `new Date()`（仅初次加载/异常兜底）
 
+### 持仓列两态（被动表也可能有内容）
+- **isActive=true**（active / global_other）：渲染 `📊 持仓` 按钮，点击拉 `holdings/{code}.json`
+- **`PASSIVE_HOLDINGS_OVERRIDE` 命中**（前端常量，被动分类下的例外名单）：
+  - `type='active'`：分类被动但实为主动管理（Smart Beta，如 096001 大成标普500等权重）→ 走真实持仓按钮，**`fetch_holdings.py` 的 `EXTRA_HOLDINGS_CODES` 必须同步包含**
+- **其他被动指数**：占位 `—`（包括场外联接基金，如 050025 博时标普500ETF联接 —— 跟踪母 ETF 的细节不在列里展示）
+- 维护：`PASSIVE_HOLDINGS_OVERRIDE`（前端）和 `EXTRA_HOLDINGS_CODES`（脚本）成对存在；前者新增 `type='active'` 条目时后者必须同步
+- `openDetail` 的 series 查找已扩展到全部场外分类（`active / global_other / sp500 / nasdaq_passive / global_index`），新增 override 无需再改查找列表
+
+### 分类下的"真被动 / 名义被动"扫盲（sp500 / nasdaq_passive）
+
+| 分类 | series | 主代码 | fund_type | 性质 | 处理 |
+|---|---|---|---|---|---|
+| sp500 | 博时标普500ETF联接 | 050025 | 指数型-海外股票 | ✅ 真被动（跟踪 513500） | 占位 `—` |
+| sp500 | 摩根标普500指数 | 017641 | 指数型-海外股票 | ✅ 真被动 | 占位 `—` |
+| sp500 | 易方达标普500指数 | 161125 | 指数型-海外股票 | ✅ 真被动 | 占位 `—` |
+| sp500 | 华夏标普500ETF联接 | 018064 | 指数型-海外股票 | ✅ 真被动 | 占位 `—` |
+| sp500 | 大成标普500等权重指数 | 096001 | 指数型-海外股票 | ⚠️ Smart Beta（等权再平衡） | `type='active'` 走持仓按钮 |
+| sp500 | 天弘标普500发起 | 007721 / 007722 | **QDII-FOF** | ⚠️ FOF（基金经理选 ETF 配置，实为主动） | **保留占位 `—`**：akshare `fund_portfolio_hold_em` 对 FOF 返回 0 行（FOF 持基金不持个股），加按钮也是空 |
+| nasdaq_passive | 全部 series（含南方纳斯达克100 等发起式） | — | 指数型-海外股票 | ✅ 全是真被动 | 占位 `—`（被动指数有"持仓"=指数成分股，是常识不展示） |
+
+> 维护原则：判定标准是 **`fund_type` + `full_name`**，不是名字带不带"指数"。FOF 即便归在标普500分类下也**不是被动**。
+
 ### 卖出规则展示统一格式
 - 主展示**只用**「持X免」一种格式（X 经 `formatHoldDays` 归一化：366→1年、730→2年）
 - 优先级：`free_hold_days` → `sell_rules` 末档（最低费率档）的 `condition` 下界（`parseSellRuleLowerDays` 解析）
 - **禁止**显示 `持7天起0.5%` 这类混合格式（华夏全球永不免赎也照样展示「持7天免」+ 详细费率走 tooltip）
 - 详细分档（含费率、买入金额段）走 hover tooltip，不污染主行
+
+### tooltip 触发样式
+- `.fee-tip` 类用于费率/买入费/卖出规则等主行单元格 + hover 弹窗，**`cursor` 必须是 `pointer`，禁止 `help`**
+  - `cursor: help` 会让光标变 `?` 形状，暗示"这是说明性内容"，与"可点开查看详情"的语义冲突，用户会误以为单元格有问题
 
 ### 分组级风险/说明横幅 `GROUP_NOTICE`
 - 配置位于 `index.html` 内的 `GROUP_NOTICE` 常量，按 `tab → filter` 二级嵌套；空配置自动隐藏
@@ -129,7 +155,11 @@ qdii-tracker/
 
 ### 场内 ETF 特殊点
 - ETF 表头**没有**：成立来、申购、份额数列
-- ETF `nav_date` 来自东财快照（非实时，与场外同节奏）
+- ETF `nav_date` **必须**走 lsjz API 拉真实净值披露日（`enrich_data.py::fetch_etf_nav_date_lsjz`），与场外 QDII 同节奏
+  - **禁止**用 `datetime.now()` 写入 ETF `nav_date`：周末/节假日运行会写入非交易日，导致表头显示「最新价 5.30」（周六）这类错误日期
+  - 数据源：`fund_open_fund_rank_em` **不收录 ETF**，所以 ETF 的 `nav_date` 不会被 `refresh_purchase.py` 自动覆盖刷新；只能靠 enrich 阶段写入
+  - 表头日期取所有 share `nav_date` 最大值，前端逻辑一致（场内外都按这套）
+- `etf_price` / `etf_change_pct` 来自东财快照（`fund_etf_spot_em`，可能是实时报价），**与 `nav_date` 不必同日**——`nav_date` 始终是 lsjz 净值日，价格则是当前抓取时的最新价
 - `series.starred = true` 在分组内置顶（当前 513500、513100）
 
 ---
@@ -182,6 +212,11 @@ qdii-tracker/
 - 未提交的 untracked 文件
 - 表头/行内出现 `366天`、`持7天起0.5%` 等违反【卖出规则展示统一格式】的文案
 - `GROUP_NOTICE.offshore.active` 红色警告被改成中性色或被删除
+- ETF `nav_date` 在周末/节假日显示为脚本运行当天（应来自 lsjz 真实披露日）
+- 任何脚本里出现 `share["nav_date"] = datetime.now()` 这种写法（无论场内场外都禁止）
+- `PASSIVE_HOLDINGS_OVERRIDE` 中 `type='active'` 的代码未在 `EXTRA_HOLDINGS_CODES` 中（会导致前端按钮拉到 404）
+- `.fee-tip` 的 `cursor` 被改回 `help`（应为 `pointer`，避免误导 `?` 图标）
+- `007721 / 007722` 被加进 `PASSIVE_HOLDINGS_OVERRIDE` 或 `EXTRA_HOLDINGS_CODES`（FOF 接口拿不到个股持仓，加了点开就是空 + 脚本空跑）
 
 **不报**（伪问题）：
 - "孤儿 holdings"——见禁止事项 4
