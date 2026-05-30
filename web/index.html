@@ -331,6 +331,8 @@
         </div>
         <span class="text-xs text-stone-500 flex-shrink-0" id="count-offshore">--</span>
       </div>
+      <!-- 分组级风险/说明提示（按 Chip 动态切换；空字符串则隐藏） -->
+      <div id="offshore-notice" class="hidden mb-3"></div>
       <!-- 分组筛选 Chips（JS 动态注入） -->
       <div id="offshore-chips" class="flex flex-wrap items-center gap-2 mb-3"></div>
       <div class="bg-white rounded-xl border border-stone-200 overflow-x-auto" id="table-offshore"></div>
@@ -869,13 +871,27 @@
       document.getElementById(`count-${tab}`).textContent =
         `${totalSeries} 个系列 · ${totalShares} 只份额 · 总规模 ${totalScale.toFixed(0)} 亿`;
 
-      // 表头净值日期：统一显示当天日期（表示"今天看到的数据"）
-      // 行内：QDII 场外基金每行标注实际 nav_date（T+1 披露，与官方一致）
-      //       日经/ETF 如果 nav_date = 今天则不标（当天数据无需额外说明）
-      const today = new Date().toISOString().slice(0, 10);
-      const navHeaderSub = fmtMD(today);
-      // 存 today 供 renderSeries 判断是否需要显示行内日期
-      STATE._today = today;
+      // 表头净值日期：取当前 tab 下所有 share nav_date 的最大值（= 官方最新披露日）
+      // why 不用 new Date()：周末/节假日浏览器拿到的"今天"≠ 官方最新披露日（如周六显示周五净值），
+      //                     直接拿数据里的最大 nav_date 天然规避节假日表，无需手动维护
+      // 数据空兜底：fallback 到今天（避免初次加载或异常时表头空白）
+      let latestNavDate = '';
+      for (const g of groups) {
+        for (const s of g.items) {
+          for (const sh of (s.shares || [])) {
+            const nd = sh.nav_date || '';
+            if (nd && nd > latestNavDate) latestNavDate = nd;
+          }
+        }
+      }
+      if (!latestNavDate) {
+        const d = new Date();
+        latestNavDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      }
+      const navHeaderSub = fmtMD(latestNavDate);
+      // 按 tab 存储，供 renderSeries 判断行内是否需要重复显示日期
+      STATE._navDate = STATE._navDate || {};
+      STATE._navDate[tab] = latestNavDate;
 
       // 列数（用于分组标题行 colspan）
       // 场外 = 10 + 1(估值) + 1(申购) + 走势 + 持仓 = 13
@@ -1046,6 +1062,8 @@
         if (titleEl) titleEl.textContent = meta.title;
         if (subEl) subEl.textContent = meta.subtitle.replace('{count}', currentGroup.items.length);
       }
+      // 更新分组级风险/说明横幅（无配置则自动隐藏）
+      renderGroupNotice(tab, filter);
     }
 
     // 每个 Tab 下各分组的「标题 + 副标题」文案（按 tab 隔离，避免同 key 在场内外撞车）
@@ -1064,6 +1082,58 @@
         global_other: { title: '🌐 全球/其他 ETF',     subtitle: '中证·美国50 等头部美股浓缩版 + 全球配置 / 其他跨境方向' },
       },
     };
+
+    // 分组级"风险提示 / 选基要点"横幅（场外按 Chip 动态切换；空则隐藏）
+    // 设计原则：点到为止、起警示作用，不堆文字。被动指数风险小（中性蓝），主动基有真实坑（红色警告）
+    const GROUP_NOTICE = {
+      offshore: {
+        sp500: {
+          tone: 'sky',
+          items: [
+            '被动跟踪 · 风险可控；常因 QDII 限购留有 5~10% 现金仓位，<b>长期可能少赚 1~2 个点</b>，但不会跑偏 · 是稳健首选',
+          ],
+        },
+        nasdaq_passive: {
+          tone: 'sky',
+          items: [
+            '被动跟踪 · 风险可控；<b>限购常态化</b>（多数仅 1元~1万/日），现金仓位拖累 1~2 个点 · 长期定投仍是稳健首选',
+          ],
+        },
+        active: {
+          tone: 'rose',
+          items: [
+            '<b>挂羊头卖狗肉</b>：部分基金经理主动调仓买 A 股 / 港股博收益，名义"美股主动"实际<b>重仓 A 股</b>',
+            '<b>费率高 + 披露滞后</b>：管理费 1.2~1.8%/年，季报只披露 Top10 · 想稳优先选上方<b>被动指数</b>',
+          ],
+        },
+      },
+    };
+
+    // 渲染分组级风险提示横幅（无配置则隐藏容器）
+    function renderGroupNotice(tab, filter) {
+      const el = document.getElementById(`${tab}-notice`);
+      if (!el) return; // 该 tab 没有 notice 容器（如 etf）
+      const cfg = (GROUP_NOTICE[tab] || {})[filter];
+      if (!cfg || !cfg.items || !cfg.items.length) {
+        el.classList.add('hidden');
+        el.innerHTML = '';
+        return;
+      }
+      // 配色：sky=中性提示（被动指数小风险），amber=黄色提醒（限购/误差等可控风险），rose=红色警告（深坑）
+      const palette = {
+        sky:   { bg: 'bg-sky-50/70',   border: 'border-sky-200',   text: 'text-sky-900',   icon: '📌' },
+        amber: { bg: 'bg-amber-50/70', border: 'border-amber-200', text: 'text-amber-900', icon: '⚠️' },
+        rose:  { bg: 'bg-rose-50/70',  border: 'border-rose-200',  text: 'text-rose-900',  icon: '🚨' },
+      }[cfg.tone] || { bg: 'bg-stone-50', border: 'border-stone-200', text: 'text-stone-700', icon: '📌' };
+      el.classList.remove('hidden');
+      el.innerHTML = `
+        <div class="${palette.bg} border ${palette.border} rounded-xl px-4 py-3 text-xs ${palette.text}">
+          <ul class="space-y-1.5 leading-relaxed">
+            ${cfg.items.map(it => `<li class="flex gap-2"><span class="flex-shrink-0">${palette.icon}</span><span>${it}</span></li>`).join('')}
+          </ul>
+        </div>
+      `;
+    }
 
     function renderSeries(series, isActive, isEtf, showHoldings, groupKey) {
       // showHoldings: 当前表格是否存在"持仓"列（决定 colspan 和是否渲染持仓按钮）
@@ -1127,7 +1197,7 @@
           <td class="py-3 px-3 text-right num">
             <div class="font-medium">${price}</div>
             <div class="text-xs ${dailyChange > 0 ? 'up' : dailyChange < 0 ? 'down' : 'text-stone-400'}">${dailyChange == null ? '--' : (dailyChange > 0 ? '+' : '') + dailyChange.toFixed(2) + '%'}</div>
-            ${(() => { const nd = isEtf ? (def._live_etf_date || def.nav_date) : def.nav_date; if (!nd) return ''; if (nd === (STATE._today || '')) return ''; return `<div class="text-[10px] text-stone-400">${fmtMD(nd)}</div>`; })()}
+            ${(() => { const nd = isEtf ? (def._live_etf_date || def.nav_date) : def.nav_date; if (!nd) return ''; const headerDate = (STATE._navDate || {})[isEtf ? 'etf' : 'offshore'] || ''; if (nd === headerDate) return ''; return `<div class="text-[10px] text-stone-400">${fmtMD(nd)}</div>`; })()}
           </td>
           ${changeCell(def.chg_1m)}
           ${changeCell(def.chg_ytd)}
@@ -1212,9 +1282,34 @@
       `;
     }
 
-    // 清理费率条件：去多余小数点（0.0万→0万, 7.0天→7天, 2.0年→2年）
+    // 清理 / 统一费率条件文本，让不同基金显示风格一致。
+    // 处理顺序：① 文本式条件 → 标准式；② 去冗余 .0；③ 近似 1 年/2 年的天数归一化
     function cleanCondition(s) {
-      return s.replace(/(\d+)\.0(万|天|年)/g, '$1$2');
+      if (!s) return s;
+      // 1) AKShare 偶发返回的文本式条件，例如 "小于等于6天" → "0天<持有期限<7天"
+      s = s.replace(/^小于等于(\d+)天$/, (_, d) => `0天<持有期限<${+d + 1}天`);
+      // 2) 去掉冗余的 .0：0.0万→0万, 7.0天→7天, 2.0年→2年
+      s = s.replace(/(\d+)\.0(万|天|年)/g, '$1$2');
+      // 3) 接近一年的天数（如 365/366）归一化为 "1年"，对齐其他基金
+      s = s.replace(/(\d+)天/g, (m, d) => {
+        const n = +d;
+        if (n >= 360 && n < 400) {
+          const yrs = Math.round(n / 365);
+          if (Math.abs(n - yrs * 365) <= 5) return yrs + '年';
+        }
+        return m;
+      });
+      return s;
+    }
+
+    // 把 free_hold_days（数字）格式化为人类友好文案：366→1年, 730→2年, 30→30天
+    function formatHoldDays(days) {
+      if (days == null) return '';
+      if (days >= 360) {
+        const years = Math.round(days / 365);
+        if (years > 0 && Math.abs(days - years * 365) <= 5) return years + '年';
+      }
+      return days + '天';
     }
 
     function renderBuyFee(sh) {
@@ -1309,15 +1404,32 @@
         </div>
       `;
 
-      // 主展示：持有X天/年免 / 最高Y%
-      let freeLabel;
-      if (freeDays != null) {
-        const freeDisp = freeDays >= 365 ? (freeDays / 365) + '年' : freeDays + '天';
-        freeLabel = `<span class="text-green-600 font-medium">持${freeDisp}免</span>`;
-      } else {
-        freeLabel = `<span class="text-stone-500">${rules[0].rate}%起</span>`;
+      // 主展示统一为「持X免」格式，所有基金视觉一致；详细费率走 tooltip
+      // 优先级：free_hold_days → sell_rules 末档（即最低费率档）的下界
+      // - 末档 rate=0：标准免赎档
+      // - 末档 rate>0（如华夏全球永不免赎）：用最低费率档下界做锚点，主显示仍为「持X免」
+      //   不再展示 0.5% 等具体费率，避免出现「持X起Y%」破坏统一格式
+      let displayDays = freeDays;
+      if (displayDays == null) {
+        const lastRule = rules[rules.length - 1];
+        displayDays = parseSellRuleLowerDays(lastRule && lastRule.condition);
       }
+      const freeLabel = displayDays != null
+        ? `<span class="text-green-600 font-medium">持${formatHoldDays(displayDays)}免</span>`
+        : `<span class="text-stone-500">${rules[0].rate}%起</span>`;
       return `<span class="fee-tip">${freeLabel}${popHtml}</span>`;
+    }
+
+    // 从卖出规则的 condition 文本里解析"持有期限下界"（天）
+    // 兼容：「7.0天<=持有期限」「7天<=持有期限」「365.0天<=持有期限<2.0年」
+    function parseSellRuleLowerDays(cond) {
+      if (!cond) return null;
+      const m = cond.match(/(\d+(?:\.\d+)?)\s*天\s*<=?\s*持有/);
+      if (m) return Math.round(parseFloat(m[1]));
+      // 极少数情况下界用"年"，比如「2.0年<=持有期限」
+      const my = cond.match(/(\d+(?:\.\d+)?)\s*年\s*<=?\s*持有/);
+      if (my) return Math.round(parseFloat(my[1]) * 365);
+      return null;
     }
 
     function changeCell(v, small = false) {

@@ -193,8 +193,8 @@ FORCE_INCLUDE_CODES = {
     # 易方达标普信息科技指数（标普 500 信息技术行业指数，美股宽基的细分）
     "161128": "active",  # A(人民币)
     "012868": "active",  # C(人民币)
-    # "003721": "active",  # A(美元现汇) —— 非人民币份额仍由 currency 过滤
-    # "012869": "active",  # C(美元现汇)
+    "003721": "active",  # A(美元现汇)
+    "012869": "active",  # C(美元现汇)
 
     # 建信新兴市场混合（实际投全球 / 美股为主的主动基金）
     "539002": "active",  # A
@@ -220,10 +220,31 @@ FORCE_INCLUDE_CODES = {
     # 鹏华全球高收益债（160644，全球/其他 QDII，名字不触发关键词）
     "160644": "global_other",
 
+    # 广发全球稳健配置混合（QDII 全球基金，4 个 share 合并到同一 series：RMB A/C + USD A/C）
+    # 名字"全球稳健配置"不触发美股识别词，显式归入 global_other
+    "019230": "global_other",  # A(人民币)
+    "019231": "global_other",  # C(人民币)
+    "019232": "global_other",  # A(美元)
+    "019233": "global_other",  # C(美元)
+
     # v20 新增：亚太市场基金（日本/越南/印度），归入 global_other
     "007280": "global_other",  # 摩根日本精选股票 A
     "008763": "global_other",  # 天弘越南市场股票 A
     "006105": "global_other",  # 宏利印度机会股票 A
+
+    # v22 新增：v20 系列遗漏的 C/D/美元份额，与同 series 主代码合并展示
+    "019449": "global_other",  # 摩根日本精选股票 C（A 类 007280 的姊妹份额）
+    "008764": "global_other",  # 天弘越南市场股票 C（A 类 008763 的姊妹份额）
+    "022524": "global_other",  # 天弘越南市场股票 D（A 类 008763 的姊妹份额，新份额）
+    "026015": "global_other",  # 宏利印度机会股票 C（A 类 006105 的姊妹份额）
+    "006792": "global_other",  # 鹏华港美互联股票 美元现汇（人民币 160644 的姊妹份额）
+
+    # v21 新增：全球非美指数基金（被 EXCLUDE_KEYWORDS 中"日经/韩"等过滤），归入 global_index
+    "020712": "global_index",  # 华安日经225ETF联接 A
+    "020713": "global_index",  # 华安日经225ETF联接 C
+    "019454": "global_index",  # 华泰柏瑞中韩半导体ETF联接 A
+    "019455": "global_index",  # 华泰柏瑞中韩半导体ETF联接 C
+    "022681": "global_index",  # 华泰柏瑞中韩半导体ETF联接 I
 }
 
 
@@ -235,9 +256,6 @@ FORCE_INCLUDE_CODES = {
 #   但从 Top10 持仓看实际重仓港股/A 股/医疗等非美股核心方向，
 #   放在 active 里会让"美股主动"标签名不副实，所以显式排除
 FORCE_EXCLUDE_CODES = {
-    # 广发全球稳健配置混合（Top10 重仓 A 股电力股）
-    "019230", "019231",
-
     # 万家全球成长一年持有期混合（Top3 寒武纪/深信服，主要投 A 股科技）
     "012535", "012536",
 
@@ -420,6 +438,142 @@ def extract_currency(full_name: str) -> str:
 
 
 # ============================================================
+# 增量合并：保留 fetch_nav 等下游脚本写入的运行时字段
+# ============================================================
+# scan_funds.py 只负责"分类与归组"，仅负责管理这些字段：
+#   share 层: code / name / share_class / currency / fund_type
+#   series 层: series_id / company / company_display / series_name /
+#             display_name / category / etf_target / shares
+# 其余字段（nav / chg_* / scale / buy_status / buy_rules / ... 以及 series 层
+# 的 default_share_code / series_scale 等）由下游脚本（fetch_nav.py 等）
+# 写入。本脚本写文件时必须按 code 合并旧数据，避免一覆盖把净值/规模/申购
+# 状态等全清空。
+
+# scan_funds 自己负责的字段（写入时直接以新值覆盖，其它字段从旧数据继承）
+SCAN_OWNED_SHARE_KEYS = {"code", "name", "share_class", "currency", "fund_type"}
+SCAN_OWNED_SERIES_KEYS = {
+    "series_id", "company", "company_display", "series_name",
+    "display_name", "category", "etf_target", "shares",
+}
+
+
+def _load_existing_index(fp: Path) -> tuple[dict, dict]:
+    """
+    读取旧 JSON，构建两份索引：
+      - shares_by_code: { code: 旧 share dict }
+      - series_by_id:   { series_id: 旧 series dict（**完整保留 shares 数组**） }
+    旧文件不存在或解析失败时返回空索引（首次生成场景）。
+    保留 shares 是为了让 ``_merge_one_series`` 沿用旧 share 的相对顺序，让顶层
+    字段顺序里的 ``shares`` 占位仍在原位置（避免 default_share_code 等被挤到中间）。
+    """
+    shares_by_code: dict = {}
+    series_by_id: dict = {}
+    if not fp.exists():
+        return shares_by_code, series_by_id
+    try:
+        with open(fp, encoding="utf-8") as f:
+            old = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return shares_by_code, series_by_id
+    for s in old.get("series", []):
+        sid = s.get("series_id")
+        if sid:
+            series_by_id[sid] = s  # 完整保留，含 shares 占位
+        for sh in s.get("shares", []):
+            code = sh.get("code")
+            if code:
+                shares_by_code[code] = sh
+    return shares_by_code, series_by_id
+
+
+def _new_series_sort_key(s: dict) -> tuple:
+    """
+    新增 series 的稳定排序键（B 方案）：
+      1. 份额数倒序（份额多的系列靠前）
+      2. default_share_code 升序；缺失时退化为第一只 share 的 code
+    code 是不可变的 6 位数字，跨次跑结果完全稳定。
+    """
+    shares = s.get("shares") or []
+    rep_code = s.get("default_share_code") or (shares[0].get("code") if shares else "")
+    return (-len(shares), rep_code or "")
+
+
+def _merge_share(new_sh: dict, old_sh: dict) -> dict:
+    """合并单只 share：旧字段打底（保留 nav/scale/buy_* 等运行时数据），scan 负责字段用新值覆盖。"""
+    merged = dict(old_sh)  # 继承 nav / chg_* / scale / buy_* 等
+    for k in SCAN_OWNED_SHARE_KEYS:
+        if k in new_sh:
+            merged[k] = new_sh[k]
+    return merged
+
+
+def _merge_one_series(new_s: dict, old_s: dict, shares_by_code: dict) -> dict:
+    """
+    合并单个 series：
+      - 顶层字段：旧字段顺序打底（保留 default_share_code / series_scale 等的位置），
+        scan 负责字段用新值覆盖；保证 ``shares`` key 留在旧文件中的原位置（旧文件
+        没有时落到末尾）。
+      - shares 数组（A+B）：旧 share 按旧顺序输出（已删除的旧 share 自动消失），
+        新增 share 按 ``code`` 升序追加到末尾。
+    """
+    merged = dict(old_s)  # 继承顶层字段及其顺序
+    # 兜底：旧 series 没有 shares 占位时，先放一个空 list 占位，确保后续赋值不会跳到末尾
+    merged.setdefault("shares", [])
+    for k in SCAN_OWNED_SERIES_KEYS:
+        if k == "shares":
+            continue  # shares 单独处理，避免顺序被打乱
+        if k in new_s:
+            merged[k] = new_s[k]
+
+    # shares：A 方案保序 + B 方案稳定追加
+    new_shares_by_code = {sh["code"]: sh for sh in new_s["shares"]}
+    old_shares_order = [sh.get("code") for sh in (old_s.get("shares") or []) if sh.get("code")]
+
+    ordered_shares: list = []
+    seen: set = set()
+    # A：旧 share 按旧顺序输出（已删除的自动消失）
+    for code in old_shares_order:
+        if code in new_shares_by_code:
+            ordered_shares.append(_merge_share(new_shares_by_code[code], shares_by_code.get(code, {})))
+            seen.add(code)
+    # B：新增 share 按 code 升序追加
+    new_only_codes = sorted(c for c in new_shares_by_code if c not in seen)
+    for code in new_only_codes:
+        ordered_shares.append(_merge_share(new_shares_by_code[code], shares_by_code.get(code, {})))
+
+    merged["shares"] = ordered_shares
+    return merged
+
+
+def _merge_series(new_series: list, shares_by_code: dict, series_by_id: dict) -> list:
+    """
+    合并新归组结果与旧 JSON：
+    1. 字段层：scan 只覆盖它负责的字段，其余（nav/scale/buy_* 等）从旧数据继承
+    2. 顺序层（A+B 方案）：
+       - 旧文件已存在的 series：沿用旧文件中的相对顺序（diff 最小化）
+       - 新增的 series（旧索引里没有）：追加到末尾，组内按稳定键排序
+    """
+    new_by_id = {s["series_id"]: s for s in new_series}
+
+    ordered: list = []
+    seen_ids: set = set()
+
+    # A：旧 series 按旧顺序输出（已被删除的旧 series 自动消失，不会写回）
+    for sid in series_by_id:
+        if sid in new_by_id:
+            ordered.append(_merge_one_series(new_by_id[sid], series_by_id[sid], shares_by_code))
+            seen_ids.add(sid)
+
+    # B：新增 series 用稳定键排序后追加
+    new_only = [s for s in new_series if s["series_id"] not in seen_ids]
+    new_only.sort(key=_new_series_sort_key)
+    for s in new_only:
+        ordered.append(_merge_one_series(s, {}, shares_by_code))
+
+    return ordered
+
+
+# ============================================================
 # 主流程
 # ============================================================
 
@@ -435,8 +589,8 @@ def main():
 
     print("\n🔀 开始分类...")
     classified = {
-        "sp500": [], "nasdaq_passive": [], "active": [], "global_other": [],
-        "etf": [], "exclude": [],
+        "sp500": [], "nasdaq_passive": [], "active": [], "global_index": [],
+        "global_other": [], "etf": [], "exclude": [],
     }
 
     for _, row in df_all.iterrows():
@@ -471,16 +625,17 @@ def main():
         "sp500": "板块1 · 标普500 指数（场外）",
         "nasdaq_passive": "板块2 · 纳指100 指数（场外）",
         "active": "板块3 · 美股主动（场外·白名单精选）",
-        "global_other": "板块4 · 全球/其他 QDII（场外）",
-        "etf": "板块5 · 场内 ETF",
+        "global_index": "板块4 · 全球非美指数（场外·白名单）",
+        "global_other": "板块5 · 全球/其他 QDII（场外）",
+        "etf": "板块6 · 场内 ETF",
         "exclude": "已排除",
     }
     print("\n📊 分类结果：")
-    for cat in ["sp500", "nasdaq_passive", "active", "global_other", "etf", "exclude"]:
+    for cat in ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf", "exclude"]:
         print(f"  {label_map[cat]}: {len(classified[cat]):4d} 只")
 
     print("\n🔍 各板块样例（前 5 只）：")
-    for cat in ["sp500", "nasdaq_passive", "active", "global_other", "etf"]:
+    for cat in ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf"]:
         print(f"\n  ◎ {label_map[cat]}")
         for item in classified[cat][:5]:
             extra = f" [{item.get('share_class')}/{item.get('currency')}]"
@@ -489,7 +644,7 @@ def main():
     # 归组（v2: 人民币/美元归同系列）
     print("\n🧩 按基金系列归组（基金公司 + 产品名，不分币种）...")
     series_map = {}
-    for cat in ["sp500", "nasdaq_passive", "active", "global_other", "etf"]:
+    for cat in ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf"]:
         for item in classified[cat]:
             key = f"{item['company']}::{item['series_name']}::{cat}"
             if key not in series_map:
@@ -517,33 +672,48 @@ def main():
                 "fund_type": item["fund_type"],
             })
 
-    by_category = {"sp500": [], "nasdaq_passive": [], "active": [], "global_other": [], "etf": []}
+    by_category = {"sp500": [], "nasdaq_passive": [], "active": [], "global_index": [], "global_other": [], "etf": []}
     for s in series_map.values():
         by_category[s["category"]].append(s)
 
-    # 每个板块按系列内份额数降序
-    for cat in by_category:
-        by_category[cat].sort(
-            key=lambda s: (-len(s["shares"]), s["display_name"])
-        )
+    # 注：每个板块的 series 顺序由 _merge_series 决定（旧 series 沿用旧顺序，
+    # 新增 series 按稳定键追加），这里不再预先排序。
 
     print("\n📚 归组后板块系列数：")
-    for cat in ["sp500", "nasdaq_passive", "active", "global_other", "etf"]:
+    for cat in ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf"]:
         total = sum(len(s["shares"]) for s in by_category[cat])
         print(f"  {label_map[cat]}: {len(by_category[cat]):3d} 个系列（共 {total} 只份额）")
 
-    # 保存
+    # 保存（增量合并：保留 fetch_nav 等下游脚本写入的运行时字段）
     now = datetime.now().isoformat()
-    for cat in ["sp500", "nasdaq_passive", "active", "global_other", "etf"]:
+    # 顶层字段策略：scan 负责 generated_at / category / label / series_count /
+    # series 这 5 项（每次重写）；其他字段（如 fetch_nav 写入的 total_scale /
+    # enriched_at 等）从旧文件继承，避免被覆盖丢失。
+
+    for cat in ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf"]:
         fp = data_dir / f"{cat}.json"
+        # 1) 读旧数据，按 code / series_id 建索引；并保留旧顶层字段（含其顺序）
+        shares_by_code, series_by_id = _load_existing_index(fp)
+        old_top: dict = {}
+        if fp.exists():
+            try:
+                with open(fp, encoding="utf-8") as f:
+                    old_top = json.load(f)
+            except (OSError, json.JSONDecodeError):
+                old_top = {}
+        # 2) 合并：scan 负责的字段用新值，其余字段（净值/规模/申购等）继承旧值
+        merged = _merge_series(by_category[cat], shares_by_code, series_by_id)
+        # 3) 顶层字段合并：旧顶层字段顺序打底，scan 字段用新值覆盖
+        out = dict(old_top)
+        out["generated_at"] = now
+        out["category"] = cat
+        out["label"] = label_map[cat]
+        out["series_count"] = len(merged)
+        out["series"] = merged
+        # 4) 写回（保持文件末尾换行，与旧版本风格一致）
         with open(fp, "w", encoding="utf-8") as f:
-            json.dump({
-                "generated_at": now,
-                "category": cat,
-                "label": label_map[cat],
-                "series_count": len(by_category[cat]),
-                "series": by_category[cat],
-            }, f, ensure_ascii=False, indent=2)
+            json.dump(out, f, ensure_ascii=False, indent=2)
+            f.write("\n")
 
     meta = {
         "generated_at": now,
@@ -551,6 +721,7 @@ def main():
         "sp500": {"series": len(by_category["sp500"]), "funds": len(classified["sp500"])},
         "nasdaq_passive": {"series": len(by_category["nasdaq_passive"]), "funds": len(classified["nasdaq_passive"])},
         "active": {"series": len(by_category["active"]), "funds": len(classified["active"])},
+        "global_index": {"series": len(by_category["global_index"]), "funds": len(classified["global_index"])},
         "global_other": {"series": len(by_category["global_other"]), "funds": len(classified["global_other"])},
         "etf": {"series": len(by_category["etf"]), "funds": len(classified["etf"])},
         "excluded_count": len(classified["exclude"]),

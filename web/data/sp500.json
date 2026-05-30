@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T23:53:23.654923",
+  "generated_at": "2026-05-30T13:19:08.702328",
   "category": "sp500",
   "label": "板块1 · 标普500 指数（场外）",
   "series_count": 7,
@@ -1304,7 +1304,8 @@
           "buy_min": 10.0,
           "sale_service_fee": 0.0,
           "chg_since_inception": 68.32,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "error": "HTTPSConnectionPool(host='danjuanfunds.com', port=443): Max retries exceeded with url: /djapi/fund/0"
         },
         {
           "code": "018065",
@@ -1538,5 +1539,5 @@
     }
   ],
   "total_scale": 143.17,
-  "enriched_at": "2026-05-30T01:11:02.452252"
+  "enriched_at": "2026-05-30T13:26:01.236692"
 }

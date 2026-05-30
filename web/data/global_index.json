@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-05-28T10:53:13.927383",
+  "generated_at": "2026-05-30T13:19:08.702328",
   "category": "global_index",
-  "label": "全球指数基金（场外）",
+  "label": "板块4 · 全球非美指数（场外·白名单）",
   "series_count": 2,
   "total_scale": 0,
   "series": [
@@ -174,7 +174,7 @@
     {
       "series_id": "华安__三菱日联日经225ETF联接__global_index",
       "series_name": "三菱日联日经225ETF联接",
-      "display_name": "华安日经225ETF联接",
+      "display_name": "华安三菱日联日经225ETF联接",
       "company": "华安",
       "company_display": "华安",
       "category": "global_index",
@@ -293,5 +293,5 @@
       ]
     }
   ],
-  "enriched_at": "2026-05-30T01:11:02.469348"
+  "enriched_at": "2026-05-30T13:26:01.253264"
 }

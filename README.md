@@ -87,7 +87,7 @@ qdii-tracker/
 │       ├── sp500.json            # 🏦 场外 · 标普500（7 系列）
 │       ├── nasdaq_passive.json   # 🏦 场外 · 纳指100（17 系列）
 │       ├── active.json           # 🏦 场外 · 美股主动精选（19 系列）
-│       ├── global_index.json    # 🌍 场外 · 全球指数（手动维护，2 系列）
+│       ├── global_index.json    # 🌍 场外 · 全球非美指数（2 系列）
 │       ├── global_other.json     # 🏦 场外 · 全球/其他 QDII（23 系列）
 │       ├── etf.json              # 📈 场内 ETF（17 系列）
 │       ├── meta.json             # 扫描元信息
@@ -110,17 +110,16 @@ qdii-tracker/
 | ④ | `refresh_purchase.py` | 补申购状态/日限额（批量接口） | ~30s |
 | ⑤ | `fetch_holdings.py` | 抓主动基金 Top10 重仓 | ~2min |
 
-> 📝 `global_index.json`（全球指数·日经225 等）**手动维护**，不参与 scan 自动扫描；其他 4 个补数据脚本（enrich/fill_missing/refresh_purchase/fetch_holdings）都覆盖该分类。
+> 📝 `global_index.json`（全球非美指数·日经225 / 中韩半导体等）名字含"日经/韩"等会被 `EXCLUDE_KEYWORDS` 过滤，由 `FORCE_INCLUDE_CODES` 白名单机制纳入 scan，全程 5 个脚本都覆盖。
 
 ### 自动更新时间表
 
-| 触发时机 | 模式 | 跑哪些步骤 | 耗时 |
+| 时间（北京） | 频率 | 模式 | 步骤 |
 |---|---|---|---|
-| 🗓️ 工作日 05:00（北京，实际~07-09点执行） | 增量 | ③→④ | ~3min |
-| 🗓️ 工作日 17:30 | 增量 | ③→④ | ~3min |
-| 🗓️ 工作日 22:30 | 增量 | ③→④ | ~3min |
-| 🗓️ 每月 2 日 02:00 | 完整 | ①→②→③→④→⑤ | ~12min |
-| 🖱️ 手动 Run workflow | 可选 | 按你选 | 按模式 |
+| 05:00 凌晨兜底 | 工作日 | 增量 | ③→④ |
+| 21:30 晚间主力（QDII 净值披露后） | 工作日 | 增量 | ③→④ |
+| 每月 2 日 凌晨 | 月度 | 完整 | ①→②→③→④→⑤ |
+| 手动 Run workflow | 按需 | 可选 | 按选择 |
 
 ---
 
@@ -144,7 +143,7 @@ python3 -m http.server 8080
 # 浏览器打开 http://localhost:8080/
 ```
 
-**日常增量更新**（交易日 22:30 QDII 净值主力披露）：
+**日常增量更新**（交易日 21:30 前后 QDII 净值主力披露）：
 
 ```bash
 cd scripts
@@ -191,7 +190,7 @@ QDII 基金入口
 └── 否则                      → exclude
 ```
 
-> 📝 `global_index`（全球指数，如日经225）**不参与 scan 自动扫描**，需手动编辑 `web/data/global_index.json` 添加。
+> 📝 `global_index`（全球非美指数）名字会命中 `EXCLUDE_KEYWORDS`（如"日经/韩"），需通过 `FORCE_INCLUDE_CODES` 白名单纳入，机制与其他分类一致。
 
 ---
 
@@ -205,10 +204,10 @@ QDII 基金入口
 2. 跑完整流水线：`scan_funds.py` → `enrich_data.py` → `fill_missing.py` → `refresh_purchase.py` → `fetch_holdings.py`
 3. 本地验证 → commit
 
-**方式 B：手动编辑 JSON（`global_index` 必须用这种）**
+**方式 B：手动编辑 JSON（临时补加单只、不想跑完整扫描时）**
 
 1. 用 `ak.fund_name_em()` 查同系列代码
-2. 在 `web/data/{分类}.json` 的 `series` 末尾追加骨架（参考已有的 `global_index.json`）
+2. 在 `web/data/{分类}.json` 的 `series` 末尾追加骨架
 3. 跑补数据脚本（enrich + fill_missing + refresh_purchase + fetch_holdings）
 
 > ⚠️ `scan_funds.py` 会**覆盖** `web/data/*.json`，方式 A 跑完 scan 后必须接 enrich + fill_missing；方式 B 补数据脚本不会覆盖已有字段。
@@ -220,7 +219,7 @@ QDII 基金入口
 ## 🛠 常见问题
 
 **Q: 数据不是今天的？**
-A: QDII 净值 T+1 披露，今天看到的通常是前一交易日的净值。Actions 22:30 那轮覆盖绝大多数，凌晨补漏。
+A: QDII 净值 T+1 披露，今天看到的通常是前一交易日的净值。Actions 21:30 那轮覆盖绝大多数，凌晨补漏。
 
 **Q: 某只基金数据不对/为空？**
 A: 跑 `fill_missing.py` 补缺；还是空说明数据源本身没有（新基金，等披露）。

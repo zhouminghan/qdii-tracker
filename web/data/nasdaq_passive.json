@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T23:53:23.654923",
+  "generated_at": "2026-05-30T13:19:08.702328",
   "category": "nasdaq_passive",
   "label": "板块2 · 纳指100 指数（场外）",
   "series_count": 17,
@@ -825,7 +825,8 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "chg_1w": 2.66,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "error": "HTTPSConnectionPool(host='danjuanfunds.com', port=443): Max retries exceeded with url: /djapi/fund/d"
         },
         {
           "code": "021000",
@@ -3602,5 +3603,5 @@
     }
   ],
   "total_scale": 380.21,
-  "enriched_at": "2026-05-30T01:11:02.457621"
+  "enriched_at": "2026-05-30T13:26:01.241491"
 }

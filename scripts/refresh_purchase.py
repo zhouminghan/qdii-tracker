@@ -1,13 +1,27 @@
 """
 轻量申购状态刷新：仅拉取申购状态/限额 + 涨跌幅（批量接口，快）
 不调用逐只雪球接口，适合高频增量更新。
+
+Fallback 机制（2026-05-30）：
+- AKShare 全量接口对规模 < 5000 万的迷你/新基金可能没有记录（如 022524 越南 D）
+- 在批量合并完成后，统计漏网名单 → 走天天基金 lsjz API 单只兜底，补 nav/daily_change
+- 申购状态字段（buy_status/daily_limit/fee）在 lsjz 没有，保持原值不动
 """
 import json
+import re
+import time
 from datetime import datetime
 from pathlib import Path
 
 import akshare as ak
 import pandas as pd
+import requests
+
+
+LSJZ_HEADERS = {
+    "User-Agent": "Mozilla/5.0",
+    "Referer": "https://fundf10.eastmoney.com/",
+}
 
 
 def _to_float(v):
@@ -16,6 +30,43 @@ def _to_float(v):
     try:
         return float(v)
     except (ValueError, TypeError):
+        return None
+
+
+def fetch_lsjz_single(code: str):
+    """走天天基金 lsjz API 单只兜底，仅返回 nav/nav_date/daily_change。
+    用于规模过小、AKShare 全量接口没收录的迷你基金。
+    """
+    url = (
+        f"https://api.fund.eastmoney.com/f10/lsjz"
+        f"?callback=jQuery&fundCode={code}&pageIndex=1&pageSize=1"
+    )
+    try:
+        r = requests.get(url, headers=LSJZ_HEADERS, timeout=8)
+    except Exception:
+        return None
+    if r.status_code != 200:
+        return None
+    m = re.search(r"jQuery\((.*)\)", r.text, re.DOTALL)
+    if not m:
+        return None
+    try:
+        data = json.loads(m.group(1))
+        items = data.get("Data", {}).get("LSJZList", [])
+        if not items:
+            return None
+        latest = items[0]
+        result = {}
+        if latest.get("FSRQ"):
+            result["nav_date"] = latest["FSRQ"]
+        nav = _to_float(latest.get("DWJZ"))
+        if nav is not None:
+            result["nav"] = nav
+        chg = _to_float(latest.get("JZZZL"))
+        if chg is not None:
+            result["daily_change"] = chg
+        return result if result else None
+    except Exception:
         return None
 
 
@@ -62,7 +113,9 @@ def main():
             "chg_since_inception": _to_float(row.get("成立来")),
         }
 
-    # 3. 合并到现有 JSON 文件
+    # 3. 合并到现有 JSON 文件，同时收集"批量接口漏网名单"以便走 lsjz 兜底
+    #    场内 ETF 跳过 fallback（前端用 etf_price/etf_change_pct，净值口径不同）
+    fallback_targets = []  # [(file_path, share_dict, code), ...]
     for cat in ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf"]:
         fp = data_dir / f"{cat}.json"
         if not fp.exists():
@@ -91,11 +144,70 @@ def main():
                         for k, v in rank_map[code].items():
                             if v is not None:
                                 share[k] = v
+                else:
+                    # 批量接口没收录 → 加入 fallback 队列（ETF 跳过：净值口径不同）
+                    if cat != "etf":
+                        fallback_targets.append((fp, share, code))
         with open(fp, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
         print(f"  💾 {cat}.json  更新 {updated} 只份额的申购状态 + 涨跌幅")
 
-    # 4. 更新 meta
+    # 4. Fallback：对批量接口漏网的基金走 lsjz 单只兜底
+    if fallback_targets:
+        print()
+        print("=" * 50)
+        print(f"🩹 Fallback: AKShare 漏掉 {len(fallback_targets)} 只，走 lsjz 单只兜底")
+        print("=" * 50)
+        # 按文件分组，避免重复读写
+        by_file = {}
+        for fp, sh, code in fallback_targets:
+            by_file.setdefault(fp, []).append((sh, code))
+
+        fb_success = 0
+        fb_fail = 0
+        for fp, items in by_file.items():
+            # 重新读取（前面已经写过一次）
+            with open(fp, encoding="utf-8") as f:
+                data = json.load(f)
+            # 构建 code → share 映射，方便就地更新
+            code_to_share = {}
+            for series in data["series"]:
+                for share in series["shares"]:
+                    code_to_share[share["code"]] = share
+
+            for sh_orig, code in items:
+                lsjz = fetch_lsjz_single(code)
+                if not lsjz:
+                    fb_fail += 1
+                    print(f"  ❌ {code} lsjz 也无数据")
+                    time.sleep(0.15)
+                    continue
+                target = code_to_share.get(code, sh_orig)
+                # 防回退：nav_date 只允许前进
+                new_date = lsjz.get("nav_date")
+                cur_date = target.get("nav_date", "")
+                if new_date and cur_date and new_date < cur_date:
+                    print(f"  ⏭️  {code} lsjz 日期({new_date}) 早于现存({cur_date})，跳过")
+                    time.sleep(0.15)
+                    continue
+                changed = []
+                for k, v in lsjz.items():
+                    if v is not None and target.get(k) != v:
+                        target[k] = v
+                        changed.append(k)
+                if changed:
+                    fb_success += 1
+                    print(f"  ✅ {code} 补上 {changed}")
+                else:
+                    print(f"  ✓  {code} lsjz 数据已是最新")
+                time.sleep(0.15)
+
+            # 写回
+            with open(fp, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+        print(f"  📊 Fallback 成功 {fb_success} / 失败 {fb_fail} / 共 {len(fallback_targets)}")
+
+    # 5. 更新 meta
     meta_fp = data_dir / "meta.json"
     if meta_fp.exists():
         with open(meta_fp, encoding="utf-8") as f:

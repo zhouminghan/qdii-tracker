@@ -386,7 +386,9 @@ def main():
                 src = "lsjz" if lsjz else "pzd"
                 print(f"  [{i}/{total}] ✅ {tag} {code} [{src}] 补上 {up}")
             else:
-                print(f"  [{i}/{total}] ⚠️  {code} 有返回但无可用字段")
+                # 接口正常返回，但所有字段值与 share 当前值一致 → 等价于"已是最新"
+                # 历史日志写作"有返回但无可用字段"，措辞误导（看起来像数据源故障）
+                print(f"  [{i}/{total}] ✓  {code} 数据已是最新（无变化）")
         else:
             fail += 1
             print(f"  [{i}/{total}] ❌ {code} lsjz+pzd 均失败")

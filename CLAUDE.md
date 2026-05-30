@@ -24,7 +24,7 @@ qdii-tracker/
 │   ├── enrich_data.py        # ② 补规模/费率/经理
 │   ├── fill_missing.py       # ③ 补净值/YTD/历史收益/费率规则
 │   ├── refresh_purchase.py   # ④ 补申购状态/限额（轻量）
-│   ├── fetch_holdings.py     # ⑤ 抓 Top10 重仓（active + global_other + global_index）
+│   ├── fetch_holdings.py     # ⑤ 抓 Top10 重仓（active + global_other）
 │   └── requirements.txt
 └── web/
     ├── index.html            # 单文件前端（HTML+CSS+JS 全内联）
@@ -32,7 +32,7 @@ qdii-tracker/
     ├── .nojekyll
     └── data/
         ├── sp500.json / nasdaq_passive.json / active.json
-        ├── global_index.json     # 手动维护，不参与 scan
+        ├── global_index.json     # 全球非美指数，通过 FORCE_INCLUDE_CODES 纳入 scan
         ├── global_other.json / etf.json
         ├── meta.json
         └── holdings/{code}.json  # 主动基金持仓
@@ -50,8 +50,8 @@ qdii-tracker/
 | ④ | `refresh_purchase.py` | 补申购状态/限额/排行榜数据 |
 | ⑤ | `fetch_holdings.py` | `holdings/*.json` |
 
-**增量**（工作日 05:00 / 17:30 / 22:30 北京时间）：③ → ④
-**完整**（每月 2 日 02:00）：① → ② → ③ → ④ → ⑤
+**增量**（工作日 05:00 凌晨兜底 + 21:30 晚间主力）：③ → ④
+**完整**（每月 2 日凌晨）：① → ② → ③ → ④ → ⑤
 
 > 完整流水线 scan 后**必须**接 enrich + fill_missing，否则会丢失已有 enriched 数据。
 
@@ -76,28 +76,9 @@ qdii-tracker/
 
 ---
 
-## 数据分类（6 个 JSON）
-
-| 文件 | 说明 | 来源 |
-|---|---|---|
-| `sp500.json` | 标普500 被动指数 | scan 自动 |
-| `nasdaq_passive.json` | 纳指100 被动指数 | scan 自动 |
-| `active.json` | 美股主动（白名单精选） | scan 自动 |
-| `global_index.json` | 全球指数（日经225 等） | **手动维护** |
-| `global_other.json` | 全球/其他 QDII | scan 自动 |
-| `etf.json` | 场内跨境 ETF（513/159） | scan 自动 |
-
-`global_index` 不参与 `scan_funds.py`，但参与其他 4 个脚本。
-
----
-
 ## 前端约定
 
-### 单文件架构
-所有 HTML/CSS/JS 都在 `web/index.html`，不拆分、不引入构建工具。
-
-### 配色（A 股口径）
-**红涨绿跌**：`.up { color: #dc2626; }` / `.down { color: #16a34a; }`
+**单文件架构**：所有 HTML/CSS/JS 都在 `web/index.html`，不拆分、不引入构建工具。页面加载阶段不调外部 API（走势图除外，按需加载）。
 
 ### 份额排序（前后端必须一致）
 币种（人民币 < 美元 < 其他）→ 类型（A < C < D < E < F < H < I < 默认 < LOF）
@@ -116,34 +97,40 @@ qdii-tracker/
 - C/E/F/I/D 类：`管理费 + 托管费 + 销售服务费`
 - 数字去尾零（`1.00%` → `1%`）
 
-**`condition` 字段必须是符号格式**（不允许中文）：
-- 时间：`0天<持有期限<7天` / `7天<=持有期限<2年` / `365天<=持有期限`
-- 金额：`0万<买入金额<50万` / `100万<=买入金额`
-- 后端 `fill_missing.py::normalize_condition()` 在抓取时统一格式
-- 前端 `cleanCondition()` 进一步简化显示（`365天`→`1年`、`<=`→`≥` 等）
-
-### 申购状态显示
-
-| 份额 | 显示 |
-|---|---|
-| 人民币 A/C/默认/LOF/FOF | 正常（暂停 / 限 ¥X / 开放申购） |
-| 美元份额 | 统一 `—`（接口不返回） |
-| E/F/I/D 类 | 统一 `—`（非主流代销） |
-
-### 子分类展开行
-- **不含"类别"列**（A/C 已在份额名称中）
-- 列顺序：代码 | 份额名称 | 币种 | 规模 | 净值(+日涨跌) | 近1年 | 申购 | 买入费 | 卖出规则
-- 默认份额代码后加 ★（金色）
-- 币种用符号 `¥` / `$`
-- 不用 `table-fixed`，列宽自适应
+**`condition` 字段格式约定**：
+- 标准形态：时间 `0天<持有期限<7天` / `7天<=持有期限<2年` / `365天<=持有期限`；金额 `0万<买入金额<50万` / `100万<=买入金额`
+- 数据源（AKShare）实际会返回多种"野生形态"，**前端统一兜底，原始数据保持不动**：
+  - 文本式：`小于等于6天` → `0天<持有期限<7天`
+  - 冗余 `.0`：`7.0天` → `7天`、`2.0年` → `2年`、`0.0万` → `0万`
+  - 接近一年/两年的天数（差 ≤5 天）：`365/366天` → `1年`、`730/731天` → `2年`
+- 实现位置：前端 `cleanCondition()`（仅展示用）；不在数据写入侧改写，避免覆盖原始抓取结果
+- `free_hold_days` 主展示用 `formatHoldDays()` 同样做天→年归一化（`366` 显示"持 1 年免"而非"持 366 天免"）
 
 ### nav_date 防回退
 所有写入 `nav_date` 的位置必须检查：新日期 < 已有日期 → 跳过。
 
-### 场外 vs 场内 ETF 表头
-ETF 表头**没有**：成立来、申购、份额数列。
-ETF `nav_date` 来自东财快照（非实时，与场外同节奏）。
-`series.starred = true` 在分组内置顶（当前 513500、513100）。
+### 表头净值日期取值
+- 不用 `new Date()`：周末/节假日浏览器拿到的"今天" ≠ 官方最新披露日（如周六会显示 5.30，但官方还是 5.29）
+- 实现：遍历当前 tab 下所有 `share.nav_date` 取**最大值**作为表头副标题，与官方披露完全一致
+- 行内净值日期 = 表头日期时不再重复展示；按 tab 隔离存到 `STATE._navDate[tab]`，避免场内外撞车
+- 数据空时 fallback 到 `new Date()`（仅初次加载/异常兜底）
+
+### 卖出规则展示统一格式
+- 主展示**只用**「持X免」一种格式（X 经 `formatHoldDays` 归一化：366→1年、730→2年）
+- 优先级：`free_hold_days` → `sell_rules` 末档（最低费率档）的 `condition` 下界（`parseSellRuleLowerDays` 解析）
+- **禁止**显示 `持7天起0.5%` 这类混合格式（华夏全球永不免赎也照样展示「持7天免」+ 详细费率走 tooltip）
+- 详细分档（含费率、买入金额段）走 hover tooltip，不污染主行
+
+### 分组级风险/说明横幅 `GROUP_NOTICE`
+- 配置位于 `index.html` 内的 `GROUP_NOTICE` 常量，按 `tab → filter` 二级嵌套；空配置自动隐藏
+- 三档配色：`sky`（中性提示，被动指数）/ `amber`（黄色提醒，限购等可控风险）/ `rose`（红色警告，主动基挂羊头卖狗肉等深坑）
+- 文案约束：**点到为止、起警示作用**，单条 ≤45 字，每组 ≤2 条
+- 主动基（`active`）的红色警告**禁止移除/弱化**——风格漂移是真实存在的坑，是看板的核心警示价值之一
+
+### 场内 ETF 特殊点
+- ETF 表头**没有**：成立来、申购、份额数列
+- ETF `nav_date` 来自东财快照（非实时，与场外同节奏）
+- `series.starred = true` 在分组内置顶（当前 513500、513100）
 
 ---
 
@@ -151,32 +138,22 @@ ETF `nav_date` 来自东财快照（非实时，与场外同节奏）。
 
 ### 新增基金
 
-**白名单方式**（sp500 / nasdaq_passive / active / global_other / etf）：
-1. 编辑 `scripts/scan_funds.py` 的 `FORCE_INCLUDE_CODES` 或 `*_WHITELIST_KEYWORDS`
-2. 跑完整流水线 ① → ② → ③ → ④ → ⑤
+**白名单**（所有分类都走这一路）：编辑 `scan_funds.py` 的 `FORCE_INCLUDE_CODES` 或 `*_WHITELIST_KEYWORDS`，跑完整流水线 ①→②→③→④→⑤。
 
-**手动方式**（必须用于 `global_index`，或追加单只）：
-1. 用 `ak.fund_name_em()` 查同系列代码
-2. 在 `web/data/{分类}.json` 的 `series` 数组追加骨架（`series_scale` 留 null）
-3. shares 排序按上面【份额排序】规则
-4. 跑 ② → ③ → ④ → ⑤（仅 active/global_other/global_index 跑 ⑤）
+> `global_index`（全球非美指数）也走白名单：名字会命中 `EXCLUDE_KEYWORDS`（如"日经/韩"），必须通过 `FORCE_INCLUDE_CODES` 纳入。
 
-`default_share_code` 选择：有 A/C 选 A，有人民币/美元选人民币，单只就是它本身。
+**手动**（临时补加单只、不想跑完整扫描时）：
+1. `ak.fund_name_em()` 查同系列代码
+2. 在 `web/data/{分类}.json` 的 `series` 数组追加骨架（`series_scale` 留 null，shares 按【份额排序】规则）
+3. 跑 ②→③→④→⑤（仅 active / global_other 跑 ⑤，global_index 不抵持仓）
 
+`default_share_code`：有 A/C 选 A，有人民币/美元选人民币，单只就是它本身。
 校验：`python3 -c "import json; json.load(open('web/data/xxx.json'))"`
 
-### 修改脚本
-- 直接读写 `web/data/`，不维护中间副本
-- 失败静默降级，不中断流水线
-- 逐只调用限速 `time.sleep(0.2~0.3)`
-- 写文件用 `ensure_ascii=False, indent=2`
-
-### 修改前端
-- 只改 `web/index.html`
-- 页面加载阶段不调外部 API（走势图除外，按需加载）
-
-### 修改流水线
-- 改/新增脚本时同步更新 `.github/workflows/update-data.yml`，**增量与完整两个 job 都要覆盖**
+### 修改脚本/前端/流水线
+- 脚本：直接读写 `web/data/`，不维护中间副本；失败静默降级不中断流水线；逐只调用限速 `time.sleep(0.2~0.3)`；写文件用 `ensure_ascii=False, indent=2`
+- 前端：只改 `web/index.html`
+- 流水线：改/新增脚本时同步更新 `.github/workflows/update-data.yml`，**增量与完整两个 job 都要覆盖**
 
 ---
 
@@ -203,8 +180,11 @@ ETF `nav_date` 来自东财快照（非实时，与场外同节奏）。
 - `default_share_code` 指向不存在的份额
 - 前端引用了不存在的 JSON 字段
 - 未提交的 untracked 文件
+- 表头/行内出现 `366天`、`持7天起0.5%` 等违反【卖出规则展示统一格式】的文案
+- `GROUP_NOTICE.offshore.active` 红色警告被改成中性色或被删除
 
 **不报**（伪问题）：
 - "孤儿 holdings"——见禁止事项 4
 - "default 份额缺 holdings"——多数是新基金/季报未披露，前端有 `'暂无持仓数据'` 兜底
-- Action cron 时间与文档微小偏差——脚本注释已说明
+- Action 实际起跑时间与文档时点的小偏差——平台调度抖动，非问题
+- 周末打开看到的净值日期是上一交易日——这是【表头净值日期取值】的正确行为，与官方披露口径一致

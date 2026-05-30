@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-05-27T23:53:23.654923",
+  "generated_at": "2026-05-30T13:19:08.702328",
   "category": "global_other",
-  "label": "板块4 · 全球/其他 QDII（场外）",
-  "series_count": 23,
+  "label": "板块5 · 全球/其他 QDII（场外）",
+  "series_count": 24,
   "series": [
     {
       "series_id": "天弘__越南市场股票__global_other",
@@ -84,11 +84,11 @@
           "max_sell_rate": 1.5
         },
         {
-          "code": "008764",
-          "name": "天弘越南市场股票发起(QDII)C",
           "share_class": "C",
-          "currency": "人民币",
+          "name": "天弘越南市场股票发起(QDII)C",
           "fund_type": "QDII-普通股票",
+          "code": "008764",
+          "currency": "人民币",
           "nav_date": "2026-05-28",
           "nav": 1.6163,
           "nav_cum": 1.6163,
@@ -142,11 +142,11 @@
           "sale_service_fee": 0.25
         },
         {
-          "code": "022524",
-          "name": "天弘越南市场股票发起(QDII)D",
           "share_class": "D",
-          "currency": "人民币",
+          "name": "天弘越南市场股票发起(QDII)D",
           "fund_type": "QDII-普通股票",
+          "code": "022524",
+          "currency": "人民币",
           "buy_status": "限大额",
           "sell_status": "开放赎回",
           "buy_min": 0.1,
@@ -474,11 +474,11 @@
           "max_sell_rate": 1.5
         },
         {
-          "code": "019449",
-          "name": "摩根日本精选股票(QDII)C",
           "share_class": "C",
-          "currency": "人民币",
+          "name": "摩根日本精选股票(QDII)C",
           "fund_type": "QDII-普通股票",
+          "code": "019449",
+          "currency": "人民币",
           "nav_date": "2026-05-29",
           "nav": 2.2184,
           "nav_cum": 2.2184,
@@ -784,13 +784,6 @@
       "series_scale": 18.79
     },
     {
-      "series_id": "宏利__印度机会股票__global_other",
-      "company": "宏利",
-      "company_display": "宏利",
-      "series_name": "印度机会股票",
-      "display_name": "宏利印度机会股票",
-      "category": "global_other",
-      "etf_target": null,
       "shares": [
         {
           "code": "006105",
@@ -869,8 +862,68 @@
           "fund_type_xq": "QDII-股票",
           "full_name": "宏利印度机会股票型证券投资基金(QDII)",
           "max_sell_rate": 1.5
+        },
+        {
+          "share_class": "C",
+          "name": "宏利印度股票(QDII)C",
+          "fund_type": "QDII-普通股票",
+          "code": "026015",
+          "currency": "人民币",
+          "buy_status": "暂停申购",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 0.01,
+          "fee": "",
+          "scale": 0.091495,
+          "scale_raw": "914.95万",
+          "established": "2025-11-12",
+          "manager": "师婧",
+          "fund_company": "宏利基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "宏利印度机会股票型证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5,
+          "nav": 1.2979,
+          "nav_date": "2026-05-28",
+          "daily_change": -0.07,
+          "chg_1m": -0.37,
+          "chg_3m": -5.93,
+          "chg_6m": -12.19,
+          "sale_service_fee": 0.3,
+          "chg_ytd": -10.39,
+          "chg_since_inception": -12.39
         }
       ],
+      "series_id": "宏利__印度股票__global_other",
+      "display_name": "宏利印度股票",
+      "series_name": "印度股票",
+      "etf_target": null,
+      "company": "宏利",
+      "category": "global_other",
+      "company_display": "宏利",
       "default_share_code": "006105",
       "series_scale": 15.87
     },
@@ -3198,11 +3251,11 @@
           "max_sell_rate": 1.5
         },
         {
-          "code": "006792",
-          "name": "鹏华港美互联股票美元现汇",
           "share_class": "默认",
-          "currency": "美元",
+          "name": "鹏华港美互联股票美元现汇",
           "fund_type": "QDII-普通股票",
+          "code": "006792",
+          "currency": "美元",
           "buy_status": "暂停申购",
           "sell_status": "开放赎回",
           "buy_min": 0.0,
@@ -4089,6 +4142,263 @@
       "series_scale": 1.53
     },
     {
+      "shares": [
+        {
+          "code": "019230",
+          "currency": "人民币",
+          "name": "广发全球稳健配置混合(QDII)人民币A",
+          "share_class": "A",
+          "fund_type": "QDII-混合债",
+          "nav_date": "2026-05-28",
+          "nav": 1.2099,
+          "nav_cum": 1.2099,
+          "daily_change": 0.32,
+          "chg_1w": 3.15,
+          "chg_1m": 9.73,
+          "chg_3m": 16.85,
+          "chg_6m": 17.99,
+          "chg_1y": 23.32,
+          "chg_2y": 21.17,
+          "chg_ytd": 19.32,
+          "chg_since_inception": 20.99,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 600000.0,
+          "fee": "0.15",
+          "scale": 1.12,
+          "scale_raw": "1.12亿",
+          "established": "2024-04-24",
+          "manager": "李耀柱",
+          "fund_company": "广发基金管理有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "广发全球稳健配置混合型证券投资基金（QDII）",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<50.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "50.0万<=买入金额<200.0万",
+              "rate": 1.2
+            },
+            {
+              "condition": "200.0万<=买入金额<500.0万",
+              "rate": 0.8
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<180.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "180.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 180,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5,
+          "sale_service_fee": 0.0
+        },
+        {
+          "code": "019231",
+          "currency": "人民币",
+          "name": "广发全球稳健配置混合(QDII)人民币C",
+          "share_class": "C",
+          "fund_type": "QDII-混合债",
+          "nav_date": "2026-05-28",
+          "nav": 1.1979,
+          "nav_cum": 1.1979,
+          "daily_change": 0.3,
+          "chg_1w": 3.12,
+          "chg_1m": 9.71,
+          "chg_3m": 16.73,
+          "chg_6m": 17.72,
+          "chg_1y": 22.72,
+          "chg_2y": 20.02,
+          "chg_ytd": 19.1,
+          "chg_since_inception": 19.79,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 600000.0,
+          "fee": "",
+          "scale": 0.724857,
+          "scale_raw": "7248.57万",
+          "established": "2024-04-24",
+          "manager": "李耀柱",
+          "fund_company": "广发基金管理有限公司",
+          "fund_type_xq": "QDII-混合",
+          "full_name": "广发全球稳健配置混合型证券投资基金（QDII）",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5,
+          "sale_service_fee": 0.5
+        },
+        {
+          "currency": "美元",
+          "code": "019232",
+          "name": "广发全球稳健配置混合(QDII)美元A",
+          "fund_type": "QDII-混合债",
+          "share_class": "A",
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "1.5",
+          "scale": 1.12,
+          "scale_raw": "1.12亿",
+          "established": "2024-04-24",
+          "manager": "李耀柱",
+          "error": "'data'",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<10万",
+              "rate": 1.5
+            },
+            {
+              "condition": "10万<=买入金额",
+              "rate": 1.2
+            },
+            {
+              "condition": "40万<=买入金额",
+              "rate": 0.8
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限<30天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30天<=持有期限<180天",
+              "rate": 0.5
+            },
+            {
+              "condition": "180天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "nav": 0.1773,
+          "nav_date": "2026-05-28",
+          "daily_change": 0.4,
+          "chg_1m": 10.26,
+          "chg_3m": 18.52,
+          "chg_6m": 22.36,
+          "chg_1y": 29.89,
+          "sale_service_fee": 0.0,
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 1.5,
+          "free_hold_days": 180,
+          "chg_ytd": 21.6,
+          "chg_since_inception": 25.92
+        },
+        {
+          "currency": "美元",
+          "code": "019233",
+          "name": "广发全球稳健配置混合(QDII)美元C",
+          "fund_type": "QDII-混合债",
+          "share_class": "C",
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "",
+          "scale": 0.72,
+          "scale_raw": "0.72亿",
+          "established": "2024-04-24",
+          "manager": "李耀柱",
+          "error": "'data'",
+          "buy_rules": [
+            {
+              "condition": "---",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限<30天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "nav": 0.1755,
+          "nav_date": "2026-05-28",
+          "daily_change": 0.34,
+          "chg_1m": 10.24,
+          "chg_3m": 18.42,
+          "chg_6m": 22.04,
+          "chg_1y": 29.23,
+          "sale_service_fee": 0.5,
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 0.0,
+          "free_hold_days": 30,
+          "chg_ytd": 21.36,
+          "chg_since_inception": 24.64
+        }
+      ],
+      "series_id": "广发__全球稳健配置混合__global_other",
+      "display_name": "广发全球稳健配置混合",
+      "series_name": "全球稳健配置混合",
+      "etf_target": null,
+      "company": "广发",
+      "category": "global_other",
+      "company_display": "广发",
+      "default_share_code": "019230",
+      "series_scale": 1.12
+    },
+    {
       "series_id": "嘉实__全球创新龙头股票__global_other",
       "company": "嘉实",
       "company_display": "嘉实",
@@ -4587,6 +4897,6 @@
       "series_scale": 0.24364699999999997
     }
   ],
-  "total_scale": 182.73,
-  "enriched_at": "2026-05-30T01:11:02.471373"
+  "total_scale": 183.85,
+  "enriched_at": "2026-05-30T13:26:01.255362"
 }
