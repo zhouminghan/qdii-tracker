@@ -1,0 +1,167 @@
+/**
+ * config.js — 纯常量配置集中地
+ *
+ * why：原内联在 index.html 的常量（COMPANY_BRAND/GROUP_META 等）合计 ~150 行，
+ * 抽出来后 index.html 主表关注点更聚焦；这些常量改动频率最高，单独成文件后
+ * 后续维护（加品牌色、改分组文案等）无需在 2400 行的 index.html 里来回找。
+ *
+ * 加载方式：作为 **普通 script**（非 ES Module）在内联 <script> 之前加载，
+ * 所有 const 直接落到全局作用域，原内联代码 0 改动即可继续引用。
+ *
+ * why 不用 ES Module：内联 <script> 与 <script type="module"> 作用域隔离，
+ * 而 STATE/renderCategory 等仍住在内联块，全部改 window.X 访问会引入大量噪声。
+ * 普通 script 全局作用域是最小侵入路径。
+ */
+
+// ==================== 数据源 / Tab ====================
+
+// 后端生成的 JSON，前端渲染时前 5 个合并到"场外"Tab
+const DATA_CATEGORIES = ['sp500', 'nasdaq_passive', 'active', 'global_index', 'global_other', 'etf'];
+const RENDER_TABS = ['offshore', 'etf'];
+
+// 场外 Tab 内部的分组配置（对应 Chips 的 5 个筛选项）
+const OFFSHORE_GROUPS = [
+  { key: 'sp500',          label: '📊 标普500 指数基金',  desc: 'S&P 500 · 被动跟踪' },
+  { key: 'nasdaq_passive', label: '💻 纳指100 指数基金',  desc: 'NASDAQ 100 · 被动跟踪' },
+  { key: 'active',         label: '🎯 美股主动基金',      desc: '精选 19 只重仓美股的主动 QDII' },
+  { key: 'global_index',   label: '🌍 全球指数基金',      desc: '跟踪海外非美指数（日经225 等）' },
+  { key: 'global_other',   label: '🌐 全球/其他 QDII',    desc: '全球配置型 / 非美股核心方向' },
+];
+
+// 场外 starred 系列（按 default_share_code 标识，置顶 + 显示⭐）
+const OFFSHORE_STARRED = new Set(['050025', '160213']);
+
+// 份额排序：先人民币后美元，同币种内 A<C<D<E<I<默认<LOF<其他
+const SHARE_CLASS_ORDER = {'A':0,'A(后端)':1,'C':2,'D':3,'E':4,'F':5,'H':6,'I':7,'默认':8,'LOF':9};
+
+// ==================== 公司品牌色 ====================
+
+const COMPANY_BRAND = {
+  '易方达': { color: '#d4351c', letter: '易' },  // 红
+  '华夏':   { color: '#0e5ba6', letter: '华夏' },  // 蓝（与华安/华泰/华宝都冲突，统一两字）
+  '南方':   { color: '#c8102e', letter: '南' },  // 红
+  '嘉实':   { color: '#e87500', letter: '嘉' },  // 橙
+  '广发':   { color: '#d92027', letter: '广' },
+  '华安':   { color: '#8b0000', letter: '华安' },
+  '博时':   { color: '#ea5506', letter: '博' },
+  '大成':   { color: '#c5050c', letter: '大' },
+  '天弘':   { color: '#e60012', letter: '天' },
+  '摩根':   { color: '#c41e3a', letter: 'JP' },
+  '汇添富': { color: '#1a3e82', letter: '汇' },
+  '招商':   { color: '#c8102e', letter: '招' },
+  '华泰柏瑞': { color: '#c8102e', letter: '华泰' },
+  '万家':   { color: '#e87500', letter: '万' },
+  '宝盈':   { color: '#1a3e82', letter: '宝' },
+  '建信':   { color: '#005bac', letter: '建' },
+  '国泰':   { color: '#c41e3a', letter: '国' },
+  '浦银安盛': { color: '#bc0028', letter: '浦' },
+  '富国':   { color: '#0066b3', letter: '富' },
+  '华宝':   { color: '#c8102e', letter: '华宝' },
+  '景顺长城': { color: '#c8102e', letter: '景' },
+  '鹏华':   { color: '#00529b', letter: '鹏' },
+  '工银':   { color: '#c8102e', letter: '工' },
+  '交银':   { color: '#005bac', letter: '交' },
+  '农银':   { color: '#007b3a', letter: '农' },
+  '中银':   { color: '#c8102e', letter: '中' },
+  '民生加银': { color: '#005bac', letter: '民' },
+  '上投摩根': { color: '#c41e3a', letter: '上投' },
+  '德邦':   { color: '#e60012', letter: '德' },
+  '海富通': { color: '#005bac', letter: '海' },
+  '兴业':   { color: '#005bac', letter: '兴' },
+  '中欧':   { color: '#1a3e82', letter: '中欧' },
+  '融通':   { color: '#c8102e', letter: '融' },
+  '新华':   { color: '#bc0028', letter: '新' },
+  '泰达宏利': { color: '#c41e3a', letter: '泰' },
+  '国投瑞银': { color: '#0066b3', letter: '国投' },
+  '中信保诚': { color: '#c8102e', letter: '中信' },
+  '国海富兰克林': { color: '#0066b3', letter: '国海' },
+  '宏利':   { color: '#007f5f', letter: '宏' },
+  '信达澳亚': { color: '#c41e3a', letter: '信达' },
+  '同泰':   { color: '#e60012', letter: '同' },
+  '平安':   { color: '#e60012', letter: '平' },
+  '银华':   { color: '#c41e3a', letter: '银' },
+  '上银':   { color: '#c8102e', letter: '上银' },
+  '长城':   { color: '#1a3e82', letter: '长' },
+  '长信':   { color: '#005bac', letter: '长信' },
+};
+
+// ==================== ETF 分组 ====================
+
+const ETF_GROUPS = [
+  { key: 'sp500',        label: '📊 跟踪 标普500 指数',    desc: 'S&P 500 · 美股大盘蓝筹' },
+  { key: 'nasdaq100',    label: '💻 跟踪 纳斯达克 指数',   desc: 'NASDAQ 100 / NDXT 等纳斯达克家族 · 美股科技龙头' },
+  { key: 'global_other', label: '🌐 全球/其他 ETF',        desc: '日经225 / 全球配置 / 其他跨境方向' },
+];
+
+// 被动分类下的"持仓列"特殊渲染表
+// why：sp500/nasdaq_passive 整体走"—"占位，但少数 series 是"分类被动但实为主动管理"的例外：
+//   · type='active'：Smart Beta（如 096001 大成标普500等权重）→ 走真实持仓按钮，需 holdings/{code}.json
+// 维护：新增 type='active' 条目时，`scripts/fetch_holdings.py` 的 `EXTRA_HOLDINGS_CODES` 必须同步包含
+const PASSIVE_HOLDINGS_OVERRIDE = {
+  '096001': { type: 'active' },  // 大成标普500等权重指数（Smart Beta）
+  // 注：天弘标普500 (007721) 是 QDII-FOF（基金经理选 ETF 配置），akshare fund_portfolio_hold_em
+  // 接口对 FOF 返回 0 行（FOF 持的是基金/ETF 而非个股），故不加持仓按钮。
+  // 它实质是主动管理，但分类保留在 sp500 板块；用户识别靠"基金类型"提示与 CLAUDE.md 文档说明。
+};
+
+// ==================== 分组标题 / 提示横幅 ====================
+
+const GROUP_META = {
+  offshore: {
+    sp500:          { title: '📊 标普500 指数基金', subtitle: '被动跟踪美国大盘 500 强 · 支付宝 / 天天基金可买，按当日净值成交' },
+    nasdaq_passive: { title: '💻 纳指100 指数基金', subtitle: '被动跟踪美股科技 100 强（苹果 / 微软 / 英伟达等）· 长期定投首选' },
+    active:         { title: '🎯 美股主动基金',     subtitle: '重仓美股的主动 QDII · 基金经理择股，费率较高但可能跑赢指数' },
+    global_index:   { title: '🌍 全球指数基金',     subtitle: '跟踪海外非美指数（日经225 等）· T+0 当天披露净值' },
+    global_other:   { title: '🌐 全球 / 其他 QDII', subtitle: '全球配置或非美股核心方向（医疗 / 能源 / 海外 / 混合等）· 分散投资' },
+  },
+  etf: {
+    sp500:        { title: '📊 标普500 ETF',       subtitle: 'S&P 500 指数 ETF · 证券账户买卖，盘中实时涨跌，费率仅 0.15~0.5%' },
+      nasdaq100:    { title: '💻 纳斯达克 ETF',       subtitle: 'NASDAQ 100 / NDXT 等纳斯达克家族 · 美股科技龙头 ETF 版本，流动性强' },
+    global_other: { title: '🌐 全球/其他 ETF',     subtitle: '中证·美国50 等头部美股浓缩版 + 全球配置 / 其他跨境方向' },
+  },
+};
+
+// 分组级"风险提示 / 选基要点"横幅（场外按 Chip 动态切换；空则隐藏）
+// 设计原则：点到为止、起警示作用，不堆文字。被动指数风险小（中性蓝），主动基有真实坑（红色警告）
+const GROUP_NOTICE = {
+  offshore: {
+    sp500: {
+      tone: 'sky',
+      items: [
+        '被动跟踪 · 风险可控；常因 QDII 限购留有 5~10% 现金仓位，<b>长期可能少赚 1~2 个点</b>，但不会跑偏 · 是稳健首选',
+      ],
+    },
+    nasdaq_passive: {
+      tone: 'sky',
+      items: [
+        '被动跟踪 · 风险可控；<b>限购常态化</b>（多数仅 1元~1万/日），现金仓位拖累 1~2 个点 · 长期定投仍是稳健首选',
+      ],
+    },
+    active: {
+      tone: 'rose',
+      items: [
+        '<b>挂羊头卖狗肉</b>：部分基金经理主动调仓买 A 股 / 港股博收益，名义"美股主动"实际<b>重仓 A 股</b>',
+        '<b>费率高 + 披露滞后</b>：管理费 1.2~1.8%/年，季报只披露 Top10 · 想稳优先选上方<b>被动指数</b>',
+      ],
+    },
+  },
+};
+
+// ==================== 走势 modal 区间 ====================
+
+const TREND_RANGES = [
+  { key: '1m',  label: '近1月',  days: 30 },
+  { key: '3m',  label: '近3月',  days: 90 },
+  { key: '6m',  label: '近6月',  days: 180 },
+  { key: 'ytd', label: '今年来', days: null }, // 特殊处理
+  { key: '1y',  label: '近1年',  days: 365 },
+  { key: '3y',  label: '近3年',  days: 365 * 3 },
+  { key: 'all', label: '全部',   days: null }, // 特殊处理
+];
+
+// ==================== Tab 副标题 ====================
+
+const SUBTITLE_BY_TAB = {
+  offshore: '支付宝 / 天天基金可买的场外基金，按投资标的分三组：标普500 / 纳指100 / 美股主动。',
+  etf: '场内 ETF（513 / 159 开头），需股票账户买卖，费率最低、盘中实时涨跌，按跟踪标的分组展示。',
+};

@@ -2,7 +2,7 @@
   "generated_at": "2026-05-30T13:19:08.702328",
   "category": "etf",
   "label": "板块6 · 场内 ETF",
-  "series_count": 18,
+  "series_count": 19,
   "series": [
     {
       "series_id": "广发__纳斯达克ETF广发__etf",
@@ -777,6 +777,48 @@
       ],
       "default_share_code": "159612",
       "series_scale": 8.81344238
+    },
+    {
+      "series_id": "景顺长城__纳指科技ETF景顺__etf",
+      "company": "景顺长城",
+      "company_display": "景顺长城",
+      "series_name": "纳指科技ETF景顺",
+      "display_name": "纳指科技ETF景顺",
+      "category": "etf",
+      "etf_target": "nasdaq100",
+      "shares": [
+        {
+          "code": "159509",
+          "name": "纳指科技ETF景顺",
+          "share_class": "默认",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "chg_1m": 14.03,
+          "chg_3m": 28.15,
+          "chg_6m": 19.62,
+          "chg_ytd": 20.66,
+          "chg_1y": 54.55,
+          "scale": 111.72,
+          "scale_raw": "111.72亿",
+          "established": "2023-07-19",
+          "manager": "汪洋",
+          "buy_status": "场内交易",
+          "daily_limit": 0.0,
+          "buy_rules": [],
+          "sell_rules": [],
+          "fee": "nan",
+          "etf_price": 2.71,
+          "etf_change_pct": 1.42,
+          "sale_service_fee": null,
+          "sell_status": "场内交易",
+          "buy_min": 0.0,
+          "mgmt_fee": 0.8,
+          "custody_fee": 0.2,
+          "nav_date": "2026-05-28"
+        }
+      ],
+      "default_share_code": "159509",
+      "series_scale": 111.72
     }
   ],
   "total_scale": 1813.7,

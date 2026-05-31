@@ -114,9 +114,22 @@ def extract_etf_target(name: str) -> str:
     """
     场内 ETF 的跟踪标的分类。
     返回: 'sp500' | 'nasdaq100' | 'us50' | 'other'
+
+    note: 'nasdaq100' 这个 key 是历史命名（最早只识别 NDX），实际涵盖整个
+    纳斯达克家族指数（NDX/NDXT 等）。前端 ETF_GROUPS 的 label 已不再写"100"。
+    若未来要把 NDXT（纳指科技）单拆，把"纳指科技/纳斯达克科技"分支返回值
+    改成 "nasdaq_tech" 即可，并同步前端 ETF_GROUPS 新增分组。
     """
     if "标普500" in name:
         return "sp500"
+    # 纳指科技 / 纳斯达克科技：归口到 nasdaq 家族（与 NDX 并列展示）
+    # 保留独立分支：① 命中顺序明确 ② 未来要单拆 NDXT 时直接改返回值即可
+    if "纳指科技" in name or "纳斯达克科技" in name:
+        return "nasdaq100"
+    # 纳指生物科技 / 纳斯达克生物技术（NBI 指数）：同样归口 nasdaq 家族
+    # 单独列分支：① 与"纳指科技"同等处理 ② 未来要单拆 NBI 时直接改返回值
+    if "纳指生物" in name or "纳斯达克生物" in name:
+        return "nasdaq100"
     # 纳斯达克ETF 和 纳斯达克100ETF 都跟踪纳斯达克100
     if "纳斯达克100" in name or "纳指100" in name:
         return "nasdaq100"

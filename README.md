@@ -80,7 +80,14 @@ qdii-tracker/
 │   └── requirements.txt
 │
 ├── web/                          # 前端（纯静态）
-│   ├── index.html                # 单文件应用（~2400 行）
+│   ├── index.html                # 主入口（HTML+CSS+主渲染逻辑，~2100 行）
+│   ├── js/                       # 抽离的 JS 模块
+│   │   ├── config.js             # 纯常量（COMPANY_BRAND/GROUP_META 等）
+│   │   ├── utils.js              # 纯工具函数（0 副作用 / 0 DOM）
+│   │   ├── idle-scheduler.js     # 智能空闲调度器（标签页隐藏/无交互即暂停）
+│   │   ├── market-indices.js     # 顶部市场参照系（指数+汇率指标卡）
+│   │   ├── etf-premium.js        # 场内 ETF 溢价率
+│   │   └── market-trend.js       # 指标卡日 K 走势（复用 trendModal）
 │   ├── tailwind.min.js           # 本地化 Tailwind（避免 CDN 白屏）
 │   ├── .nojekyll                 # 禁用 GitHub Pages 的 Jekyll 解析
 │   └── data/                     # 前端消费的 JSON（git 追踪）
@@ -88,8 +95,8 @@ qdii-tracker/
 │       ├── nasdaq_passive.json   # 🏦 场外 · 纳指100（17 系列）
 │       ├── active.json           # 🏦 场外 · 美股主动精选（19 系列）
 │       ├── global_index.json    # 🌍 场外 · 全球非美指数（2 系列）
-│       ├── global_other.json     # 🏦 场外 · 全球/其他 QDII（23 系列）
-│       ├── etf.json              # 📈 场内 ETF（17 系列）
+│       ├── global_other.json     # 🏦 场外 · 全球/其他 QDII（24 系列）
+│       ├── etf.json              # 📈 场内 ETF（19 系列）
 │       ├── meta.json             # 扫描元信息
 │       └── holdings/{code}.json  # 主动基金 Top10 持仓
 │

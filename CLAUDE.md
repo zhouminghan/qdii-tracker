@@ -27,7 +27,14 @@ qdii-tracker/
 │   ├── fetch_holdings.py     # ⑤ 抓 Top10 重仓（active + global_other + EXTRA_HOLDINGS_CODES 白名单）
 │   └── requirements.txt
 └── web/
-    ├── index.html            # 单文件前端（HTML+CSS+JS 全内联）
+    ├── index.html            # 前端骨架（HTML+CSS+主渲染 JS 内联）
+    ├── js/                   # 抽出的 ES Module / 普通脚本（详见禁止事项 1）
+    │   ├── config.js         # 纯常量（GROUP_META / ETF_GROUPS / TREND_RANGES 等）
+    │   ├── utils.js          # 纯工具函数（格式化 / 市场时段 / 卖出规则解析）
+    │   ├── idle-scheduler.js # 智能空闲调度（被 indices/etf-premium 共享）
+    │   ├── market-indices.js # 顶部 5 张指数+汇率指标卡（实时）
+    │   ├── etf-premium.js    # 场内 ETF 溢价率（实时）
+    │   └── market-trend.js   # 点指标卡看日 K 走势（复用 trendModal）
     ├── tailwind.min.js       # Tailwind 本地化（禁用 CDN）
     ├── .nojekyll
     └── data/
@@ -78,7 +85,7 @@ qdii-tracker/
 
 ## 前端约定
 
-**单文件架构**：所有 HTML/CSS/JS 都在 `web/index.html`，不拆分、不引入构建工具。页面加载阶段不调外部 API（走势图除外，按需加载）。
+**轻模块化架构**：HTML/CSS/主渲染 JS 仍在 `web/index.html`，通用常量/工具/实时模块抽到 `web/js/*.js`（普通 `<script>` + ES Module 混用，**不引入构建工具**）。页面加载阶段不调外部 API（走势图、指数/汇率指标卡、ETF 溢价率除外，按需加载且受 idle-scheduler 节流）。
 
 ### 份额排序（前后端必须一致）
 币种（人民币 < 美元 < 其他）→ 类型（A < C < D < E < F < H < I < 默认 < LOF）
@@ -154,13 +161,14 @@ qdii-tracker/
 - 主动基（`active`）的红色警告**禁止移除/弱化**——风格漂移是真实存在的坑，是看板的核心警示价值之一
 
 ### 场内 ETF 特殊点
-- ETF 表头**没有**：成立来、申购、份额数列
+- ETF 表头**没有**两列：成立来 / 申购（代码位置：`index.html` 中 `${isEtf ? '' : sortableTh(...)}` 条件渲染）
 - ETF `nav_date` **必须**走 lsjz API 拉真实净值披露日（`enrich_data.py::fetch_etf_nav_date_lsjz`），与场外 QDII 同节奏
   - **禁止**用 `datetime.now()` 写入 ETF `nav_date`：周末/节假日运行会写入非交易日，导致表头显示「最新价 5.30」（周六）这类错误日期
   - 数据源：`fund_open_fund_rank_em` **不收录 ETF**，所以 ETF 的 `nav_date` 不会被 `refresh_purchase.py` 自动覆盖刷新；只能靠 enrich 阶段写入
   - 表头日期取所有 share `nav_date` 最大值，前端逻辑一致（场内外都按这套）
 - `etf_price` / `etf_change_pct` 来自东财快照（`fund_etf_spot_em`，可能是实时报价），**与 `nav_date` 不必同日**——`nav_date` 始终是 lsjz 净值日，价格则是当前抓取时的最新价
-- `series.starred = true` 在分组内置顶（当前 513500、513100）
+- `series.starred = true` 在分组内置顶（场内 ETF 当前 513500、513100）
+- 场外置顶走 `OFFSHORE_STARRED` 集合（按 `default_share_code` 识别，当前 050025、160213）；ETF 置顶走 `series.starred=true` 字段。两者表现一致：置顶 + 展示⭐
 
 ---
 
@@ -177,19 +185,26 @@ qdii-tracker/
 2. 在 `web/data/{分类}.json` 的 `series` 数组追加骨架（`series_scale` 留 null，shares 按【份额排序】规则）
 3. 跑 ②→③→④→⑤（仅 active / global_other 跑 ⑤，global_index 不抵持仓）
 
+> ⚠️ 骨架字段（scale/manager/established/费率/收益/etf_price/nav_date 等）**只能由脚本填**，前端没有兜底。光追加骨架不跑脚本，行内会全 `—`。
+> · ETF 手动新增：只需跑 `enrich_data.py`（一步到位补 scale/费率/经理/收益/etf_price/nav_date），无需 ③④⑤
+> · 场外手动新增：跑 ②→③→④（active / global_other 还要跑 ⑤）
+
 `default_share_code`：有 A/C 选 A，有人民币/美元选人民币，单只就是它本身。
 校验：`python3 -c "import json; json.load(open('web/data/xxx.json'))"`
 
 ### 修改脚本/前端/流水线
 - 脚本：直接读写 `web/data/`，不维护中间副本；失败静默降级不中断流水线；逐只调用限速 `time.sleep(0.2~0.3)`；写文件用 `ensure_ascii=False, indent=2`
 - 前端：只改 `web/index.html`
+- **改 `web/js/*.js` 后必须 bump `index.html` 中 `import './js/xxx.js?v=YYYYMMDDx'` 的版本戳**：GitHub Pages / 浏览器对 `.js` 默认强缓存，不 bump 版本号会导致用户访问时仍命中旧版本（典型症状：JS 已修但页面行为不变）
 - 流水线：改/新增脚本时同步更新 `.github/workflows/update-data.yml`，**增量与完整两个 job 都要覆盖**
 
 ---
 
 ## 🚫 禁止事项
 
-1. 不在 `web/` 下创建新文件（除 `web/data/*.json`、`tailwind.min.js`、`.nojekyll`）
+1. 不在 `web/` 下创建新文件（除 `web/data/*.json`、`web/js/*.js` 模块化文件、`tailwind.min.js`、`.nojekyll`）
+   - `web/js/` 下当前模块：`market-indices.js`（指数+汇率指标卡）/ `etf-premium.js`（场内 ETF 溢价率）/ `idle-scheduler.js`（智能空闲调度，被前两者共享）/ `market-trend.js`（点击指标卡看日 K 走势，复用 trendModal）
+   - 新增 ES Module 时必须 ① 在 `index.html` 末尾 `<script type="module">` 块里 import + start，② 用 `?v=YYYYMMDDx` 版本戳防缓存
 2. 不引入 npm / webpack / vite 等构建工具
 3. 前端加载时不调外部 API
 4. **不删 `web/data/holdings/` 下的 JSON**（脚本只增不删）
