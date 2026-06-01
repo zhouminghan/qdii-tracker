@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-30T13:19:08.702328",
-  "total_scanned": 26906,
+  "generated_at": "2026-06-01T21:26:00.839907",
+  "total_scanned": 26927,
   "sp500": {
     "series": 7,
     "funds": 25
@@ -25,8 +25,8 @@
     "series": 18,
     "funds": 18
   },
-  "excluded_count": 26673,
-  "enriched_at": "2026-05-30T13:26:01.262916",
+  "excluded_count": 26694,
+  "enriched_at": "2026-06-01T21:32:39.706838",
   "enriched_fields": [
     "涨跌幅",
     "规模",
@@ -34,5 +34,5 @@
     "基金经理",
     "成立时间"
   ],
-  "purchase_refreshed_at": "2026-06-01T21:06:56.070155"
+  "purchase_refreshed_at": "2026-06-01T21:47:57.657881"
 }

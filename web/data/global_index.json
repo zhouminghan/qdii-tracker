@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T13:19:08.702328",
+  "generated_at": "2026-06-01T21:26:00.839907",
   "category": "global_index",
   "label": "板块4 · 全球非美指数（场外·白名单）",
   "series_count": 2,
@@ -14,7 +14,7 @@
       "category": "global_index",
       "etf_target": null,
       "default_share_code": "019454",
-      "series_scale": 0.8,
+      "series_scale": 1.4,
       "shares": [
         {
           "code": "019454",
@@ -27,10 +27,10 @@
           "buy_min": 10.0,
           "daily_limit": 10.0,
           "fee": "0.12",
-          "scale": 0.8,
-          "scale_raw": "0.8亿",
-          "established": "2023-09-22",
-          "manager": "李沐阳",
+          "scale": null,
+          "scale_raw": "",
+          "established": "",
+          "manager": "",
           "error": "'data'",
           "buy_rules": [
             {
@@ -195,10 +195,10 @@
           "nav": 1.4241,
           "nav_date": "2026-06-01",
           "daily_change": 0.76,
-          "chg_1m": 11.82,
-          "chg_3m": 9.99,
-          "chg_6m": 27.33,
-          "chg_1y": 47.59,
+          "chg_1m": 9.59,
+          "chg_3m": 9.17,
+          "chg_6m": 24.42,
+          "chg_1y": 45.91,
           "scale": 2.22,
           "sale_service_fee": 0.0,
           "buy_status": "限大额",
@@ -206,14 +206,14 @@
           "mgmt_fee": 0.2,
           "custody_fee": 0.05,
           "first_buy_rate": 1.5,
-          "chg_ytd": 25.99,
+          "chg_ytd": 25.05,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "fee": "0.06",
           "nav_cum": 1.4241,
-          "chg_1w": 1.74,
-          "chg_2y": 53.86,
-          "chg_since_inception": 42.41,
+          "chg_1w": 4.0,
+          "chg_2y": 52.68,
+          "chg_since_inception": 41.34,
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<50万",
@@ -253,10 +253,10 @@
           "nav": 1.416,
           "nav_date": "2026-06-01",
           "daily_change": 0.75,
-          "chg_1m": 11.8,
-          "chg_3m": 9.93,
-          "chg_6m": 27.18,
-          "chg_1y": 47.21,
+          "chg_1m": 9.57,
+          "chg_3m": 9.11,
+          "chg_6m": 24.26,
+          "chg_1y": 45.55,
           "scale": 1.26,
           "sale_service_fee": 0.25,
           "buy_status": "限大额",
@@ -264,14 +264,14 @@
           "mgmt_fee": 0.2,
           "custody_fee": 0.05,
           "first_buy_rate": 0.0,
-          "chg_ytd": 25.86,
+          "chg_ytd": 24.91,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "fee": "",
           "nav_cum": 1.416,
-          "chg_1w": 1.73,
-          "chg_2y": 53.1,
-          "chg_since_inception": 41.6,
+          "chg_1w": 3.99,
+          "chg_2y": 51.92,
+          "chg_since_inception": 40.54,
           "buy_rules": [
             {
               "condition": "---",
@@ -293,5 +293,5 @@
       ]
     }
   ],
-  "enriched_at": "2026-05-30T13:26:01.253264"
+  "enriched_at": "2026-06-01T21:32:21.404113"
 }
