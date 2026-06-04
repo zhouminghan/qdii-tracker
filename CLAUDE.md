@@ -62,6 +62,23 @@ qdii-tracker/
 
 > 完整流水线 scan 后**必须**接 enrich + fill_missing，否则会丢失已有 enriched 数据。
 
+### 前端缓存机制与 `generated_at` 同步策略
+
+**缓存破坏机制**：
+- 前端使用 `meta.json` 的 `generated_at` 作为所有数据文件的查询版本号（`?v=` 参数）
+- 版本号策略：先拉 `meta.json`（绕缓存），用其 `generated_at` 当所有数据文件的 query 版本号
+- Actions 推了新数据 → `meta.generated_at` 变 → query 变 → 自动失效
+
+**`generated_at` 同步要求**：
+- **所有增量更新脚本必须同时更新 `meta.json` 和各数据文件的 `generated_at` 字段**
+- 仅更新 `meta.json` 会导致前端仍使用旧缓存（数据文件 `generated_at` 未变）
+- 当前已修复：`fill_missing.py` 和 `refresh_purchase.py` 都会同步更新所有数据文件
+
+**缓存问题症状**：
+- 数据已更新但前端显示旧数据（如限购金额、净值日期等）
+- `meta.json` 的 `generated_at` 是最新的，但数据文件仍是旧时间戳
+- 用户需要强制刷新浏览器才能看到最新数据
+
 ### `fill_missing.py` 关键策略
 
 - nav 三件套（nav / nav_date / daily_change）**无条件覆盖**（防回退由前置检查保证）
@@ -232,6 +249,9 @@ qdii-tracker/
 - `PASSIVE_HOLDINGS_OVERRIDE` 中 `type='active'` 的代码未在 `EXTRA_HOLDINGS_CODES` 中（会导致前端按钮拉到 404）
 - `.fee-tip` 的 `cursor` 被改回 `help`（应为 `pointer`，避免误导 `?` 图标）
 - `007721 / 007722` 被加进 `PASSIVE_HOLDINGS_OVERRIDE` 或 `EXTRA_HOLDINGS_CODES`（FOF 接口拿不到个股持仓，加了点开就是空 + 脚本空跑）
+- **增量更新脚本只更新 `meta.json` 的 `generated_at` 而不更新数据文件**（会导致前端缓存失效）
+- **数据文件的 `generated_at` 与 `meta.json` 的时间戳差异过大**（>1分钟视为异常）
+- **前端显示的数据与数据源不一致但 `generated_at` 已更新**（缓存机制失效的典型症状）
 
 **不报**（伪问题）：
 - "孤儿 holdings"——见禁止事项 4
