@@ -347,11 +347,10 @@ def main():
         for s in d["series"]:
             for sh in s["shares"]:
                 if is_etf:
-                    # ETF 仅看历史收益是否缺
+                    # ETF 每天都要更新 nav_date（用于表头日期），历史收益仅在缺失时更新
                     probe_keys = ["chg_1m", "chg_1y"]
                     missing = [k for k in probe_keys if sh.get(k) in (None, "", 0)]
-                    if missing:
-                        targets.append((cat, sh["code"], sh, missing, is_etf))
+                    targets.append((cat, sh["code"], sh, missing or ["daily-refresh"], is_etf))
                 else:
                     # 场外 QDII 每天都要更新最新净值，无条件加入
                     probe_keys = ["chg_1m", "chg_1y"]
