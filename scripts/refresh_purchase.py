@@ -207,14 +207,16 @@ def main():
                 json.dump(data, f, ensure_ascii=False, indent=2)
         print(f"  📊 Fallback 成功 {fb_success} / 失败 {fb_fail} / 共 {len(fallback_targets)}")
 
-    # 5. 更新 meta
+    # 5. 更新 meta：bump generated_at（前端缓存破坏参数） + 记录申购刷新时间
     meta_fp = data_dir / "meta.json"
     if meta_fp.exists():
         with open(meta_fp, encoding="utf-8") as f:
             meta = json.load(f)
+        meta["generated_at"] = datetime.now().isoformat()
         meta["purchase_refreshed_at"] = datetime.now().isoformat()
         with open(meta_fp, "w", encoding="utf-8") as f:
             json.dump(meta, f, ensure_ascii=False, indent=2)
+        print(f"  ✅ meta.json generated_at bumped -> {meta['generated_at']}")
 
     print("\n✅ 申购状态 + 涨跌幅刷新完成！")
 

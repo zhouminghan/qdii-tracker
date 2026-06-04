@@ -35,16 +35,28 @@ def fetch_etf_nav_date_lsjz(code: str):
     try:
         r = requests.get(url, headers=LSJZ_HEADERS, timeout=8)
         if r.status_code != 200:
+            print(f"  ⚠️  fetch_etf_nav_date_lsjz({code}) HTTP {r.status_code}")
             return None
         m = re.search(r"jQuery\((.*)\)", r.text, re.DOTALL)
         if not m:
+            print(f"  ⚠️  fetch_etf_nav_date_lsjz({code}) 无法解析 jQuery 包裹")
             return None
         data = json.loads(m.group(1))
-        items = data.get("Data", {}).get("LSJZList", [])
-        if not items:
+        # 防御：Data 字段可能是字符串（如 "data"）而非 dict
+        data_obj = data.get("Data", {})
+        if not isinstance(data_obj, dict):
+            print(f"  ⚠️  fetch_etf_nav_date_lsjz({code}) Data 类型异常: {type(data_obj).__name__}")
             return None
-        return items[0].get("FSRQ") or None
-    except Exception:
+        items = data_obj.get("LSJZList", [])
+        if not items:
+            print(f"  ⚠️  fetch_etf_nav_date_lsjz({code}) LSJZList 为空")
+            return None
+        fsrq = items[0].get("FSRQ") or None
+        if not fsrq:
+            print(f"  ⚠️  fetch_etf_nav_date_lsjz({code}) FSRQ 为空")
+        return fsrq
+    except Exception as e:
+        print(f"  ⚠️  fetch_etf_nav_date_lsjz({code}) 异常: {e}")
         return None
 
 
@@ -360,14 +372,16 @@ def main():
             json.dump(data, f, ensure_ascii=False, indent=2)
         print(f"  💾 {cat}.json  系列数={len(data['series'])}  总规模={data['total_scale']}亿")
 
-    # 更新 meta
+    # 更新 meta：bump generated_at（前端缓存破坏参数）+ 记录 enrich 时间
     meta_fp = data_dir / "meta.json"
     with open(meta_fp, encoding="utf-8") as f:
         meta = json.load(f)
+    meta["generated_at"] = datetime.now().isoformat()
     meta["enriched_at"] = datetime.now().isoformat()
     meta["enriched_fields"] = ["涨跌幅", "规模", "限额", "基金经理", "成立时间"]
     with open(meta_fp, "w", encoding="utf-8") as f:
         json.dump(meta, f, ensure_ascii=False, indent=2)
+    print(f"  ✅ meta.json generated_at bumped -> {meta['generated_at']}")
 
     print("\n✅ 全量丰富完成！")
 

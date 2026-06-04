@@ -138,13 +138,20 @@ def fetch_lsjz(code: str):
     except Exception:
         return None
     if r.status_code != 200:
+        print(f"  ⚠️  fetch_lsjz({code}) HTTP {r.status_code}")
         return None
     m = re.search(r"jQuery\((.*)\)", r.text, re.DOTALL)
     if not m:
+        print(f"  ⚠️  fetch_lsjz({code}) 无法解析 jQuery 包裹")
         return None
     try:
         data = json.loads(m.group(1))
-        items = data.get("Data", {}).get("LSJZList", [])
+        # 防御：Data 字段可能是字符串（如 "data"）而非 dict
+        data_obj = data.get("Data", {})
+        if not isinstance(data_obj, dict):
+            print(f"  ⚠️  fetch_lsjz({code}) Data 类型异常: {type(data_obj).__name__}")
+            return None
+        items = data_obj.get("LSJZList", [])
         if not items:
             return None
         latest = items[0]
@@ -159,7 +166,8 @@ def fetch_lsjz(code: str):
         if chg is not None:
             result["daily_change"] = chg
         return result if result else None
-    except Exception:
+    except Exception as e:
+        print(f"  ⚠️  fetch_lsjz({code}) 解析异常: {e}")
         return None
 
 
@@ -351,7 +359,7 @@ def main():
                     targets.append((cat, sh["code"], sh, missing or ["daily-refresh"], is_etf))
 
     total = len(targets)
-    print(f"🎯 Pass 1: {total} 只基金需处理（场外每日刷新 nav/daily_change + 历史收益补漏；ETF 仅补漏历史收益）")
+    print(f"🎯 Pass 1: {total} 只基金需处理（场外每日刷新 nav/daily_change + 历史收益补漏；ETF 仅补漏历史收益 + nav_date）")
     print(f"   数据源：lsjz API（净值，快）+ pingzhongdata（历史收益，慢）")
     print()
 
@@ -359,7 +367,8 @@ def main():
     fail = 0
     for i, (cat, code, sh, missing, is_etf) in enumerate(targets, 1):
         # Step 1: 用 lsjz API 获取最新净值（快，更新及时）
-        lsjz = fetch_lsjz(code) if not is_etf else None
+        # ETF 也调 lsjz（只取 nav_date，用于修正表头日期；nav/etf_price 前端用 etf_price）
+        lsjz = fetch_lsjz(code)
 
         # Step 2: 用 pingzhongdata 获取历史收益 + 作为净值备选
         pzd = fetch_pzd(code)
@@ -380,14 +389,20 @@ def main():
 
         if merged:
             up = merge_share_data(sh, merged, is_etf=is_etf)
+            # ETF 额外处理：nav_date 需要写入（表头日期），但 nav/daily_change 不覆盖（前端用 etf_price）
+            if is_etf and lsjz:
+                new_nd = lsjz.get("nav_date")
+                cur_nd = sh.get("nav_date", "")
+                if new_nd and (not cur_nd or new_nd >= cur_nd):
+                    sh["nav_date"] = new_nd
+                    if "nav_date" not in up:
+                        up.append("nav_date")
             if up:
                 success += 1
                 tag = "[ETF]" if is_etf else "     "
                 src = "lsjz" if lsjz else "pzd"
                 print(f"  [{i}/{total}] ✅ {tag} {code} [{src}] 补上 {up}")
             else:
-                # 接口正常返回，但所有字段值与 share 当前值一致 → 等价于"已是最新"
-                # 历史日志写作"有返回但无可用字段"，措辞误导（看起来像数据源故障）
                 print(f"  [{i}/{total}] ✓  {code} 数据已是最新（无变化）")
         else:
             fail += 1
@@ -637,6 +652,16 @@ def main():
         with open(fp, "w", encoding="utf-8") as f:
             json.dump(d, f, ensure_ascii=False, indent=2)
         print(f"  ✅ {cat}.json")
+
+    # bump meta.generated_at，使前端缓存破坏参数（?v=）随数据更新而变化
+    meta_fp = data_dir / "meta.json"
+    if meta_fp.exists():
+        with open(meta_fp, encoding="utf-8") as f:
+            meta = json.load(f)
+        meta["generated_at"] = datetime.now().isoformat()
+        with open(meta_fp, "w", encoding="utf-8") as f:
+            json.dump(meta, f, ensure_ascii=False, indent=2)
+        print(f"  ✅ meta.json generated_at bumped -> {meta['generated_at']}")
 
     print()
     print(f"📊 总结：Pass1 成功 {success} / 失败 {fail} / 共 {total}")
