@@ -9,9 +9,9 @@
   <!-- 纯常量配置（COMPANY_BRAND/GROUP_META/ETF_GROUPS 等 ~150 行）抽出为 config.js；
        用普通 script 全局作用域加载（非 ES Module），原内联块 0 改动即可引用。
        ?v= 版本戳防 GitHub Pages 强缓存（改文件后需 bump）。 -->
-  <script src="./js/config.js?v=20260531c"></script>
+  <script src="./js/config.js?v=20260604a"></script>
   <!-- 纯工具函数集（0 副作用 / 0 DOM）抽出为 utils.js；依赖 config.js 的全局常量。 -->
-  <script src="./js/utils.js?v=20260531c"></script>
+  <script src="./js/utils.js?v=20260604a"></script>
   <style>
     body {
       font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -2069,9 +2069,9 @@
   <!-- why 带 ?v=YYYYMMDDx 版本戳：浏览器对 .js 默认强缓存（GitHub Pages 也是），
        修过 JS 但用户访问时仍可能命中旧版本。每次改动 js/ 下文件时同步 bump 这两个版本号即可。 -->
   <script type="module">
-    import { start as startMarketIndices } from './js/market-indices.js?v=20260531c';
-    import { start as startEtfPremium } from './js/etf-premium.js?v=20260531b';
-    import { start as startMarketTrend } from './js/market-trend.js?v=20260531b';
+import { start as startMarketIndices } from './js/market-indices.js?v=20260604a';
+import { start as startEtfPremium } from './js/etf-premium.js?v=20260604a';
+import { start as startMarketTrend } from './js/market-trend.js?v=20260604a';
 
     // 顶部「市场参照系」指标卡 —— 不依赖主表数据，立即启动
     startMarketIndices();

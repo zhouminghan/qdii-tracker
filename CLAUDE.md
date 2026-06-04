@@ -245,6 +245,7 @@ qdii-tracker/
 - 表头/行内出现 `366天`、`持7天起0.5%` 等违反【卖出规则展示统一格式】的文案
 - `GROUP_NOTICE.offshore.active` 红色警告被改成中性色或被删除
 - ETF `nav_date` 在周末/节假日显示为脚本运行当天（应来自 lsjz 真实披露日）
+- **场内ETF最新价日期bug**：周末/节假日脚本运行时，ETF `nav_date` 被错误设置为 `datetime.now()` 而非 lsjz 真实披露日，导致表头显示错误日期（如周六显示"最新价 5.30"）
 - 任何脚本里出现 `share["nav_date"] = datetime.now()` 这种写法（无论场内场外都禁止）
 - `PASSIVE_HOLDINGS_OVERRIDE` 中 `type='active'` 的代码未在 `EXTRA_HOLDINGS_CODES` 中（会导致前端按钮拉到 404）
 - `.fee-tip` 的 `cursor` 被改回 `help`（应为 `pointer`，避免误导 `?` 图标）
