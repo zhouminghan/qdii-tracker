@@ -161,8 +161,15 @@ jobs:
             if [ "$MODE" = "full" ]; then
               git commit -m "chore(data): 完整更新 @ $TS"
             else
-              git commit -m "chore(data): 增量更新 @ $TS"
+            git commit -m "chore(data): 增量更新 @ $TS"
             fi
             git push
             echo "✅ 数据已更新并推送"
+            
+            # 触发网页部署：修改 web/ 目录下的文件以触发 deploy-pages.yml
+            touch web/.deploy-trigger
+            git add web/.deploy-trigger
+            git commit -m "chore(deploy): 触发网页部署"
+            git push
+            echo "✅ 网页部署已触发"
           fi
