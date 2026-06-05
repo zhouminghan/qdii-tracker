@@ -33,6 +33,7 @@ from datetime import datetime
 from pathlib import Path
 
 import requests
+from timezone_utils import beijing_now_iso, beijing_year, beijing_year_start
 
 
 HEADERS = {
@@ -301,7 +302,7 @@ def fetch_ytd(code: str):
         date_col = "日期" if "日期" in df.columns else "净值日期"
         ret_col = "累计收益率"
         df[date_col] = pd.to_datetime(df[date_col])
-        year_start = datetime(datetime.now().year, 1, 1)
+        year_start = beijing_year_start()
         ytd_df = df[df[date_col] >= year_start].sort_values(date_col)
         if len(ytd_df) < 2:
             # 成立不足 1 年或今年没数据点
@@ -658,14 +659,14 @@ def main():
     if meta_fp.exists():
         with open(meta_fp, encoding="utf-8") as f:
             meta = json.load(f)
-        meta["generated_at"] = datetime.now().isoformat()
+        meta["generated_at"] = beijing_now_iso()
         with open(meta_fp, "w", encoding="utf-8") as f:
             json.dump(meta, f, ensure_ascii=False, indent=2)
         print(f"  ✅ meta.json generated_at bumped -> {meta['generated_at']}")
 
     # 同时更新所有数据文件的 generated_at 字段
     print("  🔄 更新数据文件 generated_at...")
-    now_str = datetime.now().isoformat()
+    now_str = beijing_now_iso()
     for cat in ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf"]:
         fp = data_dir / f"{cat}.json"
         if not fp.exists():

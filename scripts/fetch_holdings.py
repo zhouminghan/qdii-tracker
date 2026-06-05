@@ -11,6 +11,7 @@ from pathlib import Path
 
 import akshare as ak
 import pandas as pd
+from timezone_utils import beijing_now_iso, beijing_year
 
 
 def _to_float(v):
@@ -25,7 +26,7 @@ def _to_float(v):
 def fetch_holdings(code: str, year: str = None):
     """抓取单只基金的持仓数据"""
     if year is None:
-        year = str(datetime.now().year)
+        year = str(beijing_year())
     try:
         df = ak.fund_portfolio_hold_em(symbol=code, date=year)
         if len(df) == 0:
@@ -60,7 +61,7 @@ def fetch_holdings(code: str, year: str = None):
             "heavy_count": heavy_count,
             "holdings": latest_holdings,
             "all_quarters": by_quarter,  # 保留完整（未来可用）
-            "fetched_at": datetime.now().isoformat(),
+        "fetched_at": beijing_now_iso(),
         }
     except Exception as e:
         return {"error": str(e)[:200], "code": code}

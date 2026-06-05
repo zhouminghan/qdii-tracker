@@ -17,6 +17,7 @@ from datetime import datetime
 from pathlib import Path
 
 import akshare as ak
+from timezone_utils import beijing_now_iso
 
 
 # ============================================================
@@ -698,7 +699,7 @@ def main():
         print(f"  {label_map[cat]}: {len(by_category[cat]):3d} 个系列（共 {total} 只份额）")
 
     # 保存（增量合并：保留 fetch_nav 等下游脚本写入的运行时字段）
-    now = datetime.now().isoformat()
+    now = beijing_now_iso()
     # 顶层字段策略：scan 负责 generated_at / category / label / series_count /
     # series 这 5 项（每次重写）；其他字段（如 fetch_nav 写入的 total_scale /
     # enriched_at 等）从旧文件继承，避免被覆盖丢失。

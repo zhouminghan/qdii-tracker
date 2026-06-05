@@ -79,6 +79,29 @@ qdii-tracker/
 - `meta.json` 的 `generated_at` 是最新的，但数据文件仍是旧时间戳
 - 用户需要强制刷新浏览器才能看到最新数据
 
+### 时区统一策略
+
+**时区问题背景**：
+- 本地开发环境：北京时间（+8时区）
+- GitHub Actions环境：UTC时区（+0时区）
+- 导致时间戳显示不一致，`generated_at` 字段在自动化更新时显示"提前"8小时
+
+**统一解决方案**：
+- 创建 `scripts/timezone_utils.py` 模块，统一处理北京时间（东八区）
+- 所有脚本导入 `from timezone_utils import beijing_now_iso, beijing_year, beijing_year_start`
+- 替换所有 `datetime.now().isoformat()` 为 `beijing_now_iso()`
+- 替换所有 `datetime.now().year` 为 `beijing_year()`
+- 替换所有 `datetime(year, 1, 1)` 为 `beijing_year_start()`
+
+**依赖要求**：
+- 在 `scripts/requirements.txt` 中添加 `pytz>=2024.1`
+- 确保所有脚本都能正常导入时区工具模块
+
+**自检要求**：
+- 检查所有脚本是否使用统一的北京时间函数
+- 确保 `meta.json` 和所有数据文件的 `generated_at` 字段使用北京时间
+- 验证本地和GitHub Actions环境生成的时间戳一致性
+
 ### `fill_missing.py` 关键策略
 
 - nav 三件套（nav / nav_date / daily_change）**无条件覆盖**（防回退由前置检查保证）

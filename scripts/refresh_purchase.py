@@ -16,6 +16,7 @@ from pathlib import Path
 import akshare as ak
 import pandas as pd
 import requests
+from timezone_utils import beijing_now_iso
 
 
 LSJZ_HEADERS = {
@@ -212,15 +213,15 @@ def main():
     if meta_fp.exists():
         with open(meta_fp, encoding="utf-8") as f:
             meta = json.load(f)
-        meta["generated_at"] = datetime.now().isoformat()
-        meta["purchase_refreshed_at"] = datetime.now().isoformat()
+        meta["generated_at"] = beijing_now_iso()
+        meta["purchase_refreshed_at"] = beijing_now_iso()
         with open(meta_fp, "w", encoding="utf-8") as f:
             json.dump(meta, f, ensure_ascii=False, indent=2)
         print(f"  ✅ meta.json generated_at bumped -> {meta['generated_at']}")
 
     # 同时更新所有数据文件的 generated_at 字段
     print("  🔄 更新数据文件 generated_at...")
-    now_str = datetime.now().isoformat()
+    now_str = beijing_now_iso()
     for cat in ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf"]:
         fp = data_dir / f"{cat}.json"
         if not fp.exists():

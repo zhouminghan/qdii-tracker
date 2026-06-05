@@ -7,14 +7,14 @@
 按规模大的份额作为系列默认展示。
 """
 import json
-import time
 import re
+import time
 from datetime import datetime
 from pathlib import Path
 
 import akshare as ak
-import pandas as pd
 import requests
+from timezone_utils import beijing_now_iso
 
 
 LSJZ_HEADERS = {
@@ -366,7 +366,7 @@ def main():
         data["series"].sort(key=lambda s: -(s.get("series_scale") or 0))
         total_scale = sum(s.get("series_scale") or 0 for s in data["series"])
         data["total_scale"] = round(total_scale, 2)
-        data["enriched_at"] = datetime.now().isoformat()
+        data["enriched_at"] = beijing_now_iso()
 
         with open(data_dir / f"{cat}.json", "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
@@ -376,8 +376,8 @@ def main():
     meta_fp = data_dir / "meta.json"
     with open(meta_fp, encoding="utf-8") as f:
         meta = json.load(f)
-    meta["generated_at"] = datetime.now().isoformat()
-    meta["enriched_at"] = datetime.now().isoformat()
+    meta["generated_at"] = beijing_now_iso()
+    meta["enriched_at"] = beijing_now_iso()
     meta["enriched_fields"] = ["涨跌幅", "规模", "限额", "基金经理", "成立时间"]
     with open(meta_fp, "w", encoding="utf-8") as f:
         json.dump(meta, f, ensure_ascii=False, indent=2)
