@@ -80,27 +80,10 @@ qdii-tracker/
 - 用户需要强制刷新浏览器才能看到最新数据
 
 ### 时区统一策略
-
-**时区问题背景**：
-- 本地开发环境：北京时间（+8时区）
-- GitHub Actions环境：UTC时区（+0时区）
-- 导致时间戳显示不一致，`generated_at` 字段在自动化更新时显示"提前"8小时
-
-**统一解决方案**：
-- 创建 `scripts/timezone_utils.py` 模块，统一处理北京时间（东八区）
-- 所有脚本导入 `from timezone_utils import beijing_now_iso, beijing_year, beijing_year_start`
-- 替换所有 `datetime.now().isoformat()` 为 `beijing_now_iso()`
-- 替换所有 `datetime.now().year` 为 `beijing_year()`
-- 替换所有 `datetime(year, 1, 1)` 为 `beijing_year_start()`
-
-**依赖要求**：
-- 在 `scripts/requirements.txt` 中添加 `pytz>=2024.1`
-- 确保所有脚本都能正常导入时区工具模块
-
-**自检要求**：
-- 检查所有脚本是否使用统一的北京时间函数
-- 确保 `meta.json` 和所有数据文件的 `generated_at` 字段使用北京时间
-- 验证本地和GitHub Actions环境生成的时间戳一致性
+GitHub Actions 跑在 UTC、本地是北京时间，裸 `datetime.now()` 会让 `generated_at` 偏移 8 小时。
+- 统一走 `scripts/timezone_utils.py`：`from timezone_utils import beijing_now_iso, beijing_year, beijing_year_start`
+- 时间戳用 `beijing_now_iso()`、年份用 `beijing_year()`、年初用 `beijing_year_start()`；依赖 `pytz>=2024.1`（已在 requirements.txt）
+- 自检：脚本不得出现裸 `datetime.now()` 写时间戳；`meta.json` 与各数据文件 `generated_at` 均为北京时间
 
 ### `fill_missing.py` 关键策略
 
@@ -276,9 +259,8 @@ qdii-tracker/
 - **增量更新脚本只更新 `meta.json` 的 `generated_at` 而不更新数据文件**（会导致前端缓存失效）
 - **数据文件的 `generated_at` 与 `meta.json` 的时间戳差异过大**（>1分钟视为异常）
 - **前端显示的数据与数据源不一致但 `generated_at` 已更新**（缓存机制失效的典型症状）
-- **ETF nav_date与当前日期严重脱节**（相差超过2个交易日视为异常）
-- **fill_missing.py脚本中ETF nav_date更新逻辑不完整**（缺少对API无返回数据的兜底处理）
-- **交易日计算逻辑错误**（周末/节假日未正确计算上一个交易日）
+- **脚本用 `datetime.now()` 或自行推算"交易日"写 ETF nav_date**（必须只信 lsjz `FSRQ`，失败保留旧值）
+- **ETF nav_date 比 lsjz 真实披露日还新 / 落在非交易日**（说明被造假日期污染）
 - **数据更新后网页显示仍为旧数据**（缓存机制或数据写入问题）
 
 **不报**（伪问题）：
@@ -289,86 +271,27 @@ qdii-tracker/
 
 ---
 
-## 问题预防与调试指南
+## 调试指南
 
-### 数据同步问题排查流程
+### 数据显示与数据源不一致
+1. **缓存**：确认 `meta.json` 与各数据文件 `generated_at` 都已更新（差异 <1 分钟），强刷浏览器（Ctrl+F5）排除缓存
+2. **数据源**：直接看 `web/data/*.json` 是否正确，再看脚本日志确认更新是否执行
+3. **前端**：确认按 `meta.generated_at` 作 `?v=` 版本号取数
 
-**症状**：网页显示的数据与数据源不一致
-
-**排查步骤**：
-1. **检查缓存机制**：
-   - 确认 `meta.json` 和所有数据文件的 `generated_at` 字段都已更新
-   - 检查时间戳差异是否在合理范围内（<1分钟）
-   - 强制刷新浏览器（Ctrl+F5）验证是否为缓存问题
-
-2. **检查数据源**：
-   - 直接查看 `web/data/` 下的JSON文件，确认数据是否正确
-   - 运行相关脚本验证数据更新逻辑
-   - 检查脚本日志，确认更新是否成功执行
-
-3. **检查前端逻辑**：
-   - 验证前端是否正确读取了最新数据
-   - 检查是否有缓存相关的逻辑错误
-
-### ETF nav_date问题专项检查
-
-**常见问题**：
-- ETF nav_date显示为脚本运行日期而非真实披露日
-- 周末/节假日nav_date不更新
-- 表头显示错误日期
-
-**检查要点**：
-1. 确认 `fill_missing.py` 中ETF nav_date更新逻辑正确处理所有情况
-2. 验证交易日计算逻辑是否正确处理周末和节假日
-3. 检查API无返回数据时的兜底处理机制
-4. 确认数据写入逻辑正确保存所有更新
-
-**预防措施**：
-- 定期运行数据一致性检查脚本
-- 建立自动化监控机制，检测数据同步异常
-- 在脚本中添加更严格的错误检查和日志记录
+### ETF nav_date
+- 唯一正确来源：lsjz 真实披露日（`fill_missing.py` ETF 块 / `enrich_data.py::fetch_etf_nav_date_lsjz`），防回退（新 >= 旧才写），**lsjz 失败保留旧值**
+- 周末/节假日 nav_date 停在上一交易日是【正确行为】，不是 bug，**不要"修"它让日期前进**
+- 自检：脚本里不得出现 `datetime.now()` 或自行推算"交易日"来写 nav_date
 
 ---
 
-## Bug修复记录
+## Bug 史 / 反面教材
 
-### 2026-06-06：ETF nav_date 更新机制修复
+### ETF nav_date 被 datetime.now() 造假（2026-06 教训）
+- **现象**：周末/节假日 ETF 表头显示非交易日（如周六"最新价 6.6"）。
+- **错误做法（已废弃）**：`fill_missing.py` 曾在 lsjz 返回空时用 `datetime.now()` 按"中国 weekday"推算"上一交易日"写入 nav_date。但 QDII ETF 跟踪美股、T+1 披露，中美日历不对齐；且推算函数"不考虑节假日"，必然错。
+- **根因误判**：把"周末日期不前进"当成 bug，其实那是【表头净值日期取值】认可的正确行为 —— 用真 bug 去修一个伪 bug，还围绕它打了 5 个补丁 commit。
+- **正确做法（现行）**：ETF nav_date 只信 lsjz `FSRQ`，防回退（新 >= 旧才写），**lsjz 失败保留旧值，绝不造日期**。`fill_missing.py` ETF 块与 `enrich_data.py` 已统一这套口径。
 
-**问题**：
-- 场内ETF的nav_date在周末/节假日被错误设置为脚本运行当天（2026-06-04），而非lsjz真实披露日
-- 导致网页显示"最新价 6.4"（旧日期）而非当前日期
-
-**根因**：
-- `fill_missing.py`脚本中ETF nav_date更新逻辑缺陷
-- 当API没有返回新数据时（周末美股市场不交易），nav_date无法更新
-- 防回退机制过于严格，导致日期停滞不前
-
-**修复方案**：
-1. 修改ETF选择逻辑，确保所有ETF都会被处理（即使历史收益字段已完整）
-2. 改进nav_date更新逻辑，当API没有返回新数据时使用当前日期确保日期前进
-3. 添加兜底机制：如果当前nav_date为空或比今天旧，强制更新到今天
-
-**验证**：
-- 脚本成功处理了233只基金，其中18只ETF更新了nav_date
-- 所有ETF的nav_date从"2026-06-03"更新到"2026-06-04"
-- 数据文件的generated_at时间戳已更新到当前时间
-
-**预防措施**：
-- 建立数据与显示同步的监控机制
-- 定期检查ETF nav_date与当前日期的同步性
-- **脚本更新机制改进**：所有增量更新脚本必须同时更新 `meta.json` 和各数据文件的 `generated_at` 字段
-- **ETF nav_date特殊处理**：ETF的nav_date必须来自lsjz真实披露日，禁止使用`datetime.now()`
-- **缓存机制验证**：定期检查前端显示与数据源的一致性，确保缓存机制正常工作
-
-**自检要求**：
-- **增量更新脚本只更新 `meta.json` 的 `generated_at` 而不更新数据文件**（会导致前端缓存失效）
-- **数据文件的 `generated_at` 与 `meta.json` 的时间戳差异过大**（>1分钟视为异常）
-- **前端显示的数据与数据源不一致但 `generated_at` 已更新**（缓存机制失效的典型症状）
-- **场内ETF最新价日期bug**：周末/节假日脚本运行时，ETF `nav_date` 被错误设置为 `datetime.now()` 而非 lsjz 真实披露日，导致表头显示错误日期（如周六显示"最新价 5.30"）
-- **任何脚本里出现 `share["nav_date"] = datetime.now()` 这种写法**（无论场内场外都禁止）
-
-**代码审查重点**：
-- 检查 `fill_missing.py` 中ETF nav_date更新逻辑是否正确处理API无返回数据的情况
-- 验证ETF nav_date更新条件判断是否包含所有可能的情况
-- 确保交易日计算逻辑正确处理周末和节假日
-- 确认数据写入逻辑正确保存所有更新
+### 双目录分裂（2026-05-08）
+脚本曾同时维护 `data/` 与 `web/data/`，上游简化快照覆盖完整版导致字段丢失 → 已统一为单一 `web/data/`，脚本直接读写该目录，不再维护中间副本。

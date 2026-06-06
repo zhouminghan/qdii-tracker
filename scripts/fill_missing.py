@@ -50,22 +50,6 @@ ETF_SKIP_FIELDS = {"nav", "nav_date", "daily_change"}
 ALWAYS_OVERWRITE_FIELDS = {"nav", "nav_date", "daily_change"}
 
 
-def get_previous_trading_day(date_str: str, days_back: int = 1) -> str:
-    """
-    计算给定日期之前的交易日
-    简化的实现：直接减去指定的天数，不考虑节假日
-    """
-    from datetime import datetime, timedelta
-    
-    try:
-        current_date = datetime.strptime(date_str, "%Y-%m-%d")
-        previous_date = current_date - timedelta(days=days_back)
-        return previous_date.strftime("%Y-%m-%d")
-    except Exception:
-        # 如果日期解析失败，返回传入的日期
-        return date_str
-
-
 def _to_float(v):
     if v is None or v == "" or v == "null":
         return None
@@ -276,8 +260,9 @@ def merge_share_data(share: dict, pzd: dict, is_etf: bool = False):
         "chg_1m", "chg_3m", "chg_6m", "chg_1y",
     ]
     for key in candidate_keys:
-        # 对于ETF，nav_date由主函数专门处理，不在这里处理
-        if is_etf and key in ETF_SKIP_FIELDS and key != "nav_date":
+        # ETF 的 nav/nav_date/daily_change 全部跳过：前端用 etf_price/etf_change_pct，
+        # nav_date 由下方 ETF 专属块按 lsjz 真实披露日处理（防回退、绝不造假日期）
+        if is_etf and key in ETF_SKIP_FIELDS:
             continue
         if skip_nav_fields and key in ALWAYS_OVERWRITE_FIELDS:
             continue
@@ -407,47 +392,18 @@ def main():
 
         if merged:
             up = merge_share_data(sh, merged, is_etf=is_etf)
-            # ETF 额外处理：nav_date 需要写入（表头日期），但 nav/daily_change 不覆盖（前端用 etf_price）
+            # ETF 额外处理：nav_date 只信 lsjz 真实披露日（与 enrich_data.py 同一套口径）
+            # 防回退：只在新日期 >= 已有日期时写入；lsjz 失败时保留原值。
+            # ⚠️ 绝不用 datetime.now() 造日期 —— 周末/节假日 US 市场不交易，
+            #    nav_date 停在上一交易日是【正确行为】（见 CLAUDE.md「表头净值日期取值」）；
+            #    造假日期会让表头显示「最新价 6.6」这类非交易日（历史 bug，已根治）。
             if is_etf:
-                # 优先使用lsjz返回的最新nav_date
                 new_nd = lsjz.get("nav_date") if lsjz else None
                 cur_nd = sh.get("nav_date", "")
-                today = datetime.now().strftime("%Y-%m-%d")
-                weekday = datetime.now().weekday()  # 0=周一, 1=周二, ..., 5=周六, 6=周日
-                
-                # 计算上一个交易日
-                # 如果是周一，上一个交易日是上周五（跳过周六、周日）
-                # 如果是周六/周日，上一个交易日是周五
-                # 如果是周二到周五，上一个交易日是昨天
-                if weekday == 0:  # 周一
-                    last_trading_day = get_previous_trading_day(today, days_back=3)
-                elif weekday >= 5:  # 周六/周日
-                    # 周六是5，距离周五是1天；周日是6，距离周五是2天
-                    last_trading_day = get_previous_trading_day(today, days_back=weekday-4)
-                else:  # 周二到周五
-                    last_trading_day = get_previous_trading_day(today, days_back=1)
-                
-                # 如果API没有返回新数据，使用上一个交易日
-                if not new_nd:
-                    new_nd = last_trading_day
-                
-                # 确保nav_date总是更新到最新交易日
                 if new_nd and (not cur_nd or new_nd >= cur_nd):
                     sh["nav_date"] = new_nd
                     if "nav_date" not in up:
                         up.append("nav_date")
-                # 特殊情况：如果API没有返回新数据，但上一个交易日比nav_date新，也要更新
-                elif not new_nd and cur_nd:
-                    if last_trading_day > cur_nd:
-                        sh["nav_date"] = last_trading_day
-                        if "nav_date" not in up:
-                            up.append("nav_date")
-                # 额外检查：如果API返回了数据但日期比当前nav_date旧，但上一个交易日比当前nav_date新，也要更新
-                elif new_nd and cur_nd and new_nd < cur_nd:
-                    if last_trading_day > cur_nd:
-                        sh["nav_date"] = last_trading_day
-                        if "nav_date" not in up:
-                            up.append("nav_date")
             if up:
                 success += 1
                 tag = "[ETF]" if is_etf else "     "
