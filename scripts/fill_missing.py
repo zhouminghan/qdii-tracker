@@ -662,10 +662,11 @@ def main():
 
     # bump meta.generated_at，使前端缓存破坏参数（?v=）随数据更新而变化
     meta_fp = data_dir / "meta.json"
+    now_str = beijing_now_iso()
     if meta_fp.exists():
         with open(meta_fp, encoding="utf-8") as f:
             meta = json.load(f)
-        meta["generated_at"] = beijing_now_iso()
+        meta["generated_at"] = now_str
         with open(meta_fp, "w", encoding="utf-8") as f:
             json.dump(meta, f, ensure_ascii=False, indent=2)
         print(f"  ✅ meta.json generated_at bumped -> {meta['generated_at']}")
