@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-08T22:11:10.884956+08:00",
+  "generated_at": "2026-06-09T03:31:05.599120+08:00",
   "category": "global_other",
   "label": "板块5 · 全球/其他 QDII（场外）",
   "series_count": 23,
@@ -4384,7 +4384,7 @@
           "fund_type_xq": "QDII-股票",
           "full_name": "创金合信全球芯片产业股票型发起式证券投资基金(QDII)",
           "buy_status": "限大额",
-          "daily_limit": 10000.0,
+          "daily_limit": 1000.0,
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -4462,7 +4462,7 @@
           "fund_type_xq": "QDII-股票",
           "full_name": "创金合信全球芯片产业股票型发起式证券投资基金(QDII)",
           "buy_status": "限大额",
-          "daily_limit": 10000.0,
+          "daily_limit": 1000.0,
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
