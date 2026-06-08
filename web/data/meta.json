@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-08T02:14:45.473500+08:00",
-  "total_scanned": 26927,
+  "generated_at": "2026-06-08T20:01:21.169242+08:00",
+  "total_scanned": 26979,
   "sp500": {
     "series": 7,
     "funds": 25
@@ -10,23 +10,23 @@
     "funds": 60
   },
   "active": {
-    "series": 19,
-    "funds": 53
+    "series": 20,
+    "funds": 57
   },
   "global_index": {
     "series": 2,
     "funds": 5
   },
   "global_other": {
-    "series": 24,
-    "funds": 72
+    "series": 23,
+    "funds": 68
   },
   "etf": {
     "series": 18,
     "funds": 18
   },
-  "excluded_count": 26694,
-  "enriched_at": "2026-06-01T21:32:39.706838",
+  "excluded_count": 26746,
+  "enriched_at": "2026-06-08T20:00:13.397915+08:00",
   "enriched_fields": [
     "涨跌幅",
     "规模",
@@ -34,5 +34,5 @@
     "基金经理",
     "成立时间"
   ],
-  "purchase_refreshed_at": "2026-06-08T02:14:45.473500+08:00"
+  "purchase_refreshed_at": "2026-06-08T20:00:28.866472+08:00"
 }

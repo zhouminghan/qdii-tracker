@@ -1,10 +1,131 @@
 {
-  "generated_at": "2026-06-08T02:14:45.473877+08:00",
+  "generated_at": "2026-06-08T20:00:28.867066+08:00",
   "category": "global_index",
   "label": "板块4 · 全球非美指数（场外·白名单）",
   "series_count": 2,
-  "total_scale": 0,
+  "total_scale": 3.02,
   "series": [
+    {
+      "series_id": "华安__三菱日联日经225ETF联接__global_index",
+      "series_name": "三菱日联日经225ETF联接",
+      "display_name": "华安三菱日联日经225ETF联接",
+      "company": "华安",
+      "company_display": "华安",
+      "category": "global_index",
+      "etf_target": null,
+      "default_share_code": "020712",
+      "series_scale": 2.22,
+      "shares": [
+        {
+          "code": "020712",
+          "name": "华安三菱日联日经225ETF发起式联接(QDII)A",
+          "fund_type": "指数型-海外股票",
+          "share_class": "A",
+          "currency": "人民币",
+          "scale_raw": "2.22亿",
+          "established": "2024-02-07",
+          "manager": "倪斌",
+          "error": "'data'",
+          "nav": 1.4157,
+          "nav_date": "2026-06-05",
+          "daily_change": -1.15,
+          "chg_1m": 11.16,
+          "chg_3m": 16.45,
+          "chg_6m": 23.19,
+          "chg_1y": 47.1,
+          "scale": 2.22,
+          "sale_service_fee": 0.0,
+          "buy_status": "限大额",
+          "daily_limit": 10.0,
+          "mgmt_fee": 0.2,
+          "custody_fee": 0.05,
+          "first_buy_rate": 1.5,
+          "chg_ytd": 25.25,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "fee": "0.06",
+          "nav_cum": 1.4157,
+          "chg_1w": 0.16,
+          "chg_2y": 51.31,
+          "chg_since_inception": 41.57,
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<50万",
+              "rate": 0.6
+            },
+            {
+              "condition": "50万<=买入金额<100万",
+              "rate": 0.3
+            },
+            {
+              "condition": "100万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "free_hold_days": 7
+        },
+        {
+          "code": "020713",
+          "name": "华安三菱日联日经225ETF发起式联接(QDII)C",
+          "fund_type": "指数型-海外股票",
+          "share_class": "C",
+          "currency": "人民币",
+          "scale_raw": "1.26亿",
+          "established": "2024-02-07",
+          "manager": "倪斌",
+          "error": "'data'",
+          "nav": 1.4076,
+          "nav_date": "2026-06-05",
+          "daily_change": -1.15,
+          "chg_1m": 11.13,
+          "chg_3m": 16.38,
+          "chg_6m": 23.03,
+          "chg_1y": 46.73,
+          "scale": 1.26,
+          "sale_service_fee": 0.25,
+          "buy_status": "限大额",
+          "daily_limit": 10.0,
+          "mgmt_fee": 0.2,
+          "custody_fee": 0.05,
+          "first_buy_rate": 0.0,
+          "chg_ytd": 25.11,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "fee": "",
+          "nav_cum": 1.4076,
+          "chg_1w": 0.16,
+          "chg_2y": 50.56,
+          "chg_since_inception": 40.76,
+          "buy_rules": [
+            {
+              "condition": "---",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "free_hold_days": 7
+        }
+      ]
+    },
     {
       "series_id": "华泰柏瑞__中韩半导体ETF联接__global_index",
       "series_name": "中韩半导体ETF联接",
@@ -170,128 +291,7 @@
           "chg_since_inception": 237.1
         }
       ]
-    },
-    {
-      "series_id": "华安__三菱日联日经225ETF联接__global_index",
-      "series_name": "三菱日联日经225ETF联接",
-      "display_name": "华安三菱日联日经225ETF联接",
-      "company": "华安",
-      "company_display": "华安",
-      "category": "global_index",
-      "etf_target": null,
-      "default_share_code": "020712",
-      "series_scale": 2.22,
-      "shares": [
-        {
-          "code": "020712",
-          "name": "华安三菱日联日经225ETF发起式联接(QDII)A",
-          "fund_type": "指数型-海外股票",
-          "share_class": "A",
-          "currency": "人民币",
-          "scale_raw": "2.22亿",
-          "established": "2024-02-07",
-          "manager": "倪斌",
-          "error": "'data'",
-          "nav": 1.4157,
-          "nav_date": "2026-06-05",
-          "daily_change": -1.15,
-          "chg_1m": 11.16,
-          "chg_3m": 16.45,
-          "chg_6m": 23.19,
-          "chg_1y": 47.1,
-          "scale": 2.22,
-          "sale_service_fee": 0.0,
-          "buy_status": "限大额",
-          "daily_limit": 10.0,
-          "mgmt_fee": 0.2,
-          "custody_fee": 0.05,
-          "first_buy_rate": 1.5,
-          "chg_ytd": 25.25,
-          "sell_status": "开放赎回",
-          "buy_min": 10.0,
-          "fee": "0.06",
-          "nav_cum": 1.4157,
-          "chg_1w": 0.16,
-          "chg_2y": 51.31,
-          "chg_since_inception": 41.57,
-          "buy_rules": [
-            {
-              "condition": "0.0万<买入金额<50万",
-              "rate": 0.6
-            },
-            {
-              "condition": "50万<=买入金额<100万",
-              "rate": 0.3
-            },
-            {
-              "condition": "100万<=买入金额",
-              "rate": 1000.0
-            }
-          ],
-          "sell_rules": [
-            {
-              "condition": "0.0天<持有期限<7天",
-              "rate": 1.5
-            },
-            {
-              "condition": "7天<=持有期限",
-              "rate": 0.0
-            }
-          ],
-          "free_hold_days": 7
-        },
-        {
-          "code": "020713",
-          "name": "华安三菱日联日经225ETF发起式联接(QDII)C",
-          "fund_type": "指数型-海外股票",
-          "share_class": "C",
-          "currency": "人民币",
-          "scale_raw": "1.26亿",
-          "established": "2024-02-07",
-          "manager": "倪斌",
-          "error": "'data'",
-          "nav": 1.4076,
-          "nav_date": "2026-06-05",
-          "daily_change": -1.15,
-          "chg_1m": 11.13,
-          "chg_3m": 16.38,
-          "chg_6m": 23.03,
-          "chg_1y": 46.73,
-          "scale": 1.26,
-          "sale_service_fee": 0.25,
-          "buy_status": "限大额",
-          "daily_limit": 10.0,
-          "mgmt_fee": 0.2,
-          "custody_fee": 0.05,
-          "first_buy_rate": 0.0,
-          "chg_ytd": 25.11,
-          "sell_status": "开放赎回",
-          "buy_min": 10.0,
-          "fee": "",
-          "nav_cum": 1.4076,
-          "chg_1w": 0.16,
-          "chg_2y": 50.56,
-          "chg_since_inception": 40.76,
-          "buy_rules": [
-            {
-              "condition": "---",
-              "rate": 0.0
-            }
-          ],
-          "sell_rules": [
-            {
-              "condition": "0.0天<持有期限<7天",
-              "rate": 1.5
-            },
-            {
-              "condition": "7天<=持有期限",
-              "rate": 0.0
-            }
-          ],
-          "free_hold_days": 7
-        }
-      ]
     }
   ],
-  "enriched_at": "2026-06-01T21:32:21.404113"
+  "enriched_at": "2026-06-08T20:00:05.960024+08:00"
 }

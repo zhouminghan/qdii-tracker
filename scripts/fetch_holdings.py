@@ -6,12 +6,12 @@
 """
 import json
 import time
-from datetime import datetime
 from pathlib import Path
 
 import akshare as ak
 import pandas as pd
 from timezone_utils import beijing_now_iso, beijing_year
+from config_loader import get_config
 
 
 def _to_float(v):
@@ -68,6 +68,12 @@ def fetch_holdings(code: str, year: str = None):
 
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="抓取基金持仓（Top10 重仓股）")
+    parser.add_argument("--codes", help="逗号分隔的基金代码，仅处理这些；不传=全量")
+    args = parser.parse_args()
+    only_codes = set(args.codes.split(",")) if args.codes else None
+
     project_root = Path(__file__).parent.parent
     # 统一：直接读写 web/data/（前端消费目录）
     data_dir = project_root / "web" / "data"
@@ -88,14 +94,13 @@ def main():
             if default_code:
                 target_codes.append((default_code, series.get("display_name", "")))
 
-    # 显式白名单：分类上挂在被动指数里、但实际是主动管理 / Smart Beta 的基金
-    # 这类基金会有真实重仓持股可披露，需要单独纳入抓取
-    # why 用白名单不遍历整个 sp500/nasdaq_passive：真被动指数基金的 fund_portfolio_hold_em 多返回 0 行，
-    #     批量空跑只会浪费请求；显式列出"虽分类被动但实为主动"的少数 series 最干净
+    # 显式白名单：从 config/funds.json → passive_override 中 type=active 的项派生
+    # 数据源：config/funds.json → passive_override（前端 PASSIVE_HOLDINGS_OVERRIDE 同源）
+    cfg = get_config()
     EXTRA_HOLDINGS_CODES = [
-        ("096001", "大成标普500等权重指数"),  # Smart Beta，等权再平衡，有真实持股偏离
-        # 注：天弘标普500 (007721) 是 QDII-FOF，akshare fund_portfolio_hold_em 对 FOF 返回 0 行
-        # （FOF 持的是基金/ETF 而非个股），故不纳入白名单避免空跑。文档说明见 CLAUDE.md。
+        (code, info["name"])
+        for code, info in cfg.get("passive_override", {}).items()
+        if info.get("type") == "active"
     ]
     # 去重：白名单代码若已在主动分类里就跳过（防止以后归类调整重复抓）
     existing_codes = {c for c, _ in target_codes}
@@ -104,13 +109,16 @@ def main():
             target_codes.append((code, name))
 
     total = len(target_codes)
-    print(f"🎯 目标：{total} 只主动基金")
+    print(f"🎯 目标：{total} 只主动基金" + (f"（仅 {only_codes}）" if only_codes else ""))
     print(f"📁 输出：{holdings_dir}")
     print()
 
     success = 0
     fail = 0
     for i, (code, name) in enumerate(target_codes, 1):
+        # --codes 过滤：只处理指定代码
+        if only_codes and code not in only_codes:
+            continue
         result = fetch_holdings(code)
         if result and "error" not in result:
             # 保存

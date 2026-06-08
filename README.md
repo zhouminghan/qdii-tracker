@@ -88,7 +88,7 @@ qdii-tracker/
 │   │   ├── market-indices.js     # 顶部市场参照系（指数+汇率指标卡）
 │   │   ├── etf-premium.js        # 场内 ETF 溢价率
 │   │   └── market-trend.js       # 指标卡日 K 走势（复用 trendModal）
-│   ├── tailwind.min.js           # 本地化 Tailwind（避免 CDN 白屏）
+│   │   └── tailwind.min.js       # 本地化 Tailwind（避免 CDN 白屏）
 │   ├── .nojekyll                 # 禁用 GitHub Pages 的 Jekyll 解析
 │   └── data/                     # 前端消费的 JSON（git 追踪）
 │       ├── sp500.json            # 🏦 场外 · 标普500（7 系列）
@@ -137,12 +137,8 @@ qdii-tracker/
 cd scripts
 pip install -r requirements.txt
 
-# 2. 跑一次完整流水线（首次，~10 分钟）
-python3 scan_funds.py
-python3 enrich_data.py
-python3 fill_missing.py
-python3 refresh_purchase.py
-python3 fetch_holdings.py
+# 2. 跑一次完整流水线（推荐统一入口）
+python3 fundctl.py sync
 
 # 3. 启动前端
 cd ../web
@@ -154,8 +150,7 @@ python3 -m http.server 8080
 
 ```bash
 cd scripts
-python3 fill_missing.py        # 更新净值 + YTD + 收益
-python3 refresh_purchase.py    # 申购状态
+python3 fundctl.py refresh
 ```
 
 ---
@@ -184,8 +179,8 @@ python3 refresh_purchase.py    # 申购状态
 
 ```
 QDII 基金入口
-├── FORCE_EXCLUDE_CODES 命中  → exclude
-├── FORCE_INCLUDE_CODES 命中  → 指定分类
+├── force_exclude（config）命中  → exclude
+├── force_include（config）命中  → 指定分类
 ├── 不是 QDII                 → exclude
 ├── 名字命中 EXCLUDE_KEYWORDS → exclude
 ├── 场内代码（159/513/510）   → etf
@@ -203,13 +198,14 @@ QDII 基金入口
 
 ## ➕ 新增基金
 
-**方式 A：白名单自动扫描（推荐 sp500 / nasdaq_passive / active / global_other / etf）**
+**方式 A：统一入口新增（推荐）**
 
-1. 编辑 `scripts/scan_funds.py` 加白名单：
-   - 按代码：`FORCE_INCLUDE_CODES = {"002891": "active"}`
-   - 或按名字：`ACTIVE_WHITELIST_KEYWORDS = ["华夏移动互联"]`
-2. 跑完整流水线：`scan_funds.py` → `enrich_data.py` → `fill_missing.py` → `refresh_purchase.py` → `fetch_holdings.py`
-3. 本地验证 → commit
+```bash
+cd scripts
+python3 fundctl.py add --code 002891 --to active --keyword "华夏移动互联"
+```
+
+> 会自动完成：更新 `config/funds.json` → 扫描 + 单只增量补数（`--codes`）→ 按需补持仓。
 
 **方式 B：手动编辑 JSON（临时补加单只、不想跑完整扫描时）**
 
@@ -232,11 +228,11 @@ A: QDII 净值 T+1 披露，今天看到的通常是前一交易日的净值。A
 A: 跑 `fill_missing.py` 补缺；还是空说明数据源本身没有（新基金，等披露）。
 
 **Q: 想加/删基金？**
-A: 编辑 `scripts/scan_funds.py` 的白/黑名单，重跑完整流水线。
+A: 优先用 `scripts/fundctl.py`（`add` / `move`），需要全量重刷时再用 `sync`。
 
 ---
 
 ## 📜 License
 
 本项目基于 **[MIT License](./LICENSE)** 开源。
-**数据免责**：本项目仅聚合公开数据做展示，不构成投资建议。基金有风险，投资需谨慎。
+**数据免责**：本项目仅聚合公开数据做展示，不构成投资建议。基金有风险，投资需谨慎�

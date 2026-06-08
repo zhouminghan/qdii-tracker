@@ -10,7 +10,6 @@ Fallback 机制（2026-05-30）：
 import json
 import re
 import time
-from datetime import datetime
 from pathlib import Path
 
 import akshare as ak
@@ -72,6 +71,12 @@ def fetch_lsjz_single(code: str):
 
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="轻量申购状态刷新")
+    parser.add_argument("--codes", help="逗号分隔的基金代码，仅处理这些；不传=全量")
+    args = parser.parse_args()
+    only_codes = set(args.codes.split(",")) if args.codes else None
+
     project_root = Path(__file__).parent.parent
     data_dir = project_root / "web" / "data"
 
@@ -127,6 +132,8 @@ def main():
         for series in data["series"]:
             for share in series["shares"]:
                 code = share["code"]
+                if only_codes and code not in only_codes:
+                    continue
                 # 申购数据
                 if code in purchase_map:
                     share.update(purchase_map[code])
@@ -177,6 +184,8 @@ def main():
                     code_to_share[share["code"]] = share
 
             for sh_orig, code in items:
+                if only_codes and code not in only_codes:
+                    continue
                 lsjz = fetch_lsjz_single(code)
                 if not lsjz:
                     fb_fail += 1

@@ -320,6 +320,12 @@ def fetch_ytd(code: str):
 
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="补全缺失字段：净值/YTD/历史收益/费率")
+    parser.add_argument("--codes", help="逗号分隔的基金代码，仅处理这些；不传=全量")
+    args = parser.parse_args()
+    only_codes = set(args.codes.split(",")) if args.codes else None
+
     project_root = Path(__file__).parent.parent
     # 统一：直接读写 web/data/（前端消费目录），不再维护 data/ 副本
     # 历史 bug（2026-05-08）：两目录分裂时，data/ 里的上游简化快照会覆盖 web/data/ 的完整版
@@ -362,13 +368,16 @@ def main():
                     targets.append((cat, sh["code"], sh, missing or ["daily-refresh"], is_etf))
 
     total = len(targets)
-    print(f"🎯 Pass 1: {total} 只基金需处理（场外每日刷新 nav/daily_change + 历史收益补漏；ETF 仅补漏历史收益 + nav_date）")
+    print(f"🎯 Pass 1: {total} 只基金需处理（场外每日刷新 nav/daily_change + 历史收益补漏；ETF 仅补漏历史收益 + nav_date）"
+          + (f"（仅 {only_codes}）" if only_codes else ""))
     print(f"   数据源：lsjz API（净值，快）+ pingzhongdata（历史收益，慢）")
     print()
 
     success = 0
     fail = 0
     for i, (cat, code, sh, missing, is_etf) in enumerate(targets, 1):
+        if only_codes and code not in only_codes:
+            continue
         # Step 1: 用 lsjz API 获取最新净值（快，更新及时）
         # ETF 也调 lsjz（只取 nav_date，用于修正表头日期；nav/etf_price 前端用 etf_price）
         lsjz = fetch_lsjz(code)
@@ -433,9 +442,12 @@ def main():
                    sh.get("first_buy_rate") is None:
                     f10_targets.append((cat, sh["code"], sh))
     total2 = len(f10_targets)
-    print(f"🎯 目标：{total2} 只缺基础信息/费率")
+    print(f"🎯 目标：{total2} 只缺基础信息/费率"
+          + (f"（仅 {only_codes}）" if only_codes else ""))
     success2 = 0
     for i, (cat, code, sh) in enumerate(f10_targets, 1):
+        if only_codes and code not in only_codes:
+            continue
         info = fetch_f10(code)
         if info:
             changed = []
@@ -510,9 +522,12 @@ def main():
                 if not sh.get("buy_rules") and not sh.get("sell_rules"):
                     fee_targets.append((cat, sh["code"], sh))
     total2b = len(fee_targets)
-    print(f"🎯 目标：{total2b} 只缺买卖规则")
+    print(f"🎯 目标：{total2b} 只缺买卖规则"
+          + (f"（仅 {only_codes}）" if only_codes else ""))
     success2b = 0
     for i, (cat, code, sh) in enumerate(fee_targets, 1):
+        if only_codes and code not in only_codes:
+            continue
         try:
             fee_url = f"https://fundf10.eastmoney.com/jjfl_{code}.html"
             fr = requests.get(fee_url, headers=HEADERS, timeout=8)
@@ -615,13 +630,15 @@ def main():
                 if sh.get("chg_since_inception") is None:
                     inception_targets.append((cat, sh["code"], sh))
     total4 = len(inception_targets)
-    print(f"🎯 目标：{total4} 只缺成立来数据")
+    print(f"🎯 目标：{total4} 只缺成立来数据" + (f"（仅 {only_codes}）" if only_codes else ""))
     success4 = 0
     fail4 = 0
     try:
         import akshare as ak
         import pandas as pd
         for i, (cat, code, sh) in enumerate(inception_targets, 1):
+            if only_codes and code not in only_codes:
+                continue
             try:
                 df = ak.fund_open_fund_info_em(symbol=code, indicator="累计收益率走势")
                 if df is not None and len(df) > 0:

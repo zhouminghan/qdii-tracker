@@ -62,10 +62,14 @@ def fetch_etf_nav_date_lsjz(code: str):
 
 def _to_float(v):
     """安全转浮点"""
-    if v is None or (isinstance(v, float) and pd.isna(v)) or v == "":
+    if v is None or v == "":
         return None
     try:
-        return float(v)
+        f = float(v)
+        # NaN 检查（pandas/numpy 的 NaN 无法通过 float() 捕获）
+        if f != f:  # NaN 是唯一不等于自身的值
+            return None
+        return f
     except (ValueError, TypeError):
         return None
 
@@ -258,6 +262,12 @@ def share_sort_key(share: dict) -> tuple:
 
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="丰富基金数据：规模/费率/经理/收益")
+    parser.add_argument("--codes", help="逗号分隔的基金代码，仅处理这些；不传=全量")
+    args = parser.parse_args()
+    only_codes = set(args.codes.split(",")) if args.codes else None
+
     project_root = Path(__file__).parent.parent
     # 统一：直接读写 web/data/（前端消费目录），不再维护 data/ 副本
     data_dir = project_root / "web" / "data"
@@ -286,8 +296,10 @@ def main():
     # Step 3: 逐只拉取基础信息（慢，带进度）
     basic_info_map = {}
     fee_detail_map = {}
-    print("⏳ 开始抓取规模/经理/成立时间 + 费率详情（逐只调用雪球接口）...")
-    for i, code in enumerate(all_codes, 1):
+    filtered_codes = [c for c in all_codes if not only_codes or c in only_codes]
+    print(f"⏳ 开始抓取规模/经理/成立时间 + 费率详情（逐只调用雪球接口）..."
+          + (f"（仅 {len(filtered_codes)} 只）" if only_codes else ""))
+    for i, code in enumerate(filtered_codes, 1):
         basic = fetch_basic_info(code)
         basic_info_map[code] = basic
         # 同时抓费率详情

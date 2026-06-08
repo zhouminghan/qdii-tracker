@@ -19,27 +19,34 @@ qdii-tracker/
 ├── .github/workflows/
 │   ├── deploy-pages.yml      # Pages 部署
 │   └── update-data.yml       # 定时数据更新（增量 / 完整）
+├── config/
+│   └── funds.json            # ⭐ SSOT：所有业务决策配置（分类规则/白名单/品牌色/置顶等）
 ├── scripts/
-│   ├── scan_funds.py         # ① 扫描全量 QDII + 自动分类（会覆盖 JSON！）
-│   ├── enrich_data.py        # ② 补规模/费率/经理
-│   ├── fill_missing.py       # ③ 补净值/YTD/历史收益/费率规则
-│   ├── refresh_purchase.py   # ④ 补申购状态/限额（轻量）
-│   ├── fetch_holdings.py     # ⑤ 抓 Top10 重仓（active + global_other + EXTRA_HOLDINGS_CODES 白名单）
+│   ├── fundctl.py            # ⭐ 统一入口（add/move/refresh/sync/check）
+│   ├── config_loader.py      # 配置加载器（读写 config/funds.json）
+│   ├── gen_frontend_config.py# 前端常量 codegen（funds.json → config.js 派生段）
+│   ├── scan_funds.py         # ① 扫描 QDII + 自动分类（支持 --codes）
+│   ├── enrich_data.py        # ② 补规模/费率/经理（支持 --codes）
+│   ├── fill_missing.py       # ③ 补净值/YTD/历史收益/费率规则（支持 --codes）
+│   ├── refresh_purchase.py   # ④ 补申购状态/限额（支持 --codes）
+│   ├── fetch_holdings.py     # ⑤ 抓 Top10 重仓（支持 --codes，override 从 config 派生）
+│   ├── reclassify_fund.py    # 增量分类调整（更新 config + JSON）
+│   ├── timezone_utils.py     # 北京时间时区工具
 │   └── requirements.txt
 └── web/
     ├── index.html            # 前端骨架（HTML+CSS+主渲染 JS 内联）
-    ├── js/                   # 抽出的 ES Module / 普通脚本（详见禁止事项 1）
-    │   ├── config.js         # 纯常量（GROUP_META / ETF_GROUPS / TREND_RANGES 等）
+    ├── js/
+    │   ├── config.js         # 纯常量（GROUP_META / ETF_GROUPS + codegen 派生段）
     │   ├── utils.js          # 纯工具函数（格式化 / 市场时段 / 卖出规则解析）
     │   ├── idle-scheduler.js # 智能空闲调度（被 indices/etf-premium 共享）
     │   ├── market-indices.js # 顶部 5 张指数+汇率指标卡（实时）
     │   ├── etf-premium.js    # 场内 ETF 溢价率（实时）
-    │   └── market-trend.js   # 点指标卡看日 K 走势（复用 trendModal）
-    ├── tailwind.min.js       # Tailwind 本地化（禁用 CDN）
+    │   ├── market-trend.js   # 点指标卡看日 K 走势（复用 trendModal）
+    │   └── tailwind.min.js   # Tailwind 本地化（禁用 CDN）
     ├── .nojekyll
     └── data/
         ├── sp500.json / nasdaq_passive.json / active.json
-        ├── global_index.json     # 全球非美指数，通过 FORCE_INCLUDE_CODES 纳入 scan
+        ├── global_index.json     # 全球非美指数，通过 config/funds.json force_include 纳入
         ├── global_other.json / etf.json
         ├── meta.json
         └── holdings/{code}.json  # 主动基金持仓
@@ -148,9 +155,9 @@ GitHub Actions 跑在 UTC、本地是北京时间，裸 `datetime.now()` 会让 
 ### 持仓列两态（被动表也可能有内容）
 - **isActive=true**（active / global_other）：渲染 `📊 持仓` 按钮，点击拉 `holdings/{code}.json`
 - **`PASSIVE_HOLDINGS_OVERRIDE` 命中**（前端常量，被动分类下的例外名单）：
-  - `type='active'`：分类被动但实为主动管理（Smart Beta，如 096001 大成标普500等权重）→ 走真实持仓按钮，**`fetch_holdings.py` 的 `EXTRA_HOLDINGS_CODES` 必须同步包含**
+  - `type='active'`：分类被动但实为主动管理（Smart Beta，如 096001 大成标普500等权重）→ 走真实持仓按钮
 - **其他被动指数**：占位 `—`（包括场外联接基金，如 050025 博时标普500ETF联接 —— 跟踪母 ETF 的细节不在列里展示）
-- 维护：`PASSIVE_HOLDINGS_OVERRIDE`（前端）和 `EXTRA_HOLDINGS_CODES`（脚本）成对存在；前者新增 `type='active'` 条目时后者必须同步
+- 维护：`PASSIVE_HOLDINGS_OVERRIDE`（前端）和 `EXTRA_HOLDINGS_CODES`（脚本）均由 `config/funds.json → passive_override` 统一派生（`gen_frontend_config.py` 生成前者，`fetch_holdings.py` 从 config 读取后者），**无需手动同步**
 - `openDetail` 的 series 查找已扩展到全部场外分类（`active / global_other / sp500 / nasdaq_passive / global_index`），新增 override 无需再改查找列表
 
 ### 分类下的"真被动 / 名义被动"扫盲（sp500 / nasdaq_passive）
@@ -197,11 +204,34 @@ GitHub Actions 跑在 UTC、本地是北京时间，裸 `datetime.now()` 会让 
 
 ## 改动规则
 
+### 调整基金分类（⭐ 推荐：增量，~5秒）
+
+统一用 `fundctl move`：
+
+```bash
+python3 scripts/fundctl.py move --keyword "富国全球科技互联网" --from global_other --to active
+```
+
+脚本自动完成：
+1. 从源分类 JSON 中取出目标 series（含完整数据）
+2. 移到目标分类 JSON，更新 category/series_id
+3. 按需补 holdings（移到 active/global_other 时）
+4. 同步更新 `meta.json`
+5. 同步更新 `config/funds.json`（force_include / active_whitelist）
+
+选项：
+- `--no-holdings`：跳过 holdings 抓取
+- `--no-whitelist`：跳过 `config/funds.json` 白名单更新
+
 ### 新增基金
 
-**白名单**（所有分类都走这一路）：编辑 `scan_funds.py` 的 `FORCE_INCLUDE_CODES` 或 `*_WHITELIST_KEYWORDS`，跑完整流水线 ①→②→③→④→⑤。
+统一用 `fundctl add`（配置 + 增量补数 + 可选持仓）：
 
-> `global_index`（全球非美指数）也走白名单：名字会命中 `EXCLUDE_KEYWORDS`（如"日经/韩"），必须通过 `FORCE_INCLUDE_CODES` 纳入。
+```bash
+python3 scripts/fundctl.py add --code 008888 --to active --keyword "某某基金"
+```
+
+> `global_index`（全球非美指数）同样通过 `fundctl add --to global_index` 进入。
 
 **手动**（临时补加单只、不想跑完整扫描时）：
 1. `ak.fund_name_em()` 查同系列代码
@@ -219,14 +249,14 @@ GitHub Actions 跑在 UTC、本地是北京时间，裸 `datetime.now()` 会让 
 - 脚本：直接读写 `web/data/`，不维护中间副本；失败静默降级不中断流水线；逐只调用限速 `time.sleep(0.2~0.3)`；写文件用 `ensure_ascii=False, indent=2`
 - 前端：只改 `web/index.html`
 - **改 `web/js/*.js` 后必须 bump `index.html` 中 `import './js/xxx.js?v=YYYYMMDDx'` 的版本戳**：GitHub Pages / 浏览器对 `.js` 默认强缓存，不 bump 版本号会导致用户访问时仍命中旧版本（典型症状：JS 已修但页面行为不变）
-- 流水线：改/新增脚本时同步更新 `.github/workflows/update-data.yml`，**增量与完整两个 job 都要覆盖**
+- 流水线：改/新增脚本时同步更新 `.github/workflows/update-data.yml`，增量建议调用 `fundctl refresh`，完整建议调用 `fundctl sync`
 
 ---
 
 ## 🚫 禁止事项
 
-1. 不在 `web/` 下创建新文件（除 `web/data/*.json`、`web/js/*.js` 模块化文件、`tailwind.min.js`、`.nojekyll`）
-   - `web/js/` 下当前模块：`market-indices.js`（指数+汇率指标卡）/ `etf-premium.js`（场内 ETF 溢价率）/ `idle-scheduler.js`（智能空闲调度，被前两者共享）/ `market-trend.js`（点击指标卡看日 K 走势，复用 trendModal）
+1. 不在 `web/` 下创建新文件（除 `web/data/*.json`、`web/js/*.js` 模块化文件、`.nojekyll`）
+   - `web/js/` 下当前模块：`market-indices.js`（指数+汇率指标卡）/ `etf-premium.js`（场内 ETF 溢价率）/ `idle-scheduler.js`（智能空闲调度，被前两者共享）/ `market-trend.js`（点击指标卡看日 K 走势，复用 trendModal）/ `config.js`（纯常量+codegen 派生段）/ `tailwind.min.js`（Tailwind 本地化）
    - 新增 ES Module 时必须 ① 在 `index.html` 末尾 `<script type="module">` 块里 import + start，② 用 `?v=YYYYMMDDx` 版本戳防缓存
 2. 不引入 npm / webpack / vite 等构建工具
 3. 前端加载时不调外部 API
@@ -253,9 +283,9 @@ GitHub Actions 跑在 UTC、本地是北京时间，裸 `datetime.now()` 会让 
 - ETF `nav_date` 在周末/节假日显示为脚本运行当天（应来自 lsjz 真实披露日）
 - **场内ETF最新价日期bug**：周末/节假日脚本运行时，ETF `nav_date` 被错误设置为 `datetime.now()` 而非 lsjz 真实披露日，导致表头显示错误日期（如周六显示"最新价 5.30"）
 - 任何脚本里出现 `share["nav_date"] = datetime.now()` 这种写法（无论场内场外都禁止）
-- `PASSIVE_HOLDINGS_OVERRIDE` 中 `type='active'` 的代码未在 `EXTRA_HOLDINGS_CODES` 中（会导致前端按钮拉到 404）
+- `config/funds.json` 中 `passive_override.type='active'` 的代码没有对应 `holdings/{code}.json`（可用 `fundctl check` 自动检查）
 - `.fee-tip` 的 `cursor` 被改回 `help`（应为 `pointer`，避免误导 `?` 图标）
-- `007721 / 007722` 被加进 `PASSIVE_HOLDINGS_OVERRIDE` 或 `EXTRA_HOLDINGS_CODES`（FOF 接口拿不到个股持仓，加了点开就是空 + 脚本空跑）
+- `007721 / 007722` 被加进 `passive_override`（FOF 接口拿不到个股持仓，加了点开就是空 + 脚本空跑）
 - **增量更新脚本只更新 `meta.json` 的 `generated_at` 而不更新数据文件**（会导致前端缓存失效）
 - **数据文件的 `generated_at` 与 `meta.json` 的时间戳差异过大**（>1分钟视为异常）
 - **前端显示的数据与数据源不一致但 `generated_at` 已更新**（缓存机制失效的典型症状）
