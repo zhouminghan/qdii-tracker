@@ -11,7 +11,7 @@
        ?v= 版本戳防 GitHub Pages 强缓存（改文件后需 bump）。 -->
   <script src="./js/config.js?v=20260606a"></script>
   <!-- 纯工具函数集（0 副作用 / 0 DOM）抽出为 utils.js；依赖 config.js 的全局常量。 -->
-  <script src="./js/utils.js?v=20260606a"></script>
+  <script src="./js/utils.js?v=20260609a"></script>
   <style>
     body {
       font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -515,7 +515,7 @@
     let DETAIL_REFRESH_TIMER = null;  // 持仓弹窗自动刷新定时器
 
     // 以下纯函数已抽到 web/js/utils.js（普通 script，全局作用域）：
-    //   shareSort / buyStatusRank / getSortValue / sortSeries
+    //   shareSort / buyStatusRank / getOffshoreDisplayValues / getSortValue / sortSeries
     //   getLogo / adjustColor
     //   todayStr / isTradingDay / fmtMD / getLocalParts / getMarketSession / detectMarketPrefix
     //   cleanCondition / formatHoldDays / parseSellRuleLowerDays
@@ -539,6 +539,7 @@
     async function loadData() {
       const { meta, ver } = await fetchDataVersion();
       STATE.dataVer = ver;
+      STATE.metaGeneratedAt = meta?.generated_at || '';
 
       await Promise.all(DATA_CATEGORIES.map(async (cat) => {
         const res = await fetch(`./data/${cat}.json?v=${ver}`);
@@ -700,10 +701,12 @@
       let latestNavDate = '';
       for (const g of groups) {
         for (const s of g.items) {
-          for (const sh of (s.shares || [])) {
-            const nd = sh.nav_date || '';
-            if (nd && nd > latestNavDate) latestNavDate = nd;
-          }
+          const def = s.shares.find(x => x.code === s.default_share_code) || s.shares[0];
+          if (!def) continue;
+          const nd = isEtf
+            ? (def._live_etf_date || def.nav_date || '')
+            : (getOffshoreDisplayValues(def).navDate || '');
+          if (nd && nd > latestNavDate) latestNavDate = nd;
         }
       }
       if (!latestNavDate) {
@@ -966,14 +969,19 @@
 
       // 外层行展示（大分类）：
       //   · 场内 ETF —— etf_price + etf_change_pct（腾讯行情实时）
-      //   · 场外 QDII —— nav + daily_change（最近一次收盘真实净值）
-      let price, dailyChange;
+      //   · 场外 QDII —— nav + daily_change；15:00~24:00 可能被 _live_* overlay 临时覆盖
+      const offshoreDisp = isEtf ? null : getOffshoreDisplayValues(def);
+      let price, dailyChange, rowNavDate, rowIsLive;
       if (isEtf) {
         price = def.etf_price?.toFixed(3) ?? def.nav?.toFixed(4) ?? '--';
         dailyChange = def.etf_change_pct != null ? def.etf_change_pct : def.daily_change;
+        rowNavDate = def._live_etf_date || def.nav_date || '';
+        rowIsLive = false;
       } else {
-        price = def.nav?.toFixed(4) ?? '--';
-        dailyChange = def.daily_change;
+        price = offshoreDisp?.price != null ? offshoreDisp.price.toFixed(4) : '--';
+        dailyChange = offshoreDisp?.dailyChange ?? null;
+        rowNavDate = offshoreDisp?.navDate || '';
+        rowIsLive = !!offshoreDisp?.isLive;
       }
 
       // 走势 td（所有基金都有）+ 持仓 td
@@ -1018,7 +1026,13 @@
           <td class="py-3 px-3 text-right num">
             <div class="font-medium">${price}</div>
             <div class="text-xs ${dailyChange > 0 ? 'up' : dailyChange < 0 ? 'down' : 'text-stone-400'}">${dailyChange == null ? '--' : (dailyChange > 0 ? '+' : '') + dailyChange.toFixed(2) + '%'}</div>
-            ${(() => { const nd = isEtf ? (def._live_etf_date || def.nav_date) : def.nav_date; if (!nd) return ''; const headerDate = (STATE._navDate || {})[isEtf ? 'etf' : 'offshore'] || ''; if (nd === headerDate) return ''; return `<div class="text-[10px] text-stone-400">${fmtMD(nd)}</div>`; })()}
+            ${(() => {
+              const nd = rowNavDate;
+              if (!nd) return '';
+              const headerDate = (STATE._navDate || {})[isEtf ? 'etf' : 'offshore'] || '';
+              if (nd === headerDate && !rowIsLive) return '';
+              return `<div class="text-[10px] text-stone-400">${fmtMD(nd)}${rowIsLive ? '<span class="ml-1 text-indigo-500">实时</span>' : ''}</div>`;
+            })()}
           </td>
           ${(() => {
             // 「溢价率」独立列：仅 ETF 渲染。和最新价 td 解耦后，可单独排序、视觉上更整齐。
@@ -2057,6 +2071,7 @@
     // why：<script type="module"> 有独立作用域，无法直接访问本块内的 const STATE 等
     window.STATE = STATE;
     window.renderCategory = renderCategory;
+    window.loadData = loadData;
     // 走势 modal 内部状态机 + 渲染函数 —— 让 market-trend.js 复用同一套图表/列表/区间 chips
     // why 不复制一份到 market-trend：DOM 是单例（trendModal 全局只有一个），
     //     状态机也只有一份，复用反而比重复实现更安全（避免两侧渲染逻辑漂移）
@@ -2072,6 +2087,7 @@
 import { start as startMarketIndices } from './js/market-indices.js?v=20260606a';
 import { start as startEtfPremium } from './js/etf-premium.js?v=20260606a';
 import { start as startMarketTrend } from './js/market-trend.js?v=20260606a';
+import { start as startOffshoreLiveNav } from './js/offshore-live-nav.js?v=20260609a';
 
     // 顶部「市场参照系」指标卡 —— 不依赖主表数据，立即启动
     startMarketIndices();
@@ -2086,6 +2102,20 @@ import { start as startMarketTrend } from './js/market-trend.js?v=20260606a';
         // 写回 STATE 后重渲染 ETF 表格（renderCategory 是全局函数）
         if (typeof window.renderCategory === 'function') {
           window.renderCategory('etf');
+        }
+      },
+    });
+
+    // 场外 QDII 主表实时净值 overlay：
+    //   · 仅更新每个系列的 default share（外层行）
+    //   · 子份额展开行仍显示本地静态净值
+    //   · 15:00~24:00 北京时间按节奏轮询；页面隐藏/闲置由 idle-scheduler 自动暂停
+    startOffshoreLiveNav({
+      state: window.STATE,
+      reloadData: () => (typeof window.loadData === 'function' ? window.loadData() : Promise.resolve()),
+      onUpdate: () => {
+        if (typeof window.renderCategory === 'function') {
+          window.renderCategory('offshore');
         }
       },
     });

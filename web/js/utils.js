@@ -44,6 +44,23 @@ function buyStatusRank(st, limit) {
   return 1;
 }
 
+// 场外主表显示值（只用于 default share 外层行）：
+//   · 当 _live_nav_date 严格晚于本地 nav_date 时，主表采用 _live_* overlay
+//   · 否则继续用本地静态 nav/daily_change/nav_date
+function getOffshoreDisplayValues(def) {
+  if (!def) return { price: null, dailyChange: null, navDate: '', isLive: false };
+  const localDate = def.nav_date || '';
+  const liveDate = def._live_nav_date || '';
+  const hasLive = def._live_nav != null;
+  const useLive = !!(hasLive && liveDate && (!localDate || liveDate > localDate));
+  return {
+    price: useLive ? def._live_nav : (def.nav ?? null),
+    dailyChange: useLive ? (def._live_daily_change ?? def.daily_change ?? null) : (def.daily_change ?? null),
+    navDate: useLive ? liveDate : localDate,
+    isLive: useLive,
+  };
+}
+
 // 取 series 上某排序字段的值（series_scale 在 series 本身，其他都是 default share 上的）
 function getSortValue(series, key) {
   if (key === 'series_scale') return series.series_scale ?? null;
@@ -51,10 +68,10 @@ function getSortValue(series, key) {
   if (!def) return null;
   // 净值列点击排序时，排的是「该列对应的当日涨跌幅」
   //   · 场内 ETF —— etf_change_pct（腾讯实时涨跌）
-  //   · 场外     —— daily_change（最近收盘日涨跌）
+  //   · 场外     —— 主表展示值对应的 dailyChange（优先 _live_daily_change）
   if (key === 'nav') {
     if (def.etf_change_pct != null) return def.etf_change_pct;
-    return def.daily_change ?? null;
+    return getOffshoreDisplayValues(def).dailyChange;
   }
   if (key === 'buy_status') return buyStatusRank(def.buy_status, def.daily_limit);
   return def[key] ?? null;

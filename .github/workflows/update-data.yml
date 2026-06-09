@@ -149,40 +149,27 @@ jobs:
 
       # 6. 如果 web/data 有变化，commit 回主分支
       - name: 💾 提交数据变更
-        id: commit
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git add web/data/
           if git diff --cached --quiet; then
             echo "⚠️  数据无变化，跳过提交"
-            echo "changed=false" >> $GITHUB_OUTPUT
           else
             TS=$(date -u '+%Y-%m-%d %H:%M UTC')
             MODE="${{ steps.mode.outputs.mode }}"
             if [ "$MODE" = "full" ]; then
               git commit -m "chore(data): 完整更新 @ $TS"
             else
-              git commit -m "chore(data): 增量更新 @ $TS"
+            git commit -m "chore(data): 增量更新 @ $TS"
             fi
             git push
             echo "✅ 数据已更新并推送"
-            echo "changed=true" >> $GITHUB_OUTPUT
+            
+            # 触发网页部署：修改 web/ 目录下的文件以触发 deploy-pages.yml
+            touch web/.deploy-trigger
+            git add web/.deploy-trigger
+            git commit -m "chore(deploy): 触发网页部署"
+            git push
+            echo "✅ 网页部署已触发"
           fi
-
-      # 7. 通过 workflow_dispatch API 触发部署
-      #    GITHUB_TOKEN 的 push 事件不会触发其他 workflow（GitHub 安全限制），
-      #    必须用 API 显式触发 deploy-pages.yml
-      - name: 🚀 触发网页部署
-        if: steps.commit.outputs.changed == 'true'
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'deploy-pages.yml',
-              ref: 'main'
-            });
-            console.log('✅ 已触发 deploy-pages.yml 部署');
