@@ -9,7 +9,7 @@
   <!-- 纯常量配置（COMPANY_BRAND/GROUP_META/ETF_GROUPS 等 ~150 行）抽出为 config.js；
        用普通 script 全局作用域加载（非 ES Module），原内联块 0 改动即可引用。
        ?v= 版本戳防 GitHub Pages 强缓存（改文件后需 bump）。 -->
-  <script src="./js/config.js?v=20260606a"></script>
+  <script src="./js/config.js?v=20260610a"></script>
   <!-- 纯工具函数集（0 副作用 / 0 DOM）抽出为 utils.js；依赖 config.js 的全局常量。 -->
   <script src="./js/utils.js?v=20260609a"></script>
   <style>
@@ -940,11 +940,34 @@
         amber: { bg: 'bg-amber-50/70', border: 'border-amber-200', text: 'text-amber-900', icon: '⚠️' },
         rose:  { bg: 'bg-rose-50/70',  border: 'border-rose-200',  text: 'text-rose-900',  icon: '🚨' },
       }[cfg.tone] || { bg: 'bg-stone-50', border: 'border-stone-200', text: 'text-stone-700', icon: '📌' };
+      // 计算日限额汇总（仅场外被动分组：sp500 / nasdaq_passive / global_index）
+      let limitSummary = '';
+      if (tab === 'offshore' && ['sp500', 'nasdaq_passive', 'global_index'].includes(filter)) {
+        const src = STATE.data[filter];
+        if (src?.series) {
+          let totalLimit = 0, openCount = 0;
+          for (const s of src.series) {
+            const def = s.shares.find(sh => sh.code === s.default_share_code) || s.shares[0];
+            if (!def?.buy_status) continue;
+            if (def.buy_status.includes('暂停')) continue; // 暂停不计入
+            if (def.daily_limit > 0) { totalLimit += def.daily_limit; }
+            else if (def.buy_status.includes('开放') && !def.daily_limit) { openCount++; }
+          }
+          const parts = [];
+          if (totalLimit > 0) parts.push(`当前每日可购买 ¥${formatLimit(totalLimit)}`);
+          if (openCount > 0) parts.push(`${openCount} 只开放申购`);
+          if (parts.length) limitSummary = parts.join(' + ');
+        }
+      }
       el.classList.remove('hidden');
+      const limitLi = limitSummary
+        ? `<li class="flex gap-2"><span class="flex-shrink-0">💰</span><span><b>${limitSummary}</b></span></li>`
+        : '';
       el.innerHTML = `
         <div class="${palette.bg} border ${palette.border} rounded-xl px-4 py-3 text-xs ${palette.text}">
           <ul class="space-y-1.5 leading-relaxed">
             ${cfg.items.map(it => `<li class="flex gap-2"><span class="flex-shrink-0">${palette.icon}</span><span>${it}</span></li>`).join('')}
+            ${limitLi}
           </ul>
         </div>
       `;
