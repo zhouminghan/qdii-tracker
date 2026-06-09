@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-09T20:38:29.648770+08:00",
+  "generated_at": "2026-06-10T03:25:28.821465+08:00",
   "category": "etf",
   "label": "板块6 · 场内 ETF",
   "series_count": 18,
@@ -214,7 +214,7 @@
           "buy_min": 0.0,
           "mgmt_fee": 0.5,
           "custody_fee": 0.1,
-          "nav_date": "2026-06-05",
+          "nav_date": "2026-06-08",
           "error": "'data'"
         }
       ],
