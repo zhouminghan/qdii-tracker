@@ -1031,7 +1031,7 @@
               if (!nd) return '';
               const headerDate = (STATE._navDate || {})[isEtf ? 'etf' : 'offshore'] || '';
               if (nd === headerDate && !rowIsLive) return '';
-              return `<div class="text-[10px] text-stone-400">${fmtMD(nd)}${rowIsLive ? '<span class="ml-1 text-indigo-500">实时</span>' : ''}</div>`;
+              return `<div class="text-[10px] ${rowIsLive ? 'text-indigo-500' : 'text-stone-400'}">${fmtMD(nd)}</div>`;
             })()}
           </td>
           ${(() => {
@@ -1425,6 +1425,10 @@
     async function fetchPzdHistory(code) {
       // 重用 pingzhongdata 接口；返回 [{date, nav, change}, ...] 升序
       return new Promise((resolve) => {
+        // 清掉旧全局变量，避免上一次成功的数据污染本次请求（尤其本次失败时）
+        try { delete window.Data_netWorthTrend; } catch (_) { window.Data_netWorthTrend = undefined; }
+        try { delete window.fS_code; } catch (_) { window.fS_code = undefined; }
+
         const s = document.createElement('script');
         s.src = `https://fund.eastmoney.com/pingzhongdata/${code}.js?rt=${Date.now()}`;
         s.async = true;
@@ -1432,6 +1436,11 @@
         s.onload = () => {
           clearTimeout(timer);
           s.remove();
+          // 校验 fS_code 与请求 code 一致，防止缓存/CDN 返回错误基金的数据
+          if (window.fS_code && String(window.fS_code) !== String(code)) {
+            resolve(null);
+            return;
+          }
           // pingzhongdata 是脚本直接给全局变量赋值，读 window.Data_netWorthTrend
           const arr = window.Data_netWorthTrend;
           if (!Array.isArray(arr) || !arr.length) { resolve(null); return; }
@@ -2086,8 +2095,8 @@
   <script type="module">
 import { start as startMarketIndices } from './js/market-indices.js?v=20260606a';
 import { start as startEtfPremium } from './js/etf-premium.js?v=20260606a';
-import { start as startMarketTrend } from './js/market-trend.js?v=20260606a';
-import { start as startOffshoreLiveNav } from './js/offshore-live-nav.js?v=20260609a';
+import { start as startMarketTrend } from './js/market-trend.js?v=20260609b';
+import { start as startOffshoreLiveNav } from './js/offshore-live-nav.js?v=20260609b';
 
     // 顶部「市场参照系」指标卡 —— 不依赖主表数据，立即启动
     startMarketIndices();

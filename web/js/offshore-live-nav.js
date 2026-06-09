@@ -1,12 +1,17 @@
 import { schedule } from './idle-scheduler.js';
 
 const OFFSHORE_CATEGORIES = ['sp500', 'nasdaq_passive', 'active', 'global_index', 'global_other'];
-const LIVE_SOURCE = 'lsjz';
+const LIVE_SOURCE_LSJZ = 'lsjz';
+const LIVE_SOURCE_PZD = 'pzd';
 const REQUEST_TIMEOUT_MS = 8000;
 const CONCURRENCY_LIMIT = 5;
 const META_CHECK_INTERVAL_MS = 30 * 60 * 1000;
 const RECHECK_AFTER_NEWER_MS = 90 * 60 * 1000;
 const BOOTSTRAP_RETRY_MS = 15 * 1000;
+
+// 失败退避基数（毫秒）：连续失败 → 15min / 30min / 60min
+const BACKOFF_BASE_MS = 15 * 60 * 1000;
+const BACKOFF_MAX_MS = 60 * 60 * 1000;
 
 const codeStates = new Map();
 
@@ -41,8 +46,13 @@ function inLiveWindow(parts) {
 }
 
 function getIntervalMsByBjTime(parts) {
-  if (!inLiveWindow(parts)) return 30 * 60 * 1000;
-  if (parts.minutes < 21 * 60 + 30) return 10 * 60 * 1000;
+  if (inLiveWindow(parts)) {
+    // 15:00–22:00 每 10 分钟
+    if (parts.minutes < 22 * 60) return 10 * 60 * 1000;
+    // 22:00–24:00 每 60 分钟
+    return 60 * 60 * 1000;
+  }
+  // 非实时窗口：30 分钟（meta.json 检查仍会执行）
   return 30 * 60 * 1000;
 }
 
@@ -80,6 +90,7 @@ function collectOffshoreDefaultShares(state) {
   return out;
 }
 
+// ==================== 数据源 1: lsjz（主选） ====================
 function fetchLsjzLatest(code) {
   return new Promise((resolve) => {
     const cbName = `jsonp_lsjz_${code}_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
@@ -118,6 +129,7 @@ function fetchLsjzLatest(code) {
           nav,
           dailyChange: Number.isFinite(dailyChange) ? dailyChange : null,
           navDate,
+          source: LIVE_SOURCE_LSJZ,
         });
       } catch (_) {
         cleanup();
@@ -142,6 +154,65 @@ function fetchLsjzLatest(code) {
   });
 }
 
+// ==================== 数据源 2: pingzhongdata（兜底） ====================
+// 从 fund.eastmoney.com/pingzhongdata/{code}.js 解析 Data_netWorthTrend 最后一条
+//   · lsjz 对 GitHub Pages 等跨站来源返回 ErrCode=-999，但 pingzhongdata 仍可访问
+//   · 缺点：全量历史 JS 体积大（~100KB），但只取最后一条即可
+//   · 注意：需清掉旧全局变量，避免上次请求的残留数据污染本次
+function fetchPzdLatest(code) {
+  return new Promise((resolve) => {
+    // 清掉上次 pingzhongdata 留下的全局变量，避免 stale 污染
+    try { delete window.Data_netWorthTrend; } catch (_) { window.Data_netWorthTrend = undefined; }
+    try { delete window.fS_code; } catch (_) { window.fS_code = undefined; }
+
+    const s = document.createElement('script');
+    s.async = true;
+    const timer = setTimeout(() => { s.remove(); resolve(null); }, REQUEST_TIMEOUT_MS);
+    s.onload = () => {
+      clearTimeout(timer);
+      s.remove();
+      try {
+        // 校验 fS_code 与请求 code 一致，防止缓存错乱
+        if (window.fS_code && String(window.fS_code) !== String(code)) {
+          resolve(null);
+          return;
+        }
+        const arr = window.Data_netWorthTrend;
+        if (!Array.isArray(arr) || !arr.length) { resolve(null); return; }
+        // 取最后一条（最新净值）
+        const last = arr[arr.length - 1];
+        if (!last || last.y == null) { resolve(null); return; }
+        const nav = parseFloat(last.y);
+        const navDate = last.x ? new Date(last.x) : null;
+        const change = last.equityReturn != null ? parseFloat(last.equityReturn) : null;
+        if (!Number.isFinite(nav) || !navDate || isNaN(navDate.getTime())) {
+          resolve(null);
+          return;
+        }
+        const dateStr = `${navDate.getFullYear()}-${String(navDate.getMonth() + 1).padStart(2, '0')}-${String(navDate.getDate()).padStart(2, '0')}`;
+        resolve({
+          nav,
+          dailyChange: Number.isFinite(change) ? change : null,
+          navDate: dateStr,
+          source: LIVE_SOURCE_PZD,
+        });
+      } catch (_) {
+        resolve(null);
+      }
+    };
+    s.onerror = () => { clearTimeout(timer); s.remove(); resolve(null); };
+    s.src = `https://fund.eastmoney.com/pingzhongdata/${code}.js?rt=${Date.now()}`;
+    document.head.appendChild(s);
+  });
+}
+
+// 主选 lsjz，失败后 pingzhongdata 兜底
+async function fetchLatestNav(code) {
+  const lsjz = await fetchLsjzLatest(code);
+  if (lsjz) return lsjz;
+  return fetchPzdLatest(code);
+}
+
 async function runWithConcurrency(items, limit, worker) {
   if (!items.length) return;
   let idx = 0;
@@ -164,6 +235,8 @@ function getCodeState(code) {
       hasObservedNewer: false,
       settled: false,
       cooldownUntil: 0,
+      consecutiveFailures: 0,
+      backoffUntil: 0,
     };
     codeStates.set(code, st);
   }
@@ -176,6 +249,7 @@ function shouldFetchCode(code, share, nowTs) {
 
   if (st.settled) return false;
 
+  // 已被静态数据追上 → settled
   if (st.hasObservedNewer && st.observedLiveDate && localDate && compareDate(localDate, st.observedLiveDate) >= 0) {
     st.settled = true;
     st.cooldownUntil = Infinity;
@@ -183,6 +257,10 @@ function shouldFetchCode(code, share, nowTs) {
     return false;
   }
 
+  // 指数退避冷却中
+  if (st.backoffUntil > nowTs) return false;
+
+  // 常规冷却
   if (st.cooldownUntil > nowTs) return false;
   return true;
 }
@@ -204,8 +282,10 @@ export function start({ state, onUpdate, reloadData }) {
   let nextMetaCheckAt = 0;
   let nextIntervalOverrideMs = null;
 
+  // meta.json 检查：拆出 live window 限制，全天低频检查
+  // why：GitHub Actions 在凌晨 03:31 更新静态 JSON，如果只在 15:00-24:00 检查，
+  //      长期开着的页面不会自动 reload 新数据
   async function maybeRefreshMeta(nowParts) {
-    if (!inLiveWindow(nowParts)) return false;
     if (nowParts.ts < nextMetaCheckAt) return false;
 
     nextMetaCheckAt = nowParts.ts + META_CHECK_INTERVAL_MS;
@@ -235,14 +315,16 @@ export function start({ state, onUpdate, reloadData }) {
 
   async function tick() {
     const nowParts = bjNowParts();
-    if (!inLiveWindow(nowParts)) return;
 
+    // meta.json 检查：全天运行（不再受 inLiveWindow 限制）
     const reloaded = await maybeRefreshMeta(nowParts);
     if (reloaded) return;
 
+    // 实时净值只在 live window 内拉取
+    if (!inLiveWindow(nowParts)) return;
+
     const defaultShares = collectOffshoreDefaultShares(state);
     if (!defaultShares.size) {
-      // 可能是首屏数据还在 loadData() 中，短间隔补拉，避免直接等到常规 10 分钟档
       nextIntervalOverrideMs = BOOTSTRAP_RETRY_MS;
       return;
     }
@@ -259,8 +341,19 @@ export function start({ state, onUpdate, reloadData }) {
 
     await runWithConcurrency(targets, CONCURRENCY_LIMIT, async ({ code, share }) => {
       const st = getCodeState(code);
-      const live = await fetchLsjzLatest(code);
-      if (!live) return;
+      const live = await fetchLatestNav(code);
+
+      if (!live) {
+        // 失败 → 指数退避
+        st.consecutiveFailures++;
+        const backoffMs = Math.min(BACKOFF_BASE_MS * st.consecutiveFailures, BACKOFF_MAX_MS);
+        st.backoffUntil = Date.now() + backoffMs;
+        return;
+      }
+
+      // 成功 → 重置退避
+      st.consecutiveFailures = 0;
+      st.backoffUntil = 0;
 
       if (live.navDate && compareDate(live.navDate, st.observedLiveDate) > 0) {
         st.observedLiveDate = live.navDate;
@@ -272,7 +365,7 @@ export function start({ state, onUpdate, reloadData }) {
         share._live_nav = live.nav;
         share._live_daily_change = live.dailyChange;
         share._live_nav_date = live.navDate;
-        share._live_nav_source = LIVE_SOURCE;
+        share._live_nav_source = live.source;
         share._live_nav_updated_at = new Date().toISOString();
         st.hasObservedNewer = true;
         st.cooldownUntil = Date.now() + RECHECK_AFTER_NEWER_MS;

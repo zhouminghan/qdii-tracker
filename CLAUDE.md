@@ -41,7 +41,8 @@ qdii-tracker/
     │   ├── idle-scheduler.js # 智能空闲调度（被 indices/etf-premium 共享）
     │   ├── market-indices.js # 顶部 5 张指数+汇率指标卡（实时）
     │   ├── etf-premium.js    # 场内 ETF 溢价率（实时）
-    │   ├── market-trend.js   # 点指标卡看日 K 走势（复用 trendModal）
+    │   ├── offshore-live-nav.js # 场外基金实时净值 overlay（lsjz 主选 + pingzhongdata 兜底）
+    │   ├── market-trend.js   # 点指标卡看日 K 走势（复用 trendModal，push2his + push2 双 host）
     │   └── tailwind.min.js   # Tailwind 本地化（禁用 CDN）
     ├── .nojekyll
     └── data/
@@ -115,7 +116,41 @@ GitHub Actions 跑在 UTC、本地是北京时间，裸 `datetime.now()` 会让 
 
 ## 前端约定
 
-**轻模块化架构**：HTML/CSS/主渲染 JS 仍在 `web/index.html`，通用常量/工具/实时模块抽到 `web/js/*.js`（普通 `<script>` + ES Module 混用，**不引入构建工具**）。页面加载阶段不调外部 API（走势图、指数/汇率指标卡、ETF 溢价率除外，按需加载且受 idle-scheduler 节流）。
+**轻模块化架构**：HTML/CSS/主渲染 JS 仍在 `web/index.html`，通用常量/工具/实时模块抽到 `web/js/*.js`（普通 `<script>` + ES Module 混用，**不引入构建工具**）。页面加载阶段不调外部 API（走势图、指数/汇率指标卡、ETF 溢价率、场外实时净值除外，均按需加载且受 idle-scheduler 节流）。
+
+### 场外实时净值（offshore-live-nav.js）
+
+**数据源双链路**：
+- **主选**：`api.fund.eastmoney.com/f10/lsjz`（JSONP，`LSJZList[0]` 取最新净值）
+- **兜底**：`fund.eastmoney.com/pingzhongdata/{code}.js`（JSONP，`Data_netWorthTrend` 末条取最新净值）
+- why 双链路：`lsjz` 对 GitHub Pages 等跨站 Referer 返回 `ErrCode=-999`，本地正常但远端失败；`pingzhongdata` 对跨站访问更宽容
+
+**调度策略**：
+- 15:00–22:00 每 10 分钟轮询；22:00–24:00 每 60 分钟
+- 非实时窗口不拉净值，但 `meta.json` 全天每 30 分钟检查（不受 `inLiveWindow` 限制）
+- 页面隐藏 / 用户 10 分钟无交互：暂停
+- 用户回到页面：立即 catch-up 一次
+
+**失败退避**：
+- 连续失败 → 指数退避：15 分钟 → 30 分钟 → 60 分钟
+- 成功后重置退避计数
+- 本地静态数据追上实时日期 → 标记 `settled`，不再请求该 code
+
+**overlay 边界**：
+- 仅覆盖场外默认份额（`default_share_code`）的外层行，展开子份额仍用静态 `nav_date`
+- 表头日期 = 当前 tab 所有展示日期最大值（含 overlay `_live_nav_date`），不会"造日期"
+- `_live_nav_source` 标记来源（`'lsjz'` / `'pzd'`），方便调试
+
+### 指标卡日 K 走势（market-trend.js）
+
+**双 host fallback**：
+- 主选 `push2his.eastmoney.com`，失败自动尝试 `push2.eastmoney.com`
+- 两个 host 参数完全一致，只是域名不同
+- why：`push2his` 从 GitHub Pages 等跨站环境偶尔不可达，`push2` 作为备选提高可用性
+
+**pingzhongdata 请求防护**（`fetchPzdHistory` + `offshore-live-nav.js::fetchPzdLatest`）：
+- 请求前清掉旧全局变量 `window.Data_netWorthTrend` / `window.fS_code`，防止 stale 数据污染
+- 校验 `window.fS_code === code`，防止 CDN 缓存返回错误基金的 JS
 
 ### 份额排序（前后端必须一致）
 币种（人民币 < 美元 < 其他）→ 类型（A < C < D < E < F < H < I < 默认 < LOF）
@@ -256,7 +291,7 @@ python3 scripts/fundctl.py add --code 008888 --to active --keyword "某某基金
 ## 🚫 禁止事项
 
 1. 不在 `web/` 下创建新文件（除 `web/data/*.json`、`web/js/*.js` 模块化文件、`.nojekyll`）
-   - `web/js/` 下当前模块：`market-indices.js`（指数+汇率指标卡）/ `etf-premium.js`（场内 ETF 溢价率）/ `idle-scheduler.js`（智能空闲调度，被前两者共享）/ `market-trend.js`（点击指标卡看日 K 走势，复用 trendModal）/ `config.js`（纯常量+codegen 派生段）/ `tailwind.min.js`（Tailwind 本地化）
+   - `web/js/` 下当前模块：`market-indices.js`（指数+汇率指标卡）/ `etf-premium.js`（场内 ETF 溢价率）/ `idle-scheduler.js`（智能空闲调度，被前两者共享）/ `market-trend.js`（点击指标卡看日 K 走势，复用 trendModal，push2his+push2 双 host）/ `offshore-live-nav.js`（场外实时净值 overlay，lsjz+pingzhongdata 双链路）/ `config.js`（纯常量+codegen 派生段）/ `tailwind.min.js`（Tailwind 本地化）
    - 新增 ES Module 时必须 ① 在 `index.html` 末尾 `<script type="module">` 块里 import + start，② 用 `?v=YYYYMMDDx` 版本戳防缓存
 2. 不引入 npm / webpack / vite 等构建工具
 3. 前端加载时不调外部 API
@@ -325,3 +360,12 @@ python3 scripts/fundctl.py add --code 008888 --to active --keyword "某某基金
 
 ### 双目录分裂（2026-05-08）
 脚本曾同时维护 `data/` 与 `web/data/`，上游简化快照覆盖完整版导致字段丢失 → 已统一为单一 `web/data/`，脚本直接读写该目录，不再维护中间副本。
+
+### 远端实时接口被封锁（2026-06-09 教训）
+- **现象**：本地打开页面实时净值/指标卡日 K 正常，GitHub Pages 远端不行。
+- **根因**：不是 GitHub Pages 服务器 IP 被封（纯静态页面，浏览器直连 API）。而是东方财富 `api.fund.eastmoney.com/f10/lsjz` 和 `push2his.eastmoney.com` 对跨站 Referer（`zhouminghan.github.io`）返回空数据 / 拒绝连接。Python 脚本可以伪造 Referer，浏览器 JS 不行。
+- **区分**：走势图能拉到是因为走 `fund.eastmoney.com/pingzhongdata/{code}.js`（不受限），指标卡日 K 拉不到是因为走 `push2his.eastmoney.com`（受限）。两者不是同一数据源。
+- **修复（现行）**：
+  - 实时净值：`lsjz`（主选）→ `pingzhongdata`（兜底）双链路
+  - 指标卡日 K：`push2his`（主选）→ `push2`（兜底）双 host
+  - 两者仍有偶发不可用可能，后续如需彻底解决需加 Cloudflare Worker 代理
