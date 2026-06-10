@@ -39,8 +39,9 @@ qdii-tracker/
     │   ├── config.js         # 纯常量（GROUP_META / ETF_GROUPS + codegen 派生段）
     │   ├── utils.js          # 纯工具函数（格式化 / 市场时段 / 卖出规则解析）
     │   ├── idle-scheduler.js # 智能空闲调度（被 indices/etf-premium 共享）
+    │   ├── bj-time.js        # 北京时间公共工具（bjNowParts，被 etf-premium/offshore-live-nav 共用）
     │   ├── market-indices.js # 顶部 5 张指数+汇率指标卡（实时）
-    │   ├── etf-premium.js    # 场内 ETF 溢价率（实时）
+    │   ├── etf-premium.js    # 场内 ETF 溢价率（实时，盘中3档分时 + 收盘settle-once）
     │   ├── offshore-live-nav.js # 场外基金实时净值 overlay（lsjz 主选 + pingzhongdata 兜底）
     │   ├── market-trend.js   # 点指标卡看日 K 走势（复用 trendModal，push2his + push2 双 host）
     │   └── tailwind.min.js   # Tailwind 本地化（禁用 CDN）
@@ -296,7 +297,7 @@ python3 scripts/fundctl.py add --code 008888 --to active --keyword "某某基金
 ## 🚫 禁止事项
 
 1. 不在 `web/` 下创建新文件（除 `web/data/*.json`、`web/js/*.js` 模块化文件、`.nojekyll`）
-   - `web/js/` 下当前模块：`market-indices.js`（指数+汇率指标卡）/ `etf-premium.js`（场内 ETF 溢价率）/ `idle-scheduler.js`（智能空闲调度，被前两者共享）/ `market-trend.js`（点击指标卡看日 K 走势，复用 trendModal，push2his+push2 双 host）/ `offshore-live-nav.js`（场外实时净值 overlay，lsjz+pingzhongdata 双链路）/ `config.js`（纯常量+codegen 派生段）/ `tailwind.min.js`（Tailwind 本地化）
+   - `web/js/` 下当前模块：`market-indices.js`（指数+汇率指标卡）/ `etf-premium.js`（场内 ETF 溢价率，盘中3档分时+收盘settle-once）/ `idle-scheduler.js`（智能空闲调度，被前两者共享）/ `bj-time.js`（北京时间公共工具，bjNowParts）/ `market-trend.js`（点击指标卡看日 K 走势，复用 trendModal，push2his+push2 双 host）/ `offshore-live-nav.js`（场外实时净值 overlay，lsjz+pingzhongdata 双链路，5档分时）/ `config.js`（纯常量+codegen 派生段）/ `tailwind.min.js`（Tailwind 本地化）
    - 新增 ES Module 时必须 ① 在 `index.html` 末尾 `<script type="module">` 块里 import + start，② 用 `?v=YYYYMMDDx` 版本戳防缓存
 2. 不引入 npm / webpack / vite 等构建工具
 3. 前端加载时不调外部 API

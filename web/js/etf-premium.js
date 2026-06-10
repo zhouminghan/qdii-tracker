@@ -102,14 +102,17 @@ function collectEtfCodes(state) {
 }
 
 // 把拉到的数据写回 STATE，供 renderCategory('etf') 使用
-function writeBack(state, dataMap) {
+function writeBack(state, dataMap, bjParts) {
   const series = state?.data?.etf?.series || [];
   for (const s of series) {
     for (const sh of (s.shares || [])) {
       const live = dataMap[sh.code];
       if (live) {
         // 实时值优先于静态值
-        if (isFinite(live.price)) sh.etf_price = live.price;
+        if (isFinite(live.price)) {
+          sh.etf_price = live.price;
+          sh._live_etf_date = bjParts.date; // 实时价格对应的北京时间日期
+        }
         if (isFinite(live.changePct)) sh.etf_change_pct = live.changePct;
         if (live.nav != null) sh.etf_iopv = live.nav;        // 单位净值（IOPV 近似）
         if (live.premium != null) sh.etf_premium = live.premium;  // 溢价率 %
@@ -119,25 +122,76 @@ function writeBack(state, dataMap) {
 }
 
 import { schedule } from './idle-scheduler.js';
+import { bjNowParts } from './bj-time.js';
+
+// ── ETF 分时段限频 ──
+// 09:30-11:30  60s   盘中上午
+// 11:30-13:00  120s  午休（价格冻结）
+// 13:00-15:00  60s   盘中下午
+// 15:00 后     settle-once（拉到收盘价即停，未拉到退避重试）
+
+function getEtfIntervalMs(parts, etfSettled, postCloseRetries) {
+  if (etfSettled) return 24 * 60 * 60 * 1000; // 已 settle，24h 后再检查（实际靠 maybeResetSettled 重置）
+  const m = parts.minutes;
+  if (m >= 15 * 60) {
+    // 15:00 后：退避重试 60s → 120s → 300s → 600s
+    const backoff = [60, 120, 300, 600];
+    return (backoff[Math.min(postCloseRetries, backoff.length - 1)] || 600) * 1000;
+  }
+  if (m >= 13 * 60) return 60 * 1000;         // 13:00-15:00 盘中
+  if (m >= 11.5 * 60) return 120 * 1000;       // 11:30-13:00 午休
+  if (m >= 9.5 * 60) return 60 * 1000;         // 09:30-11:30 盘中
+  return 5 * 60 * 1000;                        // 09:30 前：5min 等待开盘
+}
 
 /**
  * 启动 ETF 实时溢价率拉取。
  * @param {object} options
  * @param {object} options.state          全局 STATE 对象（必须包含 data.etf）
  * @param {function} options.onUpdate     拉取完成后调用，通常是 () => renderCategory('etf')
- * @param {number}  [options.intervalMs]  轮询间隔，默认 60s
  */
-export function start({ state, onUpdate, intervalMs = 60 * 1000 }) {
-  async function tick() {
-    const codes = collectEtfCodes(state);
-    if (!codes.length) return;
-    const map = await fetchByJsonp(codes);
-    if (Object.keys(map).length) {
-      writeBack(state, map);
-      try { onUpdate && onUpdate(); } catch (e) {}
+export function start({ state, onUpdate }) {
+  let etfSettled = false;
+  let postCloseRetries = 0;
+  let lastSettledDate = ''; // 记录 settle 时的日期，次日重置
+
+  // 检查是否需要重置 settled 状态（新交易日 09:00）
+  function maybeResetSettled(parts) {
+    if (lastSettledDate && parts.date !== lastSettledDate && parts.minutes >= 9 * 60) {
+      etfSettled = false;
+      postCloseRetries = 0;
+      lastSettledDate = '';
     }
   }
+
+  async function tick() {
+    const parts = bjNowParts();
+    maybeResetSettled(parts);
+
+    if (etfSettled) return;
+
+    const codes = collectEtfCodes(state);
+    if (!codes.length) return;
+
+    const map = await fetchByJsonp(codes);
+    if (Object.keys(map).length) {
+      writeBack(state, map, parts);
+      try { onUpdate && onUpdate(); } catch (e) {}
+
+      // 15:00 后拉到数据 → settle
+      if (parts.minutes >= 15 * 60 && !etfSettled) {
+        etfSettled = true;
+        lastSettledDate = parts.date;
+      }
+    }
+
+    // 15:00 后未拉到数据 → 退避计数
+    if (parts.minutes >= 15 * 60 && !etfSettled) {
+      postCloseRetries++;
+    }
+  }
+
   // 由 idle-scheduler 接管：标签页隐藏 / 用户长时间无操作时自动暂停，避免空轮询
   // firstDelayMs=1500 —— 给主表 loadData() 留时间把 etf.json 装进 STATE
-  schedule(tick, () => intervalMs, { firstDelayMs: 1500 });
+  schedule(tick, () => getEtfIntervalMs(bjNowParts(), etfSettled, postCloseRetries), { firstDelayMs: 1500 });
 }

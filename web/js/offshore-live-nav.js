@@ -1,4 +1,5 @@
 import { schedule } from './idle-scheduler.js';
+import { bjNowParts } from './bj-time.js';
 
 const OFFSHORE_CATEGORIES = ['sp500', 'nasdaq_passive', 'active', 'global_index', 'global_other'];
 const LIVE_SOURCE_LSJZ = 'lsjz';
@@ -14,32 +15,6 @@ const BACKOFF_BASE_MS = 15 * 60 * 1000;
 const BACKOFF_MAX_MS = 60 * 60 * 1000;
 
 const codeStates = new Map();
-
-function bjNowParts() {
-  const fmt = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Shanghai',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hourCycle: 'h23',
-  });
-  const parts = fmt.formatToParts(new Date());
-  const get = (t) => parts.find(p => p.type === t)?.value || '';
-  const year = get('year');
-  const month = get('month');
-  const day = get('day');
-  const hh = parseInt(get('hour'), 10) || 0;
-  const mm = parseInt(get('minute'), 10) || 0;
-  return {
-    date: `${year}-${month}-${day}`,
-    hh,
-    mm,
-    minutes: hh * 60 + mm,
-    ts: Date.now(),
-  };
-}
 
 function inLiveWindow(parts) {
   // 15:00~次日06:00，由 settled 机制自然终止（拉到新净值后停止）

@@ -2117,9 +2117,9 @@
        修过 JS 但用户访问时仍可能命中旧版本。每次改动 js/ 下文件时同步 bump 这两个版本号即可。 -->
   <script type="module">
 import { start as startMarketIndices } from './js/market-indices.js?v=20260606a';
-import { start as startEtfPremium } from './js/etf-premium.js?v=20260606a';
+import { start as startEtfPremium } from './js/etf-premium.js?v=20260610a';
 import { start as startMarketTrend } from './js/market-trend.js?v=20260609b';
-import { start as startOffshoreLiveNav } from './js/offshore-live-nav.js?v=20260609b';
+import { start as startOffshoreLiveNav } from './js/offshore-live-nav.js?v=20260610a';
 
     // 顶部「市场参照系」指标卡 —— 不依赖主表数据，立即启动
     startMarketIndices();
@@ -2141,7 +2141,7 @@ import { start as startOffshoreLiveNav } from './js/offshore-live-nav.js?v=20260
     // 场外 QDII 主表实时净值 overlay：
     //   · 仅更新每个系列的 default share（外层行）
     //   · 子份额展开行仍显示本地静态净值
-    //   · 15:00~24:00 北京时间按节奏轮询；页面隐藏/闲置由 idle-scheduler 自动暂停
+    //   · 15:00~次日06:00 北京时间按节奏轮询；页面隐藏/闲置由 idle-scheduler 自动暂停
     startOffshoreLiveNav({
       state: window.STATE,
       reloadData: () => (typeof window.loadData === 'function' ? window.loadData() : Promise.resolve()),

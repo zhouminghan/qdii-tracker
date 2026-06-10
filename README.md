@@ -88,9 +88,10 @@ qdii-tracker/
 │   │   ├── config.js             # 纯常量（COMPANY_BRAND/GROUP_META 等）
 │   │   ├── utils.js              # 纯工具函数（0 副作用 / 0 DOM）
 │   │   ├── idle-scheduler.js     # 智能空闲调度器（标签页隐藏/无交互即暂停）
+│   │   ├── bj-time.js            # 北京时间公共工具（bjNowParts，多模块共用）
 │   │   ├── market-indices.js     # 顶部市场参照系（指数+汇率指标卡）
-│   │   ├── etf-premium.js        # 场内 ETF 溢价率
-│   │   ├── offshore-live-nav.js  # 场外实时净值 overlay（lsjz + pingzhongdata 双链路）
+│   │   ├── etf-premium.js        # 场内 ETF 溢价率（盘中3档分时 + 收盘settle-once）
+│   │   ├── offshore-live-nav.js  # 场外实时净值 overlay（5档分时，lsjz + pingzhongdata 双链路）
 │   │   └── market-trend.js       # 指标卡日 K 走势（push2his + push2 双 host fallback）
 │   │   └── tailwind.min.js       # 本地化 Tailwind（避免 CDN 白屏）
 │   ├── .nojekyll                 # 禁用 GitHub Pages 的 Jekyll 解析
