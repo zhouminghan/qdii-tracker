@@ -42,17 +42,23 @@ function bjNowParts() {
 }
 
 function inLiveWindow(parts) {
-  return parts.minutes >= 15 * 60 && parts.minutes < 24 * 60;
+  // 15:00~次日06:00，由 settled 机制自然终止（拉到新净值后停止）
+  return parts.minutes >= 15 * 60 || parts.minutes < 6 * 60;
 }
 
 function getIntervalMsByBjTime(parts) {
   if (inLiveWindow(parts)) {
-    // 15:00–22:00 每 10 分钟
-    if (parts.minutes < 22 * 60) return 10 * 60 * 1000;
-    // 22:00–24:00 每 60 分钟
-    return 60 * 60 * 1000;
+    const m = parts.minutes;
+    // 15:00–17:30 低频待命（美股数据尚未处理，净值几无可能已出）
+    if (m < 17.5 * 60) return 15 * 60 * 1000;
+    // 17:30–22:00 高频窗口（净值披露核心时段）
+    if (m < 22 * 60) return 10 * 60 * 1000;
+    // 22:00–00:00 降频（大部分已出，少数延迟）
+    if (m < 24 * 60) return 20 * 60 * 1000;
+    // 00:00–06:00 极低频（深夜，仅防 Actions 延迟推送）
+    return 30 * 60 * 1000;
   }
-  // 非实时窗口：30 分钟（meta.json 检查仍会执行）
+  // 06:00–15:00 非实时窗口：30 分钟（仅 meta.json 检查）
   return 30 * 60 * 1000;
 }
 

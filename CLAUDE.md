@@ -125,9 +125,13 @@ GitHub Actions 跑在 UTC、本地是北京时间，裸 `datetime.now()` 会让 
 - **兜底**：`fund.eastmoney.com/pingzhongdata/{code}.js`（JSONP，`Data_netWorthTrend` 末条取最新净值）
 - why 双链路：`lsjz` 对 GitHub Pages 等跨站 Referer 返回 `ErrCode=-999`，本地正常但远端失败；`pingzhongdata` 对跨站访问更宽容
 
-**调度策略**：
-- 15:00–22:00 每 10 分钟轮询；22:00–24:00 每 60 分钟
-- 非实时窗口不拉净值，但 `meta.json` 全天每 30 分钟检查（不受 `inLiveWindow` 限制）
+**调度策略**（5 档分时 + settled 自然终止）：
+- 15:00–17:30 每 15 分钟（低频待命，美股数据尚未处理）
+- 17:30–22:00 每 10 分钟（高频窗口，净值披露核心时段）
+- 22:00–00:00 每 20 分钟（降频，大部分已出）
+- 00:00–06:00 每 30 分钟（极低频，仅防 Actions 延迟推送）
+- 06:00–15:00 不拉净值，`meta.json` 每 30 分钟检查（不受 `inLiveWindow` 限制）
+- `inLiveWindow()` 覆盖 15:00~次日06:00（无硬截止），settled 后完全停止
 - 页面隐藏 / 用户 10 分钟无交互：暂停
 - 用户回到页面：立即 catch-up 一次
 
