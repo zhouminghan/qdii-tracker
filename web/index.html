@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>US Fund Tracker · 美股基金看板</title>
   <link rel="icon" href="data:,">
+  <!-- 防闪烁：在首屏渲染前读取 localStorage / 系统偏好，立即应用 dark class（必须在 Tailwind CDN 之前） -->
+  <script>(function(){try{var t=localStorage.getItem('qdii-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}})();</script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' }</script>
-  <!-- 防闪烁：在首屏渲染前读取 localStorage / 系统偏好，立即应用 dark class -->
-  <script>(function(){try{var t=localStorage.getItem('qdii-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}})();</script>
   <!-- 纯常量配置（COMPANY_BRAND/GROUP_META/ETF_GROUPS 等 ~150 行）抽出为 config.js；
        用普通 script 全局作用域加载（非 ES Module），原内联块 0 改动即可引用。
        ?v= 版本戳防 GitHub Pages 强缓存（改文件后需 bump）。 -->
@@ -166,13 +167,13 @@
     html { transition: background-color 0.2s, color 0.2s; }
     html.dark body { background: #1c1917; color: #f5f5f4; }
 
-    /* Badge 深色：统一 stone-800 底 + 降饱和彩色字 */
-    html.dark .badge-open   { background: #292524; color: #5fb38a; border-color: #44403c; }
-    html.dark .badge-limit  { background: #292524; color: #c4a35a; border-color: #44403c; }
-    html.dark .badge-paused { background: #292524; color: #c47171; border-color: #44403c; }
-    html.dark .badge-qdii   { background: #292524; color: #8a96c8; border-color: #44403c; }
-    html.dark .badge-usd    { background: #292524; color: #c4a35a; border-color: #44403c; }
-    html.dark .badge-cny    { background: #292524; color: #8a919c; border-color: #44403c; }
+    /* Badge 深色：同色系深底 + 亮字 + 同色边框，保留色相语义 */
+    html.dark .badge-open   { background: rgba(22,101,52,0.25); color: #86efac; border-color: rgba(22,101,52,0.4); }
+    html.dark .badge-limit  { background: rgba(146,64,14,0.25); color: #fcd34d; border-color: rgba(146,64,14,0.4); }
+    html.dark .badge-paused { background: rgba(127,29,29,0.25); color: #fca5a5; border-color: rgba(127,29,29,0.4); }
+    html.dark .badge-qdii   { background: rgba(55,48,163,0.25); color: #a5b4fc; border-color: rgba(55,48,163,0.4); }
+    html.dark .badge-usd    { background: rgba(146,64,14,0.25); color: #fcd34d; border-color: rgba(146,64,14,0.4); }
+    html.dark .badge-cny    { background: rgba(41,37,36,0.5); color: #d6d3d1; border-color: #44403c; }
 
     /* Tab active 深色：不用白底突兀，用 stone-700 柔和突出 */
     html.dark .tab-active { background: #44403c; color: #e7e5e4; }
@@ -295,7 +296,7 @@
     <!-- 基金知识说明（可折叠，按 Tab 动态显示） -->
     <div class="mt-4" id="knowledge-cards">
       <!-- 卡片 1：场内 vs 场外（仅在场内 ETF Tab 显示） -->
-      <details class="bg-sky-50 dark:bg-stone-800 border border-sky-200 dark:border-stone-700 rounded-xl overflow-hidden" id="card-onshore-offshore" data-for-tabs="etf" open>
+      <details class="bg-sky-50 dark:bg-stone-900/50 border border-sky-200 dark:border-stone-700 rounded-xl overflow-hidden" id="card-onshore-offshore" data-for-tabs="etf" open>
         <summary class="cursor-pointer px-5 py-3 text-sm font-medium text-sky-900 dark:text-stone-300 hover:bg-sky-100 dark:hover:bg-stone-700 transition flex items-center gap-2 select-none">
           <span>🏛️</span>
           <span>场内 ETF vs 场外基金：有什么区别？</span>
@@ -347,20 +348,20 @@
           </table>
 
           <!-- 附带说明：ETF 联接（折中方案） -->
-          <div class="mt-3 bg-amber-50 dark:bg-stone-800 border border-amber-200 dark:border-stone-700 rounded-lg p-3">
-            <div class="text-xs font-medium text-amber-900 dark:text-stone-300 mb-1">💎 第三种选择：ETF 联接基金</div>
+          <div class="mt-3 bg-amber-50 dark:bg-stone-900/50 border border-amber-200 dark:border-stone-700 rounded-lg p-3">
+            <div class="text-xs font-medium text-amber-900 dark:text-stone-200 mb-1">💎 第三种选择：ETF 联接基金</div>
             <p class="text-xs text-amber-800 dark:text-stone-300 leading-relaxed">
               本质是<b>场外基金</b>（支付宝可买、可定投），但 ≥90% 资产投向对应的<b>场内 ETF</b> —— 等于"用场外的方式享受 ETF 的低费率，且无溢价问题"。申购费电商 1 折后常低至 0.1% 左右。
-              <span class="text-amber-900 dark:text-stone-200 font-medium">多数人的最佳选择。</span>
+              <span class="text-amber-900 dark:text-stone-100 font-medium">多数人的最佳选择。</span>
             </p>
           </div>
 
           <!-- 决策小贴士 -->
           <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-            <div class="bg-emerald-50 dark:bg-stone-800 border border-emerald-100 dark:border-stone-700 rounded-lg px-3 py-2 text-emerald-800 dark:text-stone-300">
+            <div class="bg-emerald-50 dark:bg-stone-900/50 border border-emerald-100 dark:border-stone-700 rounded-lg px-3 py-2 text-emerald-800 dark:text-stone-300">
               🧘 <b>不想开股票账户</b> → 支付宝买「ETF 联接基金」，定投最省心。
             </div>
-            <div class="bg-sky-50 dark:bg-stone-800 border border-sky-100 dark:border-stone-700 rounded-lg px-3 py-2 text-sky-800 dark:text-stone-300">
+            <div class="bg-sky-50 dark:bg-stone-900/50 border border-sky-100 dark:border-stone-700 rounded-lg px-3 py-2 text-sky-800 dark:text-stone-300">
               ⚡ <b>有股票账户</b> → 场内 ETF 更划算，但注意 QDII 溢价时不要高位买入。
             </div>
           </div>
@@ -368,7 +369,7 @@
       </details>
 
       <!-- 卡片 2：A/C/D/E/F/I 决策对照表（仅在场外 Tab 显示） -->
-      <details class="bg-amber-50 dark:bg-stone-800 border border-amber-200 dark:border-stone-700 rounded-xl overflow-hidden mt-3" id="card-share-class" data-for-tabs="offshore" open>
+      <details class="bg-amber-50 dark:bg-stone-900/50 border border-amber-200 dark:border-stone-700 rounded-xl overflow-hidden mt-3" id="card-share-class" data-for-tabs="offshore" open>
         <summary class="cursor-pointer px-5 py-3 text-sm font-medium text-amber-900 dark:text-stone-300 hover:bg-amber-100 dark:hover:bg-stone-700 transition flex items-center gap-2 select-none">
           <span>📊</span>
           <span>A / C / D / E / F / I 份额怎么选？—— 同一只基金不同份额的对比</span>
@@ -416,13 +417,13 @@
 
           <!-- 决策小贴士 -->
           <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-            <div class="bg-emerald-50 dark:bg-stone-800 border border-emerald-100 dark:border-stone-700 rounded-lg px-3 py-2 text-emerald-800 dark:text-stone-300">
+            <div class="bg-emerald-50 dark:bg-stone-900/50 border border-emerald-100 dark:border-stone-700 rounded-lg px-3 py-2 text-emerald-800 dark:text-stone-300">
               📌 <b>长期定投</b><br>选 A 类（有 E 就选 E）<br><span class="text-emerald-600 dark:text-stone-400">代销平台 1 折申购费，长持免赎回</span>
             </div>
-            <div class="bg-amber-50 dark:bg-stone-800 border border-amber-100 dark:border-stone-700 rounded-lg px-3 py-2 text-amber-800 dark:text-stone-300">
+            <div class="bg-amber-50 dark:bg-stone-900/50 border border-amber-100 dark:border-stone-700 rounded-lg px-3 py-2 text-amber-800 dark:text-stone-300">
               📌 <b>短线择时</b><br>选 C 类（有 D 就选 D）<br><span class="text-amber-600 dark:text-stone-400">0 申购费，持 7~30 天即免赎回</span>
             </div>
-            <div class="bg-sky-50 dark:bg-stone-800 border border-sky-100 dark:border-stone-700 rounded-lg px-3 py-2 text-sky-800 dark:text-stone-300">
+            <div class="bg-sky-50 dark:bg-stone-900/50 border border-sky-100 dark:border-stone-700 rounded-lg px-3 py-2 text-sky-800 dark:text-stone-300">
               📌 <b>大资金省费率</b><br>选 F / I 类（直销）<br><span class="text-sky-600 dark:text-stone-400">下载基金公司官方 APP 购买</span>
             </div>
           </div>
@@ -492,7 +493,7 @@
       </div>
 
       <!-- 场内 ETF 说明 -->
-      <div class="bg-indigo-50/60 dark:bg-stone-800 border border-indigo-100 dark:border-stone-700 rounded-xl px-4 py-3 mb-3 text-xs">
+      <div class="bg-indigo-50/60 dark:bg-stone-900/50 border border-indigo-100 dark:border-stone-700 rounded-xl px-4 py-3 mb-3 text-xs">
         <div class="flex flex-wrap items-start gap-x-6 gap-y-2 text-stone-700 dark:text-stone-300">
           <div><span class="text-indigo-500 dark:text-stone-400 font-medium">交易</span> 盘中实时买卖，秒级成交</div>
           <div><span class="text-indigo-500 dark:text-stone-400 font-medium">费率</span> 仅券商佣金（万1~万3），<b>无申购/赎回/销售服务费</b></div>
@@ -1046,10 +1047,10 @@
       }
       // 配色：sky=中性提示（被动指数小风险），amber=黄色提醒（限购/误差等可控风险），rose=红色警告（深坑）
       const palette = {
-        sky:   { bg: 'bg-sky-50/70 dark:bg-stone-800',   border: 'border-sky-200 dark:border-stone-700',   text: 'text-sky-900 dark:text-stone-300',   icon: '📌' },
-        amber: { bg: 'bg-amber-50/70 dark:bg-stone-800', border: 'border-amber-200 dark:border-stone-700', text: 'text-amber-900 dark:text-stone-300', icon: '⚠️' },
-        rose:  { bg: 'bg-rose-50/70 dark:bg-stone-800',  border: 'border-rose-200 dark:border-stone-700',  text: 'text-rose-900 dark:text-stone-300',  icon: '🚨' },
-      }[cfg.tone] || { bg: 'bg-stone-50 dark:bg-stone-800', border: 'border-stone-200 dark:border-stone-700', text: 'text-stone-700 dark:text-stone-300', icon: '📌' };
+        sky:   { bg: 'bg-sky-50/70 dark:bg-stone-900/50',   border: 'border-sky-200 dark:border-stone-700',   text: 'text-sky-900 dark:text-stone-300',   icon: '📌' },
+        amber: { bg: 'bg-amber-50/70 dark:bg-stone-900/50', border: 'border-amber-200 dark:border-stone-700', text: 'text-amber-900 dark:text-stone-300', icon: '⚠️' },
+        rose:  { bg: 'bg-rose-50/70 dark:bg-stone-900/50',  border: 'border-rose-200 dark:border-stone-700',  text: 'text-rose-900 dark:text-stone-300',  icon: '🚨' },
+      }[cfg.tone] || { bg: 'bg-stone-50 dark:bg-stone-900/50', border: 'border-stone-200 dark:border-stone-700', text: 'text-stone-700 dark:text-stone-300', icon: '📌' };
       // 计算日限额汇总（仅场外被动分组：sp500 / nasdaq_passive / global_index）
       let limitSummary = '';
       if (tab === 'offshore' && ['sp500', 'nasdaq_passive', 'global_index'].includes(filter)) {
@@ -1064,7 +1065,7 @@
             else if (def.buy_status.includes('开放') && !def.daily_limit) { openCount++; }
           }
           const parts = [];
-          if (totalLimit > 0) parts.push(`当前每日可购买 ¥${formatLimit(totalLimit)}`);
+          if (totalLimit > 0) parts.push(`当前每日可购买 <b class="text-red-600 dark:text-red-400">¥${formatLimit(totalLimit)}</b>`);
           if (openCount > 0) parts.push(`${openCount} 只开放申购`);
           if (parts.length) limitSummary = parts.join(' + ');
         }
@@ -1437,7 +1438,7 @@
 
     function holdingsBtn(code) {
       // 只有抓到持仓数据的基金才显示按钮（前端运行时会校验）
-      return `<button class="holdings-btn text-xs px-2.5 py-1 rounded-md border dark:border-stone-700 bg-indigo-50 dark:bg-stone-800 text-indigo-600 dark:text-stone-300 hover:bg-indigo-100 dark:hover:bg-stone-700 transition font-medium"
+      return `<button class="holdings-btn text-xs px-2.5 py-1 rounded-md border dark:border-stone-700 bg-indigo-50 dark:bg-stone-900/50 text-indigo-600 dark:text-stone-300 hover:bg-indigo-100 dark:hover:bg-stone-700 transition font-medium"
                 data-code="${code}"
                 onclick="event.stopPropagation(); openDetail('${code}', event);">
                 📊 持仓
@@ -1446,7 +1447,7 @@
 
     function trendBtn(code) {
       // 走势按钮：所有 6 位代码的场外基金都能拉 pingzhongdata
-      return `<button class="trend-btn text-xs px-2.5 py-1 rounded-md border dark:border-stone-700 bg-emerald-50 dark:bg-stone-800 text-emerald-700 dark:text-stone-300 hover:bg-emerald-100 dark:hover:bg-stone-700 transition font-medium"
+      return `<button class="trend-btn text-xs px-2.5 py-1 rounded-md border dark:border-stone-700 bg-emerald-50 dark:bg-stone-900/50 text-emerald-700 dark:text-stone-300 hover:bg-emerald-100 dark:hover:bg-stone-700 transition font-medium"
                 data-code="${code}"
                 onclick="event.stopPropagation(); openTrend('${code}', event);">
                 📈 走势
@@ -2070,15 +2071,15 @@
       // 持仓头部汇总条
       const summaryHtml = `
         <div class="grid grid-cols-3 gap-2 mb-4">
-          <div class="bg-indigo-50 dark:bg-stone-800 rounded-lg p-3 text-center">
+          <div class="bg-indigo-50 dark:bg-stone-900/50 rounded-lg p-3 text-center">
             <div class="text-xs text-indigo-600 dark:text-stone-400">持仓只数</div>
             <div class="text-xl font-bold text-indigo-900 dark:text-stone-200 num mt-1">${data.holdings_count} 只</div>
           </div>
-          <div class="bg-emerald-50 dark:bg-stone-800 rounded-lg p-3 text-center">
+          <div class="bg-emerald-50 dark:bg-stone-900/50 rounded-lg p-3 text-center">
             <div class="text-xs text-emerald-600 dark:text-stone-400">Top10 总占比</div>
             <div class="text-xl font-bold text-emerald-900 dark:text-stone-200 num mt-1">${data.total_weight}%</div>
           </div>
-          <div class="bg-amber-50 dark:bg-stone-800 rounded-lg p-3 text-center">
+          <div class="bg-amber-50 dark:bg-stone-900/50 rounded-lg p-3 text-center">
             <div class="text-xs text-amber-600 dark:text-stone-400">重仓股（>5%）</div>
             <div class="text-xl font-bold text-amber-900 dark:text-stone-200 num mt-1">${data.heavy_count} 只</div>
           </div>
