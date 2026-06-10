@@ -278,7 +278,7 @@ def main():
     for cat, d in loaded_data.items():
         for s in d["series"]:
             a_rmb = [sh for sh in s["shares"]
-                     if sh.get("share_class") in ("A", "默认", "A(后端)")
+                     if sh.get("share_class") in ("A", "默认")
                      and sh.get("currency", "人民币") == "人民币"]
             if a_rmb and a_rmb[0].get("scale"):
                 s["series_scale"] = a_rmb[0]["scale"]

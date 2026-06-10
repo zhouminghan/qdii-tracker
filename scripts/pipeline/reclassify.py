@@ -33,7 +33,7 @@ def update_series_category(series: dict, new_cat: str):
 
 def recalc_series_scale(series: dict):
     a_rmb = [s for s in series["shares"]
-             if s.get("share_class") in ("A", "默认", "A(后端)")
+             if s.get("share_class") in ("A", "默认")
              and s.get("currency", "人民币") == "人民币"]
     if a_rmb:
         series["series_scale"] = a_rmb[0].get("scale") or 0

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>US Fund Tracker · 美股基金看板</title>
   <link rel="icon" href="data:,">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -245,18 +246,21 @@
       width: 36px; height: 36px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       transition: all 0.2s; cursor: pointer;
-      background: transparent; color: inherit;
-      border: 1px solid transparent;
+      background: #f5f5f4; color: #1c1917;
+      border: 1px solid #d6d3d1;
     }
-    .theme-toggle:hover { background: rgba(0,0,0,.06); }
-    html.dark .theme-toggle { border-color: #44403c; }
-    html.dark .theme-toggle:hover { background: rgba(255,255,255,.1); }
+    .theme-toggle:hover { background: #e7e5e4; }
+    html.dark .theme-toggle {
+      background: #44403c; color: #f5f5f4;
+      border-color: #57534e;
+    }
+    html.dark .theme-toggle:hover { background: #57534e; }
     .theme-toggle svg { width: 20px; height: 20px; }
-    /* 图标切换动画 */
-    .theme-toggle .icon-sun  { display: none; }
-    .theme-toggle .icon-moon { display: block; }
-    html.dark .theme-toggle .icon-sun  { display: block; }
-    html.dark .theme-toggle .icon-moon { display: none; }
+    /* 图标由 html.dark 控制，不依赖 JS */
+    .theme-toggle .icon-moon { display: none; }
+    .theme-toggle .icon-sun  { display: block; }
+    html.dark .theme-toggle .icon-moon { display: block; }
+    html.dark .theme-toggle .icon-sun  { display: none; }
   </style>
 </head>
 <body class="text-stone-900 dark:text-stone-100">
@@ -272,7 +276,7 @@
         </div>
       </div>
       <nav class="flex items-center gap-1 sm:gap-2 text-sm flex-shrink-0">
-        <button class="theme-toggle" id="themeToggle" title="切换深色/亮色主题">
+        <button class="theme-toggle" id="themeToggle" title="切换主题">
           <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
           <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
         </button>
@@ -2226,10 +2230,10 @@ import { start as startMarketIndices } from './js/market-indices.js?v=20260606a'
 import { start as startEtfPremium } from './js/etf-premium.js?v=20260610a';
 import { start as startMarketTrend } from './js/market-trend.js?v=20260609b';
 import { start as startOffshoreLiveNav } from './js/offshore-live-nav.js?v=20260610a';
-import { start as startTheme } from './js/theme.js?v=20260610b';
+import { start as startTheme } from './js/theme.js?v=20260610e';
 
     // 主题切换（深色/亮色 + 跟随系统）
-    startTheme();
+    try { startTheme(); } catch (e) { console.error('theme init error:', e); }
 
     // 顶部「市场参照系」指标卡 —— 不依赖主表数据，立即启动
     startMarketIndices();

@@ -120,7 +120,7 @@ def main():
             series["default_share_code"] = series["shares"][0]["code"] if series["shares"] else None
             # series_scale 取 A 类人民币份额规模
             a_rmb = [s for s in series["shares"]
-                     if s.get("share_class") in ("A", "默认", "A(后端)")
+                     if s.get("share_class") in ("A", "默认")
                      and s.get("currency", "人民币") == "人民币"]
             if a_rmb:
                 series["series_scale"] = a_rmb[0].get("scale") or 0
