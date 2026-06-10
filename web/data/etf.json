@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-10T21:03:20.757498+08:00",
+  "generated_at": "2026-06-11T03:45:24.351794+08:00",
   "category": "etf",
   "label": "板块6 · 场内 ETF",
   "series_count": 18,
@@ -715,7 +715,7 @@
           "sell_rules": [],
           "etf_price": 1.559,
           "etf_change_pct": -2.87,
-          "nav_date": "2026-06-08",
+          "nav_date": "2026-06-09",
           "chg_1m": 7.58,
           "chg_3m": 14.49,
           "chg_6m": 8.2,
