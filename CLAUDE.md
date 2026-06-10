@@ -22,16 +22,24 @@ qdii-tracker/
 ├── config/
 │   └── funds.json            # ⭐ SSOT：所有业务决策配置（分类规则/白名单/品牌色/置顶等）
 ├── scripts/
-│   ├── fundctl.py            # ⭐ 统一入口（add/move/refresh/sync/check）
-│   ├── config_loader.py      # 配置加载器（读写 config/funds.json）
-│   ├── gen_frontend_config.py# 前端常量 codegen（funds.json → config.js 派生段）
-│   ├── scan_funds.py         # ① 扫描 QDII + 自动分类（支持 --codes）
-│   ├── enrich_data.py        # ② 补规模/费率/经理（支持 --codes）
-│   ├── fill_missing.py       # ③ 补净值/YTD/历史收益/费率规则（支持 --codes）
-│   ├── refresh_purchase.py   # ④ 补申购状态/限额（支持 --codes）
-│   ├── fetch_holdings.py     # ⑤ 抓 Top10 重仓（支持 --codes，override 从 config 派生）
-│   ├── reclassify_fund.py    # 增量分类调整（更新 config + JSON）
+│   ├── fundctl.py            # ⭐ 统一入口（add/move/refresh/sync/check，直接 import pipeline 模块）
 │   ├── timezone_utils.py     # 北京时间时区工具
+│   ├── core/                 # 共享基础设施
+│   │   ├── constants.py      # CATEGORIES / DATA_DIR / CATEGORY_LABELS / HEADERS
+│   │   ├── utils.py          # to_float / read_json / write_json / bump_generated_at / parse_scale
+│   │   └── config_loader.py  # 配置加载器（读写 config/funds.json）
+│   ├── sources/              # 数据源抽象层（可插拔）
+│   │   ├── akshare_source.py # AKShare 调用（rank/purchase/etf/ytd/holdings/fund_names）
+│   │   ├── eastmoney_source.py # 东财调用（lsjz/pzd/f10/fee_rules）
+│   │   └── xueqiu_source.py  # 雪球调用（basic_info/fee_detail）
+│   ├── pipeline/             # 流水线步骤
+│   │   ├── scan.py           # ① 扫描 QDII + 自动分类（支持 --codes）
+│   │   ├── enrich.py         # ② 补规模/费率/经理（支持 --codes）
+│   │   ├── fill.py           # ③ 补净值/YTD/历史收益/费率规则（支持 --codes）
+│   │   ├── refresh.py        # ④ 补申购状态/限额（支持 --codes）
+│   │   ├── holdings.py       # ⑤ 抓 Top10 重仓（支持 --codes，override 从 config 派生）
+│   │   ├── reclassify.py     # 增量分类调整（更新 config + JSON）
+│   │   └── codegen.py        # 前端常量 codegen（funds.json → config.js 派生段）
 │   └── requirements.txt
 └── web/
     ├── index.html            # 前端骨架（HTML+CSS+主渲染 JS 内联）
@@ -60,16 +68,16 @@ qdii-tracker/
 
 | 步骤 | 脚本 | 输出 |
 |---|---|---|
-| ① | `scan_funds.py` | 6 个分类 JSON（**覆盖式写入**） |
-| ② | `enrich_data.py` | 补规模/费率/经理/收益 |
-| ③ | `fill_missing.py` | 补净值/YTD/历史收益/费率规则 |
-| ④ | `refresh_purchase.py` | 补申购状态/限额/排行榜数据 |
-| ⑤ | `fetch_holdings.py` | `holdings/*.json` |
+| ① | `pipeline.scan` | 6 个分类 JSON（**覆盖式写入**） |
+| ② | `pipeline.enrich` | 补规模/费率/经理/收益 |
+| ③ | `pipeline.fill` | 补净值/YTD/历史收益/费率规则 |
+| ④ | `pipeline.refresh` | 补申购状态/限额/排行榜数据 |
+| ⑤ | `pipeline.holdings` | `holdings/*.json` |
 
 **增量**（工作日 05:00 凌晨兜底 + 21:30 晚间主力）：③ → ④
 **完整**（每月 2 日凌晨）：① → ② → ③ → ④ → ⑤
 
-> 完整流水线 scan 后**必须**接 enrich + fill_missing，否则会丢失已有 enriched 数据。
+> 完整流水线 scan 后**必须**接 enrich + fill，否则会丢失已有 enriched 数据。
 
 ### 前端缓存机制与 `generated_at` 同步策略
 
@@ -81,7 +89,7 @@ qdii-tracker/
 **`generated_at` 同步要求**：
 - **所有增量更新脚本必须同时更新 `meta.json` 和各数据文件的 `generated_at` 字段**
 - 仅更新 `meta.json` 会导致前端仍使用旧缓存（数据文件 `generated_at` 未变）
-- 当前已修复：`fill_missing.py` 和 `refresh_purchase.py` 都会同步更新所有数据文件
+- 当前已修复：`pipeline.fill` 和 `pipeline.refresh` 都会同步更新所有数据文件
 
 **缓存问题症状**：
 - 数据已更新但前端显示旧数据（如限购金额、净值日期等）
@@ -94,14 +102,14 @@ GitHub Actions 跑在 UTC、本地是北京时间，裸 `datetime.now()` 会让 
 - 时间戳用 `beijing_now_iso()`、年份用 `beijing_year()`、年初用 `beijing_year_start()`；依赖 `pytz>=2024.1`（已在 requirements.txt）
 - 自检：脚本不得出现裸 `datetime.now()` 写时间戳；`meta.json` 与各数据文件 `generated_at` 均为北京时间
 
-### `fill_missing.py` 关键策略
+### `pipeline.fill` 关键策略
 
 - nav 三件套（nav / nav_date / daily_change）**无条件覆盖**（防回退由前置检查保证）
 - 历史收益 / scale / fee / manager 等**仅填漏**，不覆盖已有值
 - A/默认类的 `sale_service_fee > 0.05` 视为误抓，丢弃
 - 写回前**必须**重算 `series_scale`（防止 scan 阶段 scale=None 时该字段卡在 0）
 
-### `refresh_purchase.py` 关键策略
+### `pipeline.refresh` 关键策略
 
 - `fund_open_fund_rank_em()` 排行榜**不覆盖**所有基金（LOF/FOF/发起式常缺），缺 `chg_since_inception` 时前端显示 `--`
 
@@ -160,7 +168,7 @@ GitHub Actions 跑在 UTC、本地是北京时间，裸 `datetime.now()` 会让 
 ### 份额排序（前后端必须一致）
 币种（人民币 < 美元 < 其他）→ 类型（A < C < D < E < F < H < I < 默认 < LOF）
 - 前端：`shareSort()`
-- 后端：`enrich_data.py` 的 `share_sort_key()`
+- 后端：`pipeline.enrich` 的 `share_sort_key()`
 
 ### 规模显示
 - 系列外层 = `series_scale`（取 A 类人民币规模，**不加和**：同系列各份额共享底层资产）
@@ -197,7 +205,7 @@ GitHub Actions 跑在 UTC、本地是北京时间，裸 `datetime.now()` 会让 
 - **`PASSIVE_HOLDINGS_OVERRIDE` 命中**（前端常量，被动分类下的例外名单）：
   - `type='active'`：分类被动但实为主动管理（Smart Beta，如 096001 大成标普500等权重）→ 走真实持仓按钮
 - **其他被动指数**：占位 `—`（包括场外联接基金，如 050025 博时标普500ETF联接 —— 跟踪母 ETF 的细节不在列里展示）
-- 维护：`PASSIVE_HOLDINGS_OVERRIDE`（前端）和 `EXTRA_HOLDINGS_CODES`（脚本）均由 `config/funds.json → passive_override` 统一派生（`gen_frontend_config.py` 生成前者，`fetch_holdings.py` 从 config 读取后者），**无需手动同步**
+- 维护：`PASSIVE_HOLDINGS_OVERRIDE`（前端）和 `EXTRA_HOLDINGS_CODES`（脚本）均由 `config/funds.json → passive_override` 统一派生（`pipeline.codegen` 生成前者，`pipeline.holdings` 从 config 读取后者），**无需手动同步**
 - `openDetail` 的 series 查找已扩展到全部场外分类（`active / global_other / sp500 / nasdaq_passive / global_index`），新增 override 无需再改查找列表
 
 ### 分类下的"真被动 / 名义被动"扫盲（sp500 / nasdaq_passive）
@@ -233,9 +241,9 @@ GitHub Actions 跑在 UTC、本地是北京时间，裸 `datetime.now()` 会让 
 
 ### 场内 ETF 特殊点
 - ETF 表头**没有**两列：成立来 / 申购（代码位置：`index.html` 中 `${isEtf ? '' : sortableTh(...)}` 条件渲染）
-- ETF `nav_date` **必须**走 lsjz API 拉真实净值披露日（`enrich_data.py::fetch_etf_nav_date_lsjz`），与场外 QDII 同节奏
+- ETF `nav_date` **必须**走 lsjz API 拉真实净值披露日（`pipeline.enrich` + `sources.eastmoney_source::fetch_lsjz`），与场外 QDII 同节奏
   - **禁止**用 `datetime.now()` 写入 ETF `nav_date`：周末/节假日运行会写入非交易日，导致表头显示「最新价 5.30」（周六）这类错误日期
-  - 数据源：`fund_open_fund_rank_em` **不收录 ETF**，所以 ETF 的 `nav_date` 不会被 `refresh_purchase.py` 自动覆盖刷新；只能靠 enrich 阶段写入
+  - 数据源：`fund_open_fund_rank_em` **不收录 ETF**，所以 ETF 的 `nav_date` 不会被 `pipeline.refresh` 自动覆盖刷新；只能靠 enrich 阶段写入
   - 表头日期取所有 share `nav_date` 最大值，前端逻辑一致（场内外都按这套）
 - `etf_price` / `etf_change_pct` 来自东财快照（`fund_etf_spot_em`，可能是实时报价），**与 `nav_date` 不必同日**——`nav_date` 始终是 lsjz 净值日，价格则是当前抓取时的最新价
 - `series.starred = true` 在分组内置顶（场内 ETF 当前 513500、513100）
@@ -280,7 +288,7 @@ python3 scripts/fundctl.py add --code 008888 --to active --keyword "某某基金
 3. 跑 ②→③→④→⑤（仅 active / global_other 跑 ⑤，global_index 不抵持仓）
 
 > ⚠️ 骨架字段（scale/manager/established/费率/收益/etf_price/nav_date 等）**只能由脚本填**，前端没有兜底。光追加骨架不跑脚本，行内会全 `—`。
-> · ETF 手动新增：只需跑 `enrich_data.py`（一步到位补 scale/费率/经理/收益/etf_price/nav_date），无需 ③④⑤
+> · ETF 手动新增：只需跑 `pipeline.enrich`（一步到位补 scale/费率/经理/收益/etf_price/nav_date），无需 ③④⑤
 > · 场外手动新增：跑 ②→③→④（active / global_other 还要跑 ⑤）
 
 `default_share_code`：有 A/C 选 A，有人民币/美元选人民币，单只就是它本身。
@@ -350,7 +358,7 @@ python3 scripts/fundctl.py add --code 008888 --to active --keyword "某某基金
 3. **前端**：确认按 `meta.generated_at` 作 `?v=` 版本号取数
 
 ### ETF nav_date
-- 唯一正确来源：lsjz 真实披露日（`fill_missing.py` ETF 块 / `enrich_data.py::fetch_etf_nav_date_lsjz`），防回退（新 >= 旧才写），**lsjz 失败保留旧值**
+- 唯一正确来源：lsjz 真实披露日（`pipeline.fill` ETF 块 / `pipeline.enrich` + `sources.eastmoney_source::fetch_lsjz`），防回退（新 >= 旧才写），**lsjz 失败保留旧值**
 - 周末/节假日 nav_date 停在上一交易日是【正确行为】，不是 bug，**不要"修"它让日期前进**
 - 自检：脚本里不得出现 `datetime.now()` 或自行推算"交易日"来写 nav_date
 
@@ -360,9 +368,9 @@ python3 scripts/fundctl.py add --code 008888 --to active --keyword "某某基金
 
 ### ETF nav_date 被 datetime.now() 造假（2026-06 教训）
 - **现象**：周末/节假日 ETF 表头显示非交易日（如周六"最新价 6.6"）。
-- **错误做法（已废弃）**：`fill_missing.py` 曾在 lsjz 返回空时用 `datetime.now()` 按"中国 weekday"推算"上一交易日"写入 nav_date。但 QDII ETF 跟踪美股、T+1 披露，中美日历不对齐；且推算函数"不考虑节假日"，必然错。
+- **错误做法（已废弃）**：`pipeline.fill` 前身曾在 lsjz 返回空时用 `datetime.now()` 按"中国 weekday"推算"上一交易日"写入 nav_date。但 QDII ETF 跟踪美股、T+1 披露，中美日历不对齐；且推算函数"不考虑节假日"，必然错。
 - **根因误判**：把"周末日期不前进"当成 bug，其实那是【表头净值日期取值】认可的正确行为 —— 用真 bug 去修一个伪 bug，还围绕它打了 5 个补丁 commit。
-- **正确做法（现行）**：ETF nav_date 只信 lsjz `FSRQ`，防回退（新 >= 旧才写），**lsjz 失败保留旧值，绝不造日期**。`fill_missing.py` ETF 块与 `enrich_data.py` 已统一这套口径。
+- **正确做法（现行）**：ETF nav_date 只信 lsjz `FSRQ`，防回退（新 >= 旧才写），**lsjz 失败保留旧值，绝不造日期**。`pipeline.fill` ETF 块与 `pipeline.enrich` 已统一这套口径。
 
 ### 双目录分裂（2026-05-08）
 脚本曾同时维护 `data/` 与 `web/data/`，上游简化快照覆盖完整版导致字段丢失 → 已统一为单一 `web/data/`，脚本直接读写该目录，不再维护中间副本。

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-10T03:25:28.821465+08:00",
+  "generated_at": "2026-06-10T20:03:01.453554+08:00",
   "category": "active",
   "label": "板块3 · 美股主动（场外·白名单精选）",
   "series_count": 20,
@@ -2110,262 +2110,6 @@
       "series_scale": 14.91
     },
     {
-      "shares": [
-        {
-          "share_class": "A",
-          "fund_type": "QDII-普通股票",
-          "code": "100055",
-          "currency": "人民币",
-          "name": "富国全球科技互联网股票(QDII)A",
-          "nav_date": "2026-06-08",
-          "nav": 5.6908,
-          "nav_cum": 5.6908,
-          "daily_change": -1.27,
-          "chg_1w": -2.13,
-          "chg_1m": 8.86,
-          "chg_3m": 56.48,
-          "chg_6m": 52.99,
-          "chg_1y": 100.26,
-          "chg_2y": 131.11,
-          "chg_3y": 178.02,
-          "chg_ytd": 54.98,
-          "chg_since_inception": 469.08,
-          "buy_status": "限大额",
-          "sell_status": "开放赎回",
-          "buy_min": 10.0,
-          "daily_limit": 1000.0,
-          "fee": "0.15",
-          "scale": 12.46,
-          "scale_raw": "12.46亿",
-          "established": "2011-07-13",
-          "manager": "赵年珅",
-          "fund_company": "富国基金管理有限公司",
-          "fund_type_xq": "QDII-股票",
-          "full_name": "富国全球科技互联网股票型证券投资基金(QDII)",
-          "buy_rules": [
-            {
-              "condition": "0.0万<买入金额<100.0万",
-              "rate": 1.5
-            },
-            {
-              "condition": "100.0万<=买入金额<500.0万",
-              "rate": 1.2
-            },
-            {
-              "condition": "500.0万<=买入金额",
-              "rate": 1000.0
-            }
-          ],
-          "sell_rules": [
-            {
-              "condition": "0.0天<持有期限<7.0天",
-              "rate": 1.5
-            },
-            {
-              "condition": "7.0天<=持有期限<30.0天",
-              "rate": 0.75
-            },
-            {
-              "condition": "30.0天<=持有期限<365.0天",
-              "rate": 0.5
-            },
-            {
-              "condition": "365.0天<=持有期限<2.0年",
-              "rate": 0.3
-            },
-            {
-              "condition": "2.0年<=持有期限",
-              "rate": 0.0
-            }
-          ],
-          "mgmt_fee": 1.2,
-          "custody_fee": 0.2,
-          "free_hold_days": null,
-          "first_buy_rate": 1.5,
-          "max_sell_rate": 1.5,
-          "sale_service_fee": 0.0
-        },
-        {
-          "share_class": "A(后端)",
-          "fund_type": "QDII-普通股票",
-          "code": "000157",
-          "currency": "人民币",
-          "name": "富国全球科技互联网股票(QDII)A(后端)",
-          "scale": null,
-          "scale_raw": "",
-          "established": "2011-07-13",
-          "manager": "赵年珅",
-          "error": "'data'",
-          "buy_rules": [
-            {
-              "condition": "0.0万<买入金额<100万",
-              "rate": 1.5
-            },
-            {
-              "condition": "100万<=买入金额<500万",
-              "rate": 1.2
-            },
-            {
-              "condition": "500万<=买入金额",
-              "rate": 1000.0
-            }
-          ],
-          "sell_rules": [
-            {
-              "condition": "0.0天<持有期限<7天",
-              "rate": 1.5
-            },
-            {
-              "condition": "7天<=持有期限<30天",
-              "rate": 0.75
-            },
-            {
-              "condition": "30天<=持有期限<1.0年",
-              "rate": 0.5
-            },
-            {
-              "condition": "1.0年<=持有期限<2.0年",
-              "rate": 0.3
-            },
-            {
-              "condition": "2.0年<=持有期限",
-              "rate": 0.0
-            }
-          ],
-          "sale_service_fee": 0.0,
-          "mgmt_fee": 1.2,
-          "custody_fee": 0.2,
-          "first_buy_rate": 1.5
-        },
-        {
-          "share_class": "C",
-          "fund_type": "QDII-普通股票",
-          "code": "022184",
-          "currency": "人民币",
-          "name": "富国全球科技互联网股票(QDII)C",
-          "nav_date": "2026-06-08",
-          "nav": 5.6856,
-          "nav_cum": 5.6856,
-          "daily_change": -1.28,
-          "chg_1w": -2.14,
-          "chg_1m": 8.83,
-          "chg_3m": 56.03,
-          "chg_6m": 52.45,
-          "chg_1y": 99.3,
-          "chg_ytd": 54.46,
-          "chg_since_inception": 150.05,
-          "buy_status": "限大额",
-          "sell_status": "开放赎回",
-          "buy_min": 10.0,
-          "daily_limit": 1000.0,
-          "fee": "",
-          "scale": 8.34,
-          "scale_raw": "8.34亿",
-          "established": "2024-09-18",
-          "manager": "赵年珅",
-          "fund_company": "富国基金管理有限公司",
-          "fund_type_xq": "QDII-股票",
-          "full_name": "富国全球科技互联网股票型证券投资基金(QDII)",
-          "buy_rules": [
-            {
-              "condition": "0.0万<买入金额",
-              "rate": 0.0
-            }
-          ],
-          "sell_rules": [
-            {
-              "condition": "0.0天<持有期限<7.0天",
-              "rate": 1.5
-            },
-            {
-              "condition": "7.0天<=持有期限<30.0天",
-              "rate": 0.5
-            },
-            {
-              "condition": "30.0天<=持有期限",
-              "rate": 0.0
-            }
-          ],
-          "mgmt_fee": 1.2,
-          "custody_fee": 0.2,
-          "free_hold_days": 30,
-          "first_buy_rate": 0.0,
-          "max_sell_rate": 1.5,
-          "sale_service_fee": 0.4
-        },
-        {
-          "share_class": "D",
-          "fund_type": "QDII-普通股票",
-          "code": "026228",
-          "currency": "人民币",
-          "name": "富国全球科技互联网股票(QDII)D",
-          "buy_status": "限大额",
-          "sell_status": "开放赎回",
-          "buy_min": 1.0,
-          "daily_limit": 0.0,
-          "fee": "1.5",
-          "scale": 0.12,
-          "scale_raw": "0.12亿",
-          "established": "2025-12-02",
-          "manager": "赵年珅",
-          "error": "'data'",
-          "buy_rules": [
-            {
-              "condition": "0.0万<买入金额<100万",
-              "rate": 1.5
-            },
-            {
-              "condition": "100万<=买入金额<500万",
-              "rate": 1.2
-            },
-            {
-              "condition": "500万<=买入金额",
-              "rate": 1000.0
-            }
-          ],
-          "sell_rules": [
-            {
-              "condition": "0.0天<持有期限<7天",
-              "rate": 1.5
-            },
-            {
-              "condition": "7天<=持有期限<30天",
-              "rate": 0.75
-            },
-            {
-              "condition": "30天<=持有期限<180天",
-              "rate": 0.5
-            },
-            {
-              "condition": "180天<=持有期限",
-              "rate": 0.0
-            }
-          ],
-          "nav": 5.6823,
-          "nav_date": "2026-06-08",
-          "daily_change": -1.28,
-          "chg_1m": 21.66,
-          "chg_3m": 58.0,
-          "chg_6m": 56.66,
-          "sale_service_fee": 0.0,
-          "mgmt_fee": 1.2,
-          "custody_fee": 0.2,
-          "first_buy_rate": 1.5,
-          "free_hold_days": 180,
-          "chg_since_inception": 56.98
-        }
-      ],
-      "company_display": "富国",
-      "etf_target": null,
-      "display_name": "富国全球科技互联网股票",
-      "company": "富国",
-      "series_id": "富国__全球科技互联网股票__global_global_active",
-      "category": "active",
-      "series_name": "全球科技互联网股票",
-      "default_share_code": "100055",
-      "series_scale": 12.46
-    },
-    {
       "series_id": "银华__海外数字经济量化选股混合__active",
       "company": "银华",
       "company_display": "银华",
@@ -3872,6 +3616,260 @@
       ],
       "default_share_code": "017144",
       "series_scale": 1.44
+    },
+    {
+      "shares": [
+        {
+          "share_class": "A(后端)",
+          "fund_type": "QDII-普通股票",
+          "code": "000157",
+          "currency": "人民币",
+          "name": "富国全球科技互联网股票(QDII)A(后端)",
+          "scale": null,
+          "scale_raw": "",
+          "established": "2011-07-13",
+          "manager": "赵年珅",
+          "error": "'data'",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100万",
+              "rate": 1.5
+            },
+            {
+              "condition": "100万<=买入金额<500万",
+              "rate": 1.2
+            },
+            {
+              "condition": "500万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限<30天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30天<=持有期限<1.0年",
+              "rate": 0.5
+            },
+            {
+              "condition": "1.0年<=持有期限<2.0年",
+              "rate": 0.3
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "sale_service_fee": 0.0,
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 1.5
+        },
+        {
+          "share_class": "C",
+          "fund_type": "QDII-普通股票",
+          "code": "022184",
+          "currency": "人民币",
+          "name": "富国全球科技互联网股票(QDII)C",
+          "nav_date": "2026-06-08",
+          "nav": 5.6856,
+          "nav_cum": 5.6856,
+          "daily_change": -1.28,
+          "chg_1w": -2.14,
+          "chg_1m": 8.83,
+          "chg_3m": 56.03,
+          "chg_6m": 52.45,
+          "chg_1y": 99.3,
+          "chg_ytd": 54.46,
+          "chg_since_inception": 150.05,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 1000.0,
+          "fee": "",
+          "scale": 8.34,
+          "scale_raw": "8.34亿",
+          "established": "2024-09-18",
+          "manager": "赵年珅",
+          "fund_company": "富国基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "富国全球科技互联网股票型证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "30.0天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": 30,
+          "first_buy_rate": 0.0,
+          "max_sell_rate": 1.5,
+          "sale_service_fee": 0.4
+        },
+        {
+          "share_class": "D",
+          "fund_type": "QDII-普通股票",
+          "code": "026228",
+          "currency": "人民币",
+          "name": "富国全球科技互联网股票(QDII)D",
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
+          "daily_limit": 0.0,
+          "fee": "1.5",
+          "scale": 0.12,
+          "scale_raw": "0.12亿",
+          "established": "2025-12-02",
+          "manager": "赵年珅",
+          "error": "'data'",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100万",
+              "rate": 1.5
+            },
+            {
+              "condition": "100万<=买入金额<500万",
+              "rate": 1.2
+            },
+            {
+              "condition": "500万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限<30天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30天<=持有期限<180天",
+              "rate": 0.5
+            },
+            {
+              "condition": "180天<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "nav": 5.6823,
+          "nav_date": "2026-06-08",
+          "daily_change": -1.28,
+          "chg_1m": 21.66,
+          "chg_3m": 58.0,
+          "chg_6m": 56.66,
+          "sale_service_fee": 0.0,
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "first_buy_rate": 1.5,
+          "free_hold_days": 180,
+          "chg_since_inception": 56.98
+        },
+        {
+          "share_class": "A",
+          "fund_type": "QDII-普通股票",
+          "code": "100055",
+          "currency": "人民币",
+          "name": "富国全球科技互联网股票(QDII)A",
+          "nav_date": "2026-06-08",
+          "nav": 5.6908,
+          "nav_cum": 5.6908,
+          "daily_change": -1.27,
+          "chg_1w": -2.13,
+          "chg_1m": 8.86,
+          "chg_3m": 56.48,
+          "chg_6m": 52.99,
+          "chg_1y": 100.26,
+          "chg_2y": 131.11,
+          "chg_3y": 178.02,
+          "chg_ytd": 54.98,
+          "chg_since_inception": 469.08,
+          "buy_status": "限大额",
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "daily_limit": 1000.0,
+          "fee": "0.15",
+          "scale": 12.46,
+          "scale_raw": "12.46亿",
+          "established": "2011-07-13",
+          "manager": "赵年珅",
+          "fund_company": "富国基金管理有限公司",
+          "fund_type_xq": "QDII-股票",
+          "full_name": "富国全球科技互联网股票型证券投资基金(QDII)",
+          "buy_rules": [
+            {
+              "condition": "0.0万<买入金额<100.0万",
+              "rate": 1.5
+            },
+            {
+              "condition": "100.0万<=买入金额<500.0万",
+              "rate": 1.2
+            },
+            {
+              "condition": "500.0万<=买入金额",
+              "rate": 1000.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7.0天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7.0天<=持有期限<30.0天",
+              "rate": 0.75
+            },
+            {
+              "condition": "30.0天<=持有期限<365.0天",
+              "rate": 0.5
+            },
+            {
+              "condition": "365.0天<=持有期限<2.0年",
+              "rate": 0.3
+            },
+            {
+              "condition": "2.0年<=持有期限",
+              "rate": 0.0
+            }
+          ],
+          "mgmt_fee": 1.2,
+          "custody_fee": 0.2,
+          "free_hold_days": null,
+          "first_buy_rate": 1.5,
+          "max_sell_rate": 1.5,
+          "sale_service_fee": 0.0
+        }
+      ],
+      "category": "active",
+      "etf_target": null,
+      "series_name": "全球科技互联网股票",
+      "company": "富国",
+      "display_name": "富国全球科技互联网股票",
+      "company_display": "富国",
+      "series_id": "富国__全球科技互联网股票__active"
     }
   ],
   "total_scale": 451.66,

@@ -109,14 +109,14 @@ jobs:
           echo "✅ 运行模式: $(grep mode $GITHUB_OUTPUT | cut -d= -f2)"
 
       # 5a. 增量更新（快，~3 分钟）
-      #     fill_missing.py：
+      #     pipeline.fill：
       #       - 数据源：lsjz API（优先，快）+ pingzhongdata（备选+历史收益）
       #       - 更新字段：nav / nav_date / daily_change（每日强制覆盖）
       #                   chg_1m / chg_3m / chg_6m / chg_1y（仅填空）
       #                   chg_ytd（AKShare 推算）
       #                   mgmt_fee / custody_fee / sale_service_fee（F10 补漏）
       #       - 策略：场外 QDII 无条件刷新净值；ETF 仅补历史收益；防回退（nav_date 只进不退）
-      #     refresh_purchase.py：
+      #     pipeline.refresh：
       #       - 数据源：AKShare 批量接口（秒级拉全量）
       #       - 更新字段：buy_status / sell_status / daily_limit / buy_min / fee
       #                   nav / nav_date / daily_change / chg_1m~3y / chg_ytd / chg_since_inception
@@ -125,10 +125,10 @@ jobs:
         if: steps.mode.outputs.mode == 'incremental'
         run: |
           cd scripts
-          echo "=== [1/2] fill_missing.py（净值 + 涨跌幅 + YTD + 费率补漏）==="
-          python fill_missing.py
-          echo "=== [2/2] refresh_purchase.py（申购状态 + 限额 + 涨跌幅兜底）==="
-          python refresh_purchase.py
+          echo "=== [1/2] pipeline.fill（净值 + 涨跌幅 + YTD + 费率补漏）==="
+          python -m pipeline.fill
+          echo "=== [2/2] pipeline.refresh（申购状态 + 限额 + 涨跌幅兜底）==="
+          python -m pipeline.refresh
 
       # 5b. 完整流水线（慢，~12 分钟）
       #     重新扫描基金池 + 补全所有字段 + 更新持仓
@@ -136,16 +136,16 @@ jobs:
         if: steps.mode.outputs.mode == 'full'
         run: |
           cd scripts
-          echo "=== [1/5] scan_funds.py（扫描 + 分类）==="
-          python scan_funds.py
-          echo "=== [2/5] enrich_data.py（规模 + 费率 + 基金经理）==="
-          python enrich_data.py
-          echo "=== [3/5] fill_missing.py（净值 + 涨跌幅）==="
-          python fill_missing.py
-          echo "=== [4/5] refresh_purchase.py（申购状态 + 限额）==="
-          python refresh_purchase.py
-          echo "=== [5/5] fetch_holdings.py（主动基金持仓）==="
-          python fetch_holdings.py
+          echo "=== [1/5] pipeline.scan（扫描 + 分类）==="
+          python -m pipeline.scan
+          echo "=== [2/5] pipeline.enrich（规模 + 费率 + 基金经理）==="
+          python -m pipeline.enrich
+          echo "=== [3/5] pipeline.fill（净值 + 涨跌幅）==="
+          python -m pipeline.fill
+          echo "=== [4/5] pipeline.refresh（申购状态 + 限额）==="
+          python -m pipeline.refresh
+          echo "=== [5/5] pipeline.holdings（主动基金持仓）==="
+          python -m pipeline.holdings
 
       # 6. 如果 web/data 有变化，commit 回主分支
       - name: 💾 提交数据变更

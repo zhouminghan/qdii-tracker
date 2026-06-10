@@ -2,30 +2,31 @@
 """
 统一入口：
 - add: 新增/强制纳入一只基金（配置 + 局部后处理）
-- move: 增量移动分类（复用 reclassify_fund.py）
-- refresh: 日常增量（默认 fill_missing + refresh_purchase）
+- move: 增量移动分类（复用 pipeline.reclassify）
+- refresh: 日常增量（默认 fill + refresh）
 - sync: 全量流水线
 - check: 一致性校验
 """
 import argparse
 import json
-import subprocess
 import sys
 from datetime import datetime
-from pathlib import Path
 
-from config_loader import get_config, save_config
+from core.constants import CATEGORIES, DATA_DIR
+from core.config_loader import get_config, save_config
 
-ROOT = Path(__file__).parent.parent
-SCRIPTS = ROOT / "scripts"
-DATA = ROOT / "web" / "data"
-CATS = ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf"]
+# 直接 import pipeline 模块（替代 subprocess 调用）
+from pipeline import scan, enrich, fill, refresh, holdings, reclassify, codegen
 
 
-def run_py(script: str, *args):
-    cmd = [sys.executable, str(SCRIPTS / script), *args]
-    print("$", " ".join(cmd))
-    subprocess.run(cmd, check=True)
+def _run(main_fn, *argv_extra):
+    """调用 pipeline 模块的 main()，通过临时修改 sys.argv 传递 argparse 参数。"""
+    saved = sys.argv
+    try:
+        sys.argv = [main_fn.__module__] + list(argv_extra)
+        main_fn()
+    finally:
+        sys.argv = saved
 
 
 def cmd_add(args):
@@ -42,53 +43,52 @@ def cmd_add(args):
     print(f"✅ 配置已更新: force_include[{code}]={to_cat}")
 
     # 生成前端派生常量
-    run_py("gen_frontend_config.py")
+    _run(codegen.main)
 
     # 扫描 + 局部补数
-    run_py("scan_funds.py")
-    run_py("enrich_data.py", "--codes", code)
-    run_py("fill_missing.py", "--codes", code)
-    run_py("refresh_purchase.py", "--codes", code)
+    _run(scan.main)
+    _run(enrich.main, "--codes", code)
+    _run(fill.main, "--codes", code)
+    _run(refresh.main, "--codes", code)
     if to_cat in ("active", "global_other"):
-        run_py("fetch_holdings.py", "--codes", code)
+        _run(holdings.main, "--codes", code)
 
     print("🎉 add 完成")
 
 
 def cmd_move(args):
-    run_py(
-        "reclassify_fund.py",
-        "--keyword", args.keyword,
-        "--from", args.from_cat,
-        "--to", args.to_cat,
-        *( ["--no-holdings"] if args.no_holdings else [] ),
-        *( ["--no-whitelist"] if args.no_whitelist else [] ),
-    )
-    run_py("gen_frontend_config.py")
+    extra = []
+    if args.no_holdings:
+        extra.append("--no-holdings")
+    if args.no_whitelist:
+        extra.append("--no-whitelist")
+    _run(reclassify.main, "--keyword", args.keyword,
+         "--from", args.from_cat, "--to", args.to_cat, *extra)
+    _run(codegen.main)
 
 
 def cmd_refresh(args):
     if args.codes:
-        run_py("fill_missing.py", "--codes", args.codes)
-        run_py("refresh_purchase.py", "--codes", args.codes)
+        _run(fill.main, "--codes", args.codes)
+        _run(refresh.main, "--codes", args.codes)
     else:
-        run_py("fill_missing.py")
-        run_py("refresh_purchase.py")
+        _run(fill.main)
+        _run(refresh.main)
 
 
 def cmd_sync(_args):
-    run_py("scan_funds.py")
-    run_py("enrich_data.py")
-    run_py("fill_missing.py")
-    run_py("refresh_purchase.py")
-    run_py("fetch_holdings.py")
-    run_py("gen_frontend_config.py")
+    _run(scan.main)
+    _run(enrich.main)
+    _run(fill.main)
+    _run(refresh.main)
+    _run(holdings.main)
+    _run(codegen.main)
 
 
 def _all_share_codes() -> set:
     codes = set()
-    for cat in CATS:
-        fp = DATA / f"{cat}.json"
+    for cat in CATEGORIES:
+        fp = DATA_DIR / f"{cat}.json"
         if not fp.exists():
             continue
         d = json.loads(fp.read_text(encoding="utf-8"))
@@ -120,12 +120,12 @@ def cmd_check(_args):
     # 2) passive_override(type=active) 必须有 holdings
     for code, info in cfg.get("passive_override", {}).items():
         if info.get("type") == "active":
-            if not (DATA / "holdings" / f"{code}.json").exists():
+            if not (DATA_DIR / "holdings" / f"{code}.json").exists():
                 errors.append(f"passive_override(active) 缺少 holdings 文件: {code}")
 
     # 3) default_share_code 必须在 shares 中
-    for cat in CATS:
-        fp = DATA / f"{cat}.json"
+    for cat in CATEGORIES:
+        fp = DATA_DIR / f"{cat}.json"
         if not fp.exists():
             continue
         d = json.loads(fp.read_text(encoding="utf-8"))
@@ -136,13 +136,13 @@ def cmd_check(_args):
                 errors.append(f"{cat}/{s.get('display_name','?')} default_share_code 无效: {default_code}")
 
     # 4) meta 与各数据 generated_at 差异 < 1 分钟
-    meta_fp = DATA / "meta.json"
+    meta_fp = DATA_DIR / "meta.json"
     if meta_fp.exists():
         meta = json.loads(meta_fp.read_text(encoding="utf-8"))
         t_meta = _parse_iso(meta.get("generated_at", ""))
         if t_meta:
-            for cat in CATS:
-                fp = DATA / f"{cat}.json"
+            for cat in CATEGORIES:
+                fp = DATA_DIR / f"{cat}.json"
                 if not fp.exists():
                     continue
                 d = json.loads(fp.read_text(encoding="utf-8"))
@@ -165,14 +165,14 @@ def main():
 
     p_add = sub.add_parser("add", help="新增/强制纳入一只基金")
     p_add.add_argument("--code", required=True)
-    p_add.add_argument("--to", required=True, choices=CATS)
+    p_add.add_argument("--to", required=True, choices=CATEGORIES)
     p_add.add_argument("--keyword", help="可选：加入 active_whitelist 的关键词")
     p_add.set_defaults(func=cmd_add)
 
     p_move = sub.add_parser("move", help="移动分类")
     p_move.add_argument("--keyword", required=True)
-    p_move.add_argument("--from", dest="from_cat", required=True, choices=CATS)
-    p_move.add_argument("--to", dest="to_cat", required=True, choices=CATS)
+    p_move.add_argument("--from", dest="from_cat", required=True, choices=CATEGORIES)
+    p_move.add_argument("--to", dest="to_cat", required=True, choices=CATEGORIES)
     p_move.add_argument("--no-holdings", action="store_true")
     p_move.add_argument("--no-whitelist", action="store_true")
     p_move.set_defaults(func=cmd_move)

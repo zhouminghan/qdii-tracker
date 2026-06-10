@@ -5,11 +5,13 @@
 import json
 from pathlib import Path
 
+from core.constants import CONFIG_DIR
+
 _CONFIG = None
 
 
 def _config_path() -> Path:
-    return Path(__file__).parent.parent / "config" / "funds.json"
+    return CONFIG_DIR / "funds.json"
 
 
 def load_config(force_reload: bool = False) -> dict:

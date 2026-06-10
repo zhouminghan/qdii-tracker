@@ -47,11 +47,11 @@
 ┌──────────┴──────────────┐    ┌──────▼──────────────┐
 │  数据流水线 (Python)     │    │  前端 (HTML/JS)      │
 │  scripts/               │    │  web/index.html     │
-│  ├── scan_funds.py      │    │                     │
-│  ├── enrich_data.py     │    │  - 纯 Vanilla JS    │
-│  ├── fill_missing.py    │    │  - Tailwind 本地化  │
-│  ├── refresh_purchase.py│    │  - 首屏 0 外部请求  │
-│  └── fetch_holdings.py  │    │  - 实时数据按需加载  │
+│  ├── pipeline/scan.py   │    │                     │
+│  ├── pipeline/enrich.py │    │  - 纯 Vanilla JS    │
+│  ├── pipeline/fill.py   │    │  - Tailwind 本地化  │
+│  ├── pipeline/refresh.py│    │  - 首屏 0 外部请求  │
+│  └── pipeline/holdings.py│   │  - 实时数据按需加载  │
 └──────────▲──────────────┘    └─────────────────────┘
            │ 拉取
 ┌──────────┴──────────────────────────────────────────┐
@@ -75,11 +75,15 @@ qdii-tracker/
 ├── .gitignore
 │
 ├── scripts/                      # 数据流水线（Python）
-│   ├── scan_funds.py             # [1] 扫描全量基金、分类
-│   ├── enrich_data.py            # [2] 补充规模/费率/基金经理/收益
-│   ├── fill_missing.py           # [3] 补齐净值/YTD/历史收益
-│   ├── refresh_purchase.py       # [4] 申购状态 + 日限额
-│   ├── fetch_holdings.py         # [5] 抓主动基金 Top10 重仓
+│   ├── fundctl.py                # ⭐ 统一入口（add/move/refresh/sync/check）
+│   ├── core/                     # 共享基础设施（constants/utils/config_loader）
+│   ├── sources/                  # 数据源抽象层（akshare/eastmoney/xueqiu）
+│   ├── pipeline/                 # 流水线步骤
+│   │   ├── scan.py              # [1] 扫描全量基金、分类
+│   │   ├── enrich.py            # [2] 补充规模/费率/基金经理/收益
+│   │   ├── fill.py              # [3] 补齐净值/YTD/历史收益
+│   │   ├── refresh.py           # [4] 申购状态 + 日限额
+│   │   └── holdings.py          # [5] 抓主动基金 Top10 重仓
 │   └── requirements.txt
 │
 ├── web/                          # 前端（纯静态）
@@ -116,11 +120,11 @@ qdii-tracker/
 
 | 步骤 | 脚本 | 做什么 | 耗时 |
 |---|---|---|---|
-| ① | `scan_funds.py` | 扫描全量 QDII 基金，按规则分类，归组成系列 | ~30s |
-| ② | `enrich_data.py` | 补规模/费率/基金经理/收益（逐只调雪球） | ~5min |
-| ③ | `fill_missing.py` | 补净值/日涨跌/YTD/历史收益（天天基金） | ~2min |
-| ④ | `refresh_purchase.py` | 补申购状态/日限额（批量接口） | ~30s |
-| ⑤ | `fetch_holdings.py` | 抓主动基金 Top10 重仓 | ~2min |
+| ① | `pipeline.scan` | 扫描全量 QDII 基金，按规则分类，归组成系列 | ~30s |
+| ② | `pipeline.enrich` | 补规模/费率/基金经理/收益（逐只调雪球） | ~5min |
+| ③ | `pipeline.fill` | 补净值/日涨跌/YTD/历史收益（天天基金） | ~2min |
+| ④ | `pipeline.refresh` | 补申购状态/日限额（批量接口） | ~30s |
+| ⑤ | `pipeline.holdings` | 抓主动基金 Top10 重仓 | ~2min |
 
 > 📝 `global_index.json`（全球非美指数·日经225 / 中韩半导体等）名字含"日经/韩"等会被 `EXCLUDE_KEYWORDS` 过滤，由 `FORCE_INCLUDE_CODES` 白名单机制纳入 scan，全程 5 个脚本都覆盖。
 
@@ -180,7 +184,7 @@ python3 fundctl.py refresh
 
 ---
 
-## 🔍 分类规则（scan_funds.py）
+## 🔍 分类规则（pipeline.scan）
 
 ```
 QDII 基金入口
@@ -216,9 +220,9 @@ python3 fundctl.py add --code 002891 --to active --keyword "华夏移动互联"
 
 1. 用 `ak.fund_name_em()` 查同系列代码
 2. 在 `web/data/{分类}.json` 的 `series` 末尾追加骨架
-3. 跑补数据脚本（enrich + fill_missing + refresh_purchase + fetch_holdings）
+3. 跑补数据脚本（enrich + fill + refresh + holdings）
 
-> ⚠️ `scan_funds.py` 会**覆盖** `web/data/*.json`，方式 A 跑完 scan 后必须接 enrich + fill_missing；方式 B 补数据脚本不会覆盖已有字段。
+> ⚠️ `pipeline.scan` 会**覆盖** `web/data/*.json`，方式 A 跑完 scan 后必须接 enrich + fill；方式 B 补数据脚本不会覆盖已有字段。
 
 详细字段规范、踩坑列表、Bug 史 详见 [`CLAUDE.md`](./CLAUDE.md)。
 
@@ -230,7 +234,7 @@ python3 fundctl.py add --code 002891 --to active --keyword "华夏移动互联"
 A: QDII 净值 T+1 披露，今天看到的通常是前一交易日的净值。Actions 21:30 那轮覆盖绝大多数，凌晨补漏。
 
 **Q: 某只基金数据不对/为空？**
-A: 跑 `fill_missing.py` 补缺；还是空说明数据源本身没有（新基金，等披露）。
+A: 跑 `pipeline.fill` 补缺；还是空说明数据源本身没有（新基金，等披露）。
 
 **Q: 想加/删基金？**
 A: 优先用 `scripts/fundctl.py`（`add` / `move`），需要全量重刷时再用 `sync`。
