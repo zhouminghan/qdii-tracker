@@ -175,15 +175,15 @@ function renderCard(item, parsed) {
     const cached = card.dataset.lastPrice;
     if (cached) {
       card.innerHTML = `
-        <div class="text-[11px] text-stone-400 mb-0.5">${item.emoji} ${item.name}</div>
-        <div class="text-base sm:text-lg font-semibold tabular-nums text-stone-400">${cached}</div>
-        <div class="text-[11px] text-stone-300">📡 暂时无法刷新</div>
+        <div class="text-[11px] text-stone-400 dark:text-stone-500 mb-0.5">${item.emoji} ${item.name}</div>
+        <div class="text-base sm:text-lg font-semibold tabular-nums text-stone-400 dark:text-stone-500">${cached}</div>
+        <div class="text-[11px] text-stone-300 dark:text-stone-600">📡 暂时无法刷新</div>
       `;
     } else {
       card.innerHTML = `
-        <div class="text-[11px] text-stone-400 mb-0.5">${item.emoji} ${item.name}</div>
-        <div class="text-base font-semibold text-stone-300">-</div>
-        <div class="text-[11px] text-stone-300">数据源加载中…</div>
+        <div class="text-[11px] text-stone-400 dark:text-stone-500 mb-0.5">${item.emoji} ${item.name}</div>
+        <div class="text-base font-semibold text-stone-300 dark:text-stone-600">-</div>
+        <div class="text-[11px] text-stone-300 dark:text-stone-600">数据源加载中…</div>
       `;
     }
     return;
@@ -202,7 +202,7 @@ function renderCard(item, parsed) {
   const changeStr = `${sign}${change.toFixed(item.digits === 4 ? 4 : 2)}`;
   card.dataset.lastPrice = priceStr;  // 缓存上次成功值，下次失败可降级展示
   card.innerHTML = `
-    <div class="text-[11px] text-stone-500 mb-0.5">${item.emoji} ${item.name}</div>
+    <div class="text-[11px] text-stone-500 dark:text-stone-400 mb-0.5">${item.emoji} ${item.name}</div>
     <div class="text-base sm:text-lg font-semibold tabular-nums">${priceStr}</div>
     <div class="text-[11px] tabular-nums ${colorCls}">${arrow} ${changeStr} (${pctStr})</div>
   `;

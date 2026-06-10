@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>US Fund Tracker · 美股基金看板</title>
   <link rel="icon" href="data:,">
-  <script src="./js/tailwind.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
+  <!-- 防闪烁：在首屏渲染前读取 localStorage / 系统偏好，立即应用 dark class -->
+  <script>(function(){try{var t=localStorage.getItem('qdii-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}})();</script>
   <!-- 纯常量配置（COMPANY_BRAND/GROUP_META/ETF_GROUPS 等 ~150 行）抽出为 config.js；
        用普通 script 全局作用域加载（非 ES Module），原内联块 0 改动即可引用。
        ?v= 版本戳防 GitHub Pages 强缓存（改文件后需 bump）。 -->
@@ -31,6 +34,7 @@
       font-size: 11px;
       font-weight: 500;
       white-space: nowrap;
+      border: 1px solid transparent;
     }
     .badge-open { background: #dcfce7; color: #166534; }
     .badge-limit { background: #fef3c7; color: #92400e; }
@@ -155,48 +159,148 @@
       font-variant-numeric: tabular-nums;
     }
     .chip.chip-active .chip-count { background: rgba(255,255,255,.2); }
+
+    /* ====== 深色模式覆盖 ====== */
+    /* 策略：CSS 覆盖为主（badge/chip/tab/表格/弹窗/走势图），Tailwind dark: 为辅（布局/文字） */
+    html { transition: background-color 0.2s, color 0.2s; }
+    html.dark body { background: #1c1917; color: #f5f5f4; }
+
+    /* Badge 深色：统一 stone-800 底 + 降饱和彩色字 */
+    html.dark .badge-open   { background: #292524; color: #5fb38a; border-color: #44403c; }
+    html.dark .badge-limit  { background: #292524; color: #c4a35a; border-color: #44403c; }
+    html.dark .badge-paused { background: #292524; color: #c47171; border-color: #44403c; }
+    html.dark .badge-qdii   { background: #292524; color: #8a96c8; border-color: #44403c; }
+    html.dark .badge-usd    { background: #292524; color: #c4a35a; border-color: #44403c; }
+    html.dark .badge-cny    { background: #292524; color: #8a919c; border-color: #44403c; }
+
+    /* Tab active 深色：不用白底突兀，用 stone-700 柔和突出 */
+    html.dark .tab-active { background: #44403c; color: #e7e5e4; }
+
+    /* Chip 深色 */
+    html.dark .chip { background: #292524; color: #a8a29e; border-color: #44403c; }
+    html.dark .chip:hover { background: #44403c; }
+    html.dark .chip.chip-active { background: #44403c; color: #e7e5e4; }
+    html.dark .chip.chip-active .chip-count { background: rgba(255,255,255,.08); }
+
+    /* 费率弹窗深色 */
+    html.dark .fee-tip { border-bottom-color: #57534e; }
+    html.dark .fee-popover {
+      background: #292524; border-color: #44403c;
+      box-shadow: 0 10px 25px rgba(0,0,0,.4);
+    }
+    html.dark .fee-popover th { color: #a8a29e; }
+    html.dark .fee-popover .text-stone-700 { color: #d6d3d1; }
+    html.dark .fee-popover .text-stone-600 { color: #a8a29e; }
+    html.dark .fee-popover .text-stone-500 { color: #78716c; }
+    html.dark .fee-popover .text-stone-400 { color: #57534e; }
+    html.dark .fee-popover .border-stone-100 { border-color: #44403c; }
+    html.dark .fee-tip .text-stone-500 { color: #a8a29e; }
+
+    /* 表格深色（thead / 展开行 / hover） */
+    html.dark .bg-stone-50 { background: #1c1917 !important; }
+    html.dark .bg-stone-50\/60 { background: rgba(28,25,23,0.6) !important; }
+    html.dark thead.bg-stone-50 { background: #1c1917 !important; }
+    html.dark .border-stone-100 { border-color: #292524 !important; }
+    html.dark .border-stone-200 { border-color: #44403c !important; }
+    html.dark .divide-stone-100 > :not([hidden]) ~ :not([hidden]) { border-color: #292524; }
+    html.dark .hover\:bg-stone-50:hover,
+    html.dark .hover\:bg-stone-50\/50:hover { background: #292524 !important; }
+    html.dark .hover\:bg-stone-100:hover { background: #292524 !important; }
+
+    /* Badge 默认（buyStatusClass fallback）深色 */
+    html.dark .badge.bg-stone-100 { background: #292524 !important; color: #a8a29e !important; }
+    /* 费率 tooltip 内买费率文字深色 */
+    html.dark .fee-popover .text-stone-400 { color: #57534e !important; }
+
+    /* 市场状态指示点 */
+    html.dark .mkt-dot.closed { background: #57534e; }
+
+    /* 走势图 SVG 深色 */
+    html.dark .trend-grid-line { stroke: #44403c; }
+    html.dark .trend-grid-text { fill: #78716c; }
+    html.dark .trend-zero-line  { stroke: #57534e; }
+    html.dark #trend-cursor-line { stroke: #a8a29e; }
+    html.dark #trend-cursor-dot  { stroke: #292524; }
+
+    /* 走势图面积渐变深色：降低不透明度 */
+    html.dark #trend-svg stop:first-child { stop-opacity: 0.12; }
+
+    /* nav-date-sub 深色 */
+    html.dark .nav-date-sub { color: #57534e; }
+
+    /* 走势 tooltip 深色 */
+    html.dark #trend-tooltip,
+    html.dark .trend-tooltip-dark {
+      background: #292524; border-color: #44403c; color: #f5f5f4;
+    }
+
+    /* 涨跌色在深色下保持（红涨绿跌不变） */
+
+    /* Modal 遮罩深色 */
+    html.dark #detailModal,
+    html.dark #trendModal { background: rgba(0,0,0,0.6); }
+
+    /* 主题切换按钮 */
+    .theme-toggle {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; cursor: pointer; border: none;
+      background: transparent; color: inherit;
+    }
+    .theme-toggle:hover { background: rgba(0,0,0,.06); }
+    html.dark .theme-toggle:hover { background: rgba(255,255,255,.1); }
+    .theme-toggle svg { width: 20px; height: 20px; }
+    /* 图标切换动画 */
+    .theme-toggle .icon-sun  { display: none; }
+    .theme-toggle .icon-moon { display: block; }
+    html.dark .theme-toggle .icon-sun  { display: block; }
+    html.dark .theme-toggle .icon-moon { display: none; }
   </style>
 </head>
-<body class="text-stone-900">
+<body class="text-stone-900 dark:text-stone-100">
 
   <!-- 顶部导航 -->
-  <header class="bg-white border-b border-stone-200 sticky top-0 z-10">
+  <header class="bg-white dark:bg-stone-800 border-b border-stone-200 dark:border-stone-700 sticky top-0 z-10">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-        <div class="w-8 h-8 bg-stone-900 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0">美</div>
+        <div class="w-8 h-8 bg-stone-900 dark:bg-stone-100 rounded-lg flex items-center justify-center text-white dark:text-stone-900 font-bold text-sm flex-shrink-0">美</div>
         <div class="min-w-0">
           <div class="font-bold text-base sm:text-lg tracking-tight leading-none truncate">US Fund Tracker</div>
-          <div class="text-[11px] sm:text-xs text-stone-500 mt-0.5 truncate">美股基金追踪看板</div>
+          <div class="text-[11px] sm:text-xs text-stone-500 dark:text-stone-400 mt-0.5 truncate">美股基金追踪看板</div>
         </div>
       </div>
       <nav class="flex items-center gap-1 sm:gap-2 text-sm flex-shrink-0">
         <button class="tab-btn tab-active px-3 sm:px-4 py-2 rounded-lg transition text-xs sm:text-sm" data-tab="offshore">🏦 <span class="hidden sm:inline">场外基金</span><span class="sm:hidden">场外</span></button>
-        <button class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 transition text-xs sm:text-sm" data-tab="etf">📈 <span class="hidden sm:inline">场内 ETF</span><span class="sm:hidden">ETF</span></button>
+        <button class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="etf">📈 <span class="hidden sm:inline">场内 ETF</span><span class="sm:hidden">ETF</span></button>
+        <button class="theme-toggle ml-1" id="themeToggle" title="切换深色/亮色主题">
+          <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        </button>
       </nav>
     </div>
   </header>
 
   <!-- 主标题区 -->
   <section class="max-w-7xl mx-auto px-3 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6">
-    <div class="text-xs tracking-widest text-stone-500 uppercase mb-2">US EQUITY FUND TRACKER</div>
+    <div class="text-xs tracking-widest text-stone-500 dark:text-stone-400 uppercase mb-2">US EQUITY FUND TRACKER</div>
     <h1 class="text-2xl sm:text-3xl font-bold tracking-tight mb-2">美股基金追踪看板</h1>
-    <p class="text-xs sm:text-sm text-stone-600" id="page-subtitle">支付宝 / 天天基金可买的场外基金，按投资标的分三组：标普500 / 纳指100 / 美股主动。</p>
+    <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400" id="page-subtitle">支付宝 / 天天基金可买的场外基金，按投资标的分三组：标普500 / 纳指100 / 美股主动。</p>
 
     <!-- 基金知识说明（可折叠，按 Tab 动态显示） -->
     <div class="mt-4" id="knowledge-cards">
       <!-- 卡片 1：场内 vs 场外（仅在场内 ETF Tab 显示） -->
-      <details class="bg-sky-50 border border-sky-200 rounded-xl overflow-hidden" id="card-onshore-offshore" data-for-tabs="etf" open>
-        <summary class="cursor-pointer px-5 py-3 text-sm font-medium text-sky-900 hover:bg-sky-100 transition flex items-center gap-2 select-none">
+      <details class="bg-sky-50 dark:bg-stone-800 border border-sky-200 dark:border-stone-700 rounded-xl overflow-hidden" id="card-onshore-offshore" data-for-tabs="etf" open>
+        <summary class="cursor-pointer px-5 py-3 text-sm font-medium text-sky-900 dark:text-stone-300 hover:bg-sky-100 dark:hover:bg-stone-700 transition flex items-center gap-2 select-none">
           <span>🏛️</span>
           <span>场内 ETF vs 场外基金：有什么区别？</span>
         </summary>
-        <div class="px-5 pb-4 pt-2 bg-white">
-          <p class="text-xs text-stone-500 mb-3">同一只美股指数（如纳指 100），往往同时存在场内和场外两种版本。<b>底层资产相同，差别在于买卖方式</b>。</p>
+        <div class="px-5 pb-4 pt-2 bg-white dark:bg-stone-800">
+          <p class="text-xs text-stone-500 dark:text-stone-400 mb-3">同一只美股指数（如纳指 100），往往同时存在场内和场外两种版本。<b>底层资产相同，差别在于买卖方式</b>。</p>
 
           <!-- 维度对比表 -->
-          <table class="w-full text-xs border border-stone-200 rounded-lg overflow-hidden">
-            <thead class="bg-stone-50 text-stone-600">
-              <tr class="border-b border-stone-200">
+          <table class="w-full text-xs border border-stone-200 dark:border-stone-700 rounded-lg overflow-hidden">
+            <thead class="bg-stone-50 dark:bg-stone-900 text-stone-600 dark:text-stone-400">
+              <tr class="border-b border-stone-200 dark:border-stone-700">
                 <th class="text-left px-3 py-2 font-medium w-24">对比维度</th>
                 <th class="text-left px-3 py-2 font-medium">🏦 场外基金</th>
                 <th class="text-left px-3 py-2 font-medium">📈 场内 ETF</th>
@@ -204,53 +308,53 @@
             </thead>
             <tbody class="divide-y divide-stone-100">
               <tr>
-                <td class="px-3 py-2 text-stone-500">买在哪</td>
-                <td class="px-3 py-2 text-stone-700">支付宝 / 天天基金 / 基金公司 APP</td>
-                <td class="px-3 py-2 text-stone-700">证券账户（东财 / 华泰 / 同花顺 …）</td>
+                <td class="px-3 py-2 text-stone-500 dark:text-stone-400">买在哪</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">支付宝 / 天天基金 / 基金公司 APP</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">证券账户（东财 / 华泰 / 同花顺 …）</td>
               </tr>
               <tr>
-                <td class="px-3 py-2 text-stone-500">价格怎么定</td>
-                <td class="px-3 py-2 text-stone-700">按当日 <b>15:00 收盘净值</b>成交</td>
-                <td class="px-3 py-2 text-stone-700"><b>盘中实时波动</b>，像买股票</td>
+                <td class="px-3 py-2 text-stone-500 dark:text-stone-400">价格怎么定</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">按当日 <b>15:00 收盘净值</b>成交</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300"><b>盘中实时波动</b>，像买股票</td>
               </tr>
               <tr>
-                <td class="px-3 py-2 text-stone-500">起购门槛</td>
-                <td class="px-3 py-2 text-stone-700"><b>10 元</b>起 · 可定投</td>
-                <td class="px-3 py-2 text-stone-700"><b>100 份</b>起（部分 1 份）· 多数券商也支持定投</td>
+                <td class="px-3 py-2 text-stone-500 dark:text-stone-400">起购门槛</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300"><b>10 元</b>起 · 可定投</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300"><b>100 份</b>起（部分 1 份）· 多数券商也支持定投</td>
               </tr>
               <tr>
-                <td class="px-3 py-2 text-stone-500">费率</td>
-                <td class="px-3 py-2 text-stone-700">申购 0.15~1.5%（<b>电商 1 折</b>后常 ≈ 0.1%）<br>管理费 0.6~1.8%/年</td>
-                <td class="px-3 py-2 text-stone-700">股票佣金 <b>万 1 起</b>，无申购费<br>管理费 <b>0.15~0.5%/年</b>（最低）</td>
+                <td class="px-3 py-2 text-stone-500 dark:text-stone-400">费率</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">申购 0.15~1.5%（<b>电商 1 折</b>后常 ≈ 0.1%）<br>管理费 0.6~1.8%/年</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">股票佣金 <b>万 1 起</b>，无申购费<br>管理费 <b>0.15~0.5%/年</b>（最低）</td>
               </tr>
               <tr>
-                <td class="px-3 py-2 text-stone-500">赎回速度</td>
-                <td class="px-3 py-2 text-stone-700">QDII 到账 <b>T+3 ~ T+10</b>（慢）</td>
-                <td class="px-3 py-2 text-stone-700">T+1 卖出即可取现（快）</td>
+                <td class="px-3 py-2 text-stone-500 dark:text-stone-400">赎回速度</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">QDII 到账 <b>T+3 ~ T+10</b>（慢）</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">T+1 卖出即可取现（快）</td>
               </tr>
               <tr>
-                <td class="px-3 py-2 text-stone-500">溢价风险</td>
-                <td class="px-3 py-2 text-stone-700">❌ 无，永远按净值成交</td>
-                <td class="px-3 py-2 text-stone-700">⚠️ QDII 额度紧张时可<b>溢价 1~10%</b>，小心别追高</td>
+                <td class="px-3 py-2 text-stone-500 dark:text-stone-400">溢价风险</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">❌ 无，永远按净值成交</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">⚠️ QDII 额度紧张时可<b>溢价 1~10%</b>，小心别追高</td>
               </tr>
             </tbody>
           </table>
 
           <!-- 附带说明：ETF 联接（折中方案） -->
-          <div class="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3">
-            <div class="text-xs font-medium text-amber-900 mb-1">💎 第三种选择：ETF 联接基金</div>
-            <p class="text-xs text-amber-800 leading-relaxed">
+          <div class="mt-3 bg-amber-50 dark:bg-stone-800 border border-amber-200 dark:border-stone-700 rounded-lg p-3">
+            <div class="text-xs font-medium text-amber-900 dark:text-stone-300 mb-1">💎 第三种选择：ETF 联接基金</div>
+            <p class="text-xs text-amber-800 dark:text-stone-300 leading-relaxed">
               本质是<b>场外基金</b>（支付宝可买、可定投），但 ≥90% 资产投向对应的<b>场内 ETF</b> —— 等于"用场外的方式享受 ETF 的低费率，且无溢价问题"。申购费电商 1 折后常低至 0.1% 左右。
-              <span class="text-amber-900 font-medium">多数人的最佳选择。</span>
+              <span class="text-amber-900 dark:text-stone-200 font-medium">多数人的最佳选择。</span>
             </p>
           </div>
 
           <!-- 决策小贴士 -->
           <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-            <div class="bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2 text-emerald-800">
+            <div class="bg-emerald-50 dark:bg-stone-800 border border-emerald-100 dark:border-stone-700 rounded-lg px-3 py-2 text-emerald-800 dark:text-stone-300">
               🧘 <b>不想开股票账户</b> → 支付宝买「ETF 联接基金」，定投最省心。
             </div>
-            <div class="bg-sky-50 border border-sky-100 rounded-lg px-3 py-2 text-sky-800">
+            <div class="bg-sky-50 dark:bg-stone-800 border border-sky-100 dark:border-stone-700 rounded-lg px-3 py-2 text-sky-800 dark:text-stone-300">
               ⚡ <b>有股票账户</b> → 场内 ETF 更划算，但注意 QDII 溢价时不要高位买入。
             </div>
           </div>
@@ -258,18 +362,18 @@
       </details>
 
       <!-- 卡片 2：A/C/D/E/F/I 决策对照表（仅在场外 Tab 显示） -->
-      <details class="bg-amber-50 border border-amber-200 rounded-xl overflow-hidden mt-3" id="card-share-class" data-for-tabs="offshore" open>
-        <summary class="cursor-pointer px-5 py-3 text-sm font-medium text-amber-900 hover:bg-amber-100 transition flex items-center gap-2 select-none">
+      <details class="bg-amber-50 dark:bg-stone-800 border border-amber-200 dark:border-stone-700 rounded-xl overflow-hidden mt-3" id="card-share-class" data-for-tabs="offshore" open>
+        <summary class="cursor-pointer px-5 py-3 text-sm font-medium text-amber-900 dark:text-stone-300 hover:bg-amber-100 dark:hover:bg-stone-700 transition flex items-center gap-2 select-none">
           <span>📊</span>
           <span>A / C / D / E / F / I 份额怎么选？—— 同一只基金不同份额的对比</span>
         </summary>
-        <div class="px-5 pb-4 pt-2 bg-white">
-          <p class="text-xs text-stone-500 mb-3">同一只基金拆成多种"份额"，<b>投资策略和底层资产完全相同</b>，只是费率结构不同。选对份额能省下不少手续费。</p>
+        <div class="px-5 pb-4 pt-2 bg-white dark:bg-stone-800">
+          <p class="text-xs text-stone-500 dark:text-stone-400 mb-3">同一只基金拆成多种"份额"，<b>投资策略和底层资产完全相同</b>，只是费率结构不同。选对份额能省下不少手续费。</p>
 
           <!-- 决策对照表 -->
-          <table class="w-full text-xs border border-stone-200 rounded-lg overflow-hidden">
-            <thead class="bg-stone-50 text-stone-600">
-              <tr class="border-b border-stone-200">
+          <table class="w-full text-xs border border-stone-200 dark:border-stone-700 rounded-lg overflow-hidden">
+            <thead class="bg-stone-50 dark:bg-stone-900 text-stone-600 dark:text-stone-400">
+              <tr class="border-b border-stone-200 dark:border-stone-700">
                 <th class="text-left px-3 py-2 font-medium" style="width:12%">份额</th>
                 <th class="text-left px-3 py-2 font-medium" style="width:55%">费率特征</th>
                 <th class="text-left px-3 py-2 font-medium" style="width:33%">适合谁买</th>
@@ -278,46 +382,46 @@
             <tbody class="divide-y divide-stone-100">
               <tr>
                 <td class="px-3 py-2"><span class="badge badge-open" style="padding:4px 10px;">A 类</span></td>
-                <td class="px-3 py-2 text-stone-700">买入收申购费 <b>0.12~0.15%</b>（原费率 0.8~1.5%，支付宝/天天基金等代销平台<b>打 1 折</b>）<br>持有 ≥180d 或 365d 后赎回<b>免费</b></td>
-                <td class="px-3 py-2 text-emerald-700"><b>长期定投 / 长持</b>（≥1 年）</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">买入收申购费 <b>0.12~0.15%</b>（原费率 0.8~1.5%，支付宝/天天基金等代销平台<b>打 1 折</b>）<br>持有 ≥180d 或 365d 后赎回<b>免费</b></td>
+                <td class="px-3 py-2 text-emerald-700 dark:text-stone-300"><b>长期定投 / 长持</b>（≥1 年）</td>
               </tr>
               <tr>
                 <td class="px-3 py-2"><span class="badge badge-limit" style="padding:4px 10px;">C 类</span></td>
-                <td class="px-3 py-2 text-stone-700">买入 <b>0 申购费</b>，但每天从净值里扣 <b>0.2~0.8%/年</b> 销售服务费<br>持有 7~30 天即可免赎回费</td>
-                <td class="px-3 py-2 text-emerald-700"><b>短线 / 波段</b>（&lt;1 年）</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">买入 <b>0 申购费</b>，但每天从净值里扣 <b>0.2~0.8%/年</b> 销售服务费<br>持有 7~30 天即可免赎回费</td>
+                <td class="px-3 py-2 text-emerald-700 dark:text-stone-300"><b>短线 / 波段</b>（&lt;1 年）</td>
               </tr>
               <tr>
                 <td class="px-3 py-2"><span class="badge badge-qdii" style="padding:4px 10px;">D 类</span></td>
-                <td class="px-3 py-2 text-stone-700">C 类的<b>互联网直销版</b>，在支付宝/天天基金等平台销售<br>0 申购费 + 销售服务费更低（常 0.01~0.2%），持 7~30 天免赎回</td>
-                <td class="px-3 py-2 text-emerald-700"><b>短线省钱版</b> · 比 C 类费率更低</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">C 类的<b>互联网直销版</b>，在支付宝/天天基金等平台销售<br>0 申购费 + 销售服务费更低（常 0.01~0.2%），持 7~30 天免赎回</td>
+                <td class="px-3 py-2 text-emerald-700 dark:text-stone-300"><b>短线省钱版</b> · 比 C 类费率更低</td>
               </tr>
               <tr>
                 <td class="px-3 py-2"><span class="badge badge-qdii" style="padding:4px 10px;">E 类</span></td>
-                <td class="px-3 py-2 text-stone-700">A 类的<b>互联网专属折扣版</b>，仅在支付宝/天天基金等平台销售<br>申购费更低（常 <b>1 折起</b>），销售服务费极低（0.01%）</td>
-                <td class="px-3 py-2 text-emerald-700">有 E 类就<b>优先选 E</b></td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">A 类的<b>互联网专属折扣版</b>，仅在支付宝/天天基金等平台销售<br>申购费更低（常 <b>1 折起</b>），销售服务费极低（0.01%）</td>
+                <td class="px-3 py-2 text-emerald-700 dark:text-stone-300">有 E 类就<b>优先选 E</b></td>
               </tr>
               <tr>
                 <td class="px-3 py-2"><span class="badge badge-qdii" style="padding:4px 10px;">F / I 类</span></td>
-                <td class="px-3 py-2 text-stone-700"><b>基金公司官方 APP 直销</b>专属（如广发基金、易方达 e 钱包）<br>管理费/申购费最低，I 类起购门槛通常 500~1000 万</td>
-                <td class="px-3 py-2 text-emerald-700"><b>资金量大</b>最划算 · 需下载官方 APP</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300"><b>基金公司官方 APP 直销</b>专属（如广发基金、易方达 e 钱包）<br>管理费/申购费最低，I 类起购门槛通常 500~1000 万</td>
+                <td class="px-3 py-2 text-emerald-700 dark:text-stone-300"><b>资金量大</b>最划算 · 需下载官方 APP</td>
               </tr>
             </tbody>
           </table>
 
           <!-- 决策小贴士 -->
           <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-            <div class="bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2 text-emerald-800">
-              📌 <b>长期定投</b><br>选 A 类（有 E 就选 E）<br><span class="text-emerald-600">代销平台 1 折申购费，长持免赎回</span>
+            <div class="bg-emerald-50 dark:bg-stone-800 border border-emerald-100 dark:border-stone-700 rounded-lg px-3 py-2 text-emerald-800 dark:text-stone-300">
+              📌 <b>长期定投</b><br>选 A 类（有 E 就选 E）<br><span class="text-emerald-600 dark:text-stone-400">代销平台 1 折申购费，长持免赎回</span>
             </div>
-            <div class="bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 text-amber-800">
-              📌 <b>短线择时</b><br>选 C 类（有 D 就选 D）<br><span class="text-amber-600">0 申购费，持 7~30 天即免赎回</span>
+            <div class="bg-amber-50 dark:bg-stone-800 border border-amber-100 dark:border-stone-700 rounded-lg px-3 py-2 text-amber-800 dark:text-stone-300">
+              📌 <b>短线择时</b><br>选 C 类（有 D 就选 D）<br><span class="text-amber-600 dark:text-stone-400">0 申购费，持 7~30 天即免赎回</span>
             </div>
-            <div class="bg-sky-50 border border-sky-100 rounded-lg px-3 py-2 text-sky-800">
-              📌 <b>大资金省费率</b><br>选 F / I 类（直销）<br><span class="text-sky-600">下载基金公司官方 APP 购买</span>
+            <div class="bg-sky-50 dark:bg-stone-800 border border-sky-100 dark:border-stone-700 rounded-lg px-3 py-2 text-sky-800 dark:text-stone-300">
+              📌 <b>大资金省费率</b><br>选 F / I 类（直销）<br><span class="text-sky-600 dark:text-stone-400">下载基金公司官方 APP 购买</span>
             </div>
           </div>
 
-          <p class="text-[11px] text-stone-500 mt-3">⚠️ 免赎回费天数由各基金公司约定，QDII 为防短炒汇率波动普遍较长（多为 180d / 365d）。具体数字请展开系列看「卖出规则」列。</p>
+          <p class="text-[11px] text-stone-500 dark:text-stone-400 mt-3">⚠️ 免赎回费天数由各基金公司约定，QDII 为防短炒汇率波动普遍较长（多为 180d / 365d）。具体数字请展开系列看「卖出规则」列。</p>
         </div>
       </details>
     </div>
@@ -332,22 +436,22 @@
         <div class="min-w-0">
           <div class="flex items-baseline gap-2 flex-wrap">
             <h2 class="text-lg font-bold">📊 市场参照系</h2>
-            <span class="text-xs text-stone-400 tracking-wider">· 美股大盘 + 美元/人民币汇率</span>
+            <span class="text-xs text-stone-400 dark:text-stone-500 tracking-wider">· 美股大盘 + 美元/人民币汇率</span>
           </div>
-          <p class="text-xs text-stone-500 mt-1">美元/人民币 是 USD/CNY 口径（1 美元值多少元）：<b class="text-rose-600">数值↑ = 美元升值 / 人民币贬值 → QDII 净值受益 ↑</b>；反之拖累。</p>
+          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">美元/人民币 是 USD/CNY 口径（1 美元值多少元）：<b class="text-rose-600 dark:text-rose-400">数值↑ = 美元升值 / 人民币贬值 → QDII 净值受益 ↑</b>；反之拖累。</p>
         </div>
-        <span class="text-[11px] text-stone-400 flex-shrink-0 text-right" id="market-meta">
+        <span class="text-[11px] text-stone-400 dark:text-stone-500 flex-shrink-0 text-right" id="market-meta">
           <span id="market-update-time">📡 行情加载中…</span>
         </span>
       </div>
       <!-- 指标卡网格（5 张：道琼斯 / 标普500 / 纳斯达克 / 纳指100 / 美元/人民币） -->
       <div id="market-cards" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
         <!-- 由 JS 动态填充。data-symbol 与 MarketIndices 模块的 secid 一一对应。 -->
-        <div data-symbol="100.DJIA"   class="market-card bg-white rounded-xl border border-stone-200 px-3 py-2.5"></div>
-        <div data-symbol="100.SPX"    class="market-card bg-white rounded-xl border border-stone-200 px-3 py-2.5"></div>
-        <div data-symbol="100.NDX"    class="market-card bg-white rounded-xl border border-stone-200 px-3 py-2.5"></div>
-        <div data-symbol="100.NDX100" class="market-card bg-white rounded-xl border border-stone-200 px-3 py-2.5"></div>
-        <div data-symbol="133.USDCNH" class="market-card bg-white rounded-xl border border-stone-200 px-3 py-2.5"></div>
+        <div data-symbol="100.DJIA"   class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
+        <div data-symbol="100.SPX"    class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
+        <div data-symbol="100.NDX"    class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
+        <div data-symbol="100.NDX100" class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
+        <div data-symbol="133.USDCNH" class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
       </div>
     </section>
 
@@ -356,17 +460,17 @@
         <div class="min-w-0">
           <div class="flex items-baseline gap-2 flex-wrap">
             <h2 class="text-lg font-bold" id="offshore-title">🏦 场外基金</h2>
-            <span class="text-xs text-stone-400 tracking-wider">· 支付宝 / 天天基金可买</span>
+            <span class="text-xs text-stone-400 dark:text-stone-500 tracking-wider">· 支付宝 / 天天基金可买</span>
           </div>
-          <p class="text-xs text-stone-500 mt-1" id="offshore-subtitle">按申购时当日 15:00 收盘净值成交，T+1 出净值，支持 10 元起小额定投。</p>
+          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1" id="offshore-subtitle">按申购时当日 15:00 收盘净值成交，T+1 出净值，支持 10 元起小额定投。</p>
         </div>
-        <span class="text-xs text-stone-500 flex-shrink-0" id="count-offshore">--</span>
+        <span class="text-xs text-stone-500 dark:text-stone-400 flex-shrink-0" id="count-offshore">--</span>
       </div>
       <!-- 分组级风险/说明提示（按 Chip 动态切换；空字符串则隐藏） -->
       <div id="offshore-notice" class="hidden mb-3"></div>
       <!-- 分组筛选 Chips（JS 动态注入） -->
       <div id="offshore-chips" class="flex flex-wrap items-center gap-2 mb-3"></div>
-      <div class="bg-white rounded-xl border border-stone-200 overflow-x-auto" id="table-offshore"></div>
+      <div class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 overflow-x-auto" id="table-offshore"></div>
     </section>
 
     <section data-category="etf">
@@ -374,44 +478,44 @@
         <div class="min-w-0">
           <div class="flex items-baseline gap-2 flex-wrap">
             <h2 class="text-lg font-bold" id="etf-title">📈 场内 ETF</h2>
-            <span class="text-xs text-stone-400 tracking-wider">· 需股票账户</span>
+            <span class="text-xs text-stone-400 dark:text-stone-500 tracking-wider">· 需股票账户</span>
           </div>
-          <p class="text-xs text-stone-500 mt-1" id="etf-subtitle">盘中实时交易（T+0 / T+1），费率最低（0.15~0.5%），支持一手 100 份起买。</p>
+          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1" id="etf-subtitle">盘中实时交易（T+0 / T+1），费率最低（0.15~0.5%），支持一手 100 份起买。</p>
         </div>
-        <span class="text-xs text-stone-500 flex-shrink-0" id="count-etf">--</span>
+        <span class="text-xs text-stone-500 dark:text-stone-400 flex-shrink-0" id="count-etf">--</span>
       </div>
 
       <!-- 场内 ETF 说明 -->
-      <div class="bg-indigo-50/60 border border-indigo-100 rounded-xl px-4 py-3 mb-3 text-xs">
-        <div class="flex flex-wrap items-start gap-x-6 gap-y-2 text-stone-700">
-          <div><span class="text-indigo-500 font-medium">交易</span> 盘中实时买卖，秒级成交</div>
-          <div><span class="text-indigo-500 font-medium">费率</span> 仅券商佣金（万1~万3），<b>无申购/赎回/销售服务费</b></div>
-          <div><span class="text-indigo-500 font-medium">起购</span> 1手=100份（约100~300元）</div>
-          <div><span class="text-indigo-500 font-medium">定投</span> 需手动买入或设条件单</div>
+      <div class="bg-indigo-50/60 dark:bg-stone-800 border border-indigo-100 dark:border-stone-700 rounded-xl px-4 py-3 mb-3 text-xs">
+        <div class="flex flex-wrap items-start gap-x-6 gap-y-2 text-stone-700 dark:text-stone-300">
+          <div><span class="text-indigo-500 dark:text-stone-400 font-medium">交易</span> 盘中实时买卖，秒级成交</div>
+          <div><span class="text-indigo-500 dark:text-stone-400 font-medium">费率</span> 仅券商佣金（万1~万3），<b>无申购/赎回/销售服务费</b></div>
+          <div><span class="text-indigo-500 dark:text-stone-400 font-medium">起购</span> 1手=100份（约100~300元）</div>
+          <div><span class="text-indigo-500 dark:text-stone-400 font-medium">定投</span> 需手动买入或设条件单</div>
         </div>
-        <div class="mt-2 pt-2 border-t border-indigo-100 text-stone-500 flex flex-wrap gap-x-4">
-          <span>⚠️ QDII ETF 有<b class="text-amber-700">溢价风险</b>：场内价格 &gt; 净值时为溢价，高溢价买入可能亏损</span>
+        <div class="mt-2 pt-2 border-t border-indigo-100 dark:border-stone-700 text-stone-500 dark:text-stone-400 flex flex-wrap gap-x-4">
+          <span>⚠️ QDII ETF 有<b class="text-amber-700 dark:text-amber-400">溢价风险</b>：场内价格 &gt; 净值时为溢价，高溢价买入可能亏损</span>
           <span>💡 不想开股票账户？上方「场外基金」里有对应的 <b>ETF联接基金</b>，支付宝直接定投</span>
         </div>
       </div>
 
       <!-- 分组筛选 Chips（JS 动态注入） -->
       <div id="etf-chips" class="flex flex-wrap items-center gap-2 mb-3"></div>
-      <div class="bg-white rounded-xl border border-stone-200 overflow-x-auto" id="table-etf"></div>
+      <div class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 overflow-x-auto" id="table-etf"></div>
     </section>
   </main>
 
   <!-- 基金详情 Modal -->
   <div id="detailModal" class="hidden fixed inset-0 z-50 overflow-y-auto" style="background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);">
     <div class="modal-overlay min-h-screen flex items-start justify-center p-2 sm:p-4 md:p-8">
-      <div class="bg-stone-50 rounded-2xl w-full max-w-5xl shadow-2xl overflow-hidden">
+      <div class="bg-stone-50 dark:bg-stone-900 rounded-2xl w-full max-w-5xl shadow-2xl overflow-hidden">
         <!-- Header -->
-        <div class="bg-white border-b border-stone-200 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between sticky top-0 z-10">
+        <div class="bg-white dark:bg-stone-800 border-b border-stone-200 dark:border-stone-700 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between sticky top-0 z-10">
           <div class="min-w-0">
             <h2 id="detail-title" class="text-base sm:text-xl font-bold truncate">--</h2>
-            <div id="detail-subtitle" class="text-[11px] sm:text-xs text-stone-500 mt-1 flex items-center flex-wrap gap-1">--</div>
+            <div id="detail-subtitle" class="text-[11px] sm:text-xs text-stone-500 dark:text-stone-400 mt-1 flex items-center flex-wrap gap-1">--</div>
           </div>
-          <button onclick="closeDetail()" class="w-9 h-9 rounded-full hover:bg-stone-100 flex items-center justify-center transition text-stone-500 hover:text-stone-900 flex-shrink-0 ml-3 sm:ml-4">
+          <button onclick="closeDetail()" class="w-9 h-9 rounded-full hover:bg-stone-100 dark:hover:bg-stone-700 flex items-center justify-center transition text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 flex-shrink-0 ml-3 sm:ml-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
             </svg>
@@ -422,30 +526,30 @@
         <div class="p-3 sm:p-6 space-y-4 sm:space-y-6">
           <!-- 顶部信息卡片 -->
           <section>
-            <div class="text-xs tracking-widest text-stone-500 uppercase mb-3">OVERVIEW · 基础信息</div>
+            <div class="text-xs tracking-widest text-stone-500 dark:text-stone-400 uppercase mb-3">OVERVIEW · 基础信息</div>
             <div id="detail-info" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3"></div>
           </section>
 
           <!-- 持仓 -->
           <section>
-            <div class="text-xs tracking-widest text-stone-500 uppercase mb-3">HOLDINGS · 前十大重仓股</div>
-            <div id="detail-holdings" class="bg-white rounded-xl border border-stone-200 p-3 sm:p-5 overflow-x-auto">
-              <div class="text-center py-12 text-stone-400 text-sm">加载中...</div>
+            <div class="text-xs tracking-widest text-stone-500 dark:text-stone-400 uppercase mb-3">HOLDINGS · 前十大重仓股</div>
+            <div id="detail-holdings" class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 p-3 sm:p-5 overflow-x-auto">
+              <div class="text-center py-12 text-stone-400 dark:text-stone-500 text-sm">加载中...</div>
             </div>
           </section>
 
           <!-- 业绩表现 -->
           <section>
-            <div class="text-xs tracking-widest text-stone-500 uppercase mb-3">PERFORMANCE · 业绩表现</div>
-            <div class="bg-white rounded-xl border border-stone-200 p-4">
+            <div class="text-xs tracking-widest text-stone-500 dark:text-stone-400 uppercase mb-3">PERFORMANCE · 业绩表现</div>
+            <div class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 p-4">
               <div id="detail-perf" class="grid grid-cols-4 md:grid-cols-8 gap-2"></div>
             </div>
           </section>
 
           <!-- 费率 -->
           <section>
-            <div class="text-xs tracking-widest text-stone-500 uppercase mb-3">FEES · 费率结构</div>
-            <div id="detail-fee" class="bg-white rounded-xl border border-stone-200 px-5 py-3"></div>
+            <div class="text-xs tracking-widest text-stone-500 dark:text-stone-400 uppercase mb-3">FEES · 费率结构</div>
+            <div id="detail-fee" class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-5 py-3"></div>
           </section>
         </div>
       </div>
@@ -455,13 +559,13 @@
   <!-- 历史净值走势 Modal -->
   <div id="trendModal" class="hidden fixed inset-0 z-50 overflow-y-auto" style="background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);">
     <div class="modal-overlay min-h-screen flex items-start justify-center p-2 sm:p-4 md:p-8">
-      <div class="bg-stone-50 rounded-2xl w-full max-w-3xl shadow-2xl overflow-hidden">
-        <div class="bg-white border-b border-stone-200 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between sticky top-0 z-10">
+      <div class="bg-stone-50 dark:bg-stone-900 rounded-2xl w-full max-w-3xl shadow-2xl overflow-hidden">
+        <div class="bg-white dark:bg-stone-800 border-b border-stone-200 dark:border-stone-700 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between sticky top-0 z-10">
           <div class="min-w-0">
             <h2 id="trend-title" class="text-base sm:text-xl font-bold truncate">--</h2>
-            <div id="trend-subtitle" class="text-[11px] sm:text-xs text-stone-500 mt-1">--</div>
+            <div id="trend-subtitle" class="text-[11px] sm:text-xs text-stone-500 dark:text-stone-400 mt-1">--</div>
           </div>
-          <button onclick="closeTrend()" class="w-9 h-9 rounded-full hover:bg-stone-100 flex items-center justify-center transition text-stone-500 hover:text-stone-900 flex-shrink-0 ml-3 sm:ml-4">
+          <button onclick="closeTrend()" class="w-9 h-9 rounded-full hover:bg-stone-100 dark:hover:bg-stone-700 flex items-center justify-center transition text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 flex-shrink-0 ml-3 sm:ml-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
             </svg>
@@ -471,13 +575,13 @@
           <!-- 时间区间 chips -->
           <div id="trend-ranges" class="flex flex-wrap gap-2"></div>
           <!-- 图表区 -->
-          <div id="trend-chart" class="bg-white rounded-xl border border-stone-200 p-3 sm:p-5">
+          <div id="trend-chart" class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 p-3 sm:p-5">
             <div class="text-center py-12 text-stone-400 text-sm">加载中...</div>
           </div>
           <!-- 最近净值列表 -->
           <div>
-            <div class="text-xs tracking-widest text-stone-500 uppercase mb-2">RECENT · 最近净值</div>
-            <div id="trend-recent" class="bg-white rounded-xl border border-stone-200 overflow-hidden text-xs"></div>
+            <div class="text-xs tracking-widest text-stone-500 dark:text-stone-400 uppercase mb-2">RECENT · 最近净值</div>
+            <div id="trend-recent" class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 overflow-hidden text-xs"></div>
           </div>
         </div>
       </div>
@@ -485,8 +589,8 @@
   </div>
 
   <footer class="max-w-7xl mx-auto px-3 sm:px-6 mt-4 pb-6">
-    <div class="bg-stone-50 rounded-xl p-5 text-xs text-stone-500 leading-relaxed border border-stone-200">
-      <div class="font-semibold text-stone-700 mb-2">⚠️ 风险提示与免责声明</div>
+    <div class="bg-stone-50 dark:bg-stone-800 rounded-xl p-5 text-xs text-stone-500 dark:text-stone-400 leading-relaxed border border-stone-200 dark:border-stone-700">
+      <div class="font-semibold text-stone-700 dark:text-stone-300 mb-2">⚠️ 风险提示与免责声明</div>
       <p>基金投资有风险，过往业绩不代表未来表现。QDII 基金受汇率波动、海外市场风险影响。本页面数据来自 AKShare 与天天基金公开接口，仅供个人研究参考，不构成投资建议。限额字段以基金 APP 实际显示为准。</p>
       <p class="mt-2">📊 数据来源：East Money (AKShare) / 雪球 · 📜 MIT License · 数据由 GitHub Actions 每日自动更新</p>
     </div>
@@ -736,14 +840,14 @@
       // 排序图标 helper：当前排序列 → 显示 ↓/↑；非当前列 → 显示淡色双向箭头 ⇅
       const sortIcon = (key) => {
         if (sortConf.key !== key) {
-          return '<span class="ml-0.5 text-stone-300">⇅</span>';
+          return '<span class="ml-0.5 text-stone-300 dark:text-stone-600">⇅</span>';
         }
         return sortConf.dir === 'desc'
           ? '<span class="ml-0.5 text-indigo-500">↓</span>'
           : '<span class="ml-0.5 text-indigo-500">↑</span>';
       };
       const sortableTh = (key, label, align = 'right', extra = '') => `
-        <th class="text-${align} py-3 px-3 font-medium cursor-pointer hover:bg-stone-100 select-none" data-sort-key="${key}" title="点击按${label}排序">
+        <th class="text-${align} py-3 px-3 font-medium cursor-pointer hover:bg-stone-100 dark:hover:bg-stone-700 select-none" data-sort-key="${key}" title="点击按${label}排序">
           ${label}${sortIcon(key)}${extra}
         </th>`;
 
@@ -755,7 +859,7 @@
       //   · 副标 = nav_date（MM-DD 格式）
       //   · 整列可点击 → 按当日涨跌幅排序（不是按净值数字本身）
       const priceHeaderHtml = `
-              <th class="text-right py-3 px-3 font-medium cursor-pointer hover:bg-stone-100 select-none" data-sort-key="nav" title="点击按当日涨跌排序">
+              <th class="text-right py-3 px-3 font-medium cursor-pointer hover:bg-stone-100 dark:hover:bg-stone-700 select-none" data-sort-key="nav" title="点击按当日涨跌排序">
                 <div>${isEtf ? '最新价' : '净值'}${sortIcon('nav')}</div>
                 ${navHeaderSub ? `<div class="nav-date-sub text-[10px] text-stone-400 font-normal mt-0.5">${navHeaderSub}</div>` : `<div class="nav-date-sub text-[10px] text-stone-400 font-normal mt-0.5"></div>`}
               </th>`;
@@ -770,19 +874,19 @@
       const premiumHeaderHtml = isEtf ? `
               <th class="text-right py-3 px-3 font-medium select-none">
                 <div class="inline-flex items-center justify-end gap-1.5">
-                  <span class="cursor-pointer hover:text-stone-900" data-sort-key="etf_premium" title="点击按溢价率排序">溢价率${sortIcon('etf_premium')}</span>
+                  <span class="cursor-pointer hover:text-stone-900 dark:hover:text-stone-200" data-sort-key="etf_premium" title="点击按溢价率排序">溢价率${sortIcon('etf_premium')}</span>
                   <span class="group relative inline-block cursor-help" tabindex="0">
-                    <svg class="w-3.5 h-3.5 text-stone-400 hover:text-stone-700 transition-colors" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <svg class="w-3.5 h-3.5 text-stone-400 hover:text-stone-700 dark:hover:text-stone-300 transition-colors" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                       <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                     </svg>
-                    <div class="hidden group-hover:block group-focus-within:block absolute right-0 top-full mt-2 z-50 w-72 bg-white border border-stone-200 rounded-lg shadow-lg p-3 text-left text-xs text-stone-700 font-normal normal-case pointer-events-none">
-                      <div class="font-semibold text-stone-800 mb-1.5">📌 溢价率</div>
-                      <div class="mb-2 font-mono text-stone-600">(场内价 − 净值) ÷ 净值 × 100%</div>
-                      <div class="space-y-1 text-stone-600 leading-relaxed">
-                        <div>· <b class="text-stone-700">场内价</b>：盘中实时价（每分钟刷新）</div>
-                        <div>· <b class="text-stone-700">净值</b>：上一交易日收盘净值（T-1）</div>
+                    <div class="hidden group-hover:block group-focus-within:block absolute right-0 top-full mt-2 z-50 w-72 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg shadow-lg p-3 text-left text-xs text-stone-700 dark:text-stone-300 font-normal normal-case pointer-events-none">
+                      <div class="font-semibold text-stone-800 dark:text-stone-200 mb-1.5">📌 溢价率</div>
+                      <div class="mb-2 font-mono text-stone-600 dark:text-stone-400">(场内价 − 净值) ÷ 净值 × 100%</div>
+                      <div class="space-y-1 text-stone-600 dark:text-stone-400 leading-relaxed">
+                        <div>· <b class="text-stone-700 dark:text-stone-300">场内价</b>：盘中实时价（每分钟刷新）</div>
+                        <div>· <b class="text-stone-700 dark:text-stone-300">净值</b>：上一交易日收盘净值（T-1）</div>
                       </div>
-                      <div class="mt-2 pt-2 border-t border-stone-100 text-stone-500 leading-relaxed">⚠️ 溢价 &gt;3% 通常是 QDII 限购引发的资金抢筹信号，回归净值时高位买入会亏损</div>
+                      <div class="mt-2 pt-2 border-t border-stone-100 dark:border-stone-700 text-stone-500 dark:text-stone-400 leading-relaxed">⚠️ 溢价 &gt;3% 通常是 QDII 限购引发的资金抢筹信号，回归净值时高位买入会亏损</div>
                     </div>
                   </span>
                 </div>
@@ -790,7 +894,7 @@
 
       container.innerHTML = `
         <table class="w-full text-sm">
-          <thead class="bg-stone-50 border-b border-stone-200 text-stone-600 text-xs">
+          <thead class="bg-stone-50 dark:bg-stone-900 border-b border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-400 text-xs">
             <tr>
               <th class="text-left py-3 px-3 font-medium w-8"></th>
               <th class="text-left py-3 px-3 font-medium">基金系列</th>
@@ -936,10 +1040,10 @@
       }
       // 配色：sky=中性提示（被动指数小风险），amber=黄色提醒（限购/误差等可控风险），rose=红色警告（深坑）
       const palette = {
-        sky:   { bg: 'bg-sky-50/70',   border: 'border-sky-200',   text: 'text-sky-900',   icon: '📌' },
-        amber: { bg: 'bg-amber-50/70', border: 'border-amber-200', text: 'text-amber-900', icon: '⚠️' },
-        rose:  { bg: 'bg-rose-50/70',  border: 'border-rose-200',  text: 'text-rose-900',  icon: '🚨' },
-      }[cfg.tone] || { bg: 'bg-stone-50', border: 'border-stone-200', text: 'text-stone-700', icon: '📌' };
+        sky:   { bg: 'bg-sky-50/70 dark:bg-stone-800',   border: 'border-sky-200 dark:border-stone-700',   text: 'text-sky-900 dark:text-stone-300',   icon: '📌' },
+        amber: { bg: 'bg-amber-50/70 dark:bg-stone-800', border: 'border-amber-200 dark:border-stone-700', text: 'text-amber-900 dark:text-stone-300', icon: '⚠️' },
+        rose:  { bg: 'bg-rose-50/70 dark:bg-stone-800',  border: 'border-rose-200 dark:border-stone-700',  text: 'text-rose-900 dark:text-stone-300',  icon: '🚨' },
+      }[cfg.tone] || { bg: 'bg-stone-50 dark:bg-stone-800', border: 'border-stone-200 dark:border-stone-700', text: 'text-stone-700 dark:text-stone-300', icon: '📌' };
       // 计算日限额汇总（仅场外被动分组：sp500 / nasdaq_passive / global_index）
       let limitSummary = '';
       if (tab === 'offshore' && ['sp500', 'nasdaq_passive', 'global_index'].includes(filter)) {
@@ -1019,15 +1123,15 @@
         // 真实持仓按钮：override.type='active' 用于"分类被动但实为主动管理"的基金（如 Smart Beta）
         holdingsTd = `<td class="py-3 px-3 text-center">${holdingsBtn(defCode)}</td>`;
       } else {
-        holdingsTd = '<td class="py-3 px-3 text-center text-stone-300">—</td>';
+        holdingsTd = '<td class="py-3 px-3 text-center text-stone-300 dark:text-stone-600">—</td>';
       }
 
       // 展开后的子表格 colspan（ETF=9，场外=12）
       const expandColspan = isEtf ? 10 : 13;
 
       return `
-        <tr class="series-row border-b border-stone-100 ${isEtf ? '' : 'hover:bg-stone-50 cursor-pointer'} transition" data-series-id="${series.series_id}" data-is-etf="${isEtf ? '1' : '0'}"${grpAttr}>
-          <td class="py-3 px-3 text-stone-400">
+        <tr class="series-row border-b border-stone-100 dark:border-stone-700/50 ${isEtf ? '' : 'hover:bg-stone-50 dark:hover:bg-stone-700/30 cursor-pointer'} transition" data-series-id="${series.series_id}" data-is-etf="${isEtf ? '1' : '0'}"${grpAttr}>
+          <td class="py-3 px-3 text-stone-400 dark:text-stone-500">
             ${isEtf ? '' : `<svg class="arrow w-4 h-4 inline transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>`}
@@ -1037,11 +1141,11 @@
               ${getLogo(series.company)}
               <div class="min-w-0">
                 <div class="font-medium truncate">${series.starred ? '⭐ ' : ''}${isEtf ? def.name : series.display_name}</div>
-                <div class="text-xs text-stone-500 num mt-0.5">
+                <div class="text-xs text-stone-500 dark:text-stone-400 num mt-0.5">
                   ${def.code}${isEtf ? '' : ' · ' + def.share_class + (def.currency === '美元' ? ' · 美元' : '')}
                   <span class="badge ${isEtf ? 'badge-qdii' : 'badge-qdii'} ml-1">${isEtf ? 'ETF' : 'QDII'}</span>
                 </div>
-                ${isActive && def.manager ? `<div class="text-[11px] text-stone-400 mt-0.5 truncate">👤 ${def.manager}</div>` : ''}
+                ${isActive && def.manager ? `<div class="text-[11px] text-stone-400 dark:text-stone-500 mt-0.5 truncate">👤 ${def.manager}</div>` : ''}
               </div>
             </div>
           </td>
@@ -1054,7 +1158,7 @@
               if (!nd) return '';
               const headerDate = (STATE._navDate || {})[isEtf ? 'etf' : 'offshore'] || '';
               if (nd === headerDate && !rowIsLive) return '';
-              return `<div class="text-[10px] ${rowIsLive ? 'text-indigo-500' : 'text-stone-400'}">${fmtMD(nd)}</div>`;
+              return `<div class="text-[10px] ${rowIsLive ? 'text-indigo-500 dark:text-indigo-400' : 'text-stone-400 dark:text-stone-500'}">${fmtMD(nd)}</div>`;
             })()}
           </td>
           ${(() => {
@@ -1063,7 +1167,7 @@
             // 数据未到 / 拉取失败 / 非 ETF 时显示「--」（仍占位以保证 colspan 对齐）。
             if (!isEtf) return '';
             if (def.etf_premium == null) {
-              return '<td class="py-3 px-3 text-right num text-stone-300">--</td>';
+              return '<td class="py-3 px-3 text-right num text-stone-300 dark:text-stone-600">--</td>';
             }
             const p = def.etf_premium;
             // why 取消多级色阶但保留单色红：调研支付宝实际做法 —— 溢价率统一用红色
@@ -1071,7 +1175,7 @@
             // 单色红比"灰色"更符合中国基金 App 的视觉语义（红 = 注意/警示），
             // 也与"红涨绿跌"的涨跌色不冲突（涨跌列由 changeCell 渲染，本列只展示溢价数值）。
             // 高溢价 / 折价的语义解释由表头 ⓘ 悬浮气泡 + 单元格原生 title 双层承担。
-            const cls = 'text-rose-600';
+            const cls = 'text-rose-600 dark:text-rose-400';
             const sign = p > 0 ? '+' : '';
             const tip = p > 3 ? '高溢价，谨慎追高'
                       : p > 1 ? '溢价'
@@ -1084,16 +1188,16 @@
           ${changeCell(def.chg_1y)}
           ${isEtf ? '' : changeCell(def.chg_since_inception)}
           ${isEtf ? '' : `<td class="py-3 px-3 text-center">${statusBadge(def)}</td>`}
-          ${isEtf ? '' : `<td class="py-3 px-3 text-center text-stone-500 num text-xs">${series.shares.length}</td>`}
+          ${isEtf ? '' : `<td class="py-3 px-3 text-center text-stone-500 dark:text-stone-400 num text-xs">${series.shares.length}</td>`}
           ${trendTd}
           ${holdingsTd}
         </tr>
-        ${isEtf ? '' : `<tr class="share-rows hidden bg-stone-50/60" data-parent="${series.series_id}">
+        ${isEtf ? '' : `<tr class="share-rows hidden bg-stone-50/60 dark:bg-stone-900/60" data-parent="${series.series_id}">
           <td colspan="${expandColspan}" class="p-0">
-            <div class="px-6 py-3 border-y border-stone-100 fade-in">
-              <div class="text-xs text-stone-500 mb-2">${series.shares.length} 个份额（人民币优先，A类在前）：</div>
+            <div class="px-6 py-3 border-y border-stone-100 dark:border-stone-700/50 fade-in">
+              <div class="text-xs text-stone-500 dark:text-stone-400 mb-2">${series.shares.length} 个份额（人民币优先，A类在前）：</div>
               <table class="w-full text-xs">
-                <thead class="text-stone-500">
+                <thead class="text-stone-500 dark:text-stone-400">
                   <tr>
                     <th class="text-left py-2 font-medium">代码</th>
                     <th class="text-left py-2 font-medium">份额名称</th>
@@ -1101,7 +1205,7 @@
                     <th class="text-right py-2 font-medium">规模</th>
                     <th class="text-right py-2 font-medium">
                       <div>净值</div>
-                      ${def.nav_date ? `<div class="text-[10px] text-stone-400 font-normal mt-0.5">${fmtMD(def.nav_date)}</div>` : ''}
+                      ${def.nav_date ? `<div class="text-[10px] text-stone-400 dark:text-stone-500 font-normal mt-0.5">${fmtMD(def.nav_date)}</div>` : ''}
                     </th>
                     <th class="text-right py-2 font-medium">近1年</th>
                     ${isEtf ? '' : `
@@ -1131,13 +1235,13 @@
       const chgTxt = dailyChg == null ? '--' : (dailyChg > 0 ? '+' : '') + dailyChg.toFixed(2) + '%';
 
       return `
-        <tr class="border-t border-stone-100">
-          <td class="py-2 num">${sh.code}${isDefault ? '<span class="text-amber-500 ml-1">★</span>' : ''}</td>
-          <td class="py-2 text-stone-600">${sh.name}</td>
+        <tr class="border-t border-stone-100 dark:border-stone-700/50">
+          <td class="py-2 num">${sh.code}${isDefault ? '<span class="text-amber-500 dark:text-amber-400 ml-1">★</span>' : ''}</td>
+          <td class="py-2 text-stone-600 dark:text-stone-300">${sh.name}</td>
           <td class="py-2 text-center">
             <span class="badge ${curCls}">${sh.currency === '美元' ? '$' : '¥'}</span>
           </td>
-          <td class="py-2 text-right num">${sh.scale_raw || `<span class="text-stone-300" title="基金公司未单独披露此份额规模">—</span>`}</td>
+          <td class="py-2 text-right num">${sh.scale_raw || `<span class="text-stone-300 dark:text-stone-600" title="基金公司未单独披露此份额规模">—</span>`}</td>
           <td class="py-2 text-right num">
             <div>${priceDisp}</div>
             <div class="text-[11px] ${chgCls}">${chgTxt}</div>
@@ -1155,7 +1259,7 @@
             if (total <= 0) return '—';
             const display = `${parseFloat(total.toFixed(2))}%/年`;
             const detail = `管理费 ${mgmt}% + 托管费 ${cust}%${sale ? ' + 销售服务费 ' + sale + '%' : ''}`;
-            return `<span class="fee-tip"><span class="num text-stone-500 text-[11px]">${display}</span><div class="fee-popover"><div class="font-medium text-stone-700 whitespace-nowrap">综合费率：${display}</div><div class="text-[11px] text-stone-500 mt-1 whitespace-nowrap">${detail}</div></div></span>`;
+            return `<span class="fee-tip"><span class="num text-stone-500 dark:text-stone-400 text-[11px]">${display}</span><div class="fee-popover"><div class="font-medium text-stone-700 dark:text-stone-300 whitespace-nowrap">综合费率：${display}</div><div class="text-[11px] text-stone-500 dark:text-stone-400 mt-1 whitespace-nowrap">${detail}</div></div></span>`;
           })()}</td>
           <td class="py-2 text-right">${renderSellRule(sh)}</td>
         </tr>
@@ -1170,7 +1274,7 @@
       const rate = sh.first_buy_rate;
       const rules = sh.buy_rules || [];
       if (rate === null || rate === undefined) {
-        return sh.fee ? `<span class="num text-stone-500">${sh.fee}%</span>` : '--';
+        return sh.fee ? `<span class="num text-stone-500 dark:text-stone-400">${sh.fee}%</span>` : '--';
       }
 
       // 综合费率 tooltip（A 类和 C 类都显示）
@@ -1202,8 +1306,8 @@
                 ${r.rate >= 100
                   ? `<td class="text-right num whitespace-nowrap pl-3 text-stone-400">${r.rate}元</td><td class="text-right num whitespace-nowrap font-medium pl-2">${r.rate}元</td>`
                   : r.rate === 0
-                    ? `<td class="text-right num whitespace-nowrap pl-3 text-green-600 font-medium" colspan="2">免费</td>`
-                    : `<td class="text-right num whitespace-nowrap pl-3"><span class="line-through text-stone-400">${r.rate}%</span></td><td class="text-right num whitespace-nowrap text-emerald-600 font-medium pl-2">${parseFloat((r.rate * 0.1).toFixed(2))}%</td>`
+                    ? `<td class="text-right num whitespace-nowrap pl-3 text-green-600 dark:text-green-400 font-medium" colspan="2">免费</td>`
+                    : `<td class="text-right num whitespace-nowrap pl-3"><span class="line-through text-stone-400 dark:text-stone-500">${r.rate}%</span></td><td class="text-right num whitespace-nowrap text-emerald-600 dark:text-emerald-400 font-medium pl-2">${parseFloat((r.rate * 0.1).toFixed(2))}%</td>`
                 }
               </tr>
             `).join('')}
@@ -1222,9 +1326,9 @@
       // 显示：上下排列，原价删除线在上，1折价在下
       let badge;
       if (rate === 0) {
-        badge = '<span class="text-green-600 num font-medium">免费</span>';
+        badge = '<span class="text-green-600 dark:text-green-400 num font-medium">免费</span>';
       } else if (discountRate > 0) {
-        badge = `<span class="num"><div class="line-through text-stone-400 text-[10px]">${rate}%</div><div class="font-medium text-emerald-600">${discountRate}%</div></span>`;
+        badge = `<span class="num"><div class="line-through text-stone-400 dark:text-stone-500 text-[10px]">${rate}%</div><div class="font-medium text-emerald-600 dark:text-emerald-400">${discountRate}%</div></span>`;
       } else {
         badge = `<span class="num font-medium">${rate}%</span>`;
       }
@@ -1248,7 +1352,7 @@
               return `
                 <tr>
                   <td class="text-stone-600">${cleanCondition(r.condition)}</td>
-                  <td class="text-right num font-medium ${isFree ? 'text-green-600' : ''}">
+                  <td class="text-right num font-medium ${isFree ? 'text-green-600 dark:text-green-400' : ''}">
                     ${isFree ? '免费' : r.rate + '%'}
                   </td>
                 </tr>
@@ -1269,8 +1373,8 @@
         displayDays = parseSellRuleLowerDays(lastRule && lastRule.condition);
       }
       const freeLabel = displayDays != null
-        ? `<span class="text-green-600 font-medium">持${formatHoldDays(displayDays)}免</span>`
-        : `<span class="text-stone-500">${rules[0].rate}%起</span>`;
+        ? `<span class="text-green-600 dark:text-green-400 font-medium">持${formatHoldDays(displayDays)}免</span>`
+        : `<span class="text-stone-500 dark:text-stone-400">${rules[0].rate}%起</span>`;
       return `<span class="fee-tip">${freeLabel}${popHtml}</span>`;
     }
 
@@ -1280,10 +1384,10 @@
 
     function statusBadge(sh) {
       const st = sh.buy_status || '';
-      if (!st) return '<span class="text-stone-400 text-xs">—</span>';
-      // 美元份额：支付宝等代销平台不可买，申购数据无实际参考意义，显示 —
-      if (sh.currency === '美元') {
-        return '<span class="text-stone-400 text-xs">—</span>';
+  if (!st) return '<span class="text-stone-400 dark:text-stone-500 text-xs">—</span>';
+  // 美元份额：支付宝等代销平台不可买，申购数据无实际参考意义，显示 —
+  if (sh.currency === '美元') {
+    return '<span class="text-stone-400 dark:text-stone-500 text-xs">—</span>';
       }
       const cls = buyStatusClass(st);
       if (st.includes('暂停')) {
@@ -1293,7 +1397,7 @@
         return `<span class="${cls}">限 ¥${formatLimit(sh.daily_limit)}</span>`;
       }
       if (st.includes('限') && !sh.daily_limit) {
-        return '<span class="text-stone-400 text-xs">—</span>';
+        return '<span class="text-stone-400 dark:text-stone-500 text-xs">—</span>';
       }
       return `<span class="${cls}">${st}</span>`;
     }
@@ -1327,7 +1431,7 @@
 
     function holdingsBtn(code) {
       // 只有抓到持仓数据的基金才显示按钮（前端运行时会校验）
-      return `<button class="holdings-btn text-xs px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition font-medium"
+      return `<button class="holdings-btn text-xs px-2.5 py-1 rounded-md border dark:border-stone-700 bg-indigo-50 dark:bg-stone-800 text-indigo-600 dark:text-stone-300 hover:bg-indigo-100 dark:hover:bg-stone-700 transition font-medium"
                 data-code="${code}"
                 onclick="event.stopPropagation(); openDetail('${code}', event);">
                 📊 持仓
@@ -1336,7 +1440,7 @@
 
     function trendBtn(code) {
       // 走势按钮：所有 6 位代码的场外基金都能拉 pingzhongdata
-      return `<button class="trend-btn text-xs px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition font-medium"
+      return `<button class="trend-btn text-xs px-2.5 py-1 rounded-md border dark:border-stone-700 bg-emerald-50 dark:bg-stone-800 text-emerald-700 dark:text-stone-300 hover:bg-emerald-100 dark:hover:bg-stone-700 transition font-medium"
                 data-code="${code}"
                 onclick="event.stopPropagation(); openTrend('${code}', event);">
                 📈 走势
@@ -1407,7 +1511,7 @@
           renderDetailHoldings(holdings, _detailCode);
         } catch (e) {
           document.getElementById('detail-holdings').innerHTML =
-            `<div class="text-center py-12 text-stone-400 text-sm">暂无持仓数据（可能是新基金或季报未披露）</div>`;
+            `<div class="text-center py-12 text-stone-400 dark:text-stone-500 text-sm">暂无持仓数据（可能是新基金或季报未披露）</div>`;
         }
       }
 
@@ -1501,7 +1605,7 @@
       const recent = document.getElementById('trend-recent');
       const data = filterTrendRange(TREND_STATE.fullSeries, TREND_STATE.range);
       if (!data.length) {
-        wrap.innerHTML = '<div class="text-center py-12 text-stone-400 text-sm">所选区间无数据</div>';
+        wrap.innerHTML = '<div class="text-center py-12 text-stone-400 dark:text-stone-500 text-sm">所选区间无数据</div>';
         recent.innerHTML = '';
         return;
       }
@@ -1575,8 +1679,8 @@
       for (let i = 0; i <= 4; i++) {
         const v = lo + (hi - lo) * (i / 4);
         const y = yOf(v);
-        gridLines.push(`<line x1="${PAD_L}" y1="${y.toFixed(1)}" x2="${W - PAD_R}" y2="${y.toFixed(1)}" stroke="#e7e5e4" stroke-dasharray="2 3"/>`);
-        gridLabels.push(`<text x="${PAD_L - 6}" y="${(y + 3).toFixed(1)}" font-size="10" fill="#a8a29e" text-anchor="end">${fmtAxis(v)}</text>`);
+        gridLines.push(`<line class="trend-grid-line" x1="${PAD_L}" y1="${y.toFixed(1)}" x2="${W - PAD_R}" y2="${y.toFixed(1)}" stroke="#e7e5e4" stroke-dasharray="2 3"/>`);
+        gridLabels.push(`<text class="trend-grid-text" x="${PAD_L - 6}" y="${(y + 3).toFixed(1)}" font-size="10" fill="#a8a29e" text-anchor="end">${fmtAxis(v)}</text>`);
       }
 
       const fmtD = (d) => `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -1593,13 +1697,13 @@
       // value 模式额外展示"首末值"，让用户一眼看出"6.7662 → 6.7245"这种绝对变化
       const fmtVal = (v) => v.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits });
       const headExtra = yMode === 'value'
-        ? `<span class="text-xs text-stone-500 ml-2 num">${fmtVal(pts[0].nav)} → <span class="text-stone-700 font-medium">${fmtVal(pts[pts.length - 1].nav)}</span></span>`
+        ? `<span class="text-xs text-stone-500 dark:text-stone-400 ml-2 num">${fmtVal(pts[0].nav)} → <span class="text-stone-700 dark:text-stone-300 font-medium">${fmtVal(pts[pts.length - 1].nav)}</span></span>`
         : '';
 
       wrap.innerHTML = `
         <div class="flex items-baseline justify-between flex-wrap gap-2 mb-2">
-          <div class="text-sm text-stone-500">区间累计 <span class="font-bold ${totalChgCls} num text-base ml-1">${totalChgStr}</span>${headExtra}</div>
-          <div class="text-xs text-stone-400 num">${fmtFullD(pts[0].date)} ~ ${fmtFullD(pts[pts.length - 1].date)} · ${pts.length} 个交易日</div>
+          <div class="text-sm text-stone-500 dark:text-stone-400">区间累计 <span class="font-bold ${totalChgCls} num text-base ml-1">${totalChgStr}</span>${headExtra}</div>
+          <div class="text-xs text-stone-400 dark:text-stone-500 num">${fmtFullD(pts[0].date)} ~ ${fmtFullD(pts[pts.length - 1].date)} · ${pts.length} 个交易日</div>
         </div>
         <div class="relative" id="trend-chart-inner">
           <svg viewBox="0 0 ${W} ${H}" class="w-full" style="height:auto; display:block;" id="trend-svg">
@@ -1611,18 +1715,18 @@
             </defs>
             ${gridLines.join('')}
             ${gridLabels.join('')}
-            ${zeroY != null ? `<line x1="${PAD_L}" y1="${zeroY.toFixed(1)}" x2="${W - PAD_R}" y2="${zeroY.toFixed(1)}" stroke="#a8a29e" stroke-width="0.6" stroke-dasharray="3 3"/>` : ''}
+            ${zeroY != null ? `<line class="trend-zero-line" x1="${PAD_L}" y1="${zeroY.toFixed(1)}" x2="${W - PAD_R}" y2="${zeroY.toFixed(1)}" stroke="#a8a29e" stroke-width="0.6" stroke-dasharray="3 3"/>` : ''}
             <path d="${area}" fill="url(#trend-grad)" />
             <path d="${path}" fill="none" stroke="${lineColor}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
-            ${xLabels.map(l => `<text x="${xOf(l.i).toFixed(1)}" y="${H - 8}" font-size="10" fill="#a8a29e" text-anchor="middle">${l.label}</text>`).join('')}
+            ${xLabels.map(l => `<text class="trend-grid-text" x="${xOf(l.i).toFixed(1)}" y="${H - 8}" font-size="10" fill="#a8a29e" text-anchor="middle">${l.label}</text>`).join('')}
             <!-- crosshair（默认隐藏，hover 时显示） -->
             <g id="trend-cursor" style="display:none;">
               <line id="trend-cursor-line" y1="${PAD_T}" y2="${H - PAD_B}" stroke="#525252" stroke-width="0.8" stroke-dasharray="2 2"/>
-              <circle id="trend-cursor-dot" r="3.5" fill="${lineColor}" stroke="#fff" stroke-width="1.5"/>
+              <circle id="trend-cursor-dot" r="3.5" fill="${lineColor}" stroke="${document.documentElement.classList.contains('dark') ? '#292524' : '#fff'}" stroke-width="1.5"/>
             </g>
           </svg>
           <!-- tooltip：浅色卡片，文字直接用全站 .up/.down（红涨绿跌）保持一致 -->
-          <div id="trend-tooltip" class="absolute pointer-events-none hidden bg-white border border-stone-200 rounded-lg px-3 py-2 shadow-md text-xs whitespace-nowrap" style="transition:opacity .12s; min-width:160px;"></div>
+          <div id="trend-tooltip" class="absolute pointer-events-none hidden bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg px-3 py-2 shadow-md text-xs whitespace-nowrap" style="transition:opacity .12s; min-width:160px;"></div>
         </div>
       `;
 
@@ -1679,10 +1783,10 @@
         // value 模式 nav 用 千分位+digits；pct 模式（基金）继续用 4 位定点
         const navTxt = yMode === 'value' ? fmtVal(p.nav) : p.nav.toFixed(4);
         tooltip.innerHTML = `
-          <div class="font-semibold text-stone-900 num">${fmtFullD(p.date)}</div>
-          <div class="mt-1.5 flex justify-between gap-4"><span class="text-stone-500">${navLabel}</span><span class="num font-medium text-stone-900">${navTxt}</span></div>
-          <div class="mt-0.5 flex justify-between gap-4"><span class="text-stone-500">日涨跌</span><span class="num font-medium ${chgCls}">${chgTxt}</span></div>
-          <div class="mt-0.5 flex justify-between gap-4 pt-1 border-t border-stone-100"><span class="text-stone-500">区间累计</span><span class="num font-bold ${retCls}">${retTxt}</span></div>
+          <div class="font-semibold text-stone-900 dark:text-stone-100 num">${fmtFullD(p.date)}</div>
+          <div class="mt-1.5 flex justify-between gap-4"><span class="text-stone-500 dark:text-stone-400">${navLabel}</span><span class="num font-medium text-stone-900 dark:text-stone-100">${navTxt}</span></div>
+          <div class="mt-0.5 flex justify-between gap-4"><span class="text-stone-500 dark:text-stone-400">日涨跌</span><span class="num font-medium ${chgCls}">${chgTxt}</span></div>
+          <div class="mt-0.5 flex justify-between gap-4 pt-1 border-t border-stone-100 dark:border-stone-700"><span class="text-stone-500 dark:text-stone-400">区间累计</span><span class="num font-bold ${retCls}">${retTxt}</span></div>
         `;
         tooltip.classList.remove('hidden');
         // tooltip 定位（基于内层 wrap 的相对坐标）
@@ -1738,7 +1842,7 @@
         const chgTxt = p.change == null ? '--' : `${p.change > 0 ? '+' : ''}${p.change.toFixed(2)}%`;
         const retCls = p.ret > 0 ? 'up' : p.ret < 0 ? 'down' : 'text-stone-400';
         const retTxt = `${p.ret > 0 ? '+' : ''}${p.ret.toFixed(2)}%`;
-        return `<tr class="border-t border-stone-100">
+        return `<tr class="border-t border-stone-100 dark:border-stone-700/50">
           <td class="py-2 px-3 num">${fmtFullD(p.date)}</td>
           <td class="py-2 px-3 text-right num font-medium">${fmtNav(p.nav)}</td>
           <td class="py-2 px-3 text-right num ${chgCls}">${chgTxt}</td>
@@ -1748,7 +1852,7 @@
 
       const tableHtml = `
         <table class="w-full">
-          <thead class="bg-stone-50 text-stone-500 ${expanded ? 'sticky top-0 z-10' : ''}">
+          <thead class="bg-stone-50 dark:bg-stone-900 text-stone-500 dark:text-stone-400 ${expanded ? 'sticky top-0 z-10' : ''}">
             <tr>
               <th class="text-left py-2 px-3 font-medium">日期</th>
               <th class="text-right py-2 px-3 font-medium">${navLabel}</th>
@@ -1767,7 +1871,7 @@
         if (!expanded) {
           toggleHtml = `
             <button id="trend-list-more"
-                    class="w-full py-2.5 text-xs text-stone-500 hover:text-stone-900 hover:bg-stone-50 transition border-t border-stone-100 flex items-center justify-center gap-1">
+                    class="w-full py-2.5 text-xs text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-50 dark:hover:bg-stone-700/50 transition border-t border-stone-100 dark:border-stone-700/50 flex items-center justify-center gap-1">
               <span>加载全部历史净值（共 ${all.length} 条）</span>
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -1776,7 +1880,7 @@
         } else {
           toggleHtml = `
             <button id="trend-list-more"
-                    class="w-full py-2.5 text-xs text-stone-500 hover:text-stone-900 hover:bg-stone-50 transition border-t border-stone-100 sticky bottom-0 bg-white flex items-center justify-center gap-1">
+                    class="w-full py-2.5 text-xs text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-50 dark:hover:bg-stone-700/50 transition border-t border-stone-100 dark:border-stone-700/50 sticky bottom-0 bg-white dark:bg-stone-800 flex items-center justify-center gap-1">
               <span>收起（仅看最近 5 条）</span>
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
@@ -1807,7 +1911,7 @@
     function renderTrendRanges() {
       const box = document.getElementById('trend-ranges');
       box.innerHTML = TREND_RANGES.map(r => `
-        <button data-range="${r.key}" class="px-3 py-1.5 rounded-md text-xs transition ${TREND_STATE.range === r.key ? 'bg-stone-900 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}">
+        <button data-range="${r.key}" class="px-3 py-1.5 rounded-md text-xs border dark:border-stone-700 transition ${TREND_STATE.range === r.key ? 'bg-stone-900 dark:bg-stone-700 text-white dark:text-stone-200 border-transparent dark:border-stone-600' : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700'}">
           ${r.label}
         </button>
       `).join('');
@@ -1840,10 +1944,10 @@
       document.getElementById('trend-subtitle').innerHTML = `
         <span class="num">${code}</span>
         ${share?.share_class ? ` · ${share.share_class}` : ''}
-        ${share?.nav != null ? ` · 当前净值 <span class="font-medium num text-stone-700">${share.nav.toFixed(4)}</span>` : ''}
+        ${share?.nav != null ? ` · 当前净值 <span class="font-medium num text-stone-700 dark:text-stone-300">${share.nav.toFixed(4)}</span>` : ''}
         ${share?.nav_date ? ` <span class="text-stone-400">(${share.nav_date})</span>` : ''}
       `;
-      document.getElementById('trend-chart').innerHTML = '<div class="text-center py-12 text-stone-400 text-sm">⏳ 拉取历史净值中...</div>';
+      document.getElementById('trend-chart').innerHTML = '<div class="text-center py-12 text-stone-400 dark:text-stone-500 text-sm">⏳ 拉取历史净值中...</div>';
       document.getElementById('trend-recent').innerHTML = '';
       TREND_STATE.code = code;
       TREND_STATE.fullSeries = null;
@@ -1858,7 +1962,7 @@
 
       const data = await fetchPzdHistory(code);
       if (!data || !data.length) {
-        document.getElementById('trend-chart').innerHTML = '<div class="text-center py-12 text-stone-400 text-sm">无法拉取历史净值（数据源临时不可用）</div>';
+        document.getElementById('trend-chart').innerHTML = '<div class="text-center py-12 text-stone-400 dark:text-stone-500 text-sm">无法拉取历史净值（数据源临时不可用）</div>';
         return;
       }
       TREND_STATE.fullSeries = data;
@@ -1888,7 +1992,7 @@
       document.getElementById('detail-subtitle').innerHTML = `
         <span class="num">${share.code}</span> · ${share.share_class}${share.currency === '美元' ? ' · 美元' : ''}
         <span class="badge badge-qdii ml-1">QDII</span>
-        ${share.manager ? `<span class="text-stone-500 ml-2">基金经理 <span class="text-stone-900 font-medium">${share.manager}</span></span>` : ''}
+        ${share.manager ? `<span class="text-stone-500 dark:text-stone-400 ml-2">基金经理 <span class="text-stone-900 dark:text-stone-200 font-medium">${share.manager}</span></span>` : ''}
       `;
 
       // 顶部信息卡片
@@ -1901,10 +2005,10 @@
         { label: '日买入限额', value: share.purchase_state === '暂停申购' ? '—' : fmtMoney(share.daily_limit), sub: share.purchase_state || '' },
       ];
       document.getElementById('detail-info').innerHTML = infoCards.map(c => `
-        <div class="bg-white rounded-xl border border-stone-200 p-4">
-          <div class="text-xs text-stone-500">${c.label}</div>
+        <div class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 p-4">
+          <div class="text-xs text-stone-500 dark:text-stone-400">${c.label}</div>
           <div class="text-xl font-bold mt-1 ${c.isChange ? (c.chgVal > 0 ? 'up' : c.chgVal < 0 ? 'down' : '') : ''} num">${c.value}</div>
-          <div class="text-xs text-stone-400 mt-1">${c.sub}</div>
+          <div class="text-xs text-stone-400 dark:text-stone-500 mt-1">${c.sub}</div>
         </div>
       `).join('');
 
@@ -1920,8 +2024,8 @@
         { label: '成立来', value: share.chg_since_inception },
       ];
       document.getElementById('detail-perf').innerHTML = perfItems.map(p => `
-        <div class="text-center p-3 rounded-lg bg-stone-50">
-          <div class="text-xs text-stone-500 mb-1">${p.label}</div>
+        <div class="text-center p-3 rounded-lg bg-stone-50 dark:bg-stone-800">
+          <div class="text-xs text-stone-500 dark:text-stone-400 mb-1">${p.label}</div>
           <div class="font-bold num ${p.value > 0 ? 'up' : p.value < 0 ? 'down' : ''}">${fmtPct(p.value)}</div>
         </div>
       `).join('');
@@ -1941,11 +2045,11 @@
         feeItems.push({ label: '托管费（年）', value: `${share.custody_fee}%` });
       }
       document.getElementById('detail-fee').innerHTML = feeItems.map(f => `
-        <div class="flex justify-between py-2 border-b border-stone-100 last:border-0">
-          <span class="text-sm text-stone-500">${f.label}</span>
-          <span class="text-sm font-medium num ${f.highlight ? 'text-indigo-600' : ''}">${f.value}</span>
+        <div class="flex justify-between py-2 border-b border-stone-100 dark:border-stone-700/50 last:border-0">
+          <span class="text-sm text-stone-500 dark:text-stone-400">${f.label}</span>
+          <span class="text-sm font-medium num ${f.highlight ? 'text-indigo-600 dark:text-indigo-400' : ''}">${f.value}</span>
         </div>
-      `).join('') || '<div class="text-sm text-stone-400 text-center py-4">暂无费率数据</div>';
+      `).join('') || '<div class="text-sm text-stone-400 dark:text-stone-500 text-center py-4">暂无费率数据</div>';
 
       // 估值信息已整合到持仓汇总条中
     }
@@ -1953,24 +2057,24 @@
     function renderDetailHoldings(data, fundCode) {
       const container = document.getElementById('detail-holdings');
       if (!data.holdings || data.holdings.length === 0) {
-        container.innerHTML = '<div class="text-center py-12 text-stone-400 text-sm">暂无持仓数据</div>';
+        container.innerHTML = '<div class="text-center py-12 text-stone-400 dark:text-stone-500 text-sm">暂无持仓数据</div>';
         return;
       }
 
       // 持仓头部汇总条
       const summaryHtml = `
         <div class="grid grid-cols-3 gap-2 mb-4">
-          <div class="bg-indigo-50 rounded-lg p-3 text-center">
-            <div class="text-xs text-indigo-600">持仓只数</div>
-            <div class="text-xl font-bold text-indigo-900 num mt-1">${data.holdings_count} 只</div>
+          <div class="bg-indigo-50 dark:bg-stone-800 rounded-lg p-3 text-center">
+            <div class="text-xs text-indigo-600 dark:text-stone-400">持仓只数</div>
+            <div class="text-xl font-bold text-indigo-900 dark:text-stone-200 num mt-1">${data.holdings_count} 只</div>
           </div>
-          <div class="bg-emerald-50 rounded-lg p-3 text-center">
-            <div class="text-xs text-emerald-600">Top10 总占比</div>
-            <div class="text-xl font-bold text-emerald-900 num mt-1">${data.total_weight}%</div>
+          <div class="bg-emerald-50 dark:bg-stone-800 rounded-lg p-3 text-center">
+            <div class="text-xs text-emerald-600 dark:text-stone-400">Top10 总占比</div>
+            <div class="text-xl font-bold text-emerald-900 dark:text-stone-200 num mt-1">${data.total_weight}%</div>
           </div>
-          <div class="bg-amber-50 rounded-lg p-3 text-center">
-            <div class="text-xs text-amber-600">重仓股（>5%）</div>
-            <div class="text-xl font-bold text-amber-900 num mt-1">${data.heavy_count} 只</div>
+          <div class="bg-amber-50 dark:bg-stone-800 rounded-lg p-3 text-center">
+            <div class="text-xs text-amber-600 dark:text-stone-400">重仓股（>5%）</div>
+            <div class="text-xl font-bold text-amber-900 dark:text-stone-200 num mt-1">${data.heavy_count} 只</div>
           </div>
         </div>
       `;
@@ -1980,17 +2084,17 @@
 
       // 持仓行的「市场状态点」逻辑
       const listHtml = `
-        <div class="text-xs text-stone-500 mb-2 flex justify-between flex-wrap gap-2">
+        <div class="text-xs text-stone-500 dark:text-stone-400 mb-2 flex justify-between flex-wrap gap-2">
           <span>${data.latest_quarter || '最新季报'} · 当日涨跌按持仓股票所属市场分别取实时行情</span>
-          <span class="text-stone-400">
+          <span class="text-stone-400 dark:text-stone-500">
             <span class="mkt-dot open"></span>盘中实时
             <span class="ml-2"><span class="mkt-dot closed"></span>已收盘</span>
-            <span class="ml-2 text-stone-300">·</span>
+            <span class="ml-2 text-stone-300 dark:text-stone-600">·</span>
             <span class="ml-2">持仓截至 ${(data.fetched_at || '').slice(0, 10)}</span>
           </span>
         </div>
         <table class="w-full text-sm">
-          <thead class="text-xs text-stone-500 border-b border-stone-200">
+          <thead class="text-xs text-stone-500 dark:text-stone-400 border-b border-stone-200 dark:border-stone-700">
             <tr>
               <th class="text-left py-2 font-medium w-8">#</th>
               <th class="text-left py-2 font-medium">股票名称</th>
@@ -2010,23 +2114,23 @@
               const dotTitle = sess === 'open' ? `${market} 市场盘中实时` : `${market} 市场已收盘 · 显示最近成交`;
               const dot = `<span class="mkt-dot ${sess}" title="${dotTitle}"></span>`;
               const chgInner = chg == null
-                ? '<span class="text-stone-300">--</span>'
+                ? '<span class="text-stone-300 dark:text-stone-600">--</span>'
                 : `<span class="${chg > 0 ? 'up' : chg < 0 ? 'down' : ''}">${chg > 0 ? '+' : ''}${chg.toFixed(2)}%</span>`;
               const chgCell = `${dot}${chgInner}`;
 
               return `
-                <tr class="border-b border-stone-50 hover:bg-stone-50/50">
-                  <td class="py-2.5 text-stone-400 num">${h.rank || (i + 1)}</td>
+                <tr class="border-b border-stone-50 dark:border-stone-700/50 hover:bg-stone-50/50 dark:hover:bg-stone-700/30">
+                  <td class="py-2.5 text-stone-400 dark:text-stone-500 num">${h.rank || (i + 1)}</td>
                   <td class="py-2.5">
                     <span class="font-medium">${h.stock_name}</span>
                     ${stock ? `<span class="badge ml-1 ${stock.market === 'US' ? 'badge-qdii' : stock.market === 'HK' ? 'badge-usd' : 'badge-cny'}" style="font-size:9px;">${stock.market}</span>` : ''}
                   </td>
-                  <td class="py-2.5 text-xs text-stone-500 num">${h.stock_code}</td>
+                  <td class="py-2.5 text-xs text-stone-500 dark:text-stone-400 num">${h.stock_code}</td>
                   <td class="py-2.5 text-right num font-bold">${h.weight?.toFixed(2)}%</td>
                   <td class="py-2.5 text-right num text-sm">${chgCell}</td>
-                  <td class="py-2.5 text-right num text-stone-500 text-xs">${fmtMV(h.market_value)}</td>
+                  <td class="py-2.5 text-right num text-stone-500 dark:text-stone-400 text-xs">${fmtMV(h.market_value)}</td>
                   <td class="py-2.5 pl-3">
-                    <div class="h-2 bg-stone-100 rounded-full overflow-hidden">
+                    <div class="h-2 bg-stone-100 dark:bg-stone-700 rounded-full overflow-hidden">
                       <div class="h-full bg-gradient-to-r from-indigo-400 to-indigo-600" style="width: ${((h.weight || 0) / maxW * 100)}%"></div>
                     </div>
                   </td>
@@ -2120,6 +2224,10 @@ import { start as startMarketIndices } from './js/market-indices.js?v=20260606a'
 import { start as startEtfPremium } from './js/etf-premium.js?v=20260610a';
 import { start as startMarketTrend } from './js/market-trend.js?v=20260609b';
 import { start as startOffshoreLiveNav } from './js/offshore-live-nav.js?v=20260610a';
+import { start as startTheme } from './js/theme.js?v=20260610b';
+
+    // 主题切换（深色/亮色 + 跟随系统）
+    startTheme();
 
     // 顶部「市场参照系」指标卡 —— 不依赖主表数据，立即启动
     startMarketIndices();

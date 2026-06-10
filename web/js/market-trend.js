@@ -157,8 +157,8 @@ async function openIndexTrend(secid, evt) {
   if (subEl) {
     subEl.innerHTML = `
       <span class="num">${secid}</span>
-      ${lastPrice ? ` · 最新 <span class="font-medium num text-stone-700">${lastPrice}</span>` : ''}
-      <span class="text-stone-400 ml-1">· 日 K（东方财富）</span>
+      ${lastPrice ? ` · 最新 <span class="font-medium num text-stone-700 dark:text-stone-300">${lastPrice}</span>` : ''}
+      <span class="text-stone-400 dark:text-stone-500 ml-1">· 日 K（东方财富）</span>
     `;
   }
 
@@ -186,9 +186,9 @@ async function openIndexTrend(secid, evt) {
   if (!result || !result.series || !result.series.length) {
     if (chartEl) {
       chartEl.innerHTML = `
-        <div class="text-center py-12 text-stone-400 text-sm">
+        <div class="text-center py-12 text-stone-400 dark:text-stone-500 text-sm">
           无法拉取历史 K 线（数据源暂时不可达）<br>
-          <span class="text-stone-300 text-xs">可稍后重试，或查看顶部指标卡的实时价格变动</span>
+          <span class="text-stone-300 dark:text-stone-600 text-xs">可稍后重试，或查看顶部指标卡的实时价格变动</span>
         </div>`;
     }
     return;
@@ -202,7 +202,7 @@ function bindCardClicks() {
   const grid = document.getElementById('market-cards');
   if (!grid) return;
   grid.querySelectorAll('.market-card').forEach(card => {
-    card.classList.add('cursor-pointer', 'transition', 'hover:border-stone-400', 'hover:shadow-sm');
+    card.classList.add('cursor-pointer', 'transition', 'hover:border-stone-400', 'dark:hover:border-stone-500', 'hover:shadow-sm');
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
     card.setAttribute('title', '点击查看历史走势');
