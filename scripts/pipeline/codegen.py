@@ -45,7 +45,7 @@ def main():
         right = content.split(END)[1]
         new_content = left + generated + right
     else:
-        anchor = "const SHARE_CLASS_ORDER = {'A':0,'A(后端)':1,'C':2,'D':3,'E':4,'F':5,'H':6,'I':7,'默认':8,'LOF':9};"
+        anchor = "const SHARE_CLASS_ORDER = {'A':0,'C':1,'D':2,'E':3,'F':4,'H':5,'I':6,'默认':7,'LOF':8,'A(后端)':9};"
         if anchor not in content:
             raise RuntimeError("config.js 中未找到注入锚点")
         new_content = content.replace(anchor, anchor + "\n\n" + generated)
