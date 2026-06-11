@@ -7,8 +7,8 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>US Fund Tracker · 美股基金看板</title>
   <link rel="icon" href="data:,">
-  <!-- 防闪烁：在首屏渲染前读取 localStorage / 系统偏好，立即应用 dark class（必须在 Tailwind CDN 之前） -->
-  <script>(function(){try{var t=localStorage.getItem('qdii-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}})();</script>
+  <!-- 防闪烁：在首屏渲染前读取 sessionStorage / 系统偏好，立即应用 dark class（必须在 Tailwind CDN 之前） -->
+  <script>(function(){try{var t=sessionStorage.getItem('qdii-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}})();</script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' }</script>
   <!-- 纯常量配置（COMPANY_BRAND/GROUP_META/ETF_GROUPS 等 ~150 行）抽出为 config.js；
@@ -16,7 +16,7 @@
        ?v= 版本戳防 GitHub Pages 强缓存（改文件后需 bump）。 -->
   <script src="./js/config.js?v=20260610a"></script>
   <!-- 纯工具函数集（0 副作用 / 0 DOM）抽出为 utils.js；依赖 config.js 的全局常量。 -->
-  <script src="./js/utils.js?v=20260609a"></script>
+  <script src="./js/utils.js?v=20260611a"></script>
   <style>
     body {
       font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -2230,7 +2230,7 @@
 import { start as startMarketIndices } from './js/market-indices.js?v=20260606a';
 import { start as startEtfPremium } from './js/etf-premium.js?v=20260610a';
 import { start as startMarketTrend } from './js/market-trend.js?v=20260609b';
-import { start as startOffshoreLiveNav } from './js/offshore-live-nav.js?v=20260610a';
+import { start as startOffshoreLiveNav } from './js/offshore-live-nav.js?v=20260611a';
 import { start as startTheme } from './js/theme.js?v=20260610e';
 
     // 主题切换（深色/亮色 + 跟随系统）

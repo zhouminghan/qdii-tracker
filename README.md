@@ -70,48 +70,16 @@
 
 ```
 qdii-tracker/
-├── README.md
-├── CLAUDE.md                     # AI 协作上下文
-├── .gitignore
-│
-├── scripts/                      # 数据流水线（Python）
-│   ├── fundctl.py                # ⭐ 统一入口（add/move/refresh/sync/check）
-│   ├── core/                     # 共享基础设施（constants/utils/config_loader）
-│   ├── sources/                  # 数据源抽象层（akshare/eastmoney/xueqiu）
-│   ├── pipeline/                 # 流水线步骤
-│   │   ├── scan.py              # [1] 扫描全量基金、分类
-│   │   ├── enrich.py            # [2] 补充规模/费率/基金经理/收益
-│   │   ├── fill.py              # [3] 补齐净值/YTD/历史收益
-│   │   ├── refresh.py           # [4] 申购状态 + 日限额
-│   │   └── holdings.py          # [5] 抓主动基金 Top10 重仓
-│   └── requirements.txt
-│
-├── web/                          # 前端（纯静态）
-│   ├── index.html                # 主入口（HTML+CSS+主渲染逻辑，~2100 行）
-│   ├── js/                       # 抽离的 JS 模块
-│   │   ├── config.js             # 纯常量（COMPANY_BRAND/GROUP_META 等）
-│   │   ├── utils.js              # 纯工具函数（0 副作用 / 0 DOM）
-│   │   ├── idle-scheduler.js     # 智能空闲调度器（标签页隐藏/无交互即暂停）
-│   │   ├── bj-time.js            # 北京时间公共工具（bjNowParts，多模块共用）
-│   │   ├── market-indices.js     # 顶部市场参照系（指数+汇率指标卡）
-│   │   ├── etf-premium.js        # 场内 ETF 溢价率（盘中3档分时 + 收盘settle-once）
-│   │   ├── offshore-live-nav.js  # 场外实时净值 overlay（5档分时，lsjz + pingzhongdata 双链路）
-│   │   └── market-trend.js       # 指标卡日 K 走势（push2his + push2 双 host fallback）
-│   │   └── tailwind.min.js       # 本地化 Tailwind（避免 CDN 白屏）
-│   ├── .nojekyll                 # 禁用 GitHub Pages 的 Jekyll 解析
-│   └── data/                     # 前端消费的 JSON（git 追踪）
-│       ├── sp500.json            # 🏦 场外 · 标普500（7 系列）
-│       ├── nasdaq_passive.json   # 🏦 场外 · 纳指100（17 系列）
-│       ├── active.json           # 🏦 场外 · 美股主动精选（19 系列）
-│       ├── global_index.json    # 🌍 场外 · 全球非美指数（2 系列）
-│       ├── global_other.json     # 🏦 场外 · 全球/其他 QDII（24 系列）
-│       ├── etf.json              # 📈 场内 ETF（19 系列）
-│       ├── meta.json             # 扫描元信息
-│       └── holdings/{code}.json  # 主动基金 Top10 持仓
-│
-└── .github/workflows/
-    ├── update-data.yml           # GitHub Actions 自动更新数据
-    └── deploy-pages.yml          # 发布 web/ 到 GitHub Pages
+├── scripts/                  # 数据流水线（Python）
+│   ├── fundctl.py            # 统一入口（add/move/refresh/sync/check）
+│   ├── core/                 # 共享基础设施
+│   ├── sources/              # 数据源抽象层（akshare/eastmoney/xueqiu）
+│   └── pipeline/             # scan → enrich → fill → refresh → holdings
+├── web/                      # 前端（纯静态）
+│   ├── index.html            # 主入口
+│   ├── js/                   # 抽离模块（config/utils/bj-time/market-indices/etf-premium/offshore-live-nav/market-trend/idle-scheduler）
+│   └── data/                 # 消费的 JSON（sp500/nasdaq_passive/active/global_index/global_other/etf/meta/holdings）
+└── .github/workflows/        # update-data.yml + deploy-pages.yml
 ```
 
 ---
@@ -184,24 +152,9 @@ python3 fundctl.py refresh
 
 ---
 
-## 🔍 分类规则（pipeline.scan）
+## 🔍 分类规则
 
-```
-QDII 基金入口
-├── force_exclude（config）命中  → exclude
-├── force_include（config）命中  → 指定分类
-├── 不是 QDII                 → exclude
-├── 名字命中 EXCLUDE_KEYWORDS → exclude
-├── 场内代码（159/513/510）   → etf
-├── 名字含"标普500"           → sp500
-├── 名字含"纳斯达克100"        → nasdaq_passive
-├── 名字含"美国/美股/全球/科技…"
-│   ├── 命中 ACTIVE_WHITELIST → active（19 只精选）
-│   └── 否则                  → global_other
-└── 否则                      → exclude
-```
-
-> 📝 `global_index`（全球非美指数）名字会命中 `EXCLUDE_KEYWORDS`（如"日经/韩"），需通过 `FORCE_INCLUDE_CODES` 白名单纳入，机制与其他分类一致。
+`pipeline.scan` 按优先级：force_exclude → force_include → 非 QDII → EXCLUDE_KEYWORDS → 场内代码 → 名字关键词（标普500/纳斯达克100/美国/美股/全球…）→ ACTIVE_WHITELIST → global_other。`global_index`（全球非美指数）通过 `FORCE_INCLUDE_CODES` 白名单纳入。详见 [`CLAUDE.md`](./CLAUDE.md)。
 
 ---
 

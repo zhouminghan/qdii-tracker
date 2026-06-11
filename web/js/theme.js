@@ -2,7 +2,7 @@ const STORAGE_KEY = 'qdii-theme';
 
 function toggleTheme() {
   const dark = document.documentElement.classList.toggle('dark');
-  try { localStorage.setItem(STORAGE_KEY, dark ? 'dark' : 'light'); } catch {}
+  try { sessionStorage.setItem(STORAGE_KEY, dark ? 'dark' : 'light'); } catch {}
 }
 
 function start() {
@@ -11,7 +11,7 @@ function start() {
   try {
     var mql = window.matchMedia('(prefers-color-scheme: dark)');
     var handler = function() {
-      if (!localStorage.getItem(STORAGE_KEY)) {
+      if (!sessionStorage.getItem(STORAGE_KEY)) {
         document.documentElement.classList.toggle('dark', mql.matches);
       }
     };
