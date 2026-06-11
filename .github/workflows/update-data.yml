@@ -163,11 +163,7 @@ jobs:
             else
               git commit -m "chore(data): 增量更新 @ $TS"
             fi
+            git pull --rebase origin main
             git push
             echo "✅ 数据已更新并推送"
-            
-            # 触发网页部署：用 --allow-empty 确保即使无文件变更也能 commit
-            git commit --allow-empty -m "chore(deploy): 触发网页部署"
-            git push
-            echo "✅ 网页部署已触发"
           fi
