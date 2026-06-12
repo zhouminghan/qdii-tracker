@@ -295,12 +295,14 @@ const GROUP_NOTICE = {
 // ==================== 走势 modal 区间 ====================
 
 const TREND_RANGES = [
-  { key: '1m',  label: '近1月',  days: 30 },
-  { key: '3m',  label: '近3月',  days: 90 },
-  { key: '6m',  label: '近6月',  days: 180 },
+  { key: '1m',  label: '1月',    days: 30 },
+  { key: '3m',  label: '3月',    days: 90 },
+  { key: '6m',  label: '6月',    days: 180 },
   { key: 'ytd', label: '今年来', days: null }, // 特殊处理
-  { key: '1y',  label: '近1年',  days: 365 },
-  { key: '3y',  label: '近3年',  days: 365 * 3 },
+  { key: '1y',  label: '1年',    days: 365 },
+  { key: '2y',  label: '2年',    days: 365 * 2 },
+  { key: '5y',  label: '5年',    days: 365 * 5 },
+  { key: '10y', label: '10年',   days: 365 * 10 },
   { key: 'all', label: '全部',   days: null }, // 特殊处理
 ];
 

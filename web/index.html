@@ -14,7 +14,7 @@
   <!-- 纯常量配置（COMPANY_BRAND/GROUP_META/ETF_GROUPS 等 ~150 行）抽出为 config.js；
        用普通 script 全局作用域加载（非 ES Module），原内联块 0 改动即可引用。
        ?v= 版本戳防 GitHub Pages 强缓存（改文件后需 bump）。 -->
-  <script src="./js/config.js?v=20260610a"></script>
+  <script src="./js/config.js?v=20260612a"></script>
   <!-- 纯工具函数集（0 副作用 / 0 DOM）抽出为 utils.js；依赖 config.js 的全局常量。 -->
   <script src="./js/utils.js?v=20260611a"></script>
   <style>
@@ -1692,11 +1692,30 @@
 
       const fmtD = (d) => `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
       const fmtFullD = (d) => `${d.getFullYear()}-${fmtD(d)}`;
-      const xLabels = [
-        { i: 0, label: fmtD(pts[0].date) },
-        { i: Math.floor(pts.length / 2), label: fmtD(pts[Math.floor(pts.length / 2)].date) },
-        { i: pts.length - 1, label: fmtD(pts[pts.length - 1].date) },
-      ];
+      // X 轴标签格式：根据区间跨度决定日期粒度（模仿苹果股票 App）
+      //   ≤1年  → M月D日（如 5月7日）
+      //   1~3年 → YYYY年M月（如 2025年7月）
+      //   >3年  → YYYY   （如 2022）
+      const spanDays = (pts[pts.length - 1].date - pts[0].date) / 864e5;
+      let fmtXLabel;
+      if (spanDays > 365 * 3) {
+        fmtXLabel = (d) => `${d.getFullYear()}`;
+      } else if (spanDays > 365) {
+        fmtXLabel = (d) => `${d.getFullYear()}年${d.getMonth() + 1}月`;
+      } else {
+        fmtXLabel = (d) => `${d.getMonth() + 1}月${d.getDate()}日`;
+      }
+      // X 轴刻度数量（苹果风格：所有区间都放足够多的刻度）
+      //   ≤30天  → 5 个（1月）
+      //   30~180天 → 5 个（3月/6月）
+      //   180天~3年 → 5~6 个（1年/2年）
+      //   >3年   → 6 个（5年/10年/全部）
+      const xTickCount = spanDays > 365 * 3 ? 6 : 5;
+      const xLabels = [];
+      for (let t = 0; t < xTickCount; t++) {
+        const i = t === 0 ? 0 : t === xTickCount - 1 ? pts.length - 1 : Math.round(pts.length * t / (xTickCount - 1));
+        xLabels.push({ i, label: fmtXLabel(pts[i].date) });
+      }
 
       // 区间累计涨跌：A 股口径（红涨绿跌），与全站 .up/.down 一致
       const totalChgCls = totalChg > 0 ? 'up' : totalChg < 0 ? 'down' : 'text-stone-400';
@@ -2229,7 +2248,7 @@
   <script type="module">
 import { start as startMarketIndices } from './js/market-indices.js?v=20260606a';
 import { start as startEtfPremium } from './js/etf-premium.js?v=20260610a';
-import { start as startMarketTrend } from './js/market-trend.js?v=20260609b';
+import { start as startMarketTrend } from './js/market-trend.js?v=20260612a';
 import { start as startOffshoreLiveNav } from './js/offshore-live-nav.js?v=20260611a';
 import { start as startTheme } from './js/theme.js?v=20260610e';
 
