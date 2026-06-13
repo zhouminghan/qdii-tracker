@@ -805,24 +805,42 @@
       document.getElementById(`count-${tab}`).textContent =
         `${totalSeries} 个系列 · ${totalShares} 只份额 · 总规模 ${totalScale.toFixed(0)} 亿`;
 
-      // 表头净值日期：取当前 tab 下所有 share nav_date 的最大值（= 官方最新披露日）
-      // why 不用 new Date()：周末/节假日浏览器拿到的"今天"≠ 官方最新披露日（如周六显示周五净值），
-      //                     直接拿数据里的最大 nav_date 天然规避节假日表，无需手动维护
-      // 数据空兜底：fallback 到今天（避免初次加载或异常时表头空白）
-      let latestNavDate = '';
-      for (const g of groups) {
-        for (const s of g.items) {
-          const def = s.shares.find(x => x.code === s.default_share_code) || s.shares[0];
-          if (!def) continue;
-          const nd = isEtf
-            ? (def._live_etf_date || def.nav_date || '')
-            : (getOffshoreDisplayValues(def).navDate || '');
-          if (nd && nd > latestNavDate) latestNavDate = nd;
-        }
+      // 表头净值日期：优先用「最近工作日」（周六→周五、周日→周五），避免被 QDII T+2 拖后腿
+      // why 不用 new Date()：周末应回退到最近工作日（如周六表头显示周五 06-12）
+      // fallback：数据空或异常时，取数据里最大的 nav_date 兜底
+      function lastWeekday(d = new Date()) {
+        const day = d.getDay();
+        // 日=0, 六=6 → 回退到周五
+        if (day === 0) d.setDate(d.getDate() - 2);
+        else if (day === 6) d.setDate(d.getDate() - 1);
+        return d;
       }
-      if (!latestNavDate) {
-        const d = new Date();
-        latestNavDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      let latestNavDate = '';
+      // 策略1：用最近工作日作为期望的"最新交易日"
+      {
+        const lw = lastWeekday();
+        latestNavDate = `${lw.getFullYear()}-${String(lw.getMonth() + 1).padStart(2, '0')}-${String(lw.getDate()).padStart(2, '0')}`;
+      }
+      // 策略2（兜底）：如果最近工作日还没任何数据，fallback 到数据中最大 nav_date
+      {
+        let maxDataDate = '';
+        for (const g of groups) {
+          for (const s of g.items) {
+            const def = s.shares.find(x => x.code === s.default_share_code) || s.shares[0];
+            if (!def) continue;
+            const nd = isEtf
+              ? (def._live_etf_date || def.nav_date || '')
+              : (getOffshoreDisplayValues(def).navDate || '');
+            if (nd && nd > maxDataDate) maxDataDate = nd;
+          }
+        }
+        // 如果数据最大值 < 最近工作日超过 4 天（长假场景），用数据值
+        if (maxDataDate && latestNavDate > maxDataDate) {
+          const diffMs = new Date(latestNavDate) - new Date(maxDataDate);
+          if (diffMs / 86400000 > 4) latestNavDate = maxDataDate;
+        } else if (!maxDataDate) {
+          // 首次加载无数据：保持 latestNavDate = 最近工作日
+        }
       }
       const navHeaderSub = fmtMD(latestNavDate);
       // 按 tab 存储，供 renderSeries 判断行内是否需要重复显示日期
