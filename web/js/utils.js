@@ -252,8 +252,9 @@ function changeCell(v, small = false) {
     return `<td class="${small ? 'py-2' : 'py-3 px-3'} text-right text-stone-400 num">--</td>`;
   }
   const cls = v > 0 ? 'up' : v < 0 ? 'down' : '';
-  const prefix = v > 0 ? '+' : '';
-  return `<td class="${small ? 'py-2' : 'py-3 px-3'} text-right num ${cls}">${prefix}${v.toFixed(2)}%</td>`;
+  const sign = v > 0 ? '+' : '';
+  const arrow = v > 0 ? '↑' : v < 0 ? '↓' : '';
+  return `<td class="${small ? 'py-2' : 'py-3 px-3'} text-right num ${cls}">${arrow}${sign}${v.toFixed(2)}%</td>`;
 }
 
 function buyStatusClass(status) {

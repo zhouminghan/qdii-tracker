@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://zhouminghan.github.io/qdii-tracker/sitemap.xml
