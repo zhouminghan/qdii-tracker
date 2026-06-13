@@ -10,6 +10,7 @@ import requests
 
 from core.constants import HEADERS_EASTMONEY, HEADERS_FUND
 from core.utils import to_float
+from timezone_utils import BEIJING_TZ
 
 
 def fetch_lsjz(code: str):
@@ -101,7 +102,7 @@ def fetch_pzd(code: str):
                 last = arr[-1]
                 ts = last.get("x")
                 if ts:
-                    result["nav_date"] = datetime.fromtimestamp(ts / 1000).strftime("%Y-%m-%d")
+                    result["nav_date"] = datetime.fromtimestamp(ts / 1000, tz=BEIJING_TZ).strftime("%Y-%m-%d")
                 nav = to_float(last.get("y"))
                 if nav is not None:
                     result["nav"] = nav
