@@ -19,7 +19,8 @@ ASSET_VERSION_PATTERN = re.compile(r"(\./js/[^\"'\n?]+\.js\?v=)([^\"'\n]+)")
 
 def stamp_asset_versions(target_file: Path, version: str) -> int:
     content = target_file.read_text(encoding="utf-8")
-    new_content, count = ASSET_VERSION_PATTERN.subn(rf"\1{version}", content)
+    # 用 lambda 避免 version 以数字开头时被 re.subn 误解释为反向引用 \NN
+    new_content, count = ASSET_VERSION_PATTERN.subn(lambda m: m.group(1) + version, content)
     if count:
         target_file.write_text(new_content, encoding="utf-8")
     return count
