@@ -22,7 +22,7 @@
        ?v= 版本戳防 GitHub Pages 强缓存（改文件后需 bump）。 -->
   <script defer src="./js/config.js?v=20260613a"></script>
   <!-- 纯工具函数集（0 副作用 / 0 DOM）抽出为 utils.js；依赖 config.js 的全局常量。 -->
-  <script defer src="./js/utils.js?v=20260613a"></script>
+  <script defer src="./js/utils.js?v=20260616b"></script>
   <style>
     body {
       font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -638,17 +638,17 @@
       <p class="mt-2">📊 数据来源：East Money (AKShare) / 雪球 · 📜 MIT License · 数据由 GitHub Actions 每日自动更新</p>
     </div>
   </footer>
-  <script defer src="./js/main.js?v=20260613a"></script>
+  <script defer src="./js/main.js?v=20260616b"></script>
 
   <!-- 模块化的独立功能模块（ES Modules，无构建过程） -->
-  <!-- why 带 ?v=YYYYMMDDx 版本戳：浏览器对 .js 默认强缓存（GitHub Pages 也是），
-       修过 JS 但用户访问时仍可能命中旧版本。每次改动 js/ 下文件时同步 bump 对应模块版本号即可。 -->
+  <!-- why 带 ?v=：浏览器对 .js 默认强缓存（GitHub Pages 也是），
+       发布 workflow 会在上传前自动把这些版本戳统一改写为本次构建版本，避免手工 bump 漏改。 -->
   <script type="module">
-import { start as startMarketIndices } from './js/market-indices.js?v=20260613a';
-import { start as startEtfPremium } from './js/etf-premium.js?v=20260613a';
-import { start as startMarketTrend } from './js/market-trend.js?v=20260613a';
-import { start as startOffshoreLiveNav } from './js/offshore-live-nav.js?v=20260613a';
-import { start as startTheme } from './js/theme.js?v=20260613a';
+import { start as startMarketIndices } from './js/market-indices.js?v=20260616a';
+import { start as startEtfPremium } from './js/etf-premium.js?v=20260616a';
+import { start as startMarketTrend } from './js/market-trend.js?v=20260616a';
+import { start as startOffshoreLiveNav } from './js/offshore-live-nav.js?v=20260616a';
+import { start as startTheme } from './js/theme.js?v=20260616a';
 
     // 主题切换（深色/亮色 + 跟随系统）
     try { startTheme(); } catch (e) { console.error('theme init error:', e); }

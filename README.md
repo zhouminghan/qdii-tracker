@@ -49,9 +49,11 @@
 │  scripts/               │    │  web/index.html     │
 │  ├── pipeline/scan.py   │    │                     │
 │  ├── pipeline/enrich.py │    │  - 纯 Vanilla JS    │
-│  ├── pipeline/fill.py   │    │  - Tailwind 本地化  │
+│  ├── pipeline/fill.py   │    │  - Tailwind CSS     │
 │  ├── pipeline/refresh.py│    │  - 首屏 0 外部请求  │
 │  └── pipeline/holdings.py│   │  - 实时数据按需加载  │
+│  └── frontend-build/    │    │                     │
+│    └── tailwind.*       │    │                     │
 └──────────▲──────────────┘    └─────────────────────┘
            │ 拉取
 ┌──────────┴──────────────────────────────────────────┐
@@ -74,7 +76,9 @@ qdii-tracker/
 │   ├── fundctl.py            # 统一入口（add/move/refresh/sync/check）
 │   ├── core/                 # 共享基础设施
 │   ├── sources/              # 数据源抽象层（akshare/eastmoney/xueqiu）
-│   └── pipeline/             # scan → enrich → fill → refresh → holdings
+│   ├── pipeline/             # scan → enrich → fill → refresh → holdings
+│   ├── tests/                # 回归测试（Node + Python）
+│   └── frontend-build/       # 前端样式构建输入（tailwind 配置）
 ├── web/                      # 前端（纯静态）
 │   ├── index.html            # 主入口
 │   ├── js/                   # 抽离模块（config/utils/bj-time/market-indices/etf-premium/offshore-live-nav/market-trend/idle-scheduler）
@@ -178,6 +182,21 @@ python3 fundctl.py add --code 002891 --to active --keyword "华夏移动互联"
 > ⚠️ `pipeline.scan` 会**覆盖** `web/data/*.json`，方式 A 跑完 scan 后必须接 enrich + fill；方式 B 补数据脚本不会覆盖已有字段。
 
 详细字段规范、踩坑列表、Bug 史 详见 [`CLAUDE.md`](./CLAUDE.md)。
+
+---
+
+## 🧪 测试
+
+```bash
+# 前端回归测试（Node）
+node --test scripts/tests/nav-header-date.test.js scripts/tests/etf-runtime.test.mjs
+
+# 资源版本戳脚本测试（Python）
+python3 scripts/tests/stamp-asset-version.test.py
+
+# 配置一致性校验
+cd scripts && python3 fundctl.py check
+```
 
 ---
 

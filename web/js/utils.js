@@ -1,5 +1,5 @@
 /**
- * utils.js — 纯工具函数集中地（0 副作用 / 0 DOM 操作）
+ * utils.js — 工具函数集中地（以纯函数为主；允许极少量无状态 UI 同步 helper）
  *
  * why：原内联 JS 中散落 ~20 个工具函数（排序、格式化、颜色、市场时段判断），
  * 它们之间只读不写，是天然的"被 import 项"。抽出来后：
@@ -59,6 +59,90 @@ function getOffshoreDisplayValues(def) {
     navDate: useLive ? liveDate : localDate,
     isLive: useLive,
   };
+}
+
+function getSeriesDisplayNavDate(series, isEtf = false) {
+  if (!series || !Array.isArray(series.shares) || !series.shares.length) return '';
+  const def = series.shares.find(s => s.code === series.default_share_code) || series.shares[0];
+  if (!def) return '';
+  return isEtf ? (def._live_etf_date || def.nav_date || '') : (getOffshoreDisplayValues(def).navDate || '');
+}
+
+function pickRepresentativeDate(dates) {
+  const counts = new Map();
+  for (const d of dates || []) {
+    if (!d) continue;
+    counts.set(d, (counts.get(d) || 0) + 1);
+  }
+  let bestDate = '';
+  let bestCount = 0;
+  for (const [date, count] of counts.entries()) {
+    if (count > bestCount || (count === bestCount && date > bestDate)) {
+      bestDate = date;
+      bestCount = count;
+    }
+  }
+  return bestDate;
+}
+
+function pickTabNavHeaderDate(seriesList, isEtf = false) {
+  if (!Array.isArray(seriesList) || !seriesList.length) return '';
+  return pickRepresentativeDate(seriesList.map(series => getSeriesDisplayNavDate(series, isEtf)));
+}
+
+function shouldHideRowNavDate(rowNavDate, headerDate, rowIsLive = false) {
+  return !!(rowNavDate && headerDate && rowNavDate === headerDate && !rowIsLive);
+}
+
+function syncRowNavDateVisibility(container, headerDate) {
+  if (!container || typeof container.querySelectorAll !== 'function') return;
+  container.querySelectorAll('.row-nav-date').forEach(el => {
+    if (!el?.classList || typeof el.classList.toggle !== 'function') return;
+    const rowNavDate = el.dataset?.navDate || '';
+    const rowIsLive = el.dataset?.isLive === '1';
+    el.classList.toggle('hidden', shouldHideRowNavDate(rowNavDate, headerDate, rowIsLive));
+  });
+}
+
+function renderRowNavDateHtml(rowNavDate, headerDate, rowIsLive = false) {
+  if (!rowNavDate) return '';
+  const hiddenClass = shouldHideRowNavDate(rowNavDate, headerDate, rowIsLive) ? ' hidden' : '';
+  const colorClass = rowIsLive ? 'text-indigo-500 dark:text-indigo-400' : 'text-stone-400 dark:text-stone-500';
+  return `<div class="row-nav-date text-[10px] ${colorClass}${hiddenClass}" data-nav-date="${rowNavDate}" data-is-live="${rowIsLive ? '1' : '0'}">${fmtMD(rowNavDate)}</div>`;
+}
+
+const OFFSHORE_LIVE_FIELD_KEYS = ['_live_nav', '_live_daily_change', '_live_nav_date', '_live_nav_source', '_live_nav_updated_at'];
+const ETF_LIVE_FIELD_KEYS = ['etf_price', 'etf_change_pct', 'etf_iopv', 'etf_premium', '_live_etf_date'];
+
+function copyShareFields(nextShare, prevShare, fieldKeys) {
+  if (!nextShare || !prevShare) return nextShare;
+  fieldKeys.forEach(key => {
+    if (prevShare[key] != null) nextShare[key] = prevShare[key];
+  });
+  return nextShare;
+}
+
+function mergeStateLiveFields(nextData, prevData) {
+  if (!nextData || !prevData) return nextData;
+  Object.entries(nextData).forEach(([cat, catData]) => {
+    const nextSeries = catData?.series;
+    const prevSeries = prevData?.[cat]?.series;
+    if (!Array.isArray(nextSeries) || !Array.isArray(prevSeries) || !prevSeries.length) return;
+    const prevShares = new Map();
+    prevSeries.forEach(series => {
+      (series?.shares || []).forEach(share => {
+        if (share?.code) prevShares.set(share.code, share);
+      });
+    });
+    const fieldKeys = cat === 'etf' ? ETF_LIVE_FIELD_KEYS : OFFSHORE_LIVE_FIELD_KEYS;
+    nextSeries.forEach(series => {
+      (series?.shares || []).forEach(share => {
+        const prevShare = share?.code ? prevShares.get(share.code) : null;
+        copyShareFields(share, prevShare, fieldKeys);
+      });
+    });
+  });
+  return nextData;
 }
 
 // 取 series 上某排序字段的值（series_scale 在 series 本身，其他都是 default share 上的）

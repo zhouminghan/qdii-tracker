@@ -20,13 +20,15 @@
     let DETAIL_REFRESH_TIMER = null;  // 持仓弹窗自动刷新定时器
     let LAST_FOCUS = null;            // 打开弹窗前的焦点元素
 
-    // 以下纯函数已抽到 web/js/utils.js（普通 script，全局作用域）：
-    //   shareSort / buyStatusRank / getOffshoreDisplayValues / getSortValue / sortSeries
+    // 以下工具函数已抽到 web/js/utils.js（普通 script，全局作用域）：
+    //   shareSort / buyStatusRank / getOffshoreDisplayValues / getSeriesDisplayNavDate / getSortValue / sortSeries
+    //   pickRepresentativeDate / pickTabNavHeaderDate / shouldHideRowNavDate / syncRowNavDateVisibility / renderRowNavDateHtml
+    //   mergeStateLiveFields
     //   getLogo / adjustColor
     //   todayStr / isTradingDay / fmtMD / getLocalParts / getMarketSession / detectMarketPrefix
     //   cleanCondition / formatHoldDays / parseSellRuleLowerDays
     //   changeCell / buyStatusClass / formatLimit
-    //   fmtPct / fmtMoney / fmtMV    }
+    //   fmtPct / fmtMoney / fmtMV
 
     // ==================== 数据加载 ====================
     // 版本号策略：先拉 meta.json（绕缓存），用其 generated_at 当所有数据文件的 query 版本号
@@ -200,43 +202,13 @@
       document.getElementById(`count-${tab}`).textContent =
         `${totalSeries} 个系列 · ${totalShares} 只份额 · 总规模 ${totalScale.toFixed(0)} 亿`;
 
-      // 表头净值日期：优先用「最近工作日」（周六→周五、周日→周五），避免被 QDII T+2 拖后腿
-      // why 不用 new Date()：周末应回退到最近工作日（如周六表头显示周五 06-12）
-      // fallback：数据空或异常时，取数据里最大的 nav_date 兜底
-      function lastWeekday(d = new Date()) {
-        const day = d.getDay();
-        // 日=0, 六=6 → 回退到周五
-        if (day === 0) d.setDate(d.getDate() - 2);
-        else if (day === 6) d.setDate(d.getDate() - 1);
-        return d;
-      }
-      let latestNavDate = '';
-      // 策略1：用最近工作日作为期望的"最新交易日"
-      {
-        const lw = lastWeekday();
-        latestNavDate = `${lw.getFullYear()}-${String(lw.getMonth() + 1).padStart(2, '0')}-${String(lw.getDate()).padStart(2, '0')}`;
-      }
-      // 策略2（兜底）：如果最近工作日还没任何数据，fallback 到数据中最大 nav_date
-      {
-        let maxDataDate = '';
-        for (const g of groups) {
-          for (const s of g.items) {
-            const def = s.shares.find(x => x.code === s.default_share_code) || s.shares[0];
-            if (!def) continue;
-            const nd = isEtf
-              ? (def._live_etf_date || def.nav_date || '')
-              : (getOffshoreDisplayValues(def).navDate || '');
-            if (nd && nd > maxDataDate) maxDataDate = nd;
-          }
-        }
-        // 如果数据最大值 < 最近工作日超过 4 天（长假场景），用数据值
-        if (maxDataDate && latestNavDate > maxDataDate) {
-          const diffMs = new Date(latestNavDate) - new Date(maxDataDate);
-          if (diffMs / 86400000 > 4) latestNavDate = maxDataDate;
-        } else if (!maxDataDate) {
-          // 首次加载无数据：保持 latestNavDate = 最近工作日
-        }
-      }
+      // 表头净值日期：取当前可见分组里「主表实际展示日期」的众数。
+      // why：offshore 是混合表（不同组可能天然有不同 nav_date），
+      // 用最近工作日会超前，用最大日期会被少数特例带偏；众数更贴近用户当前看到的大多数行。
+      const savedChipKey = CHIP_STATE[tab];
+      const defaultChipKey = (savedChipKey && groups.some(g => g.key === savedChipKey)) ? savedChipKey : groups[0]?.key;
+      const defaultGroup = groups.find(g => g.key === defaultChipKey);
+      const latestNavDate = pickTabNavHeaderDate(defaultGroup?.items || [], isEtf);
       const navHeaderSub = fmtMD(latestNavDate);
       // 按 tab 存储，供 renderSeries 判断行内是否需要重复显示日期
       STATE._navDate = STATE._navDate || {};
@@ -436,6 +408,13 @@
           `${visibleSeries} 个系列 · ${visibleShares} ${tab === 'etf' ? '只 ETF' : '只份额'} · 总规模 ${visibleScale.toFixed(0)} 亿`;
       }
 
+      const headerDate = pickTabNavHeaderDate(currentGroup.items, tab === 'etf');
+      STATE._navDate = STATE._navDate || {};
+      STATE._navDate[tab] = headerDate;
+      const navDateSubEl = table.querySelector('.nav-date-sub');
+      if (navDateSubEl) navDateSubEl.textContent = fmtMD(headerDate);
+      syncRowNavDateVisibility(table, headerDate);
+
       // 更新区域标题 & 副标题（随 Chip 动态变化）
       const meta = (GROUP_META[tab] || {})[filter];
       if (meta) {
@@ -579,10 +558,8 @@
             <div class="text-xs ${dailyChange > 0 ? 'up' : dailyChange < 0 ? 'down' : 'text-stone-400'}">${dailyChange == null ? '--' : (dailyChange > 0 ? '+' : '') + dailyChange.toFixed(2) + '%'}</div>
             ${(() => {
               const nd = rowNavDate;
-              if (!nd) return '';
               const headerDate = (STATE._navDate || {})[isEtf ? 'etf' : 'offshore'] || '';
-              if (nd === headerDate && !rowIsLive) return '';
-              return `<div class="text-[10px] ${rowIsLive ? 'text-indigo-500 dark:text-indigo-400' : 'text-stone-400 dark:text-stone-500'}">${fmtMD(nd)}</div>`;
+              return renderRowNavDateHtml(nd, headerDate, rowIsLive);
             })()}
           </td>
           ${(() => {

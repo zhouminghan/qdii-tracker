@@ -134,6 +134,11 @@ jobs:
           echo "=== [5/5] pipeline.holdings（主动基金持仓）==="
           python -m pipeline.holdings
 
+      - name: ✅ 一致性校验
+        run: |
+          cd scripts
+          python fundctl.py check
+
       # 6. 如果 web/data 有变化，commit 回主分支
       - name: 💾 提交数据变更
         run: |

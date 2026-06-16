@@ -130,6 +130,8 @@ import { bjNowParts } from './bj-time.js';
 // 13:00-15:00  60s   盘中下午
 // 15:00 后     settle-once（拉到收盘价即停，未拉到退避重试）
 
+export const ETF_BOOTSTRAP_RETRY_MS = 15 * 1000;
+
 function getEtfIntervalMs(parts, etfSettled, postCloseRetries) {
   if (etfSettled) return 24 * 60 * 60 * 1000; // 已 settle，24h 后再检查（实际靠 maybeResetSettled 重置）
   const m = parts.minutes;
@@ -144,6 +146,10 @@ function getEtfIntervalMs(parts, etfSettled, postCloseRetries) {
   return 5 * 60 * 1000;                        // 09:30 前：5min 等待开盘
 }
 
+export function getEtfNextIntervalMs(parts, etfSettled, postCloseRetries, hasCodes = true) {
+  return hasCodes ? getEtfIntervalMs(parts, etfSettled, postCloseRetries) : ETF_BOOTSTRAP_RETRY_MS;
+}
+
 /**
  * 启动 ETF 实时溢价率拉取。
  * @param {object} options
@@ -154,6 +160,7 @@ export function start({ state, onUpdate }) {
   let etfSettled = false;
   let postCloseRetries = 0;
   let lastSettledDate = ''; // 记录 settle 时的日期，次日重置
+  let nextIntervalOverrideMs = null;
 
   // 检查是否需要重置 settled 状态（新交易日 09:00）
   function maybeResetSettled(parts) {
@@ -171,7 +178,10 @@ export function start({ state, onUpdate }) {
     if (etfSettled) return;
 
     const codes = collectEtfCodes(state);
-    if (!codes.length) return;
+    if (!codes.length) {
+      nextIntervalOverrideMs = getEtfNextIntervalMs(parts, etfSettled, postCloseRetries, false);
+      return;
+    }
 
     const map = await fetchByJsonp(codes);
     if (Object.keys(map).length) {
@@ -193,5 +203,16 @@ export function start({ state, onUpdate }) {
 
   // 由 idle-scheduler 接管：标签页隐藏 / 用户长时间无操作时自动暂停，避免空轮询
   // firstDelayMs=1500 —— 给主表 loadData() 留时间把 etf.json 装进 STATE
-  schedule(tick, () => getEtfIntervalMs(bjNowParts(), etfSettled, postCloseRetries), { firstDelayMs: 1500 });
+  schedule(
+    tick,
+    () => {
+      if (nextIntervalOverrideMs != null) {
+        const ms = nextIntervalOverrideMs;
+        nextIntervalOverrideMs = null;
+        return ms;
+      }
+      return getEtfNextIntervalMs(bjNowParts(), etfSettled, postCloseRetries, true);
+    },
+    { firstDelayMs: 1500 },
+  );
 }

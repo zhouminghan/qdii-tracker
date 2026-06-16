@@ -31,3 +31,19 @@ akshare_cache/
 # 日志
 *.log
 logs/
+
+# ==================== 测试产物 ====================
+coverage/
+.nyc_output/
+htmlcov/
+.coverage
+coverage.xml
+scripts/tests/tmp/
+scripts/tests/.tmp/
+scripts/tests/artifacts/
+scripts/tests/**/*.tmp
+scripts/tests/**/*.actual
+
+# ==================== 工作流草稿 ====================
+# plans 正式文档保留追踪，仅忽略未完成临时草稿
+plans/*
