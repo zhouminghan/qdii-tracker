@@ -23,9 +23,8 @@
     // 以下工具函数已抽到 web/js/utils.js（普通 script，全局作用域）：
     //   shareSort / buyStatusRank / getOffshoreDisplayValues / getSeriesDisplayNavDate / getSortValue / sortSeries
     //   pickRepresentativeDate / pickTabNavHeaderDate / shouldHideRowNavDate / syncRowNavDateVisibility / renderRowNavDateHtml
-    //   mergeStateLiveFields
     //   getLogo / adjustColor
-    //   todayStr / isTradingDay / fmtMD / getLocalParts / getMarketSession / detectMarketPrefix
+    //   isTradingDay / fmtMD / getLocalParts / getMarketSession / detectMarketPrefix
     //   cleanCondition / formatHoldDays / parseSellRuleLowerDays
     //   changeCell / buyStatusClass / formatLimit
     //   fmtPct / fmtMoney / fmtMV
@@ -56,9 +55,6 @@
       RENDER_TABS.forEach(renderCategory);
       // 纯静态模式：首屏数据全部来自 data/*.json（GitHub Actions 离线生成）
     }
-
-    // 今日日期（YYYY-MM-DD，北京本地）——通用工具
-    // todayStr 已移到 web/js/utils.js
 
     // ==================== 动态拉取最新净值/行情 ====================
     // 当前架构：纯静态模式 —— 净值/估值/申购状态全部由 GitHub Actions 离线生成进 data/*.json
@@ -802,18 +798,6 @@
       }
       return `<span class="${cls}">${st}</span>`;
     }
-
-    function formatLimitForDetail(sh) {
-      if (!sh.buy_status) return '--';
-      if (sh.currency === '美元') return '—';
-      if (sh.buy_status.includes('暂停')) return '—';
-      if (sh.daily_limit) {
-        const symbol = sh.currency === '美元' ? '$' : '¥';
-        return `${symbol}${formatLimit(sh.daily_limit)}`;
-      }
-      return sh.buy_status.includes('开放') ? '不限' : '--';
-    }
-
     // formatLimit / buyStatusClass 已移到 web/js/utils.js
     function toggleSeries(row) {
       const id = row.dataset.seriesId;

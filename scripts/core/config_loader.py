@@ -35,17 +35,4 @@ def save_config(cfg: dict):
         f.write("\n")
 
 
-def add_force_include(code: str, category: str):
-    """向 force_include 添加一条，并保存"""
-    cfg = get_config()
-    cfg["classify"]["force_include"][code] = category
-    save_config(cfg)
 
-
-def add_active_whitelist(keyword: str):
-    """向 active_whitelist 添加一条，并保存"""
-    cfg = get_config()
-    wl = cfg["classify"]["active_whitelist"]
-    if keyword not in wl:
-        wl.append(keyword)
-        save_config(cfg)

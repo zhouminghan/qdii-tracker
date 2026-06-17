@@ -111,8 +111,9 @@ def classify_fund(code: str, name: str, fund_type: str) -> str:
 # 基金系列识别
 # ============================================================
 
-FUND_COMPANIES = _CFG["companies"]
-COMPANY_DISPLAY_ALIAS = _CFG["company_alias"]
+# companies 未配置时从 company_brand 自动提取（兜底）
+FUND_COMPANIES = _CFG.get("companies", list(_CFG.get("company_brand", {}).keys()))
+COMPANY_DISPLAY_ALIAS = _CFG.get("company_alias", {})
 
 SHARE_CLASS_PATTERN = re.compile(r"([ABCDEFHIQR])\s*$")
 

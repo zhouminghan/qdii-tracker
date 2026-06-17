@@ -111,40 +111,6 @@ function renderRowNavDateHtml(rowNavDate, headerDate, rowIsLive = false) {
   return `<div class="row-nav-date text-[10px] ${colorClass}${hiddenClass}" data-nav-date="${rowNavDate}" data-is-live="${rowIsLive ? '1' : '0'}">${fmtMD(rowNavDate)}</div>`;
 }
 
-const OFFSHORE_LIVE_FIELD_KEYS = ['_live_nav', '_live_daily_change', '_live_nav_date', '_live_nav_source', '_live_nav_updated_at'];
-const ETF_LIVE_FIELD_KEYS = ['etf_price', 'etf_change_pct', 'etf_iopv', 'etf_premium', '_live_etf_date'];
-
-function copyShareFields(nextShare, prevShare, fieldKeys) {
-  if (!nextShare || !prevShare) return nextShare;
-  fieldKeys.forEach(key => {
-    if (prevShare[key] != null) nextShare[key] = prevShare[key];
-  });
-  return nextShare;
-}
-
-function mergeStateLiveFields(nextData, prevData) {
-  if (!nextData || !prevData) return nextData;
-  Object.entries(nextData).forEach(([cat, catData]) => {
-    const nextSeries = catData?.series;
-    const prevSeries = prevData?.[cat]?.series;
-    if (!Array.isArray(nextSeries) || !Array.isArray(prevSeries) || !prevSeries.length) return;
-    const prevShares = new Map();
-    prevSeries.forEach(series => {
-      (series?.shares || []).forEach(share => {
-        if (share?.code) prevShares.set(share.code, share);
-      });
-    });
-    const fieldKeys = cat === 'etf' ? ETF_LIVE_FIELD_KEYS : OFFSHORE_LIVE_FIELD_KEYS;
-    nextSeries.forEach(series => {
-      (series?.shares || []).forEach(share => {
-        const prevShare = share?.code ? prevShares.get(share.code) : null;
-        copyShareFields(share, prevShare, fieldKeys);
-      });
-    });
-  });
-  return nextData;
-}
-
 // 取 series 上某排序字段的值（series_scale 在 series 本身，其他都是 default share 上的）
 function getSortValue(series, key) {
   if (key === 'series_scale') return series.series_scale ?? null;
@@ -198,14 +164,6 @@ function adjustColor(hex, amount) {
 }
 
 // ==================== 日期 / 市场时段 ====================
-
-function todayStr() {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${dd}`;
-}
 
 function isTradingDay() {
   const day = new Date().getDay();  // 周日=0，周六=6

@@ -81,7 +81,7 @@ qdii-tracker/
 │   └── frontend-build/       # 前端样式构建输入（tailwind 配置）
 ├── web/                      # 前端（纯静态）
 │   ├── index.html            # 主入口
-│   ├── js/                   # 抽离模块（config/utils/bj-time/market-indices/etf-premium/offshore-live-nav/market-trend/idle-scheduler）
+│   ├── js/                   # 抽离模块 (config/utils/bj-time/theme/market-indices/etf-premium/offshore-live-nav/market-trend/idle-scheduler)
 │   └── data/                 # 消费的 JSON（sp500/nasdaq_passive/active/global_index/global_other/etf/meta/holdings）
 └── .github/workflows/        # update-data.yml + deploy-pages.yml
 ```
@@ -123,8 +123,8 @@ python3 fundctl.py sync
 
 # 3. 启动前端
 cd ../web
-python3 -m http.server 8080
-# 浏览器打开 http://localhost:8080/
+python3 -m http.server 8765
+# 浏览器打开 http://localhost:8765/
 ```
 
 **日常增量更新**（交易日 21:30 前后 QDII 净值主力披露）：
@@ -189,7 +189,7 @@ python3 fundctl.py add --code 002891 --to active --keyword "华夏移动互联"
 
 ```bash
 # 前端回归测试（Node）
-node --test scripts/tests/nav-header-date.test.js scripts/tests/etf-runtime.test.mjs
+node --test scripts/tests/etf-runtime.test.mjs
 
 # 资源版本戳脚本测试（Python）
 python3 scripts/tests/stamp-asset-version.test.py

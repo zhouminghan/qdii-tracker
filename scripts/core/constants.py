@@ -18,9 +18,6 @@ HOLDINGS_DIR = DATA_DIR / "holdings"
 # ============================================================
 CATEGORIES = ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf"]
 
-# 场外分类（不含 etf）
-OFFSHORE_CATEGORIES = ["sp500", "nasdaq_passive", "active", "global_index", "global_other"]
-
 # ============================================================
 # 分类标签映射（原 scan_funds.py 的 label_map）
 # ============================================================

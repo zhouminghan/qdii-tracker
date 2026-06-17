@@ -16,10 +16,26 @@ env/
 # ==================== 系统/编辑器 ====================
 .DS_Store
 Thumbs.db
-.idea/
+
+# VSCode
 .vscode/
+.vscode-server/
+
+# PyCharm / IntelliJ
+.idea/
+*.iml
+
+# Claude Code / Codex / Cursor / CodeBuddy 等 AI 编辑器
+.claude/
+.claude-code/
+.cursor/
+.windsurf/
+.codebuddy/
+
+# 临时文件
 *.swp
 *.swo
+*~
 
 # ==================== 项目数据 ====================
 # web/data/ 是前端消费目录，永远追踪
@@ -44,6 +60,3 @@ scripts/tests/artifacts/
 scripts/tests/**/*.tmp
 scripts/tests/**/*.actual
 
-# ==================== 工作流草稿 ====================
-# plans 正式文档保留追踪，仅忽略未完成临时草稿
-plans/*
