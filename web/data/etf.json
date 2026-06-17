@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-17T06:58:06.715724+08:00",
+  "generated_at": "2026-06-18T01:07:36.764811+08:00",
   "category": "etf",
   "label": "板块6 · 场内 ETF",
   "series_count": 18,
@@ -40,7 +40,7 @@
           "sale_service_fee": 0.8,
           "mgmt_fee": 0.8,
           "custody_fee": 0.2,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "error": "'data'"
         }
       ],
@@ -83,7 +83,7 @@
           "sale_service_fee": 0.8,
           "mgmt_fee": 0.6,
           "custody_fee": 0.2,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "error": "'data'"
         }
       ],
@@ -127,7 +127,7 @@
           "buy_min": 0.0,
           "mgmt_fee": 0.6,
           "custody_fee": 0.2,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "error": "'data'"
         }
       ],
@@ -171,7 +171,7 @@
           "buy_min": 0.0,
           "mgmt_fee": 0.6,
           "custody_fee": 0.2,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "error": "'data'"
         }
       ],
@@ -214,7 +214,7 @@
           "buy_min": 0.0,
           "mgmt_fee": 0.5,
           "custody_fee": 0.1,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "error": "'data'"
         }
       ],
@@ -257,7 +257,7 @@
           "buy_min": 0.0,
           "mgmt_fee": 0.6,
           "custody_fee": 0.2,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "error": "'data'"
         }
       ],
@@ -300,7 +300,7 @@
           "sale_service_fee": 0.8,
           "mgmt_fee": 0.5,
           "custody_fee": 0.15,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "error": "'data'"
         }
       ],
@@ -343,7 +343,7 @@
           "buy_min": 0.0,
           "mgmt_fee": 0.6,
           "custody_fee": 0.15,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "error": "'data'"
         }
       ],
@@ -386,7 +386,7 @@
           "buy_min": 0.0,
           "mgmt_fee": 0.8,
           "custody_fee": 0.2,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "error": "'data'"
         }
       ],
@@ -429,7 +429,7 @@
           "sale_service_fee": 0.8,
           "mgmt_fee": 0.8,
           "custody_fee": 0.2,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "error": "'data'"
         }
       ],
@@ -472,7 +472,7 @@
           "buy_min": 0.0,
           "mgmt_fee": 0.5,
           "custody_fee": 0.1,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "error": "'data'"
         }
       ],
@@ -515,7 +515,7 @@
           "buy_min": 0.0,
           "mgmt_fee": 0.5,
           "custody_fee": 0.15,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "error": "'data'"
         }
       ],
@@ -558,7 +558,7 @@
           "buy_min": 0.0,
           "mgmt_fee": 0.5,
           "custody_fee": 0.15,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "error": "'data'"
         }
       ],
@@ -601,7 +601,7 @@
           "buy_min": 0.0,
           "mgmt_fee": 0.6,
           "custody_fee": 0.15,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "error": "'data'"
         }
       ],
@@ -644,7 +644,7 @@
           "buy_min": 0.0,
           "mgmt_fee": 0.5,
           "custody_fee": 0.1,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "error": "'data'"
         }
       ],
@@ -673,7 +673,7 @@
           "sell_rules": [],
           "etf_price": 1.73,
           "etf_change_pct": -2.86,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "chg_1m": 7.2,
           "chg_3m": 13.79,
           "chg_6m": 7.81,
@@ -715,7 +715,7 @@
           "sell_rules": [],
           "etf_price": 1.559,
           "etf_change_pct": -2.87,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "chg_1m": 7.58,
           "chg_3m": 14.49,
           "chg_6m": 8.2,
@@ -771,7 +771,7 @@
           "buy_min": 0.0,
           "mgmt_fee": 0.6,
           "custody_fee": 0.15,
-          "nav_date": "2026-06-15",
+          "nav_date": "2026-06-16",
           "error": "'data'"
         }
       ],
