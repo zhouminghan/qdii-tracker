@@ -22,7 +22,7 @@
 
     // 以下工具函数已抽到 web/js/utils.js（普通 script，全局作用域）：
     //   shareSort / buyStatusRank / getOffshoreDisplayValues / getSeriesDisplayNavDate / getSortValue / sortSeries
-    //   pickRepresentativeDate / pickTabNavHeaderDate / shouldHideRowNavDate / syncRowNavDateVisibility / renderRowNavDateHtml
+    //   pickRepresentativeDate / pickMaxDate / pickTabNavHeaderDate / shouldHideRowNavDate / syncRowNavDateVisibility / renderRowNavDateHtml
     //   getLogo / adjustColor
     //   isTradingDay / fmtMD / getLocalParts / getMarketSession / detectMarketPrefix
     //   cleanCondition / formatHoldDays / parseSellRuleLowerDays
@@ -198,13 +198,13 @@
       document.getElementById(`count-${tab}`).textContent =
         `${totalSeries} 个系列 · ${totalShares} 只份额 · 总规模 ${totalScale.toFixed(0)} 亿`;
 
-      // 表头净值日期：取当前可见分组里「主表实际展示日期」的众数。
-      // why：offshore 是混合表（不同组可能天然有不同 nav_date），
-      // 用最近工作日会超前，用最大日期会被少数特例带偏；众数更贴近用户当前看到的大多数行。
-      const savedChipKey = CHIP_STATE[tab];
-      const defaultChipKey = (savedChipKey && groups.some(g => g.key === savedChipKey)) ? savedChipKey : groups[0]?.key;
-      const defaultGroup = groups.find(g => g.key === defaultChipKey);
-      const latestNavDate = pickTabNavHeaderDate(defaultGroup?.items || [], isEtf);
+      // 表头净值日期：取全 Tab 所有分组的最大展示日期。
+      // why：offshore 是混合表（不同组天然有不同 nav_date），
+      // 用众数只反映当前分组主流日期——当部分组先更新时默认视图滞后；
+      // 改用全 Tab 最大日期后，表头始终反映最新可用数据，
+      // 行内日期由 shouldHideRowNavDate 自动显隐（≠ 表头 → 显示）。
+      const allTabSeries = groups.flatMap(g => g.items);
+      const latestNavDate = pickTabNavHeaderDate(allTabSeries, isEtf);
       const navHeaderSub = fmtMD(latestNavDate);
       // 按 tab 存储，供 renderSeries 判断行内是否需要重复显示日期
       STATE._navDate = STATE._navDate || {};
@@ -404,11 +404,8 @@
           `${visibleSeries} 个系列 · ${visibleShares} ${tab === 'etf' ? '只 ETF' : '只份额'} · 总规模 ${visibleScale.toFixed(0)} 亿`;
       }
 
-      const headerDate = pickTabNavHeaderDate(currentGroup.items, tab === 'etf');
-      STATE._navDate = STATE._navDate || {};
-      STATE._navDate[tab] = headerDate;
-      const navDateSubEl = table.querySelector('.nav-date-sub');
-      if (navDateSubEl) navDateSubEl.textContent = fmtMD(headerDate);
+      // 表头日期保持 Tab 级最大值（由 renderCategory 计算），切组时不重算
+      const headerDate = (STATE._navDate || {})[tab] || '';
       syncRowNavDateVisibility(table, headerDate);
 
       // 更新区域标题 & 副标题（随 Chip 动态变化）

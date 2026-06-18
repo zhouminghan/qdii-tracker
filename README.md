@@ -19,7 +19,7 @@
 - **场内 ETF 3 分组**（Chips 筛选）：标普500 / 纳指100 / 全球·其他 ETF（含日经225）
 - **⭐ ETF 星标置顶**：重点关注的 ETF 排在分组最前面
 - **📈 历史净值走势图**：每只基金可弹窗查看完整历史，支持 7 档区间（1月/3月/6月/今年来/1年/3年/全部）
-- **A/C/E/F/I 份额对比**：同一只基金不同份额的费率结构一目了然，含综合费率 tooltip
+- **A/C/D/E/F/H/I 份额对比**：同一只基金不同份额的费率结构一目了然，含综合费率 tooltip
 - **列头排序**：规模 / 净值（按当日涨跌） / 近1月 / 今年来 / 近1年 / 成立来 / 申购状态 都可点击切换升降序
 - **申购状态/日限额**：每只基金的限购金额、暂停状态一目了然
 - **分组日限额汇总**：被动分组（标普500 / 纳指100 / 全球指数）横幅动态显示当前每日可购买总额 + 开放申购只数
@@ -52,8 +52,6 @@
 │  ├── pipeline/fill.py   │    │  - Tailwind CSS     │
 │  ├── pipeline/refresh.py│    │  - 首屏 0 外部请求  │
 │  └── pipeline/holdings.py│   │  - 实时数据按需加载  │
-│  └── frontend-build/    │    │                     │
-│    └── tailwind.*       │    │                     │
 └──────────▲──────────────┘    └─────────────────────┘
            │ 拉取
 ┌──────────┴──────────────────────────────────────────┐
@@ -78,10 +76,9 @@ qdii-tracker/
 │   ├── sources/              # 数据源抽象层（akshare/eastmoney/xueqiu）
 │   ├── pipeline/             # scan → enrich → fill → refresh → holdings
 │   ├── tests/                # 回归测试（Node + Python）
-│   └── frontend-build/       # 前端样式构建输入（tailwind 配置）
 ├── web/                      # 前端（纯静态）
 │   ├── index.html            # 主入口
-│   ├── js/                   # 抽离模块 (config/utils/bj-time/theme/market-indices/etf-premium/offshore-live-nav/market-trend/idle-scheduler)
+│   ├── js/                   # 抽离模块 (main/config/utils/bj-time/theme/market-indices/etf-premium/offshore-live-nav/market-trend/idle-scheduler)
 │   └── data/                 # 消费的 JSON（sp500/nasdaq_passive/active/global_index/global_other/etf/meta/holdings）
 └── .github/workflows/        # update-data.yml + deploy-pages.yml
 ```
@@ -158,7 +155,7 @@ python3 fundctl.py refresh
 
 ## 🔍 分类规则
 
-`pipeline.scan` 按优先级：force_exclude → force_include → 非 QDII → EXCLUDE_KEYWORDS → 场内代码 → 名字关键词（标普500/纳斯达克100/美国/美股/全球…）→ ACTIVE_WHITELIST → global_other。`global_index`（全球非美指数）通过 `FORCE_INCLUDE_CODES` 白名单纳入。详见 [`CLAUDE.md`](./CLAUDE.md)。
+`pipeline.scan` 分类优先级（`classify_fund`）：force_exclude → force_include → 非 QDII → EXCLUDE_KEYWORDS → 标普/纳指/美股关键词（命中后场内走 `is_etf` 分流，场外归对应被动/主动分组）→ 未命中则 exclude。`global_index` 通过 `force_include` 白名单纳入，`active`（美股主动）通过 `active_whitelist` 关键词从泛美股候选中筛入。详见 [`AGENT.md`](./AGENT.md)。
 
 ---
 
@@ -181,7 +178,7 @@ python3 fundctl.py add --code 002891 --to active --keyword "华夏移动互联"
 
 > ⚠️ `pipeline.scan` 会**覆盖** `web/data/*.json`，方式 A 跑完 scan 后必须接 enrich + fill；方式 B 补数据脚本不会覆盖已有字段。
 
-详细字段规范、踩坑列表、Bug 史 详见 [`CLAUDE.md`](./CLAUDE.md)。
+详细字段规范、踩坑列表、Bug 史 详见 [`AGENT.md`](./AGENT.md)。
 
 ---
 
@@ -190,6 +187,7 @@ python3 fundctl.py add --code 002891 --to active --keyword "华夏移动互联"
 ```bash
 # 前端回归测试（Node）
 node --test scripts/tests/etf-runtime.test.mjs
+node --test scripts/tests/nav-date-display.test.mjs
 
 # 资源版本戳脚本测试（Python）
 python3 scripts/tests/stamp-asset-version.test.py
