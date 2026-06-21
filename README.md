@@ -75,7 +75,6 @@ qdii-tracker/
 │   ├── core/                 # 共享基础设施
 │   ├── sources/              # 数据源抽象层（akshare/eastmoney/xueqiu）
 │   ├── pipeline/             # scan → enrich → fill → refresh → holdings
-│   ├── tests/                # 回归测试（Node + Python）
 ├── web/                      # 前端（纯静态）
 │   ├── index.html            # 主入口
 │   ├── js/                   # 抽离模块 (main/config/utils/bj-time/theme/market-indices/etf-premium/offshore-live-nav/market-trend/idle-scheduler)
@@ -182,16 +181,9 @@ python3 fundctl.py add --code 002891 --to active --keyword "华夏移动互联"
 
 ---
 
-## 🧪 测试
+## 🧪 校验
 
 ```bash
-# 前端回归测试（Node）
-node --test scripts/tests/etf-runtime.test.mjs
-node --test scripts/tests/nav-date-display.test.mjs
-
-# 资源版本戳脚本测试（Python）
-python3 scripts/tests/stamp-asset-version.test.py
-
 # 配置一致性校验
 cd scripts && python3 fundctl.py check
 ```

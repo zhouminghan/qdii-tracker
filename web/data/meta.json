@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-20T00:47:23.428928+08:00",
-  "total_scanned": 26995,
+  "generated_at": "2026-06-21T23:41:22.992486+08:00",
+  "total_scanned": 27038,
   "sp500": {
     "series": 7,
     "funds": 25
@@ -10,21 +10,21 @@
     "funds": 60
   },
   "active": {
-    "series": 20,
-    "funds": 57
+    "series": 24,
+    "funds": 70
   },
   "global_index": {
     "series": 2,
     "funds": 5
   },
   "global_other": {
-    "series": 23,
-    "funds": 68
+    "series": 20,
+    "funds": 57
   },
   "etf": {
     "series": 18,
     "funds": 18
   },
-  "excluded_count": 26762,
-  "purchase_refreshed_at": "2026-06-20T00:47:23.428612+08:00"
+  "excluded_count": 26803,
+  "purchase_refreshed_at": "2026-06-21T23:41:22.992070+08:00"
 }

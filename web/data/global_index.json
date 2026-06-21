@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-06-20T00:47:23.428928+08:00",
+  "generated_at": "2026-06-21T23:41:22.992486+08:00",
   "category": "global_index",
   "label": "板块4 · 全球非美指数（场外·白名单）",
   "series_count": 2,
-  "total_scale": 3.02,
+  "total_scale": 0,
   "series": [
     {
       "series_id": "华安__三菱日联日经225ETF联接__global_index",
@@ -293,5 +293,5 @@
       ]
     }
   ],
-  "enriched_at": "2026-06-08T20:00:05.960024+08:00"
+  "enriched_at": "2026-06-21T23:36:24.549635+08:00"
 }

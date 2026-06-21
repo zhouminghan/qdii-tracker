@@ -48,15 +48,3 @@ akshare_cache/
 *.log
 logs/
 
-# ==================== 测试产物 ====================
-coverage/
-.nyc_output/
-htmlcov/
-.coverage
-coverage.xml
-scripts/tests/tmp/
-scripts/tests/.tmp/
-scripts/tests/artifacts/
-scripts/tests/**/*.tmp
-scripts/tests/**/*.actual
-
