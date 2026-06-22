@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-21T23:41:22.992486+08:00",
+  "generated_at": "2026-06-23T02:23:03.743688+08:00",
   "total_scanned": 27038,
   "sp500": {
     "series": 7,
@@ -26,5 +26,5 @@
     "funds": 18
   },
   "excluded_count": 26803,
-  "purchase_refreshed_at": "2026-06-21T23:41:22.992070+08:00"
+  "purchase_refreshed_at": "2026-06-23T02:23:03.743380+08:00"
 }
