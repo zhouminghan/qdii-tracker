@@ -94,13 +94,13 @@ function pickMaxDate(dates) {
   return maxDate;
 }
 
-// 表头净值日期：取全 Tab 所有分组的最大展示日期。
-// why：用众数（pickRepresentativeDate）只反映当前分组主流日期，
-// 当部分分组先更新（如 global_index 已 6-17、sp500 仍 6-16）时，
-// 默认视图的表头就滞后。改为全 Tab 最大日期后：
-//   · 表头始终反映最新可用数据
-//   · 行内日期显隐由 shouldHideRowNavDate 自动处理
-//     （行日期 ≠ 表头日期 → 显示行日期，等于则隐藏）
+// 分组级表头日期：取当前分组的代表日期（众数，并列取更晚日期）。
+function pickGroupHeaderDate(seriesList, isEtf = false) {
+  if (!Array.isArray(seriesList) || !seriesList.length) return '';
+  return pickRepresentativeDate(seriesList.map(series => getSeriesDisplayNavDate(series, isEtf)));
+}
+
+// 保留 Tab 级最大日期工具（兼容旧逻辑 / 其他潜在调用）。
 function pickTabNavHeaderDate(seriesList, isEtf = false) {
   if (!Array.isArray(seriesList) || !seriesList.length) return '';
   return pickMaxDate(seriesList.map(series => getSeriesDisplayNavDate(series, isEtf)));

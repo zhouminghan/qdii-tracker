@@ -7,6 +7,10 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 
+# 本地测试/验证脚本（开发期 TDD 验证用，不追踪）
+scripts/tests/
+scripts/test_nav_date_display.py
+
 # 虚拟环境
 venv/
 .venv/

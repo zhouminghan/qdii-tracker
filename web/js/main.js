@@ -22,7 +22,7 @@
 
     // 以下工具函数已抽到 web/js/utils.js（普通 script，全局作用域）：
     //   shareSort / buyStatusRank / getOffshoreDisplayValues / getSeriesDisplayNavDate / getSortValue / sortSeries
-    //   pickRepresentativeDate / pickMaxDate / pickTabNavHeaderDate / shouldHideRowNavDate / syncRowNavDateVisibility / renderRowNavDateHtml
+    //   pickRepresentativeDate / pickGroupHeaderDate / pickMaxDate / pickTabNavHeaderDate / shouldHideRowNavDate / syncRowNavDateVisibility / renderRowNavDateHtml
     //   getLogo / adjustColor
     //   isTradingDay / fmtMD / getLocalParts / getMarketSession / detectMarketPrefix
     //   cleanCondition / formatHoldDays / parseSellRuleLowerDays
@@ -198,13 +198,11 @@
       document.getElementById(`count-${tab}`).textContent =
         `${totalSeries} 个系列 · ${totalShares} 只份额 · 总规模 ${totalScale.toFixed(0)} 亿`;
 
-      // 表头净值日期：取全 Tab 所有分组的最大展示日期。
-      // why：offshore 是混合表（不同组天然有不同 nav_date），
-      // 用众数只反映当前分组主流日期——当部分组先更新时默认视图滞后；
-      // 改用全 Tab 最大日期后，表头始终反映最新可用数据，
-      // 行内日期由 shouldHideRowNavDate 自动显隐（≠ 表头 → 显示）。
-      const allTabSeries = groups.flatMap(g => g.items);
-      const latestNavDate = pickTabNavHeaderDate(allTabSeries, isEtf);
+      // 表头净值日期：按当前可见分组计算代表日期（众数，并列取更晚日期）。
+      // 默认分组 = 当前 CHIP_STATE 命中的组；若不存在则回退首组。
+      const activeGroupKey = (CHIP_STATE[tab] && groups.some(g => g.key === CHIP_STATE[tab])) ? CHIP_STATE[tab] : (groups[0]?.key || '');
+      const activeGroup = groups.find(g => g.key === activeGroupKey);
+      const latestNavDate = pickGroupHeaderDate(activeGroup?.items || [], isEtf);
       const navHeaderSub = fmtMD(latestNavDate);
       // 按 tab 存储，供 renderSeries 判断行内是否需要重复显示日期
       STATE._navDate = STATE._navDate || {};
@@ -246,9 +244,12 @@
       //   · 标题：场外 = "净值"，ETF = "最新价"
       //   · 副标 = nav_date（MM-DD 格式）
       //   · 整列可点击 → 按当日涨跌幅排序（不是按净值数字本身）
+      const delayTip = !isEtf
+        ? '<span class="ml-1 text-stone-400 dark:text-stone-500" title="QDII 净值通常在 T+1~T+2 个工作日披露，日期滞后于海外交易日属正常。">ⓘ</span>'
+        : '';
       const priceHeaderHtml = `
               <th class="text-right py-3 px-3 font-medium cursor-pointer hover:bg-stone-100 dark:hover:bg-stone-700 select-none" data-sort-key="nav" title="点击按当日涨跌排序">
-                <div>${isEtf ? '最新价' : '净值'}${sortIcon('nav')}</div>
+                <div>${isEtf ? '最新价' : '净值'}${delayTip}${sortIcon('nav')}</div>
                 ${navHeaderSub ? `<div class="nav-date-sub text-[10px] text-stone-400 font-normal mt-0.5">${navHeaderSub}</div>` : `<div class="nav-date-sub text-[10px] text-stone-400 font-normal mt-0.5"></div>`}
               </th>`;
 
@@ -404,8 +405,13 @@
           `${visibleSeries} 个系列 · ${visibleShares} ${tab === 'etf' ? '只 ETF' : '只份额'} · 总规模 ${visibleScale.toFixed(0)} 亿`;
       }
 
-      // 表头日期保持 Tab 级最大值（由 renderCategory 计算），切组时不重算
-      const headerDate = (STATE._navDate || {})[tab] || '';
+      // 切组时重算当前分组表头日期，并同步更新副标与行内日期显隐。
+      const isEtf = tab === 'etf';
+      const headerDate = pickGroupHeaderDate(currentGroup.items, isEtf);
+      STATE._navDate = STATE._navDate || {};
+      STATE._navDate[tab] = headerDate;
+      const navSub = table.querySelector('.nav-date-sub');
+      if (navSub) navSub.textContent = fmtMD(headerDate || '');
       syncRowNavDateVisibility(table, headerDate);
 
       // 更新区域标题 & 副标题（随 Chip 动态变化）

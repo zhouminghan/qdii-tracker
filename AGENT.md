@@ -28,3 +28,4 @@ cd ../web && python3 -m http.server 8765
 6. **关闭本地服务必须用 PID**，禁 `lsof -ti:PORT | xargs kill`（会误杀同端口其他进程）
 7. **`force_include` 按代码粒度生效，不继承子类**：每只基金的 A/C/美元等子类代码必须逐一加入，否则仍被 `exclude_keywords` 拦截。跨分类挪动基金时注意：(a) 全量子类加 force_include → (b) 跑 scan 后检查源文件残留数据并合并回目标文件 → (c) 补跑 enrich+fill+refresh+codegen；(b) 步骤易遗漏，scan 会覆盖目标文件但不保证清干净源文件
 8. **LOF 基金可能缺 `chg_ytd`**：akshare 累计收益率接口对部分 LOF 返回空，workaround 是取同系列兄弟份额值直接写入（A/C 差异 <1%）
+9. **表头净值日期按当前分组代表日期（众数，并列取更晚）计算，禁止用全 Tab 最大值**：offshore 是混合表（不同分组天然 nav_date 不同），取全 Tab max 会导致切 Chip 时表头日期不随分组变化、与当前分组实际日期脱节。用 `pickGroupHeaderDate`（众数）；`pickTabNavHeaderDate`（max）仅保留兼容。`applyChipFilter` 切组必须重算表头日期并同步 `.nav-date-sub` 文本与行内日期显隐（`syncRowNavDateVisibility`）
