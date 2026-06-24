@@ -43,6 +43,73 @@
       }
     }
 
+    // ==================== 数据陈旧兜底 ====================
+    // 首屏拿到 meta.generated_at 后判断是否陈旧。
+    // why：部署链路若意外断裂（CDN/部署失败），用户第二天打开页面首屏就是旧数据。
+    //      服务端 daily-verify.yml 会告警，但浏览器侧再加一道用户可见提示，避免被旧数据误导。
+    // 判定逻辑（与 daily-verify.yml 一致）：
+    //   · 周末不检测（美股无交易，数据本就不更新）
+    //   · 工作日：算"最近一个已完成 run"的完成日凌晨 00:00（北京）作为 expected_min
+    //     run 在工作日 22:00 启动、次日 ~04:00 前完成并写 generated_at
+    //     generated_at 早于 expected_min - 6h（容忍 run 提前完成）→ 陈旧
+    //   why 不用固定 age 阈值：周末 gap 使周一数据天然 age≈56h，固定阈值会误报或漏报；
+    //       按"预期更新点"判断才能区分"周一正常的周五数据"与"周二该更新却没更新"
+    function getDataFreshnessState(generatedAtStr) {
+      if (!generatedAtStr) return { stale: false };
+      const gen = new Date(generatedAtStr);
+      if (isNaN(gen.getTime())) return { stale: false };
+      const nowMs = Date.now();
+      // 北京时间字段（UTC+8）
+      const nowBj = new Date(nowMs + 8 * 3600 * 1000);
+      const bjY = nowBj.getUTCFullYear();
+      const bjM = nowBj.getUTCMonth();
+      const bjD = nowBj.getUTCDate();
+      const bjDay = nowBj.getUTCDay();   // 0=周日 ... 6=周六
+      if (bjDay === 0 || bjDay === 6) return { stale: false };  // 周末不检测
+      // 找"最近一个已完成 run"的完成日凌晨 00:00（北京）
+      let expectedMinMs = null;
+      for (let daysBack = 0; daysBack <= 7; daysBack++) {
+        const runDay = new Date(Date.UTC(bjY, bjM, bjD - daysBack));
+        const runWd = runDay.getUTCDay();
+        if (runWd === 0 || runWd === 6) continue;  // 周末不跑 run
+        // 完成时间 = runDay 次日 04:00 北京（Date.UTC 小时 -4 自动规范化为前一日 20:00 UTC）
+        const completionMs = Date.UTC(bjY, bjM, bjD - daysBack + 1, -4, 0, 0);
+        if (completionMs <= nowMs) {
+          // 预期 generated_at 不早于 runDay 次日 00:00 北京（小时 -8 → 前一日 16:00 UTC）
+          expectedMinMs = Date.UTC(bjY, bjM, bjD - daysBack + 1, -8, 0, 0);
+          break;
+        }
+      }
+      if (expectedMinMs == null) return { stale: false };
+      // 容忍 run 实际完成时间偏早（generated_at 可能略早于预期日凌晨）
+      const lowerBound = expectedMinMs - 6 * 3600 * 1000;
+      if (gen.getTime() < lowerBound) {
+        const ageH = Math.round((nowMs - gen.getTime()) / 3600000);
+        return { stale: true, ageH };
+      }
+      return { stale: false };
+    }
+
+    function renderStalenessBanner(generatedAtStr) {
+      const sub = document.getElementById('page-subtitle');
+      if (!sub) return;
+      let banner = document.getElementById('staleness-banner');
+      const st = getDataFreshnessState(generatedAtStr);
+      if (!st.stale) {
+        if (banner) banner.remove();
+        return;
+      }
+      if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'staleness-banner';
+        banner.className = 'mt-3 rounded-xl px-4 py-3 text-xs border border-amber-300 bg-amber-50 text-amber-900 dark:bg-stone-900/50 dark:border-stone-700 dark:text-amber-200';
+        sub.parentNode.insertBefore(banner, sub.nextSibling);
+      }
+      banner.innerHTML = `⚠️ 数据可能陈旧（最后更新约 ${st.ageH} 小时前），部署可能未成功。` +
+        `<button type="button" onclick="if(typeof loadData==='function'){loadData()}else{location.reload()}" class="ml-2 underline font-medium">点此重试加载</button>` +
+        ` 或 <a href="${location.pathname}" class="underline">硬刷新页面</a>。`;
+    }
+
     async function loadData() {
       const { meta, ver } = await fetchDataVersion();
       STATE.dataVer = ver;
@@ -54,6 +121,9 @@
       }));
       RENDER_TABS.forEach(renderCategory);
       // 纯静态模式：首屏数据全部来自 data/*.json（GitHub Actions 离线生成）
+      // 陈旧兜底：loadData 同时被 offshore-live-nav.js 的 reloadData 复用，
+      //           meta 刷新后会自动重算陈旧状态（清除或显示 banner），无需单独改 live-nav
+      renderStalenessBanner(STATE.metaGeneratedAt);
     }
 
     // ==================== 动态拉取最新净值/行情 ====================

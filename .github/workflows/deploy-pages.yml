@@ -4,8 +4,11 @@ name: 🌐 Deploy GitHub Pages
 # 把 web/ 目录作为静态站点发布到 GitHub Pages
 # 触发时机：
 #   · push 到 main 且 web/ 有变动（人工/本地提交）
-#   · update-data workflow 成功结束后（Actions 用 GITHUB_TOKEN 推的数据提交）
 #   · 手动触发
+#
+# ⚠️ 数据更新的部署已移至 update-data.yml（同一 job 原子完成），
+#    本 workflow 仅作为人工/本地提交的兜底部署，不再依赖 workflow_run 串联。
+#    原因：workflow_run 事件不稳定，曾导致"仓库已更新、Pages 仍停在旧数据"反复出现。
 # ─────────────────────────────────────────────────────────
 on:
   push:
@@ -13,9 +16,6 @@ on:
     paths:
       - 'web/**'
       - '.github/workflows/deploy-pages.yml'
-  workflow_run:
-    workflows: ['🔄 更新基金数据']
-    types: [completed]
   workflow_dispatch:
 
 # GitHub Pages 需要的权限
@@ -31,11 +31,6 @@ concurrency:
 
 jobs:
   deploy:
-    if: >
-      github.event_name != 'workflow_run' ||
-      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
-    env:
-      DEPLOY_SHA: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -43,17 +38,13 @@ jobs:
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
-        with:
-          # update-data 使用 GITHUB_TOKEN 推送数据时，不会再触发 push 型 workflow；
-          # 改用 workflow_run 串联后，这里显式检出触发 run 对应的 head_sha，保证部署的就是那次更新后的内容。
-          ref: ${{ env.DEPLOY_SHA }}
 
       - name: ⚙️ Setup Pages
         uses: actions/configure-pages@v5
 
       - name: 🏷️ Stamp frontend asset versions
         run: |
-          python3 scripts/pipeline/stamp_asset_version.py --version "${DEPLOY_SHA::12}"
+          python3 scripts/pipeline/stamp_asset_version.py --version "${GITHUB_SHA::12}"
 
       - name: 📦 Upload web/ as artifact
         uses: actions/upload-pages-artifact@v3

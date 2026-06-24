@@ -1,27 +1,25 @@
 name: 🔄 更新基金数据
 
-# 自动更新基金数据 workflow
+# 自动更新基金数据 workflow（含 Pages 部署 + 部署后自检）
 # 触发：工作日 22:00 增量 + 每月 2 日完整 + 手动
 # QDII 净值披露节奏：T 日美股收盘 → T+1 日晚间（北京时间）基金公司披露 T 日净值
 #
 # ⏰ 【关于 cron 时间设置】
 #   22:00（北京时间）：大多数基金已披露，少量延迟交给前端实时 overlay 兜底
 #   实时兜底：offshore-live-nav.js 在 15:00~次日06:00 提供实时净值 overlay
+#
+# 🔗 【部署链路 · 关键】数据更新与 Pages 部署在同一 job 内原子完成，
+#    不再依赖 workflow_run 跨 workflow 串联（该事件不稳定，曾导致"仓库新、网页旧"反复出现）。
+#    部署后立即 curl 线上 meta.json 自检，不一致则红 + 开 Issue 告警。
+#    另有 daily-verify.yml 每日回归监控兜底。
 "on":
   schedule:
     # 增量更新（cron 用 UTC）：
-    #
-    #   ┌─────────────────────┬──────────┬──────────────────┬────────────────────┐
-    #   │ cron 字面           │ UTC 时间 │ 北京时间          │ 说明               │
-    #   ├─────────────────────┼──────────┼──────────────────┼────────────────────┤
-    #   │ '0 14 * * 1-5'      │ 周一~五  │ 周一~五 22:00    │ 晚间更新           │
-    #   └─────────────────────┴──────────┴──────────────────┴────────────────────┘
-    #
+    #   '0 14 * * 1-5'  UTC 周一~五 14:00 = 北京 周一~五 22:00（晚间更新）
+    #   '0 18 1 * *'    每月 1 日 UTC 18:00 = 每月 2 日北京 02:00（完整流水线）
     # 注：schedule 仅保证不早于该时刻起跑，实际仍可能有队列延迟。
-    - cron: '0 14 * * 1-5'    # UTC 周一~五 14:00 = 北京 周一~五 22:00
-    # 完整流水线：每月 1 日 UTC 18:00 = 每月 2 日北京 02:00
+    - cron: '0 14 * * 1-5'
     - cron: '0 18 1 * *'
-  # 手动触发
   workflow_dispatch:
     inputs:
       mode:
@@ -33,9 +31,12 @@ name: 🔄 更新基金数据
           - '增量更新（快速·净值+申购）'
           - '完整流水线（慢·含扫描+持仓）'
 
-# 授权：需要 write 权限才能 commit/push 数据文件回仓库
+# 授权：contents（commit/push）+ pages/id-token（部署 Pages）+ issues（自检失败开 Issue）
 permissions:
   contents: write
+  pages: write
+  id-token: write
+  issues: write
 
 # 防并发：避免多任务同时操作 web/data/ 导致 push 冲突
 concurrency:
@@ -46,6 +47,9 @@ jobs:
   update:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       # 1. 拉代码
@@ -89,18 +93,6 @@ jobs:
           echo "✅ 运行模式: $(grep mode $GITHUB_OUTPUT | cut -d= -f2)"
 
       # 5a. 增量更新（快，~3 分钟）
-      #     pipeline.fill：
-      #       - 数据源：lsjz API（优先，快）+ pingzhongdata（备选+历史收益）
-      #       - 更新字段：nav / nav_date / daily_change（每日强制覆盖）
-      #                   chg_1m / chg_3m / chg_6m / chg_1y（仅填空）
-      #                   chg_ytd（AKShare 推算）
-      #                   mgmt_fee / custody_fee / sale_service_fee（F10 补漏）
-      #       - 策略：场外 QDII 无条件刷新净值；ETF 仅补历史收益；防回退（nav_date 只进不退）
-      #     pipeline.refresh：
-      #       - 数据源：AKShare 批量接口（秒级拉全量）
-      #       - 更新字段：buy_status / sell_status / daily_limit / buy_min / fee
-      #                   nav / nav_date / daily_change / chg_1m~3y / chg_ytd / chg_since_inception
-      #       - 策略：三数据源兜底——lsjz → pzd → rank，确保净值不遗漏
       - name: ⚡ 增量更新（净值 + 申购状态）
         if: steps.mode.outputs.mode == 'incremental'
         run: |
@@ -111,7 +103,6 @@ jobs:
           python -m pipeline.refresh
 
       # 5b. 完整流水线（慢，~12 分钟）
-      #     重新扫描基金池 + 补全所有字段 + 更新持仓
       - name: 🚀 完整流水线（扫描 + 补全 + 持仓）
         if: steps.mode.outputs.mode == 'full'
         run: |
@@ -132,14 +123,16 @@ jobs:
           cd scripts
           python fundctl.py check
 
-      # 6. 如果 web/data 有变化，commit 回主分支
+      # 6. 提交数据变更（输出 changed 标记，供后续部署步骤判断）
       - name: 💾 提交数据变更
+        id: commit
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git add web/data/
           if git diff --cached --quiet; then
-            echo "⚠️  数据无变化，跳过提交"
+            echo "⚠️  数据无变化，跳过提交与部署"
+            echo "changed=false" >> $GITHUB_OUTPUT
           else
             TS=$(date -u '+%Y-%m-%d %H:%M UTC')
             MODE="${{ steps.mode.outputs.mode }}"
@@ -151,4 +144,73 @@ jobs:
             git pull --rebase origin main
             git push
             echo "✅ 数据已更新并推送"
+            echo "changed=true" >> $GITHUB_OUTPUT
           fi
+
+      # ─────── 以下为 Pages 部署（仅在有数据变更时执行）───────
+      # why 原子化：数据 push 后立即在同一 job 部署，消除 workflow_run 串联的不稳定性
+
+      - name: 🏷️ 记录本次预期 generated_at
+        if: steps.commit.outputs.changed == 'true'
+        id: expected
+        run: |
+          GA=$(python3 -c "import json;print(json.load(open('web/data/meta.json'))['generated_at'])")
+          echo "ga=$GA" >> $GITHUB_OUTPUT
+          echo "本次推送的 meta.generated_at = $GA"
+
+      - name: ⚙️ Setup Pages
+        if: steps.commit.outputs.changed == 'true'
+        uses: actions/configure-pages@v5
+
+      - name: 🏷️ Stamp frontend asset versions
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          SHA=$(git rev-parse HEAD)
+          python3 scripts/pipeline/stamp_asset_version.py --version "${SHA::12}"
+
+      - name: 📦 Upload web/ as artifact
+        if: steps.commit.outputs.changed == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './web'
+
+      - name: 🚀 Deploy to GitHub Pages
+        if: steps.commit.outputs.changed == 'true'
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      # 7. 部署后端到端自检：curl 线上 meta.json，断言 generated_at == 本次推送值
+      #    这是"杜绝再发"的核心——部署了 ≠ 部署对了，必须回验线上实际生效内容
+      - name: 🔍 部署后自检（线上 meta.generated_at）
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          sleep 45
+          EXPECTED="${{ steps.expected.outputs.ga }}"
+          echo "预期 generated_at: $EXPECTED"
+          ACTUAL=$(curl -fsSL "https://zhouminghan.github.io/qdii-tracker/data/meta.json?nocache=$(date +%s)" \
+            | python3 -c "import sys,json;print(json.load(sys.stdin)['generated_at'])" 2>/dev/null || echo "")
+          echo "线上 generated_at: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
+            echo "❌ 无法获取线上 meta.json"
+            exit 1
+          fi
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "❌ 自检失败：线上 ($ACTUAL) ≠ 本次推送 ($EXPECTED)"
+            echo "   Pages CDN 可能未更新或部署未生效，创建告警 Issue..."
+            gh issue create \
+              --title "🚨 Pages 部署自检失败 @ $(date -u '+%Y-%m-%d %H:%M UTC')" \
+              --body "线上 \`meta.generated_at\` = \`$ACTUAL\`，本次推送 = \`$EXPECTED\`。
+
+          部署 workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          可能原因：Pages CDN 延迟、部署未生效。请检查 https://zhouminghan.github.io/qdii-tracker/ 或重跑 workflow。" \
+              || echo "(创建 Issue 失败，忽略)"
+            exit 1
+          fi
+          echo "✅ 自检通过：线上数据已是最新"
+
+      - name: ℹ️ 跳过部署（数据无变化）
+        if: steps.commit.outputs.changed != 'true'
+        run: echo "数据无变化，未部署 Pages。线上数据新鲜度由 daily-verify.yml 每日监控。"

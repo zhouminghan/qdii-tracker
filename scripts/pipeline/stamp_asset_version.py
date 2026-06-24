@@ -1,4 +1,4 @@
-"""统一改写 web/index.html 中本地 JS 资源的 ?v= 版本戳。"""
+"""统一改写 web/index.html 中本地 JS/CSS 资源的 ?v= 版本戳。"""
 
 from __future__ import annotations
 
@@ -14,7 +14,11 @@ if str(SCRIPTS_DIR) not in sys.path:
 from core.constants import ROOT_DIR
 
 INDEX_HTML = ROOT_DIR / "web" / "index.html"
-ASSET_VERSION_PATTERN = re.compile(r"(\./js/[^\"'\n?]+\.js\?v=)([^\"'\n]+)")
+# 覆盖 ./js/*.js 和 ./css/*.css 两类本地资源的 ?v= 版本戳
+# why：原正则只覆盖 js，CSS（如 tailwind.css）改动会静默不更新线上
+ASSET_VERSION_PATTERN = re.compile(
+    r"(\./(?:js/[^\"'\n?]+\.js|css/[^\"'\n?]+\.css)\?v=)([^\"'\n]+)"
+)
 
 
 def stamp_asset_versions(target_file: Path, version: str) -> int:
@@ -27,7 +31,7 @@ def stamp_asset_versions(target_file: Path, version: str) -> int:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="统一改写 index.html 里的 JS 版本戳")
+    parser = argparse.ArgumentParser(description="统一改写 index.html 里的 JS/CSS 版本戳")
     parser.add_argument("--version", required=True, help="要写入的版本号，例如 git sha")
     parser.add_argument("--target", default=str(INDEX_HTML), help="目标 index.html 路径")
     args = parser.parse_args()
