@@ -11,7 +11,6 @@ name: 🔄 更新基金数据
 # 🔗 【部署链路 · 关键】数据更新与 Pages 部署在同一 job 内原子完成，
 #    不再依赖 workflow_run 跨 workflow 串联（该事件不稳定，曾导致"仓库新、网页旧"反复出现）。
 #    部署后立即 curl 线上 meta.json 自检，不一致则红 + 开 Issue 告警。
-#    另有 daily-verify.yml 每日回归监控兜底。
 "on":
   schedule:
     # 增量更新（cron 用 UTC）：
@@ -213,4 +212,4 @@ jobs:
 
       - name: ℹ️ 跳过部署（数据无变化）
         if: steps.commit.outputs.changed != 'true'
-        run: echo "数据无变化，未部署 Pages。线上数据新鲜度由 daily-verify.yml 每日监控。"
+        run: echo "数据无变化，未部署 Pages。"
