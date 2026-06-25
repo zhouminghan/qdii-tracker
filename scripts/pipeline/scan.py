@@ -396,7 +396,6 @@ def main():
                 old_top = {}
         merged = _merge_series(by_category[cat], shares_by_code, series_by_id)
         out = dict(old_top)
-        out["generated_at"] = now
         out["category"] = cat
         out["label"] = label_map[cat]
         out["series_count"] = len(merged)

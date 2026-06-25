@@ -1,5 +1,4 @@
 {
-  "generated_at": "2026-06-25T00:31:27.187488+08:00",
   "category": "sp500",
   "label": "板块1 · 标普500 指数（场外）",
   "series_count": 7,
@@ -1538,6 +1537,5 @@
       "series_scale": 1.32
     }
   ],
-  "total_scale": 143.17,
-  "enriched_at": "2026-06-21T23:36:24.530004+08:00"
+  "total_scale": 143.17
 }

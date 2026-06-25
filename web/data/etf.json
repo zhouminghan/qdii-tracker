@@ -1,5 +1,4 @@
 {
-  "generated_at": "2026-06-25T00:31:27.187488+08:00",
   "category": "etf",
   "label": "板块6 · 场内 ETF",
   "series_count": 18,
@@ -779,6 +778,5 @@
       "series_scale": 8.84903427
     }
   ],
-  "total_scale": 1819.92,
-  "enriched_at": "2026-06-21T23:36:30.152340+08:00"
+  "total_scale": 1819.92
 }

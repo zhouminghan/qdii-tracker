@@ -1,5 +1,4 @@
 {
-  "generated_at": "2026-06-25T00:31:27.187488+08:00",
   "category": "nasdaq_passive",
   "label": "板块2 · 纳指100 指数（场外）",
   "series_count": 17,
@@ -3602,6 +3601,5 @@
       "series_scale": 3.15
     }
   ],
-  "total_scale": 380.21,
-  "enriched_at": "2026-06-21T23:36:24.536271+08:00"
+  "total_scale": 380.21
 }

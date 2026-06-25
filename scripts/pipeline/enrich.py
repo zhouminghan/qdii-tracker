@@ -5,7 +5,6 @@
 import json
 import time
 
-from timezone_utils import beijing_now_iso
 from core.constants import CATEGORIES, DATA_DIR, CURRENCY_RANK, SHARE_CLASS_RANK
 from core.utils import read_json, write_json, bump_generated_at
 from sources.akshare_source import fetch_rank_data, fetch_purchase_data, fetch_etf_data
@@ -131,7 +130,6 @@ def main():
         data["series"].sort(key=lambda s: -(s.get("series_scale") or 0))
         total_scale = sum(s.get("series_scale") or 0 for s in data["series"])
         data["total_scale"] = round(total_scale, 2)
-        data["enriched_at"] = beijing_now_iso()
 
         with open(data_dir / f"{cat}.json", "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)

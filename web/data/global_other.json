@@ -1,5 +1,4 @@
 {
-  "generated_at": "2026-06-25T00:31:27.187488+08:00",
   "category": "global_other",
   "label": "板块5 · 全球/其他 QDII（场外）",
   "series_count": 20,
@@ -3942,6 +3941,5 @@
       "series_scale": 0.24364699999999997
     }
   ],
-  "total_scale": 144.83,
-  "enriched_at": "2026-06-21T23:36:24.552165+08:00"
+  "total_scale": 144.83
 }

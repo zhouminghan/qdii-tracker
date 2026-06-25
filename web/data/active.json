@@ -1,5 +1,4 @@
 {
-  "generated_at": "2026-06-25T00:31:27.187488+08:00",
   "category": "active",
   "label": "板块3 · 美股主动（场外·白名单精选）",
   "series_count": 24,
@@ -4712,6 +4711,5 @@
       "series_scale": 0.704078
     }
   ],
-  "total_scale": 478.92,
-  "enriched_at": "2026-06-21T23:36:24.544483+08:00"
+  "total_scale": 478.92
 }

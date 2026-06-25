@@ -8,7 +8,7 @@ import time
 
 from timezone_utils import beijing_now_iso
 from core.constants import CATEGORIES, DATA_DIR, HOLDINGS_DIR
-from core.utils import read_json, write_json, bump_generated_at
+from core.utils import read_json, write_json
 from core.config_loader import get_config, save_config
 from sources.akshare_source import fetch_holdings
 
@@ -42,7 +42,8 @@ def recalc_series_scale(series: dict):
 
 
 def bump_generated_at_local(data: dict, now: str):
-    data["generated_at"] = now
+    """已废弃：各数据文件不再写 generated_at（仅 meta.json 保留），保留签名避免改调用处。"""
+    pass
 
 
 def update_meta(now: str):

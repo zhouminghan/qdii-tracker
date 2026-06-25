@@ -1,6 +1,6 @@
 # US Fund Tracker · 美股基金追踪看板
 
-一个专注于**美股 QDII 基金**的追踪看板。数据来自 AKShare + 天天基金 + 雪球公开接口，纯静态部署，零后端。
+一个专注于**美股 QDII 基金**的追踪看板。纯静态部署，零后端。
 
 🌐 **在线看板**：<https://zhouminghan.github.io/qdii-tracker/>
 📦 **源码仓库**：<https://github.com/zhouminghan/qdii-tracker>
@@ -24,10 +24,8 @@
 - **申购状态/日限额**：每只基金的限购金额、暂停状态一目了然
 - **分组日限额汇总**：被动分组（标普500 / 纳指100 / 全球指数）横幅动态显示当前每日可购买总额 + 开放申购只数
 - **费率 Tooltip**：A 类显示综合费率（管理费+托管费），C 类额外显示销售服务费
-- **纯静态**：页面加载仅读取本地 JSON 文件，按需加载实时数据（走势图/指标卡/ETF 溢价率/场外实时净值）
-- **展示指标**：规模 / 净值 / 日涨跌 / 近1月 / 今年来(YTD) / 近1年 / 成立来 / 基金经理 / 日限额 / 买卖费率
-- **场外实时净值**：15:00 后自动拉取最新净值 overlay（lsjz 主选 + pingzhongdata 兜底），支持到次日 06:00（覆盖 Actions 延迟推送），5 档分时限频，settled 后自动停止
-- **智能限频**：5 档分时调度（15/10/20/30/30 min），拉到新净值后 settled 自动停止；连续失败退避
+- **纯静态首屏**：仅读取本地 JSON，按需加载实时数据（走势图/指标卡/ETF 溢价率/场外实时净值）；展示规模/净值/日涨跌/近1月/YTD/近1年/成立来/基金经理/日限额/买卖费率
+- **场外实时净值 + 智能限频**：15:00 后自动拉最新净值 overlay（lsjz 主选 + pingzhongdata 兜底）至次日 06:00，5 档分时调度，拉到新净值后 settled 自动停止，连续失败退避
 
 ---
 
@@ -62,7 +60,7 @@
 └──────────────────────────────────────────────────────┘
 ```
 
-> 🚀 **部署形态**：纯 GitHub Pages 静态托管，**无后端运行时、无数据库、无 Docker**。页面加载仅读取本地 JSON 文件。
+> 🚀 **部署形态**：纯 GitHub Pages 静态托管，**无后端运行时、无数据库、无 Docker**。
 
 ---
 
@@ -74,10 +72,10 @@ qdii-tracker/
 │   ├── fundctl.py            # 统一入口（add/move/refresh/sync/check）
 │   ├── core/                 # 共享基础设施
 │   ├── sources/              # 数据源抽象层（akshare/eastmoney/xueqiu）
-│   ├── pipeline/             # scan → enrich → fill → refresh → holdings
+│   └── pipeline/             # scan → enrich → fill → refresh → holdings
 ├── web/                      # 前端（纯静态）
 │   ├── index.html            # 主入口
-│   ├── js/                   # 抽离模块 (main/config/utils/bj-time/theme/market-indices/etf-premium/offshore-live-nav/market-trend/idle-scheduler)
+│   ├── js/                   # 抽离模块（main/config/utils 等 10 个）
 │   └── data/                 # 消费的 JSON（sp500/nasdaq_passive/active/global_index/global_other/etf/meta/holdings）
 └── .github/workflows/        # update-data.yml + deploy-pages.yml
 ```
@@ -91,7 +89,7 @@ qdii-tracker/
 | ① | `pipeline.scan` | 扫描全量 QDII 基金，按规则分类，归组成系列 | ~30s |
 | ② | `pipeline.enrich` | 补规模/费率/基金经理/收益（逐只调雪球） | ~5min |
 | ③ | `pipeline.fill` | 补净值/日涨跌/YTD/历史收益（天天基金） | ~2min |
-| ④ | `pipeline.refresh` | 补申购状态/日限额（批量接口） | ~30s |
+| ④ | `pipeline.refresh` | 补申购状态/日限额 + ETF 场内价（批量接口） | ~30s |
 | ⑤ | `pipeline.holdings` | 抓主动基金 Top10 重仓 | ~2min |
 
 > 📝 `global_index.json`（全球非美指数·日经225 / 中韩半导体等）名字含"日经/韩"等会被 `EXCLUDE_KEYWORDS` 过滤，由 `FORCE_INCLUDE_CODES` 白名单机制纳入 scan，全程 5 个脚本都覆盖。
@@ -100,9 +98,8 @@ qdii-tracker/
 
 | 时间（北京） | 频率 | 模式 | 步骤 |
 |---|---|---|---|
-| 05:00 凌晨兜底 | 工作日 | 增量 | ③→④ |
-| 21:30 晚间主力（QDII 净值披露后） | 工作日 | 增量 | ③→④ |
-| 每月 2 日 凌晨 | 月度 | 完整 | ①→②→③→④→⑤ |
+| 22:00 晚间主力（QDII 净值披露后） | 工作日 | 增量 | ③→④ |
+| 每月 2 日 02:00 | 月度 | 完整 | ①→②→③→④→⑤ |
 | 手动 Run workflow | 按需 | 可选 | 按选择 |
 
 ---
@@ -123,7 +120,7 @@ python3 -m http.server 8765
 # 浏览器打开 http://localhost:8765/
 ```
 
-**日常增量更新**（交易日 21:30 前后 QDII 净值主力披露）：
+**日常增量更新**（交易日 22:00 QDII 净值披露后）：
 
 ```bash
 cd scripts
@@ -193,7 +190,7 @@ cd scripts && python3 fundctl.py check
 ## 🛠 常见问题
 
 **Q: 数据不是今天的？**
-A: QDII 净值 T+1 披露，今天看到的通常是前一交易日的净值。Actions 21:30 那轮覆盖绝大多数，凌晨补漏。
+A: QDII 净值 T+1 披露，今天看到的通常是前一交易日的净值。Actions 22:00 那轮覆盖绝大多数。
 
 **Q: 某只基金数据不对/为空？**
 A: 跑 `pipeline.fill` 补缺；还是空说明数据源本身没有（新基金，等披露）。

@@ -10,7 +10,6 @@
 import argparse
 import json
 import sys
-from datetime import datetime
 
 from core.constants import CATEGORIES, DATA_DIR
 from core.config_loader import get_config, save_config
@@ -100,13 +99,6 @@ def _all_share_codes() -> set:
     return codes
 
 
-def _parse_iso(s: str):
-    try:
-        return datetime.fromisoformat(s)
-    except Exception:
-        return None
-
-
 def cmd_check(_args):
     cfg = get_config()
     errors = []
@@ -135,20 +127,8 @@ def cmd_check(_args):
             if default_code and default_code not in share_codes:
                 errors.append(f"{cat}/{s.get('display_name','?')} default_share_code 无效: {default_code}")
 
-    # 4) meta 与各数据 generated_at 差异 < 1 分钟
-    meta_fp = DATA_DIR / "meta.json"
-    if meta_fp.exists():
-        meta = json.loads(meta_fp.read_text(encoding="utf-8"))
-        t_meta = _parse_iso(meta.get("generated_at", ""))
-        if t_meta:
-            for cat in CATEGORIES:
-                fp = DATA_DIR / f"{cat}.json"
-                if not fp.exists():
-                    continue
-                d = json.loads(fp.read_text(encoding="utf-8"))
-                t = _parse_iso(d.get("generated_at", ""))
-                if t and abs((t - t_meta).total_seconds()) > 60:
-                    errors.append(f"generated_at 差异>60s: {cat} ({d.get('generated_at')}) vs meta ({meta.get('generated_at')})")
+    # 注：原第 4 步"meta 与各数据 generated_at 差异校验"已移除——
+    # 各数据文件不再写 generated_at（仅 meta.json 保留），无差异可比。
 
     if errors:
         print("❌ 一致性校验失败：")

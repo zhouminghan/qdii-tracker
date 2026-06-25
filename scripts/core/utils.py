@@ -6,7 +6,7 @@ import json
 import re
 from pathlib import Path
 
-from core.constants import CATEGORIES, DATA_DIR
+from core.constants import DATA_DIR
 from timezone_utils import beijing_now_iso
 
 
@@ -56,8 +56,8 @@ def write_json(path: Path, data: dict):
 
 def bump_generated_at(meta_fp: Path = None, data_dir: Path = None, now_str: str = None):
     """
-    统一更新 meta.json + 所有数据文件的 generated_at。
-    原逻辑分布在 fill_missing.py / refresh_purchase.py / reclassify_fund.py 三处。
+    更新 meta.json 的 generated_at（各数据文件不再写 generated_at，避免 diff 噪音；
+    前端只用 meta.generated_at 做版本戳 / 陈旧检测）。
     """
     if not now_str:
         now_str = beijing_now_iso()
@@ -66,19 +66,12 @@ def bump_generated_at(meta_fp: Path = None, data_dir: Path = None, now_str: str 
     if not meta_fp:
         meta_fp = data_dir / "meta.json"
 
-    # 更新 meta.json
+    # 仅更新 meta.json（各数据文件不再写 generated_at，避免每次 diff 噪音；
+    # 前端只用 meta.generated_at 做版本戳 / 陈旧检测）
     if meta_fp.exists():
         meta = read_json(meta_fp)
         meta["generated_at"] = now_str
         write_json(meta_fp, meta)
-
-    # 更新所有分类数据文件
-    for cat in CATEGORIES:
-        fp = data_dir / f"{cat}.json"
-        if fp.exists():
-            d = read_json(fp)
-            d["generated_at"] = now_str
-            write_json(fp, d)
 
 
 def parse_scale(scale_str: str) -> float:

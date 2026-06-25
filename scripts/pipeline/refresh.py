@@ -7,8 +7,8 @@ import time
 
 from timezone_utils import beijing_now_iso
 from core.constants import CATEGORIES, DATA_DIR
-from core.utils import read_json, write_json, bump_generated_at
-from sources.akshare_source import fetch_rank_data, fetch_purchase_data
+from core.utils import read_json, write_json
+from sources.akshare_source import fetch_rank_data, fetch_purchase_data, fetch_etf_data
 from sources.eastmoney_source import fetch_lsjz
 
 
@@ -63,6 +63,31 @@ def main():
         with open(fp, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
         print(f"  💾 {cat}.json  更新 {updated} 只份额的申购状态 + 涨跌幅")
+
+    # 3b. ETF 场内数据更新（etf_price / etf_change_pct）
+    # why：fetch_rank_data 是开放式基金接口，不含场内 ETF；
+    #      ETF 场内价须单独拉 fund_etf_spot_em，否则增量更新里 etf_price 永不刷新
+    etf_fp = data_dir / "etf.json"
+    if etf_fp.exists():
+        etf_map = fetch_etf_data()
+        if etf_map:
+            with open(etf_fp, encoding="utf-8") as f:
+                etf_data = json.load(f)
+            etf_updated = 0
+            for series in etf_data.get("series", []):
+                for share in series.get("shares", []):
+                    if only_codes and share["code"] not in only_codes:
+                        continue
+                    info = etf_map.get(share["code"])
+                    if info:
+                        # 对齐 enrich：只刷场内价 + 涨跌幅（不引入 etf_volume/etf_scale_yi）
+                        share["etf_price"] = info.get("etf_price")
+                        share["etf_change_pct"] = info.get("etf_change_pct")
+                        etf_updated += 1
+            with open(etf_fp, "w", encoding="utf-8") as f:
+                json.dump(etf_data, f, ensure_ascii=False, indent=2)
+                f.write("\n")
+            print(f"  💾 etf.json 更新 {etf_updated} 只 ETF 场内价/涨跌幅")
 
     # 4. Fallback：对批量接口漏网的基金走 lsjz 单只兜底
     if fallback_targets:
@@ -123,11 +148,8 @@ def main():
     if meta_fp.exists():
         meta = read_json(meta_fp)
         meta["generated_at"] = now_str
-        meta["purchase_refreshed_at"] = now_str
         write_json(meta_fp, meta)
         print(f"  ✅ meta.json generated_at bumped -> {meta['generated_at']}")
-
-    bump_generated_at()
 
     print("\n✅ 申购状态 + 涨跌幅刷新完成！")
 
