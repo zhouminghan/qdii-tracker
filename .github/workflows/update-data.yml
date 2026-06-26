@@ -10,7 +10,7 @@ name: 🔄 更新基金数据
 #
 # 🔗 【部署链路 · 关键】数据更新与 Pages 部署在同一 job 内原子完成，
 #    不再依赖 workflow_run 跨 workflow 串联（该事件不稳定，曾导致"仓库新、网页旧"反复出现）。
-#    部署后立即 curl 线上 meta.json 自检，不一致则红 + 开 Issue 告警。
+#    部署后立即 curl 线上 meta.json 自检，不一致则 workflow 红。
 "on":
   schedule:
     # 增量更新（cron 用 UTC）：
@@ -30,12 +30,11 @@ name: 🔄 更新基金数据
           - '增量更新（快速·净值+申购）'
           - '完整流水线（慢·含扫描+持仓）'
 
-# 授权：contents（commit/push）+ pages/id-token（部署 Pages）+ issues（自检失败开 Issue）
+# 授权：contents（commit/push）+ pages/id-token（部署 Pages）
 permissions:
   contents: write
   pages: write
   id-token: write
-  issues: write
 
 # 防并发：避免多任务同时操作 web/data/ 导致 push 冲突
 concurrency:
@@ -98,7 +97,7 @@ jobs:
           cd scripts
           echo "=== [1/2] pipeline.fill（净值 + 涨跌幅 + YTD + 费率补漏）==="
           python -m pipeline.fill
-          echo "=== [2/2] pipeline.refresh（申购状态 + 限额 + 涨跌幅兜底）==="
+          echo "=== [2/2] pipeline.refresh（申购状态 + 限额 + 涨跌幅兜底 + ETF 场内价）==="
           python -m pipeline.refresh
 
       # 5b. 完整流水线（慢，~12 分钟）
@@ -179,11 +178,9 @@ jobs:
         uses: actions/deploy-pages@v4
 
       # 7. 部署后端到端自检：curl 线上 meta.json，断言 generated_at == 本次推送值
-      #    这是"杜绝再发"的核心——部署了 ≠ 部署对了，必须回验线上实际生效内容
+      #    部署了 ≠ 部署对了，必须回验线上实际生效内容；不一致则 workflow 红
       - name: 🔍 部署后自检（线上 meta.generated_at）
         if: steps.commit.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           sleep 45
           EXPECTED="${{ steps.expected.outputs.ga }}"
@@ -197,15 +194,7 @@ jobs:
           fi
           if [ "$ACTUAL" != "$EXPECTED" ]; then
             echo "❌ 自检失败：线上 ($ACTUAL) ≠ 本次推送 ($EXPECTED)"
-            echo "   Pages CDN 可能未更新或部署未生效，创建告警 Issue..."
-            gh issue create \
-              --title "🚨 Pages 部署自检失败 @ $(date -u '+%Y-%m-%d %H:%M UTC')" \
-              --body "线上 \`meta.generated_at\` = \`$ACTUAL\`，本次推送 = \`$EXPECTED\`。
-
-          部署 workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-          可能原因：Pages CDN 延迟、部署未生效。请检查 https://zhouminghan.github.io/qdii-tracker/ 或重跑 workflow。" \
-              || echo "(创建 Issue 失败，忽略)"
+            echo "   Pages CDN 可能未更新或部署未生效，请检查 Actions 或重跑 workflow"
             exit 1
           fi
           echo "✅ 自检通过：线上数据已是最新"
