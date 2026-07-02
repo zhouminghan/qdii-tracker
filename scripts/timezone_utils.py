@@ -24,4 +24,17 @@ def beijing_now_iso() -> str:
     return beijing_now().isoformat()
 
 
+def beijing_year() -> int:
+    """获取当前北京时间年份"""
+    return beijing_now().year
+
+
+def beijing_year_start() -> datetime:
+    """
+    获取今年1月1日北京时间 00:00:00。
+    返回 naive datetime（无时区标记），与 pd.to_datetime 默认行为一致，
+    避免 aware/naive 比较报错。
+    """
+    now = beijing_now()
+    return now.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0, tzinfo=None)
 
