@@ -8,7 +8,6 @@ import re
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from timezone_utils import beijing_now_iso
 from core.constants import CATEGORIES, DATA_DIR, ETF_SKIP_FIELDS, ALWAYS_OVERWRITE_FIELDS
 from core.utils import to_float, read_json, write_json, bump_generated_at, normalize_share_keys
 from sources.eastmoney_source import fetch_lsjz, fetch_pzd, fetch_f10, fetch_fee_rules

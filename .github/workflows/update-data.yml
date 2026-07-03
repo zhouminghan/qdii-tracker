@@ -41,14 +41,14 @@ jobs:
     steps:
       # 1. 拉代码
       - name: 📥 拉取代码
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # 2. 装 Python
       - name: 🐍 安装 Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
           cache: 'pip'
@@ -110,16 +110,14 @@ jobs:
           cd scripts
           python fundctl.py check
 
-      # 6. 提交数据变更（输出 changed 标记，供后续部署步骤判断）
+      # 6. 提交数据变更（push 后由 deploy-pages.yml 自动部署）
       - name: 💾 提交数据变更
-        id: commit
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git add web/data/
           if git diff --cached --quiet; then
-            echo "⚠️  数据无变化，跳过提交与部署"
-            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "⚠️  数据无变化，跳过提交"
           else
             TS=$(date -u '+%Y-%m-%d %H:%M UTC')
             MODE="${{ steps.mode.outputs.mode }}"
@@ -130,17 +128,5 @@ jobs:
             fi
             git pull --rebase origin main
             git push
-            echo "✅ 数据已更新并推送"
-            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "✅ 数据已推送，Pages 部署由 deploy-pages.yml 自动完成"
           fi
-
-      # ─────── 部署由 deploy-pages.yml（push web/** 触发）自动完成 ───────
-      # why 不在此 workflow 内部署：push 已触发 deploy-pages.yml，重复部署
-      #       不仅冗余，还导致 concurrency 冲突 + Pages 超时。
-      #       保留 changed 输出仅用于日志区分，不再控制后续步骤。
-      - name: ℹ️ 部署将由 deploy-pages.yml 处理
-        if: steps.commit.outputs.changed == 'true'
-        run: echo "数据已推送，Pages 部署由 deploy-pages.yml（push web/** 触发）自动完成"
-      - name: ℹ️ 跳过（数据无变化）
-        if: steps.commit.outputs.changed != 'true'
-        run: echo "数据无变化。"

@@ -30,5 +30,5 @@ cd ../web && python3 -m http.server 8765
 8. **LOF 基金可能缺 `chg_ytd`**：akshare 累计收益率接口对部分 LOF 返回空，workaround 是取同系列兄弟份额值直接写入（A/C 差异 <1%）
 9. **表头净值日期按当前分组代表日期（众数，并列取更晚）计算，禁止用全 Tab 最大值**：offshore 是混合表（不同分组天然 nav_date 不同），取全 Tab max 会导致切 Chip 时表头日期不随分组变化、与当前分组实际日期脱节。用 `pickGroupHeaderDate`（众数）；`pickTabNavHeaderDate`（max）仅保留兼容。`applyChipFilter` 切组必须重算表头日期并同步 `.nav-date-sub` 文本与行内日期显隐（`syncRowNavDateVisibility`）
 10. **禁止在 `update-data.yml` 中部署 Pages**：数据更新只需 commit/push，Pages 部署由 `deploy-pages.yml`（push `web/**` 事件触发）自动完成。update-data 内重复部署不仅冗余，还导致 concurrency 冲突 + Pages 部署超时。
-11. **数据文件（`web/data/{cat}.json`）不写 `generated_at` / `enriched_at`**：仅 `meta.json` 保留 `generated_at`（前端版本戳 + 陈旧检测 + 部署自检都依赖它）。各分类数据文件写这些时间戳只制造 diff 噪音、无消费者。`bump_generated_at()` 只更新 meta。
+11. **数据文件（`web/data/{cat}.json`）不写 `generated_at` / `enriched_at`**：仅 `meta.json` 保留 `generated_at`（前端版本戳 + 陈旧检测依赖它）。各分类数据文件写这些时间戳只制造 diff 噪音、无消费者。`bump_generated_at()` 只更新 meta。
 12. **所有 pipeline 写入 `web/data/{cat}.json` 前必须调用 `normalize_share_keys(data)`，写入 `holdings/{code}.json` 前必须调用 `normalize_holdings_keys(data)`**：key 顺序模板在 `core/constants.py`（`STANDARD_SHARE_KEY_ORDER` / `STANDARD_HOLDINGS_KEY_ORDER`）。缺少调用会导致 key 顺序漂移，造成 diff 噪音。fill.py 还使用 `ThreadPoolExecutor(max_workers=4)` + `BoundedSemaphore` 并行化 API 调用，worker 只做 I/O，主线线程统一 apply 结果 + normalize 写盘。

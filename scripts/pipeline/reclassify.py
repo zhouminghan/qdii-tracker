@@ -3,7 +3,6 @@
 原 reclassify_fund.py 逻辑搬迁，import core+sources。
 """
 import argparse
-import json
 import time
 
 from timezone_utils import beijing_now_iso
@@ -39,11 +38,6 @@ def recalc_series_scale(series: dict):
         series["series_scale"] = a_rmb[0].get("scale") or 0
     else:
         series["series_scale"] = next((s.get("scale") for s in series["shares"] if s.get("scale")), 0)
-
-
-def bump_generated_at_local(data: dict, now: str):
-    """已废弃：各数据文件不再写 generated_at（仅 meta.json 保留），保留签名避免改调用处。"""
-    pass
 
 
 def update_meta(now: str):
@@ -153,7 +147,6 @@ def main():
     from_data["series"].pop(idx)
     update_series_count(from_data)
     update_total_scale(from_data)
-    bump_generated_at_local(from_data, now)
 
     update_series_category(series, to_cat)
     recalc_series_scale(series)
@@ -162,7 +155,6 @@ def main():
     to_data["series"].sort(key=lambda s: -(s.get("series_scale") or 0))
     update_series_count(to_data)
     update_total_scale(to_data)
-    bump_generated_at_local(to_data, now)
 
     normalize_share_keys(from_data)
     normalize_share_keys(to_data)
