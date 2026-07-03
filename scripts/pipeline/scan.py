@@ -8,6 +8,7 @@ import re
 import akshare as ak
 from timezone_utils import beijing_now_iso
 from core.constants import CATEGORIES, DATA_DIR, CATEGORY_LABELS
+from core.utils import normalize_share_keys
 from core.config_loader import get_config
 from sources.akshare_source import fetch_fund_names
 
@@ -400,6 +401,7 @@ def main():
         out["label"] = label_map[cat]
         out["series_count"] = len(merged)
         out["series"] = merged
+        normalize_share_keys(out)
         with open(fp, "w", encoding="utf-8") as f:
             json.dump(out, f, ensure_ascii=False, indent=2)
             f.write("\n")

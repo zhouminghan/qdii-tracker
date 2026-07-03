@@ -6,7 +6,7 @@ import json
 import re
 from pathlib import Path
 
-from core.constants import DATA_DIR
+from core.constants import DATA_DIR, STANDARD_SHARE_KEY_ORDER, STANDARD_HOLDINGS_KEY_ORDER, STANDARD_HOLDING_ITEM_KEY_ORDER
 from timezone_utils import beijing_now_iso
 
 
@@ -90,3 +90,69 @@ def parse_scale(scale_str: str) -> float:
     if unit == "万":
         num = num / 10000
     return num
+
+
+def normalize_share_keys(data: dict) -> dict:
+    """
+    按 STANDARD_SHARE_KEY_ORDER 重排所有 series→shares 的 key 顺序。
+    不影响数据值，不增删 key。调用方应传入 data dict（顶层含 series 字段），
+    原地修改 data 后返回。
+    用于所有 pipeline 写盘前，确保各分类数据文件 key 顺序一致。
+    """
+    for series in data.get("series", []):
+        for i, share in enumerate(series.get("shares", [])):
+            ordered = {}
+            # 先按标准顺序放已有 key
+            for k in STANDARD_SHARE_KEY_ORDER:
+                if k in share:
+                    ordered[k] = share[k]
+            # 再放标准顺序中没有的额外 key（如 error）
+            for k in share:
+                if k not in STANDARD_SHARE_KEY_ORDER:
+                    ordered[k] = share[k]
+            series["shares"][i] = ordered
+    return data
+
+
+def normalize_holdings_keys(data: dict) -> dict:
+    """
+    按 STANDARD_HOLDINGS_KEY_ORDER 重排 holdings/{code}.json 的顶层 key 顺序，
+    并对 holdings / all_quarters 中各季度条目按 STANDARD_HOLDING_ITEM_KEY_ORDER 重排。
+    不影响数据值，不增删 key。原地修改 data 后返回。
+    """
+    # 1. 重排顶层 key
+    ordered = {}
+    for k in STANDARD_HOLDINGS_KEY_ORDER:
+        if k in data:
+            ordered[k] = data[k]
+    for k in data:
+        if k not in STANDARD_HOLDINGS_KEY_ORDER:
+            ordered[k] = data[k]
+    # 写回 data（原地修改）
+    data.clear()
+    data.update(ordered)
+
+    # 2. 重排 holdings 数组中每个条目
+    for i, item in enumerate(data.get("holdings", [])):
+        item_ordered = {}
+        for k in STANDARD_HOLDING_ITEM_KEY_ORDER:
+            if k in item:
+                item_ordered[k] = item[k]
+        for k in item:
+            if k not in STANDARD_HOLDING_ITEM_KEY_ORDER:
+                item_ordered[k] = item[k]
+        data["holdings"][i] = item_ordered
+
+    # 3. 重排 all_quarters 中每个季度的条目
+    for quarter, items in data.get("all_quarters", {}).items():
+        for i, item in enumerate(items):
+            item_ordered = {}
+            for k in STANDARD_HOLDING_ITEM_KEY_ORDER:
+                if k in item:
+                    item_ordered[k] = item[k]
+            for k in item:
+                if k not in STANDARD_HOLDING_ITEM_KEY_ORDER:
+                    item_ordered[k] = item[k]
+            data["all_quarters"][quarter][i] = item_ordered
+
+    return data

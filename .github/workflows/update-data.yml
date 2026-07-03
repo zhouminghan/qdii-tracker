@@ -1,6 +1,6 @@
 name: 🔄 更新基金数据
 
-# 自动更新基金数据 workflow（含 Pages 部署 + 部署后自检）
+# 自动更新基金数据 workflow（仅更新数据，部署由 deploy-pages.yml push 触发）
 # 触发：工作日 22:00 增量 + 每月 2 日完整 + 手动
 # QDII 净值披露节奏：T 日美股收盘 → T+1 日晚间（北京时间）基金公司披露 T 日净值
 #
@@ -8,9 +8,8 @@ name: 🔄 更新基金数据
 #   22:00（北京时间）：大多数基金已披露，少量延迟交给前端实时 overlay 兜底
 #   实时兜底：offshore-live-nav.js 在 15:00~次日06:00 提供实时净值 overlay
 #
-# 🔗 【部署链路 · 关键】数据更新与 Pages 部署在同一 job 内原子完成，
-#    不再依赖 workflow_run 跨 workflow 串联（该事件不稳定，曾导致"仓库新、网页旧"反复出现）。
-#    部署后立即 curl 线上 meta.json 自检，不一致则 workflow 红。
+# 🔗 【部署链路】数据 push 后由 deploy-pages.yml（push web/** 触发）自动部署 Pages，
+#    不再在此 workflow 内重复部署（重复部署导致 concurrency 冲突 + 超时）。
 "on":
   schedule:
     # 增量更新（cron 用 UTC）：
@@ -30,24 +29,14 @@ name: 🔄 更新基金数据
           - '增量更新（快速·净值+申购）'
           - '完整流水线（慢·含扫描+持仓）'
 
-# 授权：contents（commit/push）+ pages/id-token（部署 Pages）
+# 授权：contents（commit/push），Pages 部署由 deploy-pages.yml（push web/** 触发）负责
 permissions:
   contents: write
-  pages: write
-  id-token: write
-
-# 防并发：避免多任务同时操作 web/data/ 导致 push 冲突
-concurrency:
-  group: update-data
-  cancel-in-progress: false
 
 jobs:
   update:
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       # 1. 拉代码
@@ -145,60 +134,13 @@ jobs:
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
 
-      # ─────── 以下为 Pages 部署（仅在有数据变更时执行）───────
-      # why 原子化：数据 push 后立即在同一 job 部署，消除 workflow_run 串联的不稳定性
-
-      - name: 🏷️ 记录本次预期 generated_at
+      # ─────── 部署由 deploy-pages.yml（push web/** 触发）自动完成 ───────
+      # why 不在此 workflow 内部署：push 已触发 deploy-pages.yml，重复部署
+      #       不仅冗余，还导致 concurrency 冲突 + Pages 超时。
+      #       保留 changed 输出仅用于日志区分，不再控制后续步骤。
+      - name: ℹ️ 部署将由 deploy-pages.yml 处理
         if: steps.commit.outputs.changed == 'true'
-        id: expected
-        run: |
-          GA=$(python3 -c "import json;print(json.load(open('web/data/meta.json'))['generated_at'])")
-          echo "ga=$GA" >> $GITHUB_OUTPUT
-          echo "本次推送的 meta.generated_at = $GA"
-
-      - name: ⚙️ Setup Pages
-        if: steps.commit.outputs.changed == 'true'
-        uses: actions/configure-pages@v5
-
-      - name: 🏷️ Stamp frontend asset versions
-        if: steps.commit.outputs.changed == 'true'
-        run: |
-          SHA=$(git rev-parse HEAD)
-          python3 scripts/pipeline/stamp_asset_version.py --version "${SHA::12}"
-
-      - name: 📦 Upload web/ as artifact
-        if: steps.commit.outputs.changed == 'true'
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './web'
-
-      - name: 🚀 Deploy to GitHub Pages
-        if: steps.commit.outputs.changed == 'true'
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-      # 7. 部署后端到端自检：curl 线上 meta.json，断言 generated_at == 本次推送值
-      #    部署了 ≠ 部署对了，必须回验线上实际生效内容；不一致则 workflow 红
-      - name: 🔍 部署后自检（线上 meta.generated_at）
-        if: steps.commit.outputs.changed == 'true'
-        run: |
-          sleep 45
-          EXPECTED="${{ steps.expected.outputs.ga }}"
-          echo "预期 generated_at: $EXPECTED"
-          ACTUAL=$(curl -fsSL "https://zhouminghan.github.io/qdii-tracker/data/meta.json?nocache=$(date +%s)" \
-            | python3 -c "import sys,json;print(json.load(sys.stdin)['generated_at'])" 2>/dev/null || echo "")
-          echo "线上 generated_at: $ACTUAL"
-          if [ -z "$ACTUAL" ]; then
-            echo "❌ 无法获取线上 meta.json"
-            exit 1
-          fi
-          if [ "$ACTUAL" != "$EXPECTED" ]; then
-            echo "❌ 自检失败：线上 ($ACTUAL) ≠ 本次推送 ($EXPECTED)"
-            echo "   Pages CDN 可能未更新或部署未生效，请检查 Actions 或重跑 workflow"
-            exit 1
-          fi
-          echo "✅ 自检通过：线上数据已是最新"
-
-      - name: ℹ️ 跳过部署（数据无变化）
+        run: echo "数据已推送，Pages 部署由 deploy-pages.yml（push web/** 触发）自动完成"
+      - name: ℹ️ 跳过（数据无变化）
         if: steps.commit.outputs.changed != 'true'
-        run: echo "数据无变化，未部署 Pages。"
+        run: echo "数据无变化。"

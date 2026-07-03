@@ -111,20 +111,19 @@ qdii-tracker/
 cd scripts
 pip install -r requirements.txt
 
-# 2. 跑一次完整流水线（推荐统一入口）
+# 2. 跑一次完整流水线
 python3 fundctl.py sync
 
 # 3. 启动前端
 cd ../web
 python3 -m http.server 8765
 # 浏览器打开 http://localhost:8765/
-```
 
-**日常增量更新**（交易日 22:00 QDII 净值披露后）：
+# 日常增量更新（交易日 22:00 QDII 净值披露后）
+cd scripts && python3 fundctl.py refresh
 
-```bash
-cd scripts
-python3 fundctl.py refresh
+# 一致性校验
+cd scripts && python3 fundctl.py check
 ```
 
 ---
@@ -175,15 +174,6 @@ python3 fundctl.py add --code 002891 --to active --keyword "华夏移动互联"
 > ⚠️ `pipeline.scan` 会**覆盖** `web/data/*.json`，方式 A 跑完 scan 后必须接 enrich + fill；方式 B 补数据脚本不会覆盖已有字段。
 
 详细字段规范、踩坑列表、Bug 史 详见 [`AGENT.md`](./AGENT.md)。
-
----
-
-## 🧪 校验
-
-```bash
-# 配置一致性校验
-cd scripts && python3 fundctl.py check
-```
 
 ---
 

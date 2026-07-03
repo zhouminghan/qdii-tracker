@@ -7,7 +7,7 @@ import time
 
 from timezone_utils import beijing_now_iso
 from core.constants import CATEGORIES, DATA_DIR
-from core.utils import read_json, write_json
+from core.utils import read_json, write_json, normalize_share_keys
 from sources.akshare_source import fetch_rank_data, fetch_purchase_data, fetch_etf_data
 from sources.eastmoney_source import fetch_lsjz
 
@@ -60,6 +60,7 @@ def main():
                 else:
                     if cat != "etf":
                         fallback_targets.append((fp, share, code))
+        normalize_share_keys(data)
         with open(fp, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
         print(f"  💾 {cat}.json  更新 {updated} 只份额的申购状态 + 涨跌幅")
@@ -84,6 +85,7 @@ def main():
                         share["etf_price"] = info.get("etf_price")
                         share["etf_change_pct"] = info.get("etf_change_pct")
                         etf_updated += 1
+            normalize_share_keys(etf_data)
             with open(etf_fp, "w", encoding="utf-8") as f:
                 json.dump(etf_data, f, ensure_ascii=False, indent=2)
                 f.write("\n")
@@ -138,6 +140,7 @@ def main():
                     print(f"  ✓  {code} lsjz 数据已是最新")
                 time.sleep(0.15)
 
+            normalize_share_keys(data)
             with open(fp, "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
         print(f"  📊 Fallback 成功 {fb_success} / 失败 {fb_fail} / 共 {len(fallback_targets)}")

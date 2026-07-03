@@ -18,35 +18,26 @@
         {
           "code": "020712",
           "name": "华安三菱日联日经225ETF发起式联接(QDII)A",
-          "fund_type": "指数型-海外股票",
           "share_class": "A",
           "currency": "人民币",
-          "scale_raw": "2.22亿",
-          "established": "2024-02-07",
-          "manager": "倪斌",
-          "error": "'data'",
+          "fund_type": "指数型-海外股票",
           "nav": 1.439,
+          "nav_cum": 1.439,
           "nav_date": "2026-07-02",
           "daily_change": -1.94,
           "chg_1m": 1.46,
           "chg_3m": 25.07,
           "chg_6m": 27.31,
-          "chg_1y": 42.72,
-          "scale": 2.22,
-          "sale_service_fee": 0.0,
-          "buy_status": "限大额",
-          "daily_limit": 10.0,
-          "mgmt_fee": 0.2,
-          "custody_fee": 0.05,
-          "first_buy_rate": 1.5,
           "chg_ytd": 27.31,
-          "sell_status": "开放赎回",
-          "buy_min": 10.0,
-          "fee": "0.06",
-          "nav_cum": 1.439,
-          "chg_1w": -5.02,
+          "chg_1y": 42.72,
           "chg_2y": 52.52,
           "chg_since_inception": 43.9,
+          "scale": 2.22,
+          "scale_raw": "2.22亿",
+          "established": "2024-02-07",
+          "manager": "倪斌",
+          "buy_status": "限大额",
+          "daily_limit": 10.0,
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<50万",
@@ -71,40 +62,40 @@
               "rate": 0.0
             }
           ],
-          "free_hold_days": 7
+          "mgmt_fee": 0.2,
+          "custody_fee": 0.05,
+          "fee": "0.06",
+          "first_buy_rate": 1.5,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": -5.02,
+          "free_hold_days": 7,
+          "error": "'data'"
         },
         {
           "code": "020713",
           "name": "华安三菱日联日经225ETF发起式联接(QDII)C",
-          "fund_type": "指数型-海外股票",
           "share_class": "C",
           "currency": "人民币",
-          "scale_raw": "1.26亿",
-          "established": "2024-02-07",
-          "manager": "倪斌",
-          "error": "'data'",
+          "fund_type": "指数型-海外股票",
           "nav": 1.4305,
+          "nav_cum": 1.4305,
           "nav_date": "2026-07-02",
           "daily_change": -1.94,
           "chg_1m": 1.44,
           "chg_3m": 24.99,
           "chg_6m": 27.14,
-          "chg_1y": 42.37,
-          "scale": 1.26,
-          "sale_service_fee": 0.25,
-          "buy_status": "限大额",
-          "daily_limit": 10.0,
-          "mgmt_fee": 0.2,
-          "custody_fee": 0.05,
-          "first_buy_rate": 0.0,
           "chg_ytd": 27.14,
-          "sell_status": "开放赎回",
-          "buy_min": 10.0,
-          "fee": "",
-          "nav_cum": 1.4305,
-          "chg_1w": -5.02,
+          "chg_1y": 42.37,
           "chg_2y": 51.76,
           "chg_since_inception": 43.05,
+          "scale": 1.26,
+          "scale_raw": "1.26亿",
+          "established": "2024-02-07",
+          "manager": "倪斌",
+          "buy_status": "限大额",
+          "daily_limit": 10.0,
           "buy_rules": [
             {
               "condition": "---",
@@ -121,7 +112,16 @@
               "rate": 0.0
             }
           ],
-          "free_hold_days": 7
+          "mgmt_fee": 0.2,
+          "custody_fee": 0.05,
+          "fee": "",
+          "first_buy_rate": 0.0,
+          "sale_service_fee": 0.25,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "chg_1w": -5.02,
+          "free_hold_days": 7,
+          "error": "'data'"
         }
       ]
     },
@@ -139,19 +139,24 @@
         {
           "code": "019454",
           "name": "华泰柏瑞中韩半导体ETF发起式联接(QDII)A",
-          "fund_type": "指数型-海外股票",
           "share_class": "A",
           "currency": "人民币",
-          "buy_status": "暂停申购",
-          "sell_status": "开放赎回",
-          "buy_min": 10.0,
-          "daily_limit": 10.0,
-          "fee": "0.12",
+          "fund_type": "指数型-海外股票",
+          "nav": 4.0819,
+          "nav_date": "2026-07-02",
+          "daily_change": -9.82,
+          "chg_1m": 29.31,
+          "chg_3m": 43.54,
+          "chg_6m": 110.87,
+          "chg_ytd": 80.33,
+          "chg_1y": 210.17,
+          "chg_since_inception": 293.74,
           "scale": 0.8,
           "scale_raw": "0.8亿",
           "established": "2023-09-22",
           "manager": "李沐阳",
-          "error": "'data'",
+          "buy_status": "暂停申购",
+          "daily_limit": 10.0,
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100万",
@@ -180,84 +185,37 @@
               "rate": 0.0
             }
           ],
-          "nav": 4.0819,
-          "nav_date": "2026-07-02",
-          "daily_change": -9.82,
-          "chg_1m": 29.31,
-          "chg_3m": 43.54,
-          "chg_6m": 110.87,
-          "chg_1y": 210.17,
-          "sale_service_fee": 0.0,
           "mgmt_fee": 0.5,
           "custody_fee": 0.1,
+          "fee": "0.12",
           "first_buy_rate": 1.5,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
           "free_hold_days": 30,
-          "chg_ytd": 80.33,
-          "chg_since_inception": 293.74
+          "error": "'data'"
         },
         {
           "code": "019455",
           "name": "华泰柏瑞中韩半导体ETF发起式联接(QDII)C",
-          "fund_type": "指数型-海外股票",
           "share_class": "C",
           "currency": "人民币",
-          "buy_status": "暂停申购",
-          "sell_status": "开放赎回",
-          "buy_min": 10.0,
-          "daily_limit": 10.0,
-          "fee": "",
-          "scale": 1.4,
-          "scale_raw": "1.4亿",
-          "established": "2023-09-22",
-          "manager": "李沐阳",
-          "error": "'data'",
-          "buy_rules": [
-            {
-              "condition": "---",
-              "rate": 0.0
-            }
-          ],
-          "sell_rules": [
-            {
-              "condition": "0.0天<持有期限<7天",
-              "rate": 1.5
-            },
-            {
-              "condition": "7天<=持有期限",
-              "rate": 0.0
-            }
-          ],
+          "fund_type": "指数型-海外股票",
           "nav": 4.0543,
           "nav_date": "2026-07-02",
           "daily_change": -9.82,
           "chg_1m": 29.28,
           "chg_3m": 43.45,
           "chg_6m": 110.61,
-          "chg_1y": 209.39,
-          "sale_service_fee": 0.25,
-          "mgmt_fee": 0.5,
-          "custody_fee": 0.1,
-          "first_buy_rate": 0.0,
-          "free_hold_days": 7,
           "chg_ytd": 80.15,
-          "chg_since_inception": 291.17
-        },
-        {
-          "code": "022681",
-          "name": "华泰柏瑞中韩半导体ETF发起式联接(QDII)I",
-          "fund_type": "指数型-海外股票",
-          "share_class": "I",
-          "currency": "人民币",
-          "buy_status": "暂停申购",
-          "sell_status": "开放赎回",
-          "buy_min": 10.0,
-          "daily_limit": 10.0,
-          "fee": "",
-          "scale": 0.03,
-          "scale_raw": "0.03亿",
-          "established": "2024-11-26",
+          "chg_1y": 209.39,
+          "chg_since_inception": 291.17,
+          "scale": 1.4,
+          "scale_raw": "1.4亿",
+          "established": "2023-09-22",
           "manager": "李沐阳",
-          "error": "'data'",
+          "buy_status": "暂停申购",
+          "daily_limit": 10.0,
           "buy_rules": [
             {
               "condition": "---",
@@ -274,20 +232,62 @@
               "rate": 0.0
             }
           ],
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.1,
+          "fee": "",
+          "first_buy_rate": 0.0,
+          "sale_service_fee": 0.25,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
+          "free_hold_days": 7,
+          "error": "'data'"
+        },
+        {
+          "code": "022681",
+          "name": "华泰柏瑞中韩半导体ETF发起式联接(QDII)I",
+          "share_class": "I",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
           "nav": 4.0762,
           "nav_date": "2026-07-02",
           "daily_change": -9.82,
           "chg_1m": 29.3,
           "chg_3m": 43.51,
           "chg_6m": 110.77,
+          "chg_ytd": 80.26,
           "chg_1y": 209.87,
-          "sale_service_fee": 0.1,
+          "chg_since_inception": 237.1,
+          "scale": 0.03,
+          "scale_raw": "0.03亿",
+          "established": "2024-11-26",
+          "manager": "李沐阳",
+          "buy_status": "暂停申购",
+          "daily_limit": 10.0,
+          "buy_rules": [
+            {
+              "condition": "---",
+              "rate": 0.0
+            }
+          ],
+          "sell_rules": [
+            {
+              "condition": "0.0天<持有期限<7天",
+              "rate": 1.5
+            },
+            {
+              "condition": "7天<=持有期限",
+              "rate": 0.0
+            }
+          ],
           "mgmt_fee": 0.5,
           "custody_fee": 0.1,
+          "fee": "",
           "first_buy_rate": 0.0,
+          "sale_service_fee": 0.1,
+          "sell_status": "开放赎回",
+          "buy_min": 10.0,
           "free_hold_days": 7,
-          "chg_ytd": 80.26,
-          "chg_since_inception": 237.1
+          "error": "'data'"
         }
       ]
     }

@@ -68,3 +68,32 @@ SHARE_CLASS_RANK = {
     # 后端收费份额排末尾（坑，避免误买）
     "A(后端)": 50, "B(后端)": 51, "C(后端)": 52,
 }
+
+# ============================================================
+# share dict key 标准顺序（以 270023 广发全球精选为模板）
+# 所有写入 web/data/*.json 的 pipeline 脚本必须在写盘前调用
+# normalize_share_keys() 确保 key 顺序一致，避免 diff 噪音。
+# ============================================================
+STANDARD_SHARE_KEY_ORDER = [
+    "code", "name", "share_class", "currency", "fund_type",
+    "nav", "nav_cum", "nav_date", "daily_change",
+    "chg_1m", "chg_3m", "chg_6m", "chg_ytd", "chg_1y", "chg_2y", "chg_3y", "chg_since_inception",
+    "scale", "scale_raw", "established", "manager",
+    "fund_company", "fund_type_xq", "full_name",
+    "buy_status", "daily_limit", "buy_rules", "sell_rules",
+    "mgmt_fee", "custody_fee", "fee", "first_buy_rate", "sale_service_fee",
+    "sell_status", "buy_min",
+    "chg_1w", "free_hold_days", "max_sell_rate",
+]
+
+# ============================================================
+# holdings/{code}.json key 标准顺序
+# ============================================================
+STANDARD_HOLDINGS_KEY_ORDER = [
+    "code", "latest_quarter", "holdings_count", "total_weight", "heavy_count",
+    "holdings", "all_quarters", "fetched_at",
+]
+
+STANDARD_HOLDING_ITEM_KEY_ORDER = [
+    "rank", "stock_code", "stock_name", "weight", "shares", "market_value",
+]

@@ -6,7 +6,7 @@ import json
 import time
 
 from core.constants import CATEGORIES, DATA_DIR, CURRENCY_RANK, SHARE_CLASS_RANK
-from core.utils import read_json, write_json, bump_generated_at
+from core.utils import read_json, write_json, bump_generated_at, normalize_share_keys
 from sources.akshare_source import fetch_rank_data, fetch_purchase_data, fetch_etf_data
 from sources.eastmoney_source import fetch_lsjz
 from sources.xueqiu_source import fetch_basic_info, fetch_fee_detail
@@ -131,6 +131,7 @@ def main():
         total_scale = sum(s.get("series_scale") or 0 for s in data["series"])
         data["total_scale"] = round(total_scale, 2)
 
+        normalize_share_keys(data)
         with open(data_dir / f"{cat}.json", "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
         print(f"  💾 {cat}.json  系列数={len(data['series'])}  总规模={data['total_scale']}亿")

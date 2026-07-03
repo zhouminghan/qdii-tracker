@@ -6,7 +6,7 @@ import json
 import time
 
 from core.constants import CATEGORIES, DATA_DIR, HOLDINGS_DIR
-from core.utils import write_json
+from core.utils import write_json, normalize_holdings_keys
 from core.config_loader import get_config
 from sources.akshare_source import fetch_holdings
 
@@ -59,6 +59,7 @@ def main():
             continue
         result = fetch_holdings(code)
         if result and "error" not in result:
+            normalize_holdings_keys(result)
             write_json(holdings_dir / f"{code}.json", result)
             success += 1
             top_str = ""

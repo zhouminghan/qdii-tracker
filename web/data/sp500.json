@@ -26,6 +26,7 @@
           "chg_6m": 6.61,
           "chg_ytd": 5.4,
           "chg_1y": 21.65,
+          "chg_since_inception": 479.64,
           "scale": 59.27,
           "scale_raw": "59.27亿",
           "established": "2012-06-14",
@@ -79,7 +80,6 @@
           "sell_status": "暂停赎回",
           "buy_min": 10.0,
           "free_hold_days": null,
-          "chg_since_inception": 479.64,
           "max_sell_rate": 1.5
         },
         {
@@ -96,6 +96,7 @@
           "chg_6m": 6.42,
           "chg_ytd": 5.02,
           "chg_1y": 21.22,
+          "chg_since_inception": 165.23,
           "scale": 12.41,
           "scale_raw": "12.41亿",
           "established": "2018-06-07",
@@ -125,11 +126,10 @@
           "custody_fee": 0.2,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7,
+          "sale_service_fee": 0.35,
           "sell_status": "暂停赎回",
           "buy_min": 10.0,
-          "sale_service_fee": 0.35,
-          "chg_since_inception": 165.23,
+          "free_hold_days": 7,
           "max_sell_rate": 1.5
         },
         {
@@ -146,6 +146,8 @@
           "chg_6m": 6.6,
           "chg_ytd": 5.94,
           "chg_1y": 21.63,
+          "chg_since_inception": 56.49,
+          "scale": 16.31,
           "scale_raw": "16.31亿",
           "established": "2023-07-04",
           "manager": "万琼",
@@ -167,16 +169,14 @@
               "rate": 0.0
             }
           ],
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.2,
           "fee": "",
-          "scale": 16.31,
+          "first_buy_rate": 0.0,
           "sale_service_fee": 0.01,
           "sell_status": "开放赎回",
           "buy_min": 1.0,
-          "mgmt_fee": 0.6,
-          "custody_fee": 0.2,
-          "first_buy_rate": 0.0,
           "free_hold_days": 7,
-          "chg_since_inception": 56.49,
           "error": "'data'"
         },
         {
@@ -193,6 +193,8 @@
           "chg_6m": 10.44,
           "chg_ytd": 8.96,
           "chg_1y": 28.8,
+          "chg_since_inception": 59.34,
+          "scale": 59.27,
           "scale_raw": "59.27亿",
           "established": "2021-09-07",
           "manager": "万琼",
@@ -230,16 +232,14 @@
               "rate": 0.0
             }
           ],
-          "fee": "1.2",
-          "sell_status": "开放赎回",
-          "buy_min": 1.0,
-          "scale": 59.27,
-          "sale_service_fee": 0.0,
           "mgmt_fee": 0.6,
           "custody_fee": 0.2,
+          "fee": "1.2",
           "first_buy_rate": 1.2,
+          "sale_service_fee": 0.0,
+          "sell_status": "开放赎回",
+          "buy_min": 1.0,
           "free_hold_days": 1095,
-          "chg_since_inception": 59.34,
           "error": "'data'"
         },
         {
@@ -256,6 +256,8 @@
           "chg_6m": 10.24,
           "chg_ytd": 8.81,
           "chg_1y": 28.36,
+          "chg_since_inception": 56.61,
+          "scale": 12.41,
           "scale_raw": "12.41亿",
           "established": "2021-09-07",
           "manager": "万琼",
@@ -277,16 +279,14 @@
               "rate": 0.0
             }
           ],
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.2,
           "fee": "",
-          "scale": 12.41,
+          "first_buy_rate": 0.0,
           "sale_service_fee": 0.35,
           "sell_status": "开放赎回",
           "buy_min": 1.0,
-          "mgmt_fee": 0.6,
-          "custody_fee": 0.2,
-          "first_buy_rate": 0.0,
           "free_hold_days": 7,
-          "chg_since_inception": 56.61,
           "error": "'data'"
         }
       ],
@@ -422,11 +422,11 @@
           "custody_fee": 0.15,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7,
+          "sale_service_fee": 0.3,
           "sell_status": "暂停赎回",
           "buy_min": 10.0,
           "chg_1w": 1.64,
-          "sale_service_fee": 0.3,
+          "free_hold_days": 7,
           "max_sell_rate": 1.5
         },
         {
@@ -443,6 +443,8 @@
           "chg_6m": 10.72,
           "chg_ytd": 8.46,
           "chg_1y": 27.83,
+          "chg_since_inception": 69.28,
+          "scale": 36.62,
           "scale_raw": "36.62亿",
           "established": "2023-04-06",
           "manager": "张军",
@@ -480,16 +482,14 @@
               "rate": 0.0
             }
           ],
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.15,
           "fee": "1.2",
-          "scale": 36.62,
+          "first_buy_rate": 1.2,
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 1.0,
-          "mgmt_fee": 0.5,
-          "custody_fee": 0.15,
-          "first_buy_rate": 1.2,
           "free_hold_days": 730,
-          "chg_since_inception": 69.28,
           "error": "'data'"
         },
         {
@@ -506,6 +506,8 @@
           "chg_6m": 10.72,
           "chg_ytd": 8.46,
           "chg_1y": 27.83,
+          "chg_since_inception": 69.28,
+          "scale": 36.62,
           "scale_raw": "36.62亿",
           "established": "2023-04-06",
           "manager": "张军",
@@ -543,16 +545,14 @@
               "rate": 0.0
             }
           ],
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.15,
           "fee": "1.2",
-          "scale": 36.62,
+          "first_buy_rate": 1.2,
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 1.0,
-          "mgmt_fee": 0.5,
-          "custody_fee": 0.15,
-          "first_buy_rate": 1.2,
           "free_hold_days": 730,
-          "chg_since_inception": 69.28,
           "error": "'data'"
         }
       ],
@@ -627,11 +627,11 @@
           "custody_fee": 0.2,
           "fee": "0.1",
           "first_buy_rate": 1.0,
-          "free_hold_days": 365,
           "sale_service_fee": 0.0,
           "sell_status": "暂停赎回",
           "buy_min": 10.0,
           "chg_1w": 1.0,
+          "free_hold_days": 365,
           "max_sell_rate": 1.5
         },
         {
@@ -681,11 +681,11 @@
           "custody_fee": 0.2,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7,
           "sale_service_fee": 0.25,
           "sell_status": "暂停赎回",
           "buy_min": 10.0,
           "chg_1w": 1.0,
+          "free_hold_days": 7,
           "max_sell_rate": 1.5
         },
         {
@@ -702,6 +702,7 @@
           "chg_6m": 6.11,
           "chg_ytd": 4.87,
           "chg_1y": 20.32,
+          "chg_since_inception": 23.3,
           "scale": 1.94,
           "scale_raw": "1.94亿",
           "established": "2024-11-01",
@@ -735,11 +736,10 @@
           "custody_fee": 0.2,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 30,
           "sale_service_fee": 0.25,
           "sell_status": "开放赎回",
           "buy_min": 1.0,
-          "chg_since_inception": 23.3,
+          "free_hold_days": 30,
           "max_sell_rate": 1.5
         }
       ],
@@ -769,6 +769,7 @@
           "chg_6m": 6.47,
           "chg_ytd": 5.57,
           "chg_1y": 22.17,
+          "chg_since_inception": 211.32,
           "scale": 14.47,
           "scale_raw": "14.47亿",
           "established": "2016-12-02",
@@ -818,11 +819,10 @@
           "custody_fee": 0.2,
           "fee": "0.12",
           "first_buy_rate": 1.2,
+          "sale_service_fee": 0.0,
           "sell_status": "暂停赎回",
           "buy_min": 10.0,
-          "sale_service_fee": 0.0,
           "free_hold_days": null,
-          "chg_since_inception": 211.32,
           "max_sell_rate": 1.5
         },
         {
@@ -839,6 +839,7 @@
           "chg_6m": 6.28,
           "chg_ytd": 5.79,
           "chg_1y": 21.72,
+          "chg_since_inception": 78.88,
           "scale": 1.4,
           "scale_raw": "1.40亿",
           "established": "2021-07-19",
@@ -868,11 +869,10 @@
           "custody_fee": 0.2,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7,
           "sale_service_fee": 0.35,
           "sell_status": "暂停赎回",
           "buy_min": 10.0,
-          "chg_since_inception": 78.88,
+          "free_hold_days": 7,
           "max_sell_rate": 1.5
         },
         {
@@ -889,6 +889,7 @@
           "chg_6m": 10.39,
           "chg_ytd": 8.39,
           "chg_1y": 28.49,
+          "chg_since_inception": 213.55,
           "scale": 14.47,
           "scale_raw": "14.47亿",
           "established": "2016-12-02",
@@ -930,15 +931,14 @@
               "rate": 0.0
             }
           ],
-          "fee": "0.12",
-          "sell_status": "暂停赎回",
-          "buy_min": 10.0,
-          "sale_service_fee": 0.0,
           "mgmt_fee": 0.8,
           "custody_fee": 0.2,
+          "fee": "0.12",
           "first_buy_rate": 1.5,
+          "sale_service_fee": 0.0,
+          "sell_status": "暂停赎回",
+          "buy_min": 10.0,
           "free_hold_days": 730,
-          "chg_since_inception": 213.55,
           "error": "'declare_rate_table'"
         },
         {
@@ -955,6 +955,8 @@
           "chg_6m": 10.2,
           "chg_ytd": 8.81,
           "chg_1y": 28.04,
+          "chg_since_inception": 69.53,
+          "scale": null,
           "scale_raw": "",
           "established": "2021-07-19",
           "manager": "刘依姗",
@@ -976,16 +978,14 @@
               "rate": 0.0
             }
           ],
+          "mgmt_fee": 0.8,
+          "custody_fee": 0.2,
           "fee": "",
+          "first_buy_rate": 0.0,
           "sale_service_fee": 0.35,
           "sell_status": "暂停赎回",
           "buy_min": 10.0,
-          "mgmt_fee": 0.8,
-          "custody_fee": 0.2,
-          "first_buy_rate": 0.0,
           "free_hold_days": 7,
-          "chg_since_inception": 69.53,
-          "scale": null,
           "error": "'data'"
         }
       ],
@@ -1117,11 +1117,11 @@
           "custody_fee": 0.2,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7,
+          "sale_service_fee": 0.3,
           "sell_status": "暂停赎回",
           "buy_min": 10.0,
           "chg_1w": 1.68,
-          "sale_service_fee": 0.3,
+          "free_hold_days": 7,
           "max_sell_rate": 1.5
         },
         {
@@ -1138,6 +1138,8 @@
           "chg_6m": 8.94,
           "chg_ytd": 4.74,
           "chg_1y": 17.94,
+          "chg_since_inception": 24.77,
+          "scale": 5.81,
           "scale_raw": "5.81亿",
           "established": "2021-09-07",
           "manager": "冉凌浩",
@@ -1171,16 +1173,14 @@
               "rate": 0.0
             }
           ],
+          "mgmt_fee": 1.0,
+          "custody_fee": 0.2,
           "fee": "1.5",
-          "scale": 5.81,
+          "first_buy_rate": 1.5,
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 1.0,
-          "mgmt_fee": 1.0,
-          "custody_fee": 0.2,
-          "first_buy_rate": 1.5,
           "free_hold_days": 730,
-          "chg_since_inception": 24.77,
           "error": "'data'"
         },
         {
@@ -1197,6 +1197,8 @@
           "chg_6m": 8.78,
           "chg_ytd": 4.62,
           "chg_1y": 17.59,
+          "chg_since_inception": 31.24,
+          "scale": 1.38,
           "scale_raw": "1.38亿",
           "established": "2023-08-30",
           "manager": "冉凌浩",
@@ -1218,16 +1220,14 @@
               "rate": 0.0
             }
           ],
+          "mgmt_fee": 1.0,
+          "custody_fee": 0.2,
           "fee": "",
-          "scale": 1.38,
+          "first_buy_rate": 0.0,
           "sale_service_fee": 0.3,
           "sell_status": "开放赎回",
           "buy_min": 1.0,
-          "mgmt_fee": 1.0,
-          "custody_fee": 0.2,
-          "first_buy_rate": 0.0,
           "free_hold_days": 7,
-          "chg_since_inception": 31.24,
           "error": "'data'"
         }
       ],
@@ -1257,6 +1257,7 @@
           "chg_6m": 6.05,
           "chg_ytd": 5.63,
           "chg_1y": 20.87,
+          "chg_since_inception": 68.32,
           "scale": 3.39,
           "scale_raw": "3.39亿",
           "established": "2023-05-10",
@@ -1298,11 +1299,10 @@
           "custody_fee": 0.15,
           "fee": "0.12",
           "first_buy_rate": 1.2,
-          "free_hold_days": 7,
+          "sale_service_fee": 0.0,
           "sell_status": "暂停赎回",
           "buy_min": 10.0,
-          "sale_service_fee": 0.0,
-          "chg_since_inception": 68.32,
+          "free_hold_days": 7,
           "max_sell_rate": 1.5,
           "error": "HTTPSConnectionPool(host='danjuanfunds.com', port=443): Max retries exceeded with url: /djapi/fund/0"
         },
@@ -1320,6 +1320,7 @@
           "chg_6m": 5.9,
           "chg_ytd": 5.51,
           "chg_1y": 20.51,
+          "chg_since_inception": 66.79,
           "scale": 1.83,
           "scale_raw": "1.83亿",
           "established": "2023-05-10",
@@ -1349,11 +1350,10 @@
           "custody_fee": 0.15,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7,
+          "sale_service_fee": 0.3,
           "sell_status": "暂停赎回",
           "buy_min": 10.0,
-          "sale_service_fee": 0.3,
-          "chg_since_inception": 66.79,
+          "free_hold_days": 7,
           "max_sell_rate": 1.5
         },
         {
@@ -1370,6 +1370,8 @@
           "chg_6m": 10.93,
           "chg_ytd": 8.4,
           "chg_1y": 28.1,
+          "chg_since_inception": 70.33,
+          "scale": 3.39,
           "scale_raw": "3.39亿",
           "established": "2023-05-10",
           "manager": "赵宗庭",
@@ -1399,16 +1401,14 @@
               "rate": 0.0
             }
           ],
+          "mgmt_fee": 0.6,
+          "custody_fee": 0.15,
           "fee": "1.2",
-          "scale": 3.39,
+          "first_buy_rate": 1.2,
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 1.0,
-          "mgmt_fee": 0.6,
-          "custody_fee": 0.15,
-          "first_buy_rate": 1.2,
           "free_hold_days": 7,
-          "chg_since_inception": 70.33,
           "error": "'data'"
         }
       ],
@@ -1438,6 +1438,7 @@
           "chg_6m": 7.66,
           "chg_ytd": 5.71,
           "chg_1y": 19.27,
+          "chg_since_inception": 69.9,
           "scale": 1.32,
           "scale_raw": "1.32亿",
           "established": "2022-11-02",
@@ -1475,11 +1476,10 @@
           "custody_fee": 0.15,
           "fee": "0.1",
           "first_buy_rate": 1.0,
-          "free_hold_days": 7,
+          "sale_service_fee": 0.0,
           "sell_status": "暂停赎回",
           "buy_min": 10.0,
-          "sale_service_fee": 0.0,
-          "chg_since_inception": 69.9,
+          "free_hold_days": 7,
           "max_sell_rate": 1.5
         },
         {
@@ -1496,6 +1496,7 @@
           "chg_6m": 7.5,
           "chg_ytd": 5.59,
           "chg_1y": 18.91,
+          "chg_since_inception": 68.12,
           "scale": 0.649355,
           "scale_raw": "6493.55万",
           "established": "2022-11-02",
@@ -1525,11 +1526,10 @@
           "custody_fee": 0.15,
           "fee": "",
           "first_buy_rate": 0.0,
-          "free_hold_days": 7,
+          "sale_service_fee": 0.3,
           "sell_status": "暂停赎回",
           "buy_min": 10.0,
-          "sale_service_fee": 0.3,
-          "chg_since_inception": 68.12,
+          "free_hold_days": 7,
           "max_sell_rate": 1.5
         }
       ],

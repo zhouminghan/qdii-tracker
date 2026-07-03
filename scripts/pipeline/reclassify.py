@@ -8,7 +8,7 @@ import time
 
 from timezone_utils import beijing_now_iso
 from core.constants import CATEGORIES, DATA_DIR, HOLDINGS_DIR
-from core.utils import read_json, write_json
+from core.utils import read_json, write_json, normalize_share_keys, normalize_holdings_keys
 from core.config_loader import get_config, save_config
 from sources.akshare_source import fetch_holdings
 
@@ -81,6 +81,7 @@ def fetch_holdings_for_code(code: str) -> bool:
 
     result = fetch_holdings(code)
     if result and "error" not in result:
+        normalize_holdings_keys(result)
         write_json(holdings_dir / f"{code}.json", result)
         top3 = result["holdings"][:3] if result["holdings"] else []
         top_str = " | ".join(f"{h['stock_name']} {h['weight']}%" for h in top3)
@@ -163,6 +164,8 @@ def main():
     update_total_scale(to_data)
     bump_generated_at_local(to_data, now)
 
+    normalize_share_keys(from_data)
+    normalize_share_keys(to_data)
     write_json(from_fp, from_data)
     write_json(to_fp, to_data)
     print(f"✅ {display_name} 已从 {from_cat} 移到 {to_cat}")
