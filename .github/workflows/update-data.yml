@@ -29,9 +29,11 @@ name: 🔄 更新基金数据
           - '增量更新（快速·净值+申购）'
           - '完整流水线（慢·含扫描+持仓）'
 
-# 授权：contents（commit/push），Pages 部署由 deploy-pages.yml（push web/** 触发）负责
+# 授权：contents（commit/push）+ actions（触发 deploy-pages.yml）
+# GITHUB_TOKEN 的 push 不会触发其他 workflow，需用 gh workflow run 显式调度
 permissions:
   contents: write
+  actions: write
 
 jobs:
   update:
@@ -128,5 +130,7 @@ jobs:
             fi
             git pull --rebase origin main
             git push
-            echo "✅ 数据已推送，Pages 部署由 deploy-pages.yml 自动完成"
+            echo "✅ 数据已推送，触发 deploy-pages.yml"
+            # GITHUB_TOKEN push 不会自动触发其他 workflow，需显式调度
+            gh workflow run deploy-pages.yml --ref main
           fi

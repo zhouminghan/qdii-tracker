@@ -3,12 +3,12 @@ name: 🌐 Deploy GitHub Pages
 # ─────────────────────────────────────────────────────────
 # 把 web/ 目录作为静态站点发布到 GitHub Pages
 # 触发时机：
+#   · update-data.yml push 后通过 gh workflow run 触发
 #   · push 到 main 且 web/ 有变动（人工/本地提交）
 #   · 手动触发
 #
-# ⚠️ 数据更新的部署已移至 update-data.yml（同一 job 原子完成），
-#    本 workflow 仅作为人工/本地提交的兜底部署，不再依赖 workflow_run 串联。
-#    原因：workflow_run 事件不稳定，曾导致"仓库已更新、Pages 仍停在旧数据"反复出现。
+# 注：GITHUB_TOKEN push 不会自动触发其他 workflow，
+#     update-data.yml 用 gh workflow run --ref main 显式调度本文件。
 # ─────────────────────────────────────────────────────────
 on:
   push:

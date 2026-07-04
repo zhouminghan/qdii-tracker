@@ -6,6 +6,17 @@
   <meta name="color-scheme" content="light dark" />
   <title>US Fund Tracker · 美股基金看板</title>
   <meta name="description" content="QDII/ETF 美股基金实时净值看板，追踪标普500、纳斯达克100等跨境基金。" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "US Fund Tracker · 美股基金看板",
+    "url": "https://zhouminghan.github.io/qdii-tracker/",
+    "description": "美股 QDII 基金追踪看板，纯静态部署，自动更新。",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web"
+  }
+  </script>
   <meta property="og:title" content="US Fund Tracker · 美股基金看板" />
   <meta property="og:description" content="QDII/ETF 美股基金实时净值看板。" />
   <meta property="og:type" content="website" />
@@ -13,6 +24,9 @@
   <meta property="og:url" content="https://zhouminghan.github.io/qdii-tracker/" />
   <meta name="twitter:card" content="summary" />
   <link rel="canonical" href="https://zhouminghan.github.io/qdii-tracker/" />
+  <meta property="og:image" content="https://zhouminghan.github.io/qdii-tracker/og-image.png" />
+  <link rel="dns-prefetch" href="//push2.eastmoney.com" />
+  <link rel="dns-prefetch" href="//push2his.eastmoney.com" />
   <link rel="icon" href="data:,">
   <!-- 防闪烁：在首屏渲染前读取 sessionStorage / 系统偏好，立即应用 dark class（必须在 Tailwind CDN 之前） -->
   <script>(function(){try{var t=sessionStorage.getItem('qdii-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}})();</script>
