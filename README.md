@@ -8,23 +8,19 @@
 
 ![US Fund Tracker](https://img.shields.io/badge/status-running-success) ![Data](https://img.shields.io/badge/data-static-blue) ![Deploy](https://img.shields.io/badge/deploy-GitHub%20Pages-black) ![License](https://img.shields.io/badge/license-MIT-green)
 
-> 🚀 **想快速用起来？** 直接跳到 [👉 部署方式](#-部署方式)：GitHub Pages 零服务器、零成本、自动更新。
+> 🛠 **想自己部署一套？** 跳到末尾 [👉 部署方式](#-部署方式)：GitHub Pages 零服务器、零成本、自动更新。
 
 ---
 
 ## ✨ 核心功能
 
-- **2 大 Tab**：🏦 场外基金 / 📈 场内 ETF
-- **场外 5 分组**（Chips 筛选）：标普500 / 纳指100 / 美股主动（精选 21 只白名单）/ 全球指数（日经225等）/ 全球其他 QDII
-- **场内 ETF 3 分组**（Chips 筛选）：标普500 / 纳指100 / 全球·其他 ETF（含日经225）
-- **📈 历史净值走势图**：每只基金可弹窗查看完整历史，支持 9 档区间（1月/3月/6月/今年来/1年/2年/5年/10年/全部）
-- **A/C/D/E/F/H/I 份额对比**：同一只基金不同份额的费率结构一目了然，含综合费率 tooltip
-- **列头排序**：规模 / 净值（按当日涨跌） / 近1月 / 今年来 / 近1年 / 成立来 / 申购状态 都可点击切换升降序
-- **申购状态/日限额**：每只基金的限购金额、暂停状态一目了然
-- **分组日限额汇总**：被动分组（标普500 / 纳指100 / 全球指数）横幅动态显示当前每日可购买总额 + 开放申购只数
-- **费率 Tooltip**：A 类显示综合费率（管理费+托管费），C 类额外显示销售服务费
-- **纯静态首屏**：仅读取本地 JSON，按需加载实时数据（走势图/指标卡/ETF 溢价率/场外实时净值）；展示规模/净值/日涨跌/近1月/YTD/近1年/成立来/基金经理/日限额/买卖费率
-- **场外实时净值 + 智能限频**：15:00 后自动拉最新净值 overlay（lsjz 主选 + pingzhongdata 兜底）至次日 06:00，5 档分时调度，拉到新净值后 settled 自动停止，连续失败退避
+- **双 Tab · 8 分组**：场外基金（标普500 / 纳指100 / 美股主动 / 全球指数 / 全球其他）+ 场内 ETF（标普500 / 纳指100 / 全球其他），Chips 一键切换
+- **📈 历史走势图**：弹窗查看，9 档区间（1月 ~ 全部）
+- **份额对比 + 费率**：A/C/D/E/F/H/I 份额并列，综合费率 tooltip（管理费+托管费+销售服务费）
+- **列头排序**：规模 / 净值涨跌 / 近1月 / 今年来 / 近1年 / 成立来 / 申购状态
+- **申购一目了然**：暂停状态 / 日限额 / 被动分组日限额汇总横幅
+- **纯静态首屏**：本地 JSON 零外部请求；按需加载实时净值 / 走势图 / ETF 溢价率
+- **场外实时净值**：15:00~次日 06:00 自动 overlay，5 档分时调度，settled 自动停止
 
 ---
 
@@ -86,56 +82,6 @@ qdii-tracker/
 
 ---
 
-## 💻 本地开发
-
-```bash
-# 1. 装依赖
-cd scripts
-pip install -r requirements.txt
-
-# 2. 跑一次完整流水线
-python3 fundctl.py sync
-
-# 3. 启动前端
-cd ../web
-python3 -m http.server 8765
-# 浏览器打开 http://localhost:8765/
-
-# 日常增量更新（交易日 22:00 QDII 净值披露后）
-cd scripts && python3 fundctl.py refresh
-
-# 一致性校验
-cd scripts && python3 fundctl.py check
-```
-
----
-
-## 🚀 部署方式
-
-**GitHub Pages + Actions 自动更新**：免费 / 零服务器 / 自动定时刷数据。
-
-### 📋 首次配置步骤
-
-1. **创建 Public 仓库** `qdii-tracker`
-2. **推送代码** `git push -u origin main`
-3. **Settings → Pages → Source** 选 `GitHub Actions`
-4. **Settings → Actions → General → Workflow permissions** 选 `Read and write permissions`
-5. **Actions → Update Fund Data → Run workflow** 手动跑一次验证
-6. 访问 `https://{username}.github.io/qdii-tracker/`
-
-### 日常使用
-
-- 打开书签看网页即可
-- 想立刻更新：Actions → Run workflow → 选「增量更新（快速·净值+申购）」→ 等几分钟刷新
-
----
-
-## 🔍 分类规则
-
-`pipeline.scan` 分类优先级（`classify_fund`）：force_exclude → force_include → 非 QDII → EXCLUDE_KEYWORDS → 标普/纳指/美股关键词（命中后场内走 `is_etf` 分流，场外归对应被动/主动分组）→ 未命中则 exclude。`global_index` 通过 `force_include` 白名单纳入，`active`（美股主动）通过 `active_whitelist` 关键词从泛美股候选中筛入。详见 [`AGENT.md`](./AGENT.md)。
-
----
-
 ## ➕ 新增基金
 
 **方式 A：统一入口新增（推荐）**
@@ -159,6 +105,12 @@ python3 fundctl.py add --code 002891 --to active --keyword "华夏移动互联"
 
 ---
 
+## 🔍 分类规则
+
+`pipeline.scan` 分类优先级（`classify_fund`）：force_exclude → force_include → 非 QDII → EXCLUDE_KEYWORDS → 标普/纳指/美股关键词（命中后场内走 `is_etf` 分流，场外归对应被动/主动分组）→ 未命中则 exclude。`global_index` 通过 `force_include` 白名单纳入，`active`（美股主动）通过 `active_whitelist` 关键词从泛美股候选中筛入。详见 [`AGENT.md`](./AGENT.md)。
+
+---
+
 ## 🛠 常见问题
 
 **Q: 数据不是今天的？**
@@ -172,6 +124,50 @@ A: 优先用 `scripts/fundctl.py`（`add` / `move`），需要全量重刷时再
 
 **Q: 远端（GitHub Pages）实时净值/指标卡日 K 不显示？**
 A: 东方财富部分接口对 GitHub Pages 等跨站来源限制访问（本地正常但远端失败）。已做双链路兜底（lsjz → pingzhongdata；push2his → push2），仍可能有偶发不可用。本地开发环境不受影响。
+
+---
+
+## 🚀 部署方式
+
+**GitHub Pages + Actions 自动更新**：免费 / 零服务器 / 自动定时刷数据。
+
+### 📋 首次配置步骤
+
+1. **创建 Public 仓库** `qdii-tracker`
+2. **推送代码** `git push -u origin main`
+3. **Settings → Pages → Source** 选 `GitHub Actions`
+4. **Settings → Actions → General → Workflow permissions** 选 `Read and write permissions`
+5. **Actions → Update Fund Data → Run workflow** 手动跑一次验证
+6. 访问 `https://{username}.github.io/qdii-tracker/`
+
+### 日常使用
+
+- 打开书签看网页即可
+- 想立刻更新：Actions → Run workflow → 选「增量更新（快速·净值+申购）」→ 等几分钟刷新
+
+---
+
+## 💻 本地开发
+
+```bash
+# 1. 装依赖
+cd scripts
+pip install -r requirements.txt
+
+# 2. 跑一次完整流水线
+python3 fundctl.py sync
+
+# 3. 启动前端
+cd ../web
+python3 -m http.server 8765
+# 浏览器打开 http://localhost:8765/
+
+# 日常增量更新（交易日 22:00 QDII 净值披露后）
+cd scripts && python3 fundctl.py refresh
+
+# 一致性校验
+cd scripts && python3 fundctl.py check
+```
 
 ---
 

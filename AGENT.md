@@ -1,8 +1,6 @@
 # QDII Tracker
 
-> 美股 QDII 基金追踪看板。仅记录 Claude 无法从代码推断的约束与决策。
-
----
+> 仅记录代码无法推断的约束与决策。
 
 ## Commands
 
@@ -12,23 +10,21 @@ python3 fundctl.py sync      # 完整流水线
 python3 fundctl.py refresh    # 增量更新（fill→refresh）
 python3 fundctl.py add --code 008888 --to active --keyword "某某基金"
 python3 fundctl.py move --keyword "关键词" --from 分类 --to 分类
-python3 fundctl.py check      # 一致性校验（CI 中也会自动跑）
+python3 fundctl.py check      # 一致性校验
 cd ../web && python3 -m http.server 8765
 ```
 
----
-
 ## Critical Rules
 
-1. **scan 后必须接 enrich + fill**，否则覆盖式写入会丢失已有 enriched 数据
-2. **nav_date 永不回退，绝不造日期**：lsjz 失败保留旧值，不用 `datetime.now()` 推算交易日
-3. **不改既有 UI 决策**：A 股红涨绿跌配色、主动基红色警告等——不要「优化」
-4. **不在 `web/` 下创建新文件**（除 `data/*.json`、`js/*.js`、`css/*.css`、`.nojekyll`），不引入构建工具；Tailwind 为预编译产物直接提交到 `web/css/`
-5. **版本戳由 `deploy-pages.yml` 自动注入**，本地开发无需手动 bump；新增 JS 模块写 `?v=placeholder`
-6. **关闭本地服务必须用 PID**，禁 `lsof -ti:PORT | xargs kill`（会误杀同端口其他进程）
-7. **`force_include` 按代码粒度生效，不继承子类**：每只基金的 A/C/美元等子类代码必须逐一加入，否则仍被 `exclude_keywords` 拦截。跨分类挪动基金时注意：(a) 全量子类加 force_include → (b) 跑 scan 后检查源文件残留数据并合并回目标文件 → (c) 补跑 enrich+fill+refresh+codegen；(b) 步骤易遗漏，scan 会覆盖目标文件但不保证清干净源文件
-8. **LOF 基金可能缺 `chg_ytd`**：akshare 累计收益率接口对部分 LOF 返回空，workaround 是取同系列兄弟份额值直接写入（A/C 差异 <1%）
-9. **表头净值日期按当前分组代表日期（众数，并列取更晚）计算，禁止用全 Tab 最大值**：offshore 是混合表（不同分组天然 nav_date 不同），取全 Tab max 会导致切 Chip 时表头日期不随分组变化、与当前分组实际日期脱节。用 `pickGroupHeaderDate`（众数）；`pickTabNavHeaderDate`（max）仅保留兼容。`applyChipFilter` 切组必须重算表头日期并同步 `.nav-date-sub` 文本与行内日期显隐（`syncRowNavDateVisibility`）
-10. **禁止在 `update-data.yml` 中部署 Pages**：数据更新只需 commit/push，Pages 部署由 `deploy-pages.yml`（push `web/**` 事件触发）自动完成。update-data 内重复部署不仅冗余，还导致 concurrency 冲突 + Pages 部署超时。
-11. **数据文件（`web/data/{cat}.json`）不写 `generated_at` / `enriched_at`**：仅 `meta.json` 保留 `generated_at`（前端版本戳 + 陈旧检测依赖它）。各分类数据文件写这些时间戳只制造 diff 噪音、无消费者。`bump_generated_at()` 只更新 meta。
-12. **所有 pipeline 写入 `web/data/{cat}.json` 前必须调用 `normalize_share_keys(data)`，写入 `holdings/{code}.json` 前必须调用 `normalize_holdings_keys(data)`**：key 顺序模板在 `core/constants.py`（`STANDARD_SHARE_KEY_ORDER` / `STANDARD_HOLDINGS_KEY_ORDER`）。缺少调用会导致 key 顺序漂移，造成 diff 噪音。fill.py 还使用 `ThreadPoolExecutor(max_workers=4)` + `BoundedSemaphore` 并行化 API 调用，worker 只做 I/O，主线线程统一 apply 结果 + normalize 写盘。
+1. **scan 后必须接 enrich + fill**，否则覆盖写入丢失已有数据
+2. **禁止在 `update-data.yml` 中部署 Pages**：仅 commit/push + `gh workflow run deploy-pages.yml --ref main`。GITHUB_TOKEN push 不触发其他 workflow（官方防递归），须 `gh workflow run` 显式调度
+3. **数据文件不写时间戳**：仅 `meta.json` 保留 `generated_at`，`bump_generated_at()` 只更新 meta
+4. **写盘前 normalize**：`{cat}.json` → `normalize_share_keys()`；`holdings/{code}.json` → `normalize_holdings_keys()`。模板在 `core/constants.py`。fill.py `ThreadPoolExecutor(max_workers=4)` + `BoundedSemaphore`，worker 仅 I/O，主线 apply + normalize
+5. **nav_date 永不回退、不造日期**：lsjz 失败保留旧值，禁用 `datetime.now()` 推算
+6. **`force_include` 不继承子类**：A/C/美元逐一加入。跨分类挪动：(a) 全量子类加 force_include → (b) scan 后检查源文件残留并合并 → (c) 补跑 enrich+fill+refresh；(b) 易遗漏
+7. **LOF 基金 chg_ytd 兜底**：akshare 对部分 LOF 返回空，取同系列兄弟份额值写入（A/C 差异 <1%）
+8. **表头日期用分组众数，非全 Tab 最大值**：混合表不同分组 nav_date 不同。用 `pickGroupHeaderDate`（众数）；`applyChipFilter` 切组须重算 + 同步 `.nav-date-sub` + 行内日期显隐
+9. **不改既有 UI 决策**：红涨绿跌配色、主动基红色警告——别「优化」
+10. **`web/` 目录纪律**：仅 `data/*.json`、`js/*.js`、`css/*.css`、`.nojekyll`；不引入构建工具；Tailwind 预编译产物直接提交
+11. **版本戳**：`deploy-pages.yml` 自动注入，本地无需手动 bump；新增 JS 模块写 `?v=placeholder`
+12. **关服务用 PID**：禁 `lsof -ti:PORT | xargs kill`

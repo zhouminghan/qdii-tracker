@@ -9,8 +9,7 @@ from datetime import datetime
 import requests
 
 from core.constants import HEADERS_EASTMONEY, HEADERS_FUND
-from core.utils import to_float
-from timezone_utils import BEIJING_TZ
+from core.utils import to_float, BEIJING_TZ
 
 
 def fetch_lsjz(code: str):

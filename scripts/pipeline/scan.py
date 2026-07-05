@@ -6,9 +6,8 @@ import json
 import re
 
 import akshare as ak
-from timezone_utils import beijing_now_iso
 from core.constants import CATEGORIES, DATA_DIR, CATEGORY_LABELS
-from core.utils import normalize_share_keys
+from core.utils import normalize_share_keys, beijing_now_iso
 from core.config_loader import get_config
 from sources.akshare_source import fetch_fund_names
 

@@ -111,7 +111,11 @@ function writeBack(state, dataMap, bjParts) {
         // 实时值优先于静态值
         if (isFinite(live.price)) {
           sh.etf_price = live.price;
-          sh._live_etf_date = bjParts.date; // 实时价格对应的北京时间日期
+          // 仅在交易日（周一~五）更新实时日期，周末保留后端静态 nav_date
+          // 用 bjParts.weekday 而非 new Date(date).getDay() — 避免 UTC-8 等时区误判
+          if (bjParts.weekday >= 1 && bjParts.weekday <= 5) {
+            sh._live_etf_date = bjParts.date;
+          }
         }
         if (isFinite(live.changePct)) sh.etf_change_pct = live.changePct;
         if (live.nav != null) sh.etf_iopv = live.nav;        // 单位净值（IOPV 近似）

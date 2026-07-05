@@ -86,7 +86,7 @@ def fetch_ytd(code: str):
     except ImportError:
         return None
     try:
-        from timezone_utils import beijing_year_start
+        from core.utils import beijing_year_start
         df = ak.fund_open_fund_info_em(symbol=code, indicator="累计收益率走势")
         if df is None or len(df) == 0:
             return None
@@ -138,7 +138,7 @@ def fetch_holdings(code: str, year: str = None):
     抓取单只基金的持仓数据（原 fetch_holdings.py）。
     返回 dict 或 None。
     """
-    from timezone_utils import beijing_now_iso, beijing_year
+    from core.utils import beijing_now_iso, beijing_year
     if year is None:
         year = str(beijing_year())
     try:

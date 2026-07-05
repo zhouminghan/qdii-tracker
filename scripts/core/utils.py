@@ -1,13 +1,43 @@
 """
-共享工具函数：安全转浮点、JSON 读写、generated_at bump、规模解析。
+共享工具函数：安全转浮点、JSON 读写、北京时间、generated_at bump、规模解析、key 归一化。
 所有脚本统一从此模块导入，消除重复实现。
 """
 import json
 import re
 from pathlib import Path
+from datetime import datetime
+
+import pytz
 
 from core.constants import DATA_DIR, STANDARD_SHARE_KEY_ORDER, STANDARD_HOLDINGS_KEY_ORDER, STANDARD_HOLDING_ITEM_KEY_ORDER
-from timezone_utils import beijing_now_iso
+
+# ==================== 北京时间 ====================
+BEIJING_TZ = pytz.timezone('Asia/Shanghai')
+
+
+def beijing_now() -> datetime:
+    """获取当前北京时间"""
+    return datetime.now(BEIJING_TZ)
+
+
+def beijing_now_iso() -> str:
+    """获取当前北京时间的 ISO 格式字符串"""
+    return beijing_now().isoformat()
+
+
+def beijing_year() -> int:
+    """获取当前北京时间年份"""
+    return beijing_now().year
+
+
+def beijing_year_start() -> datetime:
+    """
+    获取今年1月1日北京时间 00:00:00。
+    返回 naive datetime（无时区标记），与 pd.to_datetime 默认行为一致，
+    避免 aware/naive 比较报错。
+    """
+    now = beijing_now()
+    return now.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0, tzinfo=None)
 
 
 def to_float(v):

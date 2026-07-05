@@ -62,8 +62,7 @@ function getOffshoreDisplayValues(def) {
 }
 
 function getSeriesDisplayNavDate(series, isEtf = false) {
-  if (!series || !Array.isArray(series.shares) || !series.shares.length) return '';
-  const def = series.shares.find(s => s.code === series.default_share_code) || series.shares[0];
+  const def = getDefaultShare(series);
   if (!def) return '';
   return isEtf ? (def._live_etf_date || def.nav_date || '') : (getOffshoreDisplayValues(def).navDate || '');
 }
@@ -127,10 +126,15 @@ function renderRowNavDateHtml(rowNavDate, headerDate, rowIsLive = false) {
   return `<div class="row-nav-date text-[10px] ${colorClass}${hiddenClass}" data-nav-date="${rowNavDate}" data-is-live="${rowIsLive ? '1' : '0'}">${fmtMD(rowNavDate)}</div>`;
 }
 
+function getDefaultShare(series) {
+  if (!series || !Array.isArray(series.shares) || !series.shares.length) return null;
+  return series.shares.find(s => s.code === series.default_share_code) || series.shares[0] || null;
+}
+
 // 取 series 上某排序字段的值（series_scale 在 series 本身，其他都是 default share 上的）
 function getSortValue(series, key) {
   if (key === 'series_scale') return series.series_scale ?? null;
-  const def = series.shares.find(s => s.code === series.default_share_code) || series.shares[0];
+  const def = getDefaultShare(series);
   if (!def) return null;
   // 净值列点击排序时，排的是「该列对应的当日涨跌幅」
   //   · 场内 ETF —— etf_change_pct（腾讯实时涨跌）
@@ -305,13 +309,18 @@ function parseSellRuleLowerDays(cond) {
 
 // ==================== 表格单元 / 状态徽章 ====================
 
+// 涨跌工具（消除 6+ 处重复三元）
+function chgCls(v) { return v == null ? '' : v > 0 ? 'up' : v < 0 ? 'down' : ''; }
+function chgSign(v) { return v == null ? '--' : (v > 0 ? '+' : '') + v.toFixed(2) + '%'; }
+function chgArrow(v) { return v == null ? '' : v > 0 ? '↑' : v < 0 ? '↓' : ''; }
+
 function changeCell(v, small = false) {
   if (v === null || v === undefined) {
     return `<td class="${small ? 'py-2' : 'py-3 px-3'} text-right text-stone-400 num">--</td>`;
   }
-  const cls = v > 0 ? 'up' : v < 0 ? 'down' : '';
+  const cls = chgCls(v);
   const sign = v > 0 ? '+' : '';
-  const arrow = v > 0 ? '↑' : v < 0 ? '↓' : '';
+  const arrow = chgArrow(v);
   return `<td class="${small ? 'py-2' : 'py-3 px-3'} text-right num ${cls}">${arrow}${sign}${v.toFixed(2)}%</td>`;
 }
 

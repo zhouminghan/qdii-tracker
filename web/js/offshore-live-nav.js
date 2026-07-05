@@ -55,8 +55,7 @@ function clearLiveOverlay(share) {
 
 function getDefaultShare(series) {
   if (!series || !Array.isArray(series.shares) || !series.shares.length) return null;
-  const defCode = series.default_share_code;
-  return series.shares.find(s => s.code === defCode) || series.shares[0] || null;
+  return series.shares.find(s => s.code === series.default_share_code) || series.shares[0] || null;
 }
 
 function collectOffshoreDefaultShares(state) {

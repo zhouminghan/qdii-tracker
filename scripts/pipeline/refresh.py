@@ -5,9 +5,8 @@
 import json
 import time
 
-from timezone_utils import beijing_now_iso
 from core.constants import CATEGORIES, DATA_DIR
-from core.utils import read_json, write_json, normalize_share_keys
+from core.utils import read_json, write_json, normalize_share_keys, beijing_now_iso
 from sources.akshare_source import fetch_rank_data, fetch_purchase_data, fetch_etf_data
 from sources.eastmoney_source import fetch_lsjz
 

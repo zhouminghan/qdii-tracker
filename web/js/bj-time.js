@@ -5,7 +5,8 @@
 
 /**
  * 获取当前北京时间各分量。
- * @returns {{ date: string, hh: number, mm: number, minutes: number, ts: number }}
+ * @returns {{ date: string, hh: number, mm: number, minutes: number, ts: number, weekday: number }}
+ *   weekday: 0=周日 .. 6=周六（北京时间）
  */
 export function bjNowParts() {
   const fmt = new Intl.DateTimeFormat('en-CA', {
@@ -15,6 +16,7 @@ export function bjNowParts() {
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
+    weekday: 'short',
     hourCycle: 'h23',
   });
   const parts = fmt.formatToParts(new Date());
@@ -24,11 +26,14 @@ export function bjNowParts() {
   const day = get('day');
   const hh = parseInt(get('hour'), 10) || 0;
   const mm = parseInt(get('minute'), 10) || 0;
+  const weekdayName = get('weekday'); // 'Sun'..'Sat'
+  const weekdayMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
   return {
     date: `${year}-${month}-${day}`,
     hh,
     mm,
     minutes: hh * 60 + mm,
     ts: Date.now(),
+    weekday: weekdayMap[weekdayName] ?? 0,
   };
 }
