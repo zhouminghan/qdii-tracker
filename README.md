@@ -4,9 +4,9 @@
 
 🌐 **在线看板**：<https://zhouminghan.github.io/qdii-tracker/>
 📦 **源码仓库**：<https://github.com/zhouminghan/qdii-tracker>
-⚙️ **自动更新**：[![Update Fund Data](https://github.com/zhouminghan/qdii-tracker/actions/workflows/update-data.yml/badge.svg)](https://github.com/zhouminghan/qdii-tracker/actions/workflows/update-data.yml)
 
-![US Fund Tracker](https://img.shields.io/badge/status-running-success) ![Data](https://img.shields.io/badge/data-static-blue) ![Deploy](https://img.shields.io/badge/deploy-GitHub%20Pages-black) ![License](https://img.shields.io/badge/license-MIT-green)
+[![Update](https://github.com/zhouminghan/qdii-tracker/actions/workflows/update-data.yml/badge.svg)](https://github.com/zhouminghan/qdii-tracker/actions/workflows/update-data.yml)
+[![License](https://img.shields.io/github/license/zhouminghan/qdii-tracker?color=orange)](https://github.com/zhouminghan/qdii-tracker/blob/main/LICENSE)
 
 > 🛠 **想自己部署一套？** 跳到末尾 [👉 部署方式](#-部署方式)：GitHub Pages 零服务器、零成本、自动更新。
 
