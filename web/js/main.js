@@ -409,6 +409,7 @@
     }
 
     function renderShareBtn(tab, groups) {
+      if (tab === 'etf') return;  // 分享按钮仅场外基金显示
       var bar = document.getElementById(tab + '-chips');
       if (!bar) return;
       if (document.getElementById('ss-btn-' + tab)) return;

@@ -11,23 +11,23 @@
     offshore: [
       { key: 'name',              label: '基金名称', locked: true },
       { key: 'code',              label: '代码' },
-      { key: 'buy_status',        label: '申购状态', sortable: true },
-      { key: 'chg_1m',            label: '近1月' },
-      { key: 'chg_ytd',           label: '今年来' },
-      { key: 'chg_1y',            label: '近1年' },
-      { key: 'chg_since_inception', label: '成立来' },
-      { key: 'total_fee',         label: '综合费率' },
+      { key: 'buy_status',        label: '申购', sortable: true },
+      { key: 'nav',               label: '净值', sortable: true },
+      { key: 'chg_1m',            label: '近1月', sortable: true },
+      { key: 'chg_ytd',           label: '今年来', sortable: true },
+      { key: 'chg_1y',            label: '近1年', sortable: true },
+      { key: 'chg_since_inception', label: '成立来', sortable: true },
     ],
     etf: [
       { key: 'name',         label: '基金名称', locked: true },
       { key: 'code',         label: '代码' },
-      { key: 'buy_status',   label: '申购状态', sortable: true },
-      { key: 'etf_price',    label: '最新价' },
-      { key: 'etf_premium',  label: '溢价率' },
-      { key: 'chg_1m',       label: '近1月' },
-      { key: 'chg_ytd',      label: '今年来' },
-      { key: 'chg_1y',       label: '近1年' },
-      { key: 'total_fee',    label: '综合费率' },
+      { key: 'buy_status',   label: '申购', sortable: true },
+      { key: 'etf_price',    label: '最新价', sortable: true },
+      { key: 'etf_premium',  label: '溢价率', sortable: true },
+      { key: 'nav',          label: '净值', sortable: true },
+      { key: 'chg_1m',       label: '近1月', sortable: true },
+      { key: 'chg_ytd',      label: '今年来', sortable: true },
+      { key: 'chg_1y',       label: '近1年', sortable: true },
     ],
   };
 
@@ -121,13 +121,12 @@
     var html = '';
     for (var i = 0; i < cols.length; i++) {
       var c = cols[i];
+      if (c.locked) continue; // 必选列不显示开关
       var checked = ssState.activeCols.indexOf(c.key) !== -1;
-      var disabled = c.locked ? ' disabled' : '';
-      var lockedMark = c.locked ? ' <span style="color:#a8a29e;font-size:9px">·必选</span>' : '';
       html += '<label class="ss-col-item' + (checked ? ' checked' : '') + '">' +
         '<input type="checkbox" data-key="' + c.key + '"' +
-        (checked ? ' checked' : '') + disabled + '>' +
-        '<span>' + c.label + lockedMark + '</span>' +
+        (checked ? ' checked' : '') + '>' +
+        '<span>' + c.label + '</span>' +
         '</label>';
     }
     document.getElementById('ss-col-list').innerHTML = html;
@@ -207,7 +206,8 @@
   }
 
   // ==================== 模板渲染 ====================
-  function renderMktHeader() {
+  // ==================== 内层1：市场指标块（日期 + 4个卡片）====================
+  function renderMktBlock() {
     var mkt = window.__mktData || {};
     var symbols = [
       { key: 'usINX',    label: '标普500',  digits: 2 },
@@ -239,13 +239,13 @@
     var days = ['日','一','二','三','四','五','六'];
     var dateStr = now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日 周' + days[now.getDay()];
 
-    return '<div class="ss-date-header">' + dateStr + '</div>' +
-      '<div class="ss-mkt-header">' +
-      symbols.map(card).join('') +
+    return '<div class="ss-inner ss-mkt-block">' +
+      '<div class="ss-date-header">' + dateStr + '</div>' +
+      '<div class="ss-mkt-header">' + symbols.map(card).join('') + '</div>' +
       '</div>';
   }
 
-  function renderFundTable(label, shares) {
+  function renderFundTable(label, shares, limitLabel, navHeaderDate) {
     var cols = SCREENSHOT_COLS[ssState.tab];
     var selected = cols.filter(function (c) { return ssState.activeCols.indexOf(c.key) !== -1; });
     sortShares(shares);
@@ -259,18 +259,23 @@
       var isCur = sortable && ssState.sortKey === c.key;
       var arrow = isCur ? (ssState.sortDir === 'desc' ? ' ↓' : ' ↑') : '';
       var curCls = isCur ? ' ss-th-active' : '';
-      // 列宽：基金名称优先，申购状态收缩
+      // 表头对齐跟随数据列：数字列右对齐，状态列居中，其他左对齐
+      var alignCls = '';
+      if (c.key === 'buy_status') alignCls = ' ss-th-status';
+      else if (isNumericCol(c.key)) alignCls = ' ss-th-num';
       var colW = '';
-      if (selected.length === 2) {
-        colW = c.key === 'name' ? 'style="width:65%"' : 'style="width:35%"';
-      } else if (selected.length === 3) {
+      if (selected.length <= 3) {
         colW = c.key === 'name' ? 'style="width:50%"' : (c.key === 'buy_status' ? 'style="width:25%"' : 'style="width:25%"');
       }
+      var inner = c.label + '<span class="ss-th-arrow">' + arrow + '</span>';
+      // 净值列：表头加日期副标题
+      if (c.key === 'nav' && navHeaderDate) {
+        inner = c.label + '<div class="ss-th-nav-date">' + navHeaderDate.slice(5) + '</div>' + '<span class="ss-th-arrow">' + arrow + '</span>';
+      }
       if (sortable) {
-        thead += '<th class="ss-th-sort' + curCls + '" data-sort-key="' + c.key + '" ' + colW + '>' +
-          c.label + '<span class="ss-th-arrow">' + arrow + '</span></th>';
+        thead += '<th class="ss-th-sort' + curCls + alignCls + '" data-sort-key="' + c.key + '" ' + colW + '>' + inner + '</th>';
       } else {
-        thead += '<th ' + colW + '>' + c.label + '</th>';
+        thead += '<th class="' + alignCls.trim() + '" ' + colW + '>' + inner + '</th>';
       }
     }
     thead += '</tr>';
@@ -290,13 +295,11 @@
       tbody += '</tr>';
     }
 
-    // 双表结构：表头固定 + 表体滚动
+    // 单表结构：thead+tbody 同表，列宽自然对齐
     return '<div class="ss-section">' +
-      '<div class="ss-section-title">' + label + ' · ' + shares.length + ' 只' + (arguments[2] ? arguments[2] : '') + '</div>' +
-      '<div class="ss-tbl-wrap">' +
-      '<table class="ss-tbl-head"><thead>' + thead + '</thead></table>' +
-      '<div class="ss-tbl-body"><table><tbody>' + tbody + '</tbody></table></div>' +
-      '</div></div>';
+      '<div class="ss-section-title">' + label + ' · ' + shares.length + ' 只' + (limitLabel || '') + '</div>' +
+      '<div class="ss-tbl-wrap"><table class="ss-tbl"><thead>' + thead + '</thead><tbody>' + tbody + '</tbody></table></div>' +
+      '</div>';
   }
 
   function renderTemplate() {
@@ -310,15 +313,38 @@
       }
       return total;
     }
+    // 净值列表头日期：取众数（多数份额同一净值日）
+    function calcNavHeaderDate(shares) {
+      var counts = {};
+      for (var i = 0; i < shares.length; i++) {
+        var d = shares[i].nav_date;
+        if (!d) continue;
+        counts[d] = (counts[d] || 0) + 1;
+      }
+      var best = '', bestN = 0;
+      for (var d in counts) {
+        if (counts[d] > bestN || (counts[d] === bestN && d > best)) { best = d; bestN = counts[d]; }
+      }
+      return best;
+    }
+
     var nasdaqLimit = calcLimit(ssState.nasdaq);
     var sp500Limit  = calcLimit(ssState.sp500);
+    var nasdaqNavDate = calcNavHeaderDate(ssState.nasdaq);
+    var sp500NavDate  = calcNavHeaderDate(ssState.sp500);
     function limitLabel(v) { return v > 0 ? '<span class="ss-limit-inline">当日最多 ¥' + formatLimit(v) + '</span>' : ''; }
 
-    // 始终手机格式
-    var html = '<div class="ss-phone-wrap' + extraCls + '">' + renderMktHeader();
-    if (f === 'all' || f === 'nasdaq') html += renderFundTable('纳斯达克100', ssState.nasdaq, limitLabel(nasdaqLimit));
-    if (f === 'all' || f === 'sp500')  html += renderFundTable('标普500', ssState.sp500, limitLabel(sp500Limit));
-    html += '</div>';
+    // 收集所有分类 section（不包外层，留给内层2 统一包）
+    var sectionsHtml = '';
+    if (f === 'all' || f === 'nasdaq') sectionsHtml += renderFundTable('纳斯达克100', ssState.nasdaq, limitLabel(nasdaqLimit), nasdaqNavDate);
+    if (f === 'all' || f === 'sp500')  sectionsHtml += renderFundTable('标普500', ssState.sp500, limitLabel(sp500Limit), sp500NavDate);
+
+    // 外层大框（.ss-phone-wrap，唯一带边框） + 内层1（市场指标） + 内层2（所有表格）
+    var html =
+      '<div class="ss-phone-wrap' + extraCls + '">' +
+        renderMktBlock() +
+        '<div class="ss-inner ss-table-block">' + sectionsHtml + '</div>' +
+      '</div>';
 
     document.getElementById('ss-preview').innerHTML = html;
 
@@ -327,6 +353,18 @@
       th.addEventListener('click', function () {
         onThSortClick(th.dataset.sortKey);
       });
+    });
+
+    // 弹窗宽度跟随 wrap 同步（用 scrollWidth 拿内容真实宽度，fit-content 模式下更准）
+    requestAnimationFrame(function () {
+      var modal = document.querySelector('.ss-modal-dialog');
+      var wrap = document.querySelector('#ss-preview .ss-phone-wrap');
+      if (modal && wrap) {
+        // modal = wrap 宽度，但不超过 viewport 宽度（避免弹窗比视口还宽）
+        var maxW = window.innerWidth - 32; // 16px*2 padding of #ss-modal
+        var target = Math.min(Math.max(wrap.scrollWidth + 4, 320), maxW);
+        modal.style.width = target + 'px';
+      }
     });
   }
 
@@ -350,8 +388,17 @@
           return '¥' + formatLimit(sh.daily_limit);
         }
         return '—';
-      case 'nav':
-        return sh.nav != null ? sh.nav.toFixed(4) : '—';
+      case 'nav': {
+        // 净值列：price + dailyChange（日期在表头）
+        var nv = sh.nav != null ? sh.nav.toFixed(4) : null;
+        if (nv == null) return '<div class="ss-muted">—</div>';
+        var chg = sh.daily_change;
+        var chgStr = chg != null
+          ? '<span class="' + chgCls(chg) + '">' + chgArrow(chg) + (chg > 0 ? '+' : '') + chg.toFixed(2) + '%</span>'
+          : '<span class="ss-muted">--</span>';
+        return '<div class="ss-nav-price">' + nv + '</div>' +
+          '<div class="ss-nav-chg">' + chgStr + '</div>';
+      }
       case 'etf_price':
         return sh.etf_price != null ? sh.etf_price.toFixed(3) : '—';
       case 'etf_premium':
