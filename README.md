@@ -15,9 +15,11 @@
 ## ✨ 核心功能
 
 - **双 Tab · 8 分组**：场外基金（标普500 / 纳指100 / 美股主动 / 全球指数 / 全球其他）+ 场内 ETF（标普500 / 纳指100 / 全球其他），Chips 一键切换
+- **📸 截图分享**：可定制导出卡片，7 种风格 × 3 种布局 × 列勾选 × 排序，一键下载 PNG
 - **📈 历史走势图**：弹窗查看，9 档区间（1月 ~ 全部）
 - **份额对比 + 费率**：A/C/D/E/F/H/I 份额并列，综合费率 tooltip（管理费+托管费+销售服务费）
 - **列头排序**：规模 / 净值涨跌 / 近1月 / 今年来 / 近1年 / 成立来 / 申购状态
+- **申购历史追踪**：hover 申购列 → 最近 3 次变更 tooltip；行底色标识（暂停/限额/开放）
 - **申购一目了然**：暂停状态 / 日限额 / 被动分组日限额汇总横幅
 - **纯静态首屏**：本地 JSON 零外部请求；按需加载实时净值 / 走势图 / ETF 溢价率
 - **场外实时净值**：15:00~次日 06:00 自动 overlay，5 档分时调度，settled 自动停止
@@ -53,7 +55,7 @@ qdii-tracker/
 │   └── pipeline/             # scan → enrich → fill → refresh → holdings
 ├── web/                      # 前端（纯静态）
 │   ├── index.html            # 主入口
-│   ├── js/                   # 抽离模块（main/config/utils 等 10 个）
+│   ├── js/                   # 抽离模块（main/config/utils/screenshot 等 11 个）
 │   └── data/                 # 消费的 JSON（sp500/nasdaq_passive/active/global_index/global_other/etf/meta/holdings）
 └── .github/workflows/        # update-data.yml + deploy-pages.yml
 ```

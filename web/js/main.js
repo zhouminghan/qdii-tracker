@@ -401,8 +401,33 @@
         row.addEventListener('click', () => toggleSeries(row));
       });
 
-      // 渲染分组筛选 Chips
+      // 申购 tooltip 绑定（仅场外）
+      if (!isEtf) initBuyTooltips(container);
+
+      // 渲染分组筛选 Chips + 分享按钮
       renderChips(tab, groups);
+      renderShareBtn(tab, groups);
+    }
+
+    function renderShareBtn(tab, groups) {
+      const bar = document.getElementById(`${tab}-chips`);
+      if (!bar) return;
+      if (document.getElementById(`ss-btn-${tab}`)) return;
+      const btn = document.createElement('button');
+      btn.id = `ss-btn-${tab}`;
+      btn.className = 'chip';
+      btn.style.cssText = 'background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;';
+      btn.textContent = '📤 分享';
+      btn.onclick = function () {
+        var allSeries = [];
+        for (var i = 0; i < groups.length; i++) {
+          for (var j = 0; j < groups[i].items.length; j++) {
+            allSeries.push(groups[i].items[j]);
+          }
+        }
+        window.openScreenshotModal(tab, allSeries, groups);
+      };
+      bar.appendChild(btn);
     }
 
     // ==================== 通用分组筛选 Chips ====================
@@ -560,6 +585,15 @@
       const defCode = series.default_share_code;
       const def = series.shares.find(s => s.code === defCode) || series.shares[0];
 
+      // 申购状态行底色
+      const rowCls = (() => {
+        const st = def.buy_status || '';
+        if (st.includes('暂停')) return 'row-paused';
+        if (st.includes('限')) return 'row-limit';
+        if (st.includes('开放')) return 'row-open';
+        return '';
+      })();
+
       const seriesScale = series.series_scale
         ? (series.series_scale >= 100
             ? `${series.series_scale.toFixed(0)}亿`
@@ -602,7 +636,7 @@
       const expandColspan = isEtf ? 10 : 13;
 
       return `
-        <tr class="series-row border-b border-stone-100 dark:border-stone-700/50 ${isEtf ? '' : 'hover:bg-stone-50 dark:hover:bg-stone-700/30 cursor-pointer'} transition" data-series-id="${series.series_id}" data-is-etf="${isEtf ? '1' : '0'}"${grpAttr}>
+        <tr class="series-row border-b border-stone-100 dark:border-stone-700/50 ${rowCls} ${isEtf ? '' : 'hover:bg-stone-50 dark:hover:bg-stone-700/30 cursor-pointer'} transition" data-series-id="${series.series_id}" data-is-etf="${isEtf ? '1' : '0'}"${grpAttr}>
           <td class="py-3 px-3 text-stone-400 dark:text-stone-500">
             ${isEtf ? '' : `<svg class="arrow w-4 h-4 inline transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -854,22 +888,23 @@
 
     function statusBadge(sh) {
       const st = sh.buy_status || '';
-  if (!st) return '<span class="text-stone-400 dark:text-stone-500 text-xs">—</span>';
-  // 美元份额：支付宝等代销平台不可买，申购数据无实际参考意义，显示 —
+      const hist = (sh.buy_status_history || []).slice(-3).reverse();
+      const histAttr = hist.length ? `data-history='${JSON.stringify(hist).replace(/'/g, "&#39;")}'` : '';
+  if (!st) return `<span class="text-stone-400 dark:text-stone-500 text-xs" ${histAttr}>—</span>`;
   if (sh.currency === '美元') {
-    return '<span class="text-stone-400 dark:text-stone-500 text-xs">—</span>';
+    return `<span class="text-stone-400 dark:text-stone-500 text-xs" ${histAttr}>—</span>`;
       }
       const cls = buyStatusClass(st);
       if (st.includes('暂停')) {
-        return `<span class="${cls}">暂停</span>`;
+        return `<span class="${cls} buy-cell" ${histAttr}>暂停</span>`;
       }
       if (st.includes('限') && sh.daily_limit > 0) {
-        return `<span class="${cls}">限 ¥${formatLimit(sh.daily_limit)}</span>`;
+        return `<span class="${cls} buy-cell" ${histAttr}>限 ¥${formatLimit(sh.daily_limit)}</span>`;
       }
       if (st.includes('限') && !sh.daily_limit) {
-        return '<span class="text-stone-400 dark:text-stone-500 text-xs">—</span>';
+        return `<span class="text-stone-400 dark:text-stone-500 text-xs" ${histAttr}>—</span>`;
       }
-      return `<span class="${cls}">${st}</span>`;
+      return `<span class="${cls} buy-cell" ${histAttr}>${st}</span>`;
     }
     // formatLimit / buyStatusClass 已移到 web/js/utils.js
     function toggleSeries(row) {
@@ -883,6 +918,45 @@
         detail.classList.add('hidden');
         arrow.style.transform = '';
       }
+    }
+
+    // ==================== 申购历史 tooltip ====================
+    function showBuyTip(el) {
+      // 避免重复创建
+      if (el.querySelector('.buy-hist-tip')) return;
+      const raw = el.dataset.history;
+      if (!raw) return;
+      let histData;
+      try { histData = JSON.parse(raw); } catch(_) { return; }
+      if (!histData || histData.length === 0) return;
+      const tip = document.createElement('div');
+      tip.className = 'buy-hist-tip';
+      const rows = histData.map(h => {
+        const st = h.buy_status || '';
+        let cls, label;
+        if (st.includes('暂停')) {
+          cls = 'tip-badge-paused'; label = '暂停';
+        } else if (st.includes('限') && h.daily_limit > 0) {
+          cls = 'tip-badge-limit'; label = `限 ¥${formatLimit(h.daily_limit)}`;
+        } else {
+          cls = 'tip-badge-open'; label = st;
+        }
+        return `<div>📅 ${h.date} <span class="tip-badge ${cls}">${label}</span></div>`;
+      }).join('');
+      tip.innerHTML = `<div class="tip-header">申购变更 · 最近${histData.length}次</div>${rows}`;
+      el.style.position = 'relative';
+      el.appendChild(tip);
+    }
+    function hideBuyTip(el) {
+      const tip = el.querySelector('.buy-hist-tip');
+      if (tip) tip.remove();
+      el.style.position = '';
+    }
+    function initBuyTooltips(container) {
+      container.querySelectorAll('.buy-cell').forEach(cell => {
+        cell.addEventListener('mouseenter', () => showBuyTip(cell));
+        cell.addEventListener('mouseleave', () => hideBuyTip(cell));
+      });
     }
 
     // ==================== 详情页 / 持仓 ====================

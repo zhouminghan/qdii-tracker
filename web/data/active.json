@@ -39,6 +39,13 @@
           "full_name": "广发全球精选股票型证券投资基金",
           "buy_status": "限大额",
           "daily_limit": 200.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 200.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -112,6 +119,13 @@
           "full_name": "广发全球精选股票型证券投资基金",
           "buy_status": "限大额",
           "daily_limit": 200.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 200.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -164,6 +178,13 @@
           "manager": "李耀柱",
           "buy_status": "限大额",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "---",
@@ -218,6 +239,13 @@
           "full_name": "广发全球精选股票型证券投资基金",
           "buy_status": "限大额",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<20万",
@@ -300,6 +328,13 @@
           "full_name": "嘉实美国成长股票型证券投资基金",
           "buy_status": "限大额",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<50.0万",
@@ -371,6 +406,13 @@
           "full_name": "嘉实美国成长股票型证券投资基金",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<50万",
@@ -457,6 +499,13 @@
           "full_name": "华宝纳斯达克精选股票型发起式证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 1000.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 1000.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -527,6 +576,13 @@
           "full_name": "华宝纳斯达克精选股票型发起式证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 1000.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 1000.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -598,6 +654,13 @@
           "full_name": "易方达全球成长精选混合型证券投资基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -672,6 +735,13 @@
           "full_name": "易方达全球成长精选混合型证券投资基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -724,6 +794,13 @@
           "manager": "郑希",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<20万",
@@ -787,6 +864,13 @@
           "manager": "郑希",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "---",
@@ -854,6 +938,13 @@
           "full_name": "易方达标普信息科技指数证券投资基金(LOF)",
           "buy_status": "暂停申购",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -924,6 +1015,13 @@
           "full_name": "易方达标普信息科技指数证券投资基金(LOF)",
           "buy_status": "暂停申购",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -974,6 +1072,13 @@
           "full_name": "易方达标普信息科技指数证券投资基金(LOF)",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<20万",
@@ -1036,6 +1141,13 @@
           "manager": "刘依姗",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "---",
@@ -1102,6 +1214,13 @@
           "full_name": "华夏全球科技先锋混合型证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 2000.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 2000.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<50.0万",
@@ -1174,6 +1293,13 @@
           "full_name": "华夏全球科技先锋混合型证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 2000.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 2000.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -1226,6 +1352,13 @@
           "manager": "李湘杰",
           "buy_status": "限大额",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<10万",
@@ -1289,6 +1422,13 @@
           "manager": "李湘杰",
           "buy_status": "限大额",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<10万",
@@ -1364,6 +1504,13 @@
           "full_name": "富兰克林国海全球科技互联混合型证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -1436,6 +1583,13 @@
           "full_name": "富兰克林国海全球科技互联混合型证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -1488,6 +1642,13 @@
           "manager": "徐成",
           "buy_status": "限大额",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<20万",
@@ -1551,6 +1712,13 @@
           "manager": "徐成",
           "buy_status": "限大额",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "---",
@@ -1625,6 +1793,13 @@
           "full_name": "景顺长城纳斯达克科技市值加权交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -1695,6 +1870,13 @@
           "full_name": "景顺长城纳斯达克科技市值加权交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -1753,6 +1935,13 @@
           "full_name": "景顺长城纳斯达克科技市值加权交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -1800,6 +1989,13 @@
           "manager": "汪洋",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<20万",
@@ -1874,6 +2070,13 @@
           "full_name": "易方达全球优质企业混合型证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 1000.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 1000.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -1943,6 +2146,13 @@
           "full_name": "易方达全球优质企业混合型证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 1000.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 1000.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -1995,6 +2205,13 @@
           "manager": "李剑锋",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<20万",
@@ -2054,6 +2271,13 @@
           "manager": "李剑锋",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "---",
@@ -2131,6 +2355,13 @@
           "full_name": "汇添富全球移动互联灵活配置混合型证券投资基金",
           "buy_status": "限大额",
           "daily_limit": 700.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 700.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -2205,6 +2436,13 @@
           "full_name": "汇添富全球移动互联灵活配置混合型证券投资基金",
           "buy_status": "限大额",
           "daily_limit": 700.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 700.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -2260,6 +2498,13 @@
           "full_name": "汇添富全球移动互联灵活配置混合型证券投资基金",
           "buy_status": "限大额",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -2311,6 +2556,13 @@
           "manager": "杨瑨",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<20万",
@@ -2386,6 +2638,13 @@
           "full_name": "富国全球科技互联网股票型证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 1000.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 1000.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -2458,6 +2717,13 @@
           "full_name": "富国全球科技互联网股票型证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 1000.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 1000.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -2509,6 +2775,13 @@
           "manager": "赵年珅",
           "buy_status": "限大额",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100万",
@@ -2561,6 +2834,13 @@
           "scale_raw": "",
           "established": "2011-07-13",
           "manager": "赵年珅",
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100万",
@@ -2650,6 +2930,13 @@
           "full_name": "银华海外数字经济量化选股混合型发起式证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 1000.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 1000.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<1000.0万",
@@ -2716,6 +3003,13 @@
           "full_name": "银华海外数字经济量化选股混合型发起式证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 1000.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 1000.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -2787,6 +3081,13 @@
           "full_name": "建信新兴市场优选混合型证券投资基金",
           "buy_status": "限大额",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -2857,6 +3158,13 @@
           "full_name": "建信新兴市场优选混合型证券投资基金",
           "buy_status": "限大额",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -2925,6 +3233,13 @@
           "full_name": "浦银安盛全球智能科技股票型证券投资基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -2999,6 +3314,13 @@
           "full_name": "浦银安盛全球智能科技股票型证券投资基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -3069,6 +3391,13 @@
           "full_name": "嘉实全球产业升级股票型发起式证券投资基金（QDII）",
           "buy_status": "限大额",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -3143,6 +3472,13 @@
           "full_name": "嘉实全球产业升级股票型发起式证券投资基金（QDII）",
           "buy_status": "限大额",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -3214,6 +3550,13 @@
           "full_name": "华宝海外科技股票型证券投资基金（QDII-LOF）",
           "buy_status": "限大额",
           "daily_limit": 20.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 20.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -3284,6 +3627,13 @@
           "full_name": "华宝海外科技股票型证券投资基金（QDII-LOF）",
           "buy_status": "限大额",
           "daily_limit": 20.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 20.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -3351,6 +3701,13 @@
           "full_name": "华夏移动互联灵活配置混合型证券投资基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<50.0万",
@@ -3422,6 +3779,13 @@
           "full_name": "华夏移动互联灵活配置混合型证券投资基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<10万",
@@ -3488,6 +3852,13 @@
           "full_name": "华夏移动互联灵活配置混合型证券投资基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<10万",
@@ -3570,6 +3941,13 @@
           "full_name": "长城全球新能源汽车股票型发起式证券投资基金(QDII-LOF)",
           "buy_status": "限大额",
           "daily_limit": 500.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 500.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -3648,6 +4026,13 @@
           "full_name": "长城全球新能源汽车股票型发起式证券投资基金(QDII-LOF)",
           "buy_status": "限大额",
           "daily_limit": 500.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 500.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -3719,6 +4104,13 @@
           "full_name": "天弘全球高端制造混合型证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -3797,6 +4189,13 @@
           "full_name": "天弘全球高端制造混合型证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -3858,6 +4257,13 @@
           "full_name": "景顺长城全球半导体芯片产业股票型证券投资基金（QDII-LOF）",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -3928,6 +4334,13 @@
           "full_name": "景顺长城全球半导体芯片产业股票型证券投资基金（QDII-LOF）",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -3979,6 +4392,13 @@
           "manager": "汪洋",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<20万",
@@ -4060,6 +4480,13 @@
           "full_name": "易方达全球配置混合型证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -4129,6 +4556,13 @@
           "full_name": "易方达全球配置混合型证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -4181,6 +4615,13 @@
           "manager": "张清华",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<20万",
@@ -4240,6 +4681,13 @@
           "manager": "张清华",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "---",
@@ -4317,6 +4765,13 @@
           "full_name": "华宝致远混合型证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 200.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 200.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -4395,6 +4850,13 @@
           "full_name": "华宝致远混合型证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 200.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 200.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -4466,6 +4928,13 @@
           "full_name": "华宝海外新能源汽车股票型发起式证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10000.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10000.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -4536,6 +5005,13 @@
           "full_name": "华宝海外新能源汽车股票型发起式证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10000.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10000.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -4600,6 +5076,13 @@
           "full_name": "天弘全球新能源汽车股票型证券投资基金(QDII-LOF)",
           "buy_status": "限大额",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<500.0万",
@@ -4670,6 +5153,13 @@
           "full_name": "天弘全球新能源汽车股票型证券投资基金(QDII-LOF)",
           "buy_status": "限大额",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",

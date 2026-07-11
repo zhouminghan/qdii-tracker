@@ -36,6 +36,13 @@
           "full_name": "博时标普500交易型开放式指数证券投资基金联接基金",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<50.0万",
@@ -106,6 +113,13 @@
           "full_name": "博时标普500交易型开放式指数证券投资基金联接基金",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -153,6 +167,13 @@
           "manager": "万琼",
           "buy_status": "限大额",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "---",
@@ -200,6 +221,13 @@
           "manager": "万琼",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<10万",
@@ -263,6 +291,13 @@
           "manager": "万琼",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "---",
@@ -329,6 +364,13 @@
           "full_name": "摩根标普500指数型发起式证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<50.0万",
@@ -402,6 +444,13 @@
           "full_name": "摩根标普500指数型发起式证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -450,6 +499,13 @@
           "manager": "张军",
           "buy_status": "限大额",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<10万",
@@ -513,6 +569,13 @@
           "manager": "张军",
           "buy_status": "限大额",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<10万",
@@ -595,6 +658,13 @@
           "full_name": "天弘标普500发起式证券投资基金(QDII-FOF)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<500.0万",
@@ -661,6 +731,13 @@
           "full_name": "天弘标普500发起式证券投资基金(QDII-FOF)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -712,6 +789,13 @@
           "full_name": "天弘标普500发起式证券投资基金(QDII-FOF)",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -779,6 +863,13 @@
           "full_name": "易方达标普500指数证券投资基金(LOF)",
           "buy_status": "暂停申购",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -849,6 +940,13 @@
           "full_name": "易方达标普500指数证券投资基金(LOF)",
           "buy_status": "暂停申购",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -899,6 +997,13 @@
           "full_name": "易方达标普500指数证券投资基金(LOF)",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<20万",
@@ -962,6 +1067,13 @@
           "manager": "刘依姗",
           "buy_status": "暂停申购",
           "daily_limit": 0.01,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "---",
@@ -1028,6 +1140,13 @@
           "full_name": "大成标普500等权重指数证券投资基金",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -1097,6 +1216,13 @@
           "full_name": "大成标普500等权重指数证券投资基金",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -1145,6 +1271,13 @@
           "manager": "冉凌浩",
           "buy_status": "限大额",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<20万",
@@ -1204,6 +1337,13 @@
           "manager": "冉凌浩",
           "buy_status": "限大额",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "---",
@@ -1267,6 +1407,13 @@
           "full_name": "华夏标普500交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -1330,6 +1477,13 @@
           "full_name": "华夏标普500交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -1377,6 +1531,13 @@
           "manager": "赵宗庭",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<20万",
@@ -1448,6 +1609,13 @@
           "full_name": "国泰标普500交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 10000.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<50.0万",
@@ -1506,6 +1674,13 @@
           "full_name": "国泰标普500ETF发起联接(QDII)C人民币",
           "buy_status": "暂停申购",
           "daily_limit": 10000.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": null
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",

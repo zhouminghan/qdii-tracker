@@ -2,6 +2,23 @@
 
 > 仅记录代码无法推断的约束与决策。
 
+## Architecture
+
+```
+web/js/
+├── config.js          — 静态常量（分组/品牌/覆盖配置）
+├── utils.js           — 工具函数（排序/格式化/颜色）
+├── main.js            — 主渲染 + 交互
+├── screenshot.js      — 截图分享模块（7风格×3布局，html-to-image懒加载）
+├── market-indices.js  — 顶部行情指标卡（ES module，暴露 window.__mktData）
+├── market-trend.js    — 走势图弹窗
+├── etf-premium.js     — ETF 溢价率实时
+├── offshore-live-nav.js — 场外净值实时 overlay
+├── bj-time.js         — 北京时间工具
+├── idle-scheduler.js  — 空闲调度器
+└── theme.js           — 深色/浅色主题
+```
+
 ## Commands
 
 ```bash
@@ -28,3 +45,7 @@ cd ../web && python3 -m http.server 8765
 10. **`web/` 目录纪律**：仅 `data/*.json`、`js/*.js`、`css/*.css`、`.nojekyll`；不引入构建工具；Tailwind 预编译产物直接提交
 11. **版本戳**：`deploy-pages.yml` 自动注入，本地无需手动 bump；新增 JS 模块写 `?v=placeholder`
 12. **关服务用 PID**：禁 `lsof -ti:PORT | xargs kill`
+13. **申购历史追踪**：`pipeline.refresh.py` `_update_history(share)` 在每次增量更新时写入/追加 `buy_status_history[]`；暂停/开放状态不设 `daily_limit`（存 null），限大额存实际值
+14. **截图分享**：`screenshot.js` 纯前端模块，依赖 `html-to-image` CDN 延迟加载（首次打开 Modal 才请求）；7 风格 × 3 布局通过 CSS class 切换，截图背景色固定为 `#fffbf7`
+15. **行情数据暴露**：`market-indices.js` 在 `refreshAll()` 中写入 `window.__mktData`，供 `screenshot.js` 的 `renderMktHeader()` 读取指数行情卡
+16. **截图版号**：`deploy-pages.yml` 的 `stamp_asset_version.py` regex 自动匹配 `./js/screenshot.js?v=`，无需手动 bump

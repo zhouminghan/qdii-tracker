@@ -65,6 +65,42 @@
     .badge-usd { background: #fef3c7; color: #78350f; padding: 1px 6px; font-size: 10px; }
     .badge-cny { background: #f1f5f9; color: #475569; padding: 1px 6px; font-size: 10px; }
     .badge-estimate { display: none; }
+    /* 申购状态行底色 */
+    .row-open    { background: rgba(22,101,52,0.03); }
+    .row-limit   { background: rgba(146,64,14,0.03); }
+    .row-paused  { background: rgba(127,29,29,0.04); }
+    /* 申购历史 tooltip（与费率弹窗统一风格） */
+    .buy-cell { cursor: help; }
+    .buy-hist-tip {
+      position: absolute; bottom: calc(100% + 4px); left: 50%; transform: translateX(-50%);
+      background: white; border: 1px solid #e5e7eb; border-radius: 8px;
+      padding: 8px 10px; font-size: 11px; line-height: 1.7; white-space: nowrap;
+      z-index: 9999; box-shadow: 0 10px 25px rgba(0,0,0,.1);
+      pointer-events: none; color: #44403c;
+    }
+    .buy-hist-tip::after {
+      content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+      border:6px solid transparent; border-top-color: white;
+    }
+    .buy-hist-tip::before {
+      content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+      border:7px solid transparent; border-top-color: #e5e7eb; margin-top:1px;
+    }
+    /* tooltip 标题行 */
+    .tip-header {
+      font-size: 10px; color: #78716c; padding-bottom: 4px;
+      margin-bottom: 4px; border-bottom: 1px solid #e7e5e4;
+      letter-spacing: 0.3px;
+    }
+    html.dark .tip-header { color: #a8a29e; border-bottom-color: #44403c; }
+    /* tooltip 内迷你状态标签 */
+    .tip-badge {
+      display: inline-block; padding: 1px 6px; border-radius: 4px;
+      font-size: 10px; font-weight: 500;
+    }
+    .tip-badge-paused { background: #fee2e2; color: #991b1b; }
+    .tip-badge-limit  { background: #fef3c7; color: #92400e; }
+    .tip-badge-open   { background: #dcfce7; color: #166534; }
     .fade-in { animation: fade 0.2s ease; }
     @keyframes fade { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -195,6 +231,22 @@
     html.dark .badge-qdii   { background: rgba(55,48,163,0.25); color: #a5b4fc; border-color: rgba(55,48,163,0.4); }
     html.dark .badge-usd    { background: rgba(146,64,14,0.25); color: #fcd34d; border-color: rgba(146,64,14,0.4); }
     html.dark .badge-cny    { background: rgba(41,37,36,0.5); color: #d6d3d1; border-color: #44403c; }
+    html.dark .buy-hist-tip  { background: #292524; border-color: #44403c; color: #d6d3d1;
+      box-shadow: 0 10px 25px rgba(0,0,0,.4); }
+    html.dark .buy-hist-tip::after { border-top-color: #292524; }
+    html.dark .buy-hist-tip::before { border-top-color: #44403c; }
+    html.dark .tip-badge-paused { background: rgba(127,29,29,0.35); color: #fca5a5; }
+    html.dark .tip-badge-limit  { background: rgba(146,64,14,0.35); color: #fcd34d; }
+    html.dark .tip-badge-open   { background: rgba(22,101,52,0.35); color: #86efac; }
+    html.dark .row-open   { background: rgba(34,197,94,0.04); }
+    html.dark .row-limit  { background: rgba(251,191,36,0.04); }
+    html.dark .row-paused { background: rgba(248,113,113,0.05); }
+    /* 打印：仅表格 */
+    @media print {
+      header, .filter-bar, footer, .offshore-live, .market-indicators { display: none !important; }
+      body { background: #fff; }
+      table { font-size: 10px; }
+    }
 
     /* Tab active 深色：不用白底突兀，用 stone-700 柔和突出 */
     html.dark .tab-active { background: #44403c; color: #e7e5e4; }
@@ -262,6 +314,279 @@
     /* Modal 遮罩深色 */
     html.dark #detailModal,
     html.dark #trendModal { background: rgba(0,0,0,0.6); }
+
+    /* ====== 截图 Modal ====== */
+    .ss-panel { background: #fafaf9; }
+    .ss-section-label { font-size: 10px; color: #a8a29e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-weight: 600; }
+    /* 分段控件 (格式切换) */
+    .ss-segmented { display: flex; background: #f5f5f4; border-radius: 8px; padding: 2px; }
+    .ss-seg-btn {
+      flex: 1; padding: 5px 0; border: none; background: transparent; cursor: pointer;
+      font-size: 11px; color: #78716c; border-radius: 6px; transition: all 0.15s;
+    }
+    .ss-seg-btn:hover { color: #1c1917; }
+    .ss-seg-btn.active { background: white; color: #1c1917; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    /* 分类 chip 切换 */
+    .ss-chip-group { display: flex; flex-wrap: wrap; gap: 4px; }
+    .ss-chip-btn {
+      flex: 1; min-width: 0; padding: 5px 6px; border: 1px solid #e7e5e4;
+      background: white; border-radius: 6px; font-size: 10px; color: #57534e;
+      cursor: pointer; transition: all 0.15s; white-space: nowrap;
+    }
+    .ss-chip-btn:hover { border-color: #a8a29e; }
+    .ss-chip-btn.active { background: #1c1917; color: white; border-color: #1c1917; font-weight: 500; }
+    /* 列勾选 */
+    .ss-col-grid { display: flex; flex-wrap: wrap; gap: 4px 2px; }
+    .ss-col-item {
+      display: flex; align-items: center; gap: 3px;
+      padding: 2px 5px; border-radius: 4px; cursor: pointer;
+      font-size: 11px; color: #78716c; transition: all 0.1s;
+      white-space: nowrap;
+    }
+    .ss-col-item:hover { background: #f5f5f4; color: #1c1917; }
+    .ss-col-item.checked { background: #f0fdf4; color: #166534; font-weight: 500; }
+    .ss-col-item input[type=checkbox] { accent-color: #16a34a; width: 12px; height: 12px; margin: 0; flex-shrink: 0; }
+    /* 预览区底部保存按钮 */
+    .ss-save-bar { text-align: center; padding: 12px 0 0; }
+    .ss-save-btn {
+      padding: 6px 24px; border-radius: 8px; border: none;
+      background: #1c1917; color: white; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .ss-save-btn:hover { background: #292524; }
+    /* 预览区 */
+    .ss-preview {
+      background: #f5f5f4; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    }
+    .ss-preview table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; table-layout: fixed; }
+    .ss-tbl-wrap { border: 1.5px solid #fce4d6; border-radius: 14px; overflow: hidden; }
+    .ss-tbl-head { background: rgba(255,248,243,.95); }
+    .ss-tbl-head th { background: transparent; }
+    .ss-tbl-body table { table-layout: fixed; }
+    .ss-tbl-body td { background: white; }
+    .ss-preview thead th {
+      background: transparent; color: #b8937a; font-weight: 700; font-size: 10px;
+      padding: 8px 10px; border-bottom: 2px solid #fce4d6; text-align: left;
+      white-space: nowrap; letter-spacing: 0.4px;
+    }
+    .ss-preview th.ss-th-sort { user-select: none; cursor: pointer; }
+    .ss-preview th.ss-th-sort:hover { background: rgba(255,200,160,.1); color: #5c3d2e; }
+    .ss-preview th.ss-th-active { color: #5c3d2e; }
+    .ss-preview th .ss-th-arrow { color: #f0a878; margin-left: 2px; font-weight: 700; }
+    .ss-preview td {
+      padding: 7px 10px; border-bottom: 1px solid #fef0e4; white-space: nowrap; font-size: 12px;
+      color: #5c3d2e;
+    }
+    .ss-preview .ss-td-status { text-align: center; }
+    .ss-preview td { background: white; }
+    .ss-preview tr:nth-child(even) td { background: #fffbf7; }
+    .ss-preview td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .ss-preview .up   { color: #dc2626; }
+    .ss-preview .down { color: #16a34a; }
+    /* 预览区内迷你 badge */
+    .ss-badge {
+      display: inline-block; padding: 1px 6px; border-radius: 4px;
+      font-size: 10px; font-weight: 500;
+    }
+    .ss-badge-paused { background: #ffe8e5; color: #d9605a; }
+    .ss-badge-limit  { background: #fff3e0; color: #c08452; }
+    .ss-badge-open   { background: #e5f6ed; color: #5aaa8a; }
+    .ss-muted { color: #a8a29e; }
+    /* ====== 风格：苹果玻璃 ====== */
+    .ss-style-glass.ss-phone-wrap {
+      background: rgba(255,255,255,0.88); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(0,0,0,.08); box-shadow: 0 8px 40px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.04);
+    }
+    .ss-style-glass .ss-date-header { color: #8e8e93; border-color: rgba(0,0,0,.08); }
+    .ss-style-glass .ss-mkt-card { background: rgba(255,255,255,.6); border-color: rgba(0,0,0,.06); box-shadow: 0 2px 12px rgba(0,0,0,.05); }
+    .ss-style-glass .ss-mkt-label { color: #8e8e93; }
+    .ss-style-glass .ss-mkt-price { color: #1d1d1f; }
+    .ss-style-glass .ss-section-title { color: #1d1d1f; border-color: rgba(0,0,0,.08); }
+    .ss-style-glass .ss-section-count { color: #aeaeb2; }
+    .ss-style-glass .ss-tbl-wrap { border-color: rgba(0,0,0,.06); }
+    .ss-style-glass .ss-tbl-head { background: rgba(245,245,247,.9); }
+    .ss-style-glass .ss-preview thead th { color: #86868b; border-color: rgba(0,0,0,.08); }
+    .ss-style-glass .ss-preview td { color: #1d1d1f; }
+    .ss-style-glass .ss-preview td { background: white; }
+    .ss-style-glass .ss-preview tr:nth-child(even) td { background: #fafaf8; }
+    .ss-style-glass .ss-mkt-chg.up   { color: #ff3b30; }
+    .ss-style-glass .ss-mkt-chg.down { color: #34c759; }
+    .ss-style-glass .ss-badge-paused { background: rgba(255,59,48,.1); color: #cc2d28; }
+    .ss-style-glass .ss-badge-limit  { background: rgba(255,149,0,.1); color: #b87a00; }
+    .ss-style-glass .ss-badge-open   { background: rgba(52,199,89,.1); color: #248a3d; }
+    /* ====== 风格：温暖 ====== */
+    .ss-style-warm.ss-phone-wrap {
+      background: linear-gradient(180deg, #fef9f0 0%, #fdf3e4 100%);
+      border: 2px solid #e8d5c0; box-shadow: 0 4px 20px rgba(180,140,100,.12);
+    }
+    .ss-style-warm .ss-date-header { color: #b8956e; border-color: #e8d5c0; }
+    .ss-style-warm .ss-mkt-card { background: rgba(255,252,245,.8); border-color: #e8d5c0; box-shadow: 0 2px 8px rgba(160,120,80,.08); }
+    .ss-style-warm .ss-mkt-label { color: #b8956e; }
+    .ss-style-warm .ss-mkt-price { color: #4a3622; }
+    .ss-style-warm .ss-section-title { color: #4a3622; border-color: #e8d5c0; }
+    .ss-style-warm .ss-section-count { color: #c4a882; }
+    .ss-style-warm .ss-tbl-wrap { border-color: #e8d5c0; }
+    .ss-style-warm .ss-tbl-head { background: rgba(254,249,240,.95); }
+    .ss-style-warm .ss-preview thead th { color: #b8956e; border-color: #e8d5c0; }
+    .ss-style-warm .ss-preview td { color: #4a3622; }
+    .ss-style-warm .ss-preview td { background: #fffdf8; }
+    .ss-style-warm .ss-preview tr:nth-child(even) td { background: #fef9f0; }
+    .ss-style-warm .ss-mkt-chg.up   { color: #c06a4e; }
+    .ss-style-warm .ss-mkt-chg.down { color: #5a8a6a; }
+    .ss-style-warm .ss-badge-paused { background: #f5e0d0; color: #b8705a; }
+    .ss-style-warm .ss-badge-limit  { background: #f0e0c8; color: #a08050; }
+    .ss-style-warm .ss-badge-open   { background: #d8ece0; color: #5a8a6a; }
+    /* ====== 风格：手帐 notion ====== */
+    .ss-style-notion.ss-phone-wrap {
+      background: #fefdf9; border: 2px dashed #d0c9c0; box-shadow: none;
+    }
+    .ss-style-notion .ss-date-header { color: #8b8682; border-color: #d0c9c0; border-bottom-style: dashed; }
+    .ss-style-notion .ss-mkt-card { background: #faf9f5; border: 1.5px dashed #d0c9c0; border-radius: 10px; box-shadow: none; }
+    .ss-style-notion .ss-mkt-label { color: #8b8682; font-family: Georgia,serif; }
+    .ss-style-notion .ss-mkt-price { color: #2d2a27; }
+    .ss-style-notion .ss-section-title { color: #2d2a27; border-color: #d0c9c0; border-bottom-style: dashed; }
+    .ss-style-notion .ss-section-count { color: #a09a94; }
+    .ss-style-notion .ss-tbl-wrap { border: 1.5px dashed #d0c9c0; border-radius: 8px; }
+    .ss-style-notion .ss-tbl-head { background: #faf9f5; }
+    .ss-style-notion .ss-preview thead th { color: #8b8682; border-color: #d0c9c0; border-bottom-style: dashed; }
+    .ss-style-notion .ss-preview td { color: #2d2a27; border-color: #e8e4df; }
+    .ss-style-notion .ss-preview td { background: #fefdf9; }
+    .ss-style-notion .ss-preview tr:nth-child(even) td { background: #faf9f5; }
+    .ss-style-notion .ss-mkt-chg.up   { color: #cc5948; }
+    .ss-style-notion .ss-mkt-chg.down { color: #4a8a5a; }
+    .ss-style-notion .ss-badge-paused { background: #f5e8e5; color: #cc5948; }
+    .ss-style-notion .ss-badge-limit  { background: #f0ece0; color: #8a7060; }
+    .ss-style-notion .ss-badge-open   { background: #e0ece5; color: #4a8a5a; }
+    /* ====== 风格：极简 ====== */
+    .ss-style-minimal.ss-phone-wrap {
+      background: #fff; border: 1px solid #e8e8ed; box-shadow: none; border-radius: 0;
+    }
+    .ss-style-minimal .ss-date-header { color: #b0b0b8; border-color: #e8e8ed; font-weight: 400; }
+    .ss-style-minimal .ss-mkt-card { background: #f9f9fb; border: 1px solid #e8e8ed; border-radius: 6px; box-shadow: none; }
+    .ss-style-minimal .ss-mkt-label { color: #b0b0b8; font-weight: 400; }
+    .ss-style-minimal .ss-mkt-price { color: #1a1a2e; font-weight: 600; }
+    .ss-style-minimal .ss-section-title { color: #1a1a2e; border-color: #e8e8ed; font-weight: 600; }
+    .ss-style-minimal .ss-section-count { color: #c0c0c8; }
+    .ss-style-minimal .ss-tbl-wrap { border: 1px solid #e8e8ed; border-radius: 6px; }
+    .ss-style-minimal .ss-tbl-head { background: #f9f9fb; }
+    .ss-style-minimal .ss-preview thead th { color: #909098; border-color: #e8e8ed; font-weight: 500; }
+    .ss-style-minimal .ss-preview td { color: #1a1a2e; border-color: #f0f0f4; }
+    .ss-style-minimal .ss-preview td { background: #fff; }
+    .ss-style-minimal .ss-preview tr:nth-child(even) td { background: #fafafb; }
+    .ss-style-minimal .ss-mkt-chg.up   { color: #e04040; }
+    .ss-style-minimal .ss-mkt-chg.down { color: #40a060; }
+    .ss-style-minimal .ss-badge-paused { background: #fef0f0; color: #d04040; }
+    .ss-style-minimal .ss-badge-limit  { background: #fef9f0; color: #b08040; }
+    .ss-style-minimal .ss-badge-open   { background: #f0faf0; color: #40a060; }
+    /* ====== 风格：清新 fresh ====== */
+    .ss-style-fresh.ss-phone-wrap {
+      background: linear-gradient(180deg, #f6fcf8 0%, #f0f9f4 100%);
+      border: 2px solid #c8e6d4; box-shadow: 0 4px 20px rgba(100,180,140,.1);
+    }
+    .ss-style-fresh .ss-date-header { color: #7aaf8c; border-color: #d4ecd8; }
+    .ss-style-fresh .ss-mkt-card { background: rgba(255,255,255,.7); border-color: #d4ecd8; }
+    .ss-style-fresh .ss-mkt-label { color: #7aaf8c; }
+    .ss-style-fresh .ss-mkt-price { color: #2a4a32; }
+    .ss-style-fresh .ss-section-title { color: #2a4a32; border-color: #d4ecd8; }
+    .ss-style-fresh .ss-section-count { color: #9ac0a4; }
+    .ss-style-fresh .ss-tbl-wrap { border-color: #d4ecd8; }
+    .ss-style-fresh .ss-tbl-head { background: rgba(246,252,248,.95); }
+    .ss-style-fresh .ss-preview thead th { color: #7aaf8c; border-color: #d4ecd8; }
+    .ss-style-fresh .ss-preview td { background: #fefffe; color: #2a4a32; border-color: #e8f5e8; }
+    .ss-style-fresh .ss-preview tr:nth-child(even) td { background: #f6fcf8; }
+    .ss-style-fresh .ss-mkt-chg.up   { color: #e06850; }
+    .ss-style-fresh .ss-mkt-chg.down { color: #4a8a5a; }
+    .ss-style-fresh .ss-badge-paused { background: #fce8e4; color: #d05848; }
+    .ss-style-fresh .ss-badge-limit  { background: #f0f0e0; color: #8a7a50; }
+    .ss-style-fresh .ss-badge-open   { background: #e0f0e4; color: #4a8a5a; }
+    /* ====== 风格：笔记 study-notes ====== */
+    .ss-style-notes.ss-phone-wrap {
+      background: #fdfcf8; border: 2px solid #d8d4e8; box-shadow: 0 2px 12px rgba(120,100,160,.08);
+    }
+    .ss-style-notes .ss-date-header { color: #8a80b0; border-color: #e0dce8; }
+    .ss-style-notes .ss-mkt-card { background: #faf9fc; border: 1px solid #e0dce8; border-radius: 8px; }
+    .ss-style-notes .ss-mkt-label { color: #8a80b0; font-style: italic; }
+    .ss-style-notes .ss-mkt-price { color: #3a2e5a; }
+    .ss-style-notes .ss-section-title { color: #3a2e5a; border-color: #e0dce8; }
+    .ss-style-notes .ss-section-count { color: #b0a8c8; }
+    .ss-style-notes .ss-tbl-wrap { border-color: #e0dce8; border-radius: 6px; }
+    .ss-style-notes .ss-tbl-head { background: #faf9fc; }
+    .ss-style-notes .ss-preview thead th { color: #8a80b0; border-color: #e0dce8; }
+    .ss-style-notes .ss-preview td { background: #fdfcf8; color: #3a2e5a; border-color: #f0ecf4; }
+    .ss-style-notes .ss-preview tr:nth-child(even) td { background: #faf9fc; }
+    .ss-style-notes .ss-mkt-chg.up   { color: #c06068; }
+    .ss-style-notes .ss-mkt-chg.down { color: #5098a0; }
+    .ss-style-notes .ss-badge-paused { background: #f4e8ec; color: #c06068; }
+    .ss-style-notes .ss-badge-limit  { background: #f0ece8; color: #8a7858; }
+    .ss-style-notes .ss-badge-open   { background: #e8f0ec; color: #5098a0; }
+    /* ====== 布局 ====== */
+    .ss-layout-dense.ss-phone-wrap  { padding: 14px 10px; }
+    .ss-layout-dense .ss-mkt-header { gap: 4px; margin-bottom: 10px; }
+    .ss-layout-dense .ss-mkt-card   { padding: 5px 3px; }
+    .ss-layout-dense .ss-mkt-price  { font-size: 13px; }
+    .ss-layout-dense .ss-section    { margin-bottom: 10px; }
+    .ss-layout-dense .ss-section-title { font-size: 12px; padding: 4px 0; }
+    .ss-layout-dense td, .ss-layout-dense th { padding: 4px 6px; font-size: 11px; }
+    .ss-layout-dense .ss-date-header { padding-bottom: 6px; margin-bottom: 6px; }
+
+    .ss-layout-balanced.ss-phone-wrap  { padding: 20px 16px; }
+    .ss-layout-balanced .ss-mkt-header { gap: 8px; margin-bottom: 18px; }
+    .ss-layout-balanced .ss-mkt-card   { padding: 8px 6px; }
+    .ss-layout-balanced .ss-mkt-price  { font-size: 15px; }
+    .ss-layout-balanced .ss-section    { margin-bottom: 20px; }
+    .ss-layout-balanced .ss-section-title { font-size: 14px; }
+    .ss-layout-balanced td, .ss-layout-balanced th { padding: 7px 10px; }
+
+    .ss-layout-sparse.ss-phone-wrap  { padding: 24px 18px; }
+    .ss-layout-sparse .ss-mkt-header { gap: 10px; margin-bottom: 22px; }
+    .ss-layout-sparse .ss-mkt-card   { padding: 10px 6px; min-height: 96px; }
+    .ss-layout-sparse .ss-mkt-price  { font-size: 16px; }
+    .ss-layout-sparse .ss-section    { margin-bottom: 24px; }
+    .ss-layout-sparse .ss-section-title { font-size: 15px; padding: 6px 0; }
+    .ss-layout-sparse .ss-date-header { font-size: 12px; padding-bottom: 12px; margin-bottom: 12px; }
+    .ss-layout-sparse td, .ss-layout-sparse th { padding: 8px 12px; font-size: 12px; }
+    /* 手机宽度容器 — 小红书 3:4 比例 */
+    .ss-phone-wrap {
+      width: 360px; min-height: 480px; margin: 16px auto;
+      background: linear-gradient(180deg, #fffbf7 0%, #fff5f0 100%);
+      border: 2px solid #fce4d6; border-radius: 24px;
+      padding: 20px 16px; box-shadow: 0 4px 20px rgba(255,200,160,.15), 0 1px 4px rgba(0,0,0,.04);
+    }
+    /* 日期 */
+    .ss-date-header {
+      text-align: center; font-size: 12px; font-weight: 600; color: #d4a08e;
+      padding-bottom: 12px; margin-bottom: 14px;
+      border-bottom: 1.5px dashed #fce4d6;
+    }
+    /* 指数行情头部 — 4列一行 */
+    .ss-mkt-header {
+      display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px;
+      margin-bottom: 18px;
+    }
+    .ss-mkt-card {
+      background: rgba(255,255,255,.8); border: 1.5px solid #fbe4d0;
+      border-radius: 14px; padding: 6px 4px 7px; text-align: center;
+      box-shadow: 0 2px 8px rgba(255,180,140,.1);
+      display: flex; flex-direction: column; justify-content: space-between;
+      min-height: 90px; overflow: hidden;
+    }
+    .ss-mkt-label { font-size: 9px; color: #c9a792; margin-bottom: 3px; font-weight: 600; letter-spacing: 0.1px; white-space: nowrap; }
+    .ss-mkt-price { font-size: 14px; font-weight: 700; color: #5c3d2e; letter-spacing: -0.5px; }
+    .ss-mkt-chg { font-size: 10px; font-weight: 600; line-height: 1.3; }
+    .ss-mkt-chg.up   { color: #e8685a; }
+    .ss-mkt-chg.down { color: #5aaa8a; }
+    .ss-mkt-pts { font-size: 9px; font-weight: 500; opacity: 0.75; margin-top: 0; }
+    /* 当日额度汇总（行内） */
+    .ss-limit-inline { font-size: 10px; color: #c08452; margin-left: auto; white-space: nowrap; font-weight: 600; }
+    /* 分类区块 */
+    .ss-section { margin-bottom: 20px; }
+    .ss-section-title {
+      font-size: 13px; font-weight: 700; color: #5c3d2e;
+      padding: 8px 0; margin-bottom: 8px;
+      border-bottom: 2px solid #fce4d6;
+      display: flex; align-items: baseline;
+    }
+    .ss-section-count { font-size: 10px; font-weight: 400; color: #c9a792; margin-left: 6px; }
 
     /* 主题切换按钮 */
     .theme-toggle {
@@ -645,6 +970,71 @@
     </div>
   </div>
 
+  <!-- 截图配置 Modal -->
+  <div id="ss-modal" class="hidden fixed inset-0 z-50 flex items-start justify-center p-4" style="background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);" role="dialog" aria-modal="true" aria-label="分享导出">
+    <div class="flex flex-col lg:flex-row bg-white rounded-2xl shadow-2xl w-full max-w-5xl" style="max-height:92vh;overflow:hidden;">
+      <!-- 左侧配置面板 -->
+      <div class="ss-panel p-3 border-b lg:border-b-0 lg:border-r border-stone-200 flex-shrink-0 lg:w-56 space-y-2 overflow-y-auto">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-stone-800">📤 分享</span>
+          <button onclick="closeScreenshotModal()" class="w-6 h-6 rounded-full hover:bg-stone-100 flex items-center justify-center text-stone-400 hover:text-stone-700 transition text-base">&times;</button>
+        </div>
+
+        <!-- 格式分段 -->
+        <div class="ss-segmented">
+          <button id="ss-phone-btn" class="ss-seg-btn active" onclick="togglePhoneMode(true)">📱 手机</button>
+          <button id="ss-desk-btn" class="ss-seg-btn" onclick="togglePhoneMode(false)">🖥 桌面</button>
+        </div>
+
+        <!-- 分类切换 -->
+        <div>
+          <div class="ss-section-label">分类</div>
+          <div class="ss-chip-group" id="ss-group-filter">
+            <button class="ss-chip-btn active" data-val="all">全部</button>
+            <button class="ss-chip-btn" data-val="nasdaq">纳斯达克100</button>
+            <button class="ss-chip-btn" data-val="sp500">标普500</button>
+          </div>
+        </div>
+
+        <!-- 风格切换 -->
+        <div>
+          <div class="ss-section-label">风格</div>
+          <div class="ss-chip-group" id="ss-style-filter">
+            <button class="ss-chip-btn active" data-val="cute">🎀 可爱</button>
+            <button class="ss-chip-btn" data-val="fresh">🌿 清新</button>
+            <button class="ss-chip-btn" data-val="notion">📝 手帐</button>
+            <button class="ss-chip-btn" data-val="notes">📒 笔记</button>
+            <button class="ss-chip-btn" data-val="glass">🪟 玻璃</button>
+            <button class="ss-chip-btn" data-val="warm">☕ 温暖</button>
+            <button class="ss-chip-btn" data-val="minimal">◻ 极简</button>
+          </div>
+        </div>
+
+        <!-- 布局切换 -->
+        <div>
+          <div class="ss-section-label">布局</div>
+          <div class="ss-chip-group" id="ss-layout-filter">
+            <button class="ss-chip-btn active" data-val="dense">密集</button>
+            <button class="ss-chip-btn" data-val="balanced">均衡</button>
+            <button class="ss-chip-btn" data-val="sparse">稀疏</button>
+          </div>
+        </div>
+
+        <!-- 列勾选 -->
+        <div>
+          <div class="ss-section-label">显示列</div>
+          <div id="ss-col-list" class="ss-col-grid"></div>
+        </div>
+
+        <button id="ss-download-btn" onclick="downloadScreenshotPNG()" class="w-full mt-2 text-xs py-1.5 rounded font-medium bg-stone-800 text-white hover:bg-stone-700 transition cursor-pointer">
+          保存图片
+        </button>
+      </div>
+      <!-- 右侧预览（可滚动） -->
+      <div id="ss-preview" class="ss-preview flex-1 overflow-y-auto p-4"></div>
+    </div>
+  </div>
+
   <footer class="max-w-7xl mx-auto px-3 sm:px-6 mt-4 pb-6">
     <div class="bg-stone-50 dark:bg-stone-800 rounded-xl p-5 text-xs text-stone-500 dark:text-stone-400 leading-relaxed border border-stone-200 dark:border-stone-700">
       <div class="font-semibold text-stone-700 dark:text-stone-300 mb-2">⚠️ 风险提示与免责声明</div>
@@ -652,7 +1042,8 @@
       <p class="mt-2">📊 数据来源：East Money (AKShare) / 雪球 · 📜 MIT License · 数据由 GitHub Actions 每日自动更新</p>
     </div>
   </footer>
-  <script defer src="./js/main.js?v=20260616b"></script>
+  <script defer src="./js/main.js?v=20260711z"></script>
+  <script defer src="./js/screenshot.js?v=20260712d"></script>
 
   <!-- 模块化的独立功能模块（ES Modules，无构建过程） -->
   <!-- why 带 ?v=：浏览器对 .js 默认强缓存（GitHub Pages 也是），

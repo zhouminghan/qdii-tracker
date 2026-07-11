@@ -1,14 +1,38 @@
 """
 轻量申购状态刷新：仅拉取申购状态/限额 + 涨跌幅（批量接口，快）。
 原 refresh_purchase.py 逻辑搬迁，import core+sources。
+增加 buy_status_history 申购历史追踪。
 """
 import json
 import time
+from datetime import datetime, timezone, timedelta
 
 from core.constants import CATEGORIES, DATA_DIR
 from core.utils import read_json, write_json, normalize_share_keys, beijing_now_iso
 from sources.akshare_source import fetch_rank_data, fetch_purchase_data, fetch_etf_data
 from sources.eastmoney_source import fetch_lsjz
+
+TZ = timezone(timedelta(hours=8))
+
+
+def _update_history(share):
+    """申购状态历史追踪：同状态→更新日期，不同→新开条目"""
+    today = datetime.now(TZ).strftime('%Y-%m-%d')
+    hist = share.setdefault('buy_status_history', [])
+    status = share.get('buy_status', '')
+    # 暂停/开放申购时 daily_limit 无意义，不存储
+    limit = share.get('daily_limit') if ('限' in status) else None
+    curr = {
+        'buy_status': status,
+        'daily_limit': limit,
+    }
+    if hist:
+        last = hist[-1]
+        if (last.get('buy_status') == curr['buy_status'] 
+            and last.get('daily_limit') == curr['daily_limit']):
+            last['date'] = today
+            return
+    hist.append({'date': today, **curr})
 
 
 def main():
@@ -43,6 +67,7 @@ def main():
                 # 申购数据
                 if code in purchase_map:
                     share.update(purchase_map[code])
+                    _update_history(share)  # 追踪申购状态变化
                     updated += 1
                 # 涨跌幅数据
                 if code in rank_map:
