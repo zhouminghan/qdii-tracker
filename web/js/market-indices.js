@@ -211,9 +211,13 @@ function renderCard(item, parsed) {
 async function refreshAll() {
   const map = await fetchAll();
   let okCount = 0;
+  window.__mktData = window.__mktData || {};
   for (const sym of SYMBOLS) {
     const parsed = parsePayload(map[sym.qq], sym.kind);
-    if (parsed) okCount++;
+    if (parsed) {
+      okCount++;
+      window.__mktData[sym.qq] = { name: sym.name, price: parsed.price, change: parsed.change, changePct: parsed.changePct };
+    }
     renderCard(sym, parsed);
   }
   const el = document.getElementById('market-update-time');

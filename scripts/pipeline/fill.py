@@ -2,16 +2,35 @@
 用天天基金 lsjz API + pingzhongdata 双数据源补全缺失字段。
 原 fill_missing.py 逻辑搬迁，import core+sources。
 Pass 1 API 调用使用 ThreadPoolExecutor 并行化（I/O 密集瓶颈）。
+含申购状态刷新 + buy_status_history 数组追踪（原 refresh.py 逻辑已并入）。
 """
 import json
 import re
 import threading
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from core.constants import CATEGORIES, DATA_DIR, ETF_SKIP_FIELDS, ALWAYS_OVERWRITE_FIELDS
-from core.utils import to_float, read_json, write_json, bump_generated_at, normalize_share_keys
+from core.utils import to_float, read_json, write_json, bump_generated_at, normalize_share_keys, beijing_now_iso
 from sources.eastmoney_source import fetch_lsjz, fetch_pzd, fetch_f10, fetch_fee_rules
-from sources.akshare_source import fetch_ytd, fetch_inception_return
+from sources.akshare_source import fetch_ytd, fetch_inception_return, fetch_etf_data, fetch_purchase_data, fetch_rank_data
+
+
+def _update_history(share: dict, today: str):
+    """申购变更追踪：同状态只更新日期，不同状态 push 新条目到 buy_status_history 数组。ETF 跳过。"""
+    status = share.get("buy_status", "")
+    if not status or share.get("currency") == "美元" or "场内" in status:
+        return
+    dlimit = share.get("daily_limit", None)
+    history = share.get("buy_status_history")
+    if not isinstance(history, list):
+        history = []
+        share["buy_status_history"] = history
+    entry = {"date": today, "buy_status": status, "daily_limit": dlimit}
+    if history and history[-1].get("buy_status") == status:
+        history[-1].update(entry)
+    else:
+        history.append(entry)
 
 # 并发数：4 线程平衡速度与反爬风险
 MAX_WORKERS = 4
@@ -368,6 +387,56 @@ def main():
     print(f"         Pass2 成功 {success2} / 共 {total2}")
     print(f"         Pass3 成功 {success3} / 失败 {fail3} / 共 {total3}")
     print(f"         Pass4 成功 {success4} / 失败 {fail4} / 共 {total4}")
+
+    # 5. ETF 场内价（原在 refresh.py，归入净值类）
+    etf_fp = data_dir / "etf.json"
+    if etf_fp.exists():
+        etf_map = fetch_etf_data()
+        if etf_map:
+            etf_data = read_json(etf_fp)
+            etf_updated = 0
+            for series in etf_data.get("series", []):
+                for share in series.get("shares", []):
+                    if only_codes and share["code"] not in only_codes:
+                        continue
+                    info = etf_map.get(share["code"])
+                    if info:
+                        share["etf_price"] = info.get("etf_price")
+                        share["etf_change_pct"] = info.get("etf_change_pct")
+                        etf_updated += 1
+            normalize_share_keys(etf_data)
+            write_json(etf_fp, etf_data)
+            print(f"  💾 ETF 场内价 {etf_updated} 只")
+
+    # ========== 申购状态刷新 + buy_status_history 追踪（原 refresh.py 并入） ==========
+    today = beijing_now_iso()[:10]
+    purchase_map = fetch_purchase_data()
+    rank_map = fetch_rank_data()
+    for cat in CATEGORIES:
+        fp = data_dir / f"{cat}.json"
+        if not fp.exists():
+            continue
+        data = read_json(fp)
+        updated = 0
+        for series in data.get("series", []):
+            for share in series.get("shares", []):
+                code = share["code"]
+                if only_codes and code not in only_codes:
+                    continue
+                if code in purchase_map:
+                    share.update(purchase_map[code])
+                    updated += 1
+                if code in rank_map:
+                    r = rank_map[code]
+                    if r.get("nav_date", "") >= share.get("nav_date", ""):
+                        for k, v in r.items():
+                            if v is not None and k not in ("nav_date", "nav", "nav_cum", "daily_change"):
+                                share[k] = v
+                _update_history(share, today)
+        normalize_share_keys(data)
+        write_json(fp, data)
+        if updated:
+            print(f"  💾 {cat}.json 申购 {updated} 只")
 
 
 if __name__ == "__main__":

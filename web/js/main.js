@@ -401,8 +401,32 @@
         row.addEventListener('click', () => toggleSeries(row));
       });
 
-      // 渲染分组筛选 Chips
+      // 渲染分组筛选 Chips + 分享按钮
       renderChips(tab, groups);
+      renderShareBtn(tab, groups);
+      // 申购 tooltip 绑定（仅场外）
+      if (!isEtf) initBuyTooltips(container);
+    }
+
+    function renderShareBtn(tab, groups) {
+      var bar = document.getElementById(tab + '-chips');
+      if (!bar) return;
+      if (document.getElementById('ss-btn-' + tab)) return;
+      var btn = document.createElement('button');
+      btn.id = 'ss-btn-' + tab;
+      btn.className = 'chip';
+      btn.style.cssText = 'background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;';
+      btn.textContent = '📤 分享';
+      btn.onclick = function () {
+        var allSeries = [];
+        for (var i = 0; i < groups.length; i++) {
+          for (var j = 0; j < groups[i].items.length; j++) {
+            allSeries.push(groups[i].items[j]);
+          }
+        }
+        window.openScreenshotModal(tab, allSeries, groups);
+      };
+      bar.appendChild(btn);
     }
 
     // ==================== 通用分组筛选 Chips ====================
@@ -854,24 +878,49 @@
 
     function statusBadge(sh) {
       const st = sh.buy_status || '';
-  if (!st) return '<span class="text-stone-400 dark:text-stone-500 text-xs">—</span>';
-  // 美元份额：支付宝等代销平台不可买，申购数据无实际参考意义，显示 —
-  if (sh.currency === '美元') {
-    return '<span class="text-stone-400 dark:text-stone-500 text-xs">—</span>';
-      }
+      const hist = (sh.buy_status_history || []).slice(-3).reverse();
+      const histAttr = hist.length ? 'data-history=\'' + JSON.stringify(hist).replace(/'/g, '&#39;') + '\'' : '';
+  if (!st) return '<span class="text-stone-400 dark:text-stone-500 text-xs" ' + histAttr + '>—</span>';
+  if (sh.currency === '美元') return '<span class="text-stone-400 dark:text-stone-500 text-xs" ' + histAttr + '>—</span>';
       const cls = buyStatusClass(st);
-      if (st.includes('暂停')) {
-        return `<span class="${cls}">暂停</span>`;
-      }
-      if (st.includes('限') && sh.daily_limit > 0) {
-        return `<span class="${cls}">限 ¥${formatLimit(sh.daily_limit)}</span>`;
-      }
-      if (st.includes('限') && !sh.daily_limit) {
-        return '<span class="text-stone-400 dark:text-stone-500 text-xs">—</span>';
-      }
-      return `<span class="${cls}">${st}</span>`;
+      if (st.includes('暂停')) return '<span class="' + cls + ' buy-cell" ' + histAttr + '>暂停</span>';
+      if (st.includes('限') && sh.daily_limit > 0) return '<span class="' + cls + ' buy-cell" ' + histAttr + '>限 ¥' + formatLimit(sh.daily_limit) + '</span>';
+      if (st.includes('限') && !sh.daily_limit) return '<span class="text-stone-400 dark:text-stone-500 text-xs" ' + histAttr + '>—</span>';
+      return '<span class="' + cls + ' buy-cell" ' + histAttr + '>' + st + '</span>';
     }
-    // formatLimit / buyStatusClass 已移到 web/js/utils.js
+
+    // ==================== 申购历史 tooltip ====================
+    function showBuyTip(el) {
+      if (el.querySelector('.buy-hist-tip')) return;
+      var tip = document.createElement('div'); tip.className = 'buy-hist-tip';
+      var raw = el.dataset.history;
+      var histData = [];
+      if (raw) { try { histData = JSON.parse(raw); } catch(_) { histData = []; } }
+      if (!histData || !histData.length) {
+        tip.innerHTML = '<div class="tip-header">申购变更记录</div><div class="tip-empty">暂无历史记录</div>';
+      } else {
+        histData = histData.slice(-3).reverse();
+        var rows = '';
+        for (var hi = 0; hi < histData.length; hi++) {
+          var h = histData[hi];
+          var s = h.buy_status || '';
+          var cls, label;
+          if (s.includes('暂停')) { cls = 'tip-badge-paused'; label = '暂停'; }
+          else if (s.includes('限') && h.daily_limit > 0) { cls = 'tip-badge-limit'; label = '限 ¥' + formatLimit(h.daily_limit); }
+          else { cls = 'tip-badge-open'; label = s; }
+          rows += '<div class="tip-row"><span class="tip-date">' + h.date + '</span><span class="tip-badge ' + cls + '">' + label + '</span></div>';
+        }
+        tip.innerHTML = '<div class="tip-header">申购变更 · 最近' + histData.length + '次</div>' + rows;
+      }
+      el.style.position = 'relative'; el.appendChild(tip);
+    }
+    function hideBuyTip(el) { var tip = el.querySelector('.buy-hist-tip'); if (tip) tip.remove(); el.style.position = ''; }
+    function initBuyTooltips(container) {
+      container.querySelectorAll('.buy-cell').forEach(function(cell) {
+        cell.addEventListener('mouseenter', function() { showBuyTip(cell); });
+        cell.addEventListener('mouseleave', function() { hideBuyTip(cell); });
+      });
+    }
     function toggleSeries(row) {
       const id = row.dataset.seriesId;
       const detail = document.querySelector(`.share-rows[data-parent="${id}"]`);

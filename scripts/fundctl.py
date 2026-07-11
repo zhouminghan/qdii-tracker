@@ -15,7 +15,7 @@ from core.constants import CATEGORIES, DATA_DIR
 from core.config_loader import get_config, save_config
 
 # 直接 import pipeline 模块（替代 subprocess 调用）
-from pipeline import scan, enrich, fill, refresh, holdings, reclassify, codegen
+from pipeline import scan, enrich, fill, holdings, reclassify, codegen
 
 
 def _run(main_fn, *argv_extra):
@@ -48,7 +48,6 @@ def cmd_add(args):
     _run(scan.main)
     _run(enrich.main, "--codes", code)
     _run(fill.main, "--codes", code)
-    _run(refresh.main, "--codes", code)
     if to_cat in ("active", "global_other"):
         _run(holdings.main, "--codes", code)
 
@@ -67,19 +66,17 @@ def cmd_move(args):
 
 
 def cmd_refresh(args):
+    """增量刷新（fill 已包含净值 + 申购状态 + 历史追踪）"""
     if args.codes:
         _run(fill.main, "--codes", args.codes)
-        _run(refresh.main, "--codes", args.codes)
     else:
         _run(fill.main)
-        _run(refresh.main)
 
 
 def cmd_sync(_args):
     _run(scan.main)
     _run(enrich.main)
     _run(fill.main)
-    _run(refresh.main)
     _run(holdings.main)
     _run(codegen.main)
 

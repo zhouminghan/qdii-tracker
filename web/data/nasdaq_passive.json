@@ -39,6 +39,13 @@
           "full_name": "广发纳斯达克100交易型开放式指数证券投资基金联接基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -113,6 +120,13 @@
           "full_name": "广发纳斯达克100交易型开放式指数证券投资基金联接基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -161,6 +175,13 @@
           "manager": "刘杰",
           "buy_status": "限大额",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "---",
@@ -340,6 +361,13 @@
           "full_name": "华安纳斯达克100交易型开放式指数证券投资基金联接基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -406,6 +434,13 @@
           "full_name": "华安纳斯达克100交易型开放式指数证券投资基金联接基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -589,6 +624,13 @@
           "full_name": "大成纳斯达克100交易型开放式指数证券投资基金联接基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<50.0万",
@@ -667,6 +709,13 @@
           "full_name": "大成纳斯达克100交易型开放式指数证券投资基金联接基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -734,6 +783,13 @@
           "full_name": "南方纳斯达克100指数发起式证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -800,6 +856,13 @@
           "full_name": "南方纳斯达克100指数发起式证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -849,6 +912,13 @@
           "manager": "张其思",
           "buy_status": "限大额",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "---",
@@ -915,6 +985,13 @@
           "full_name": "天弘纳斯达克100指数型发起式证券投资基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<500.0万",
@@ -981,6 +1058,13 @@
           "full_name": "天弘纳斯达克100指数型发起式证券投资基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -1032,6 +1116,13 @@
           "full_name": "天弘纳斯达克100指数型发起式证券投资基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -1101,6 +1192,13 @@
           "full_name": "摩根纳斯达克100指数型发起式证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<50.0万",
@@ -1166,6 +1264,13 @@
           "full_name": "摩根纳斯达克100指数型发起式证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -1332,6 +1437,13 @@
           "full_name": "嘉实纳斯达克100交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<50.0万",
@@ -1394,6 +1506,13 @@
           "full_name": "嘉实纳斯达克100交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -1441,6 +1560,13 @@
           "manager": "张钟玉",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "---",
@@ -1608,6 +1734,13 @@
           "full_name": "招商纳斯达克100交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -1673,6 +1806,13 @@
           "full_name": "招商纳斯达克100交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -1740,6 +1880,13 @@
           "full_name": "国泰纳斯达克100指数证券投资基金",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<50.0万",
@@ -1827,6 +1974,13 @@
           "full_name": "建信纳斯达克100指数型证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -1901,6 +2055,13 @@
           "full_name": "建信纳斯达克100指数型证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -1950,6 +2111,13 @@
           "manager": "李博涵",
           "buy_status": "限大额",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "---",
@@ -2128,6 +2296,13 @@
           "full_name": "易方达纳斯达克100交易型开放式指数证券投资基金联接基金(LOF)",
           "buy_status": "暂停申购",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -2198,6 +2373,13 @@
           "full_name": "易方达纳斯达克100交易型开放式指数证券投资基金联接基金(LOF)",
           "buy_status": "暂停申购",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -2374,6 +2556,13 @@
           "full_name": "博时纳斯达克100交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -2432,6 +2621,13 @@
           "full_name": "博时纳斯达克100交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -2479,6 +2675,13 @@
           "manager": "万琼",
           "buy_status": "暂停申购",
           "daily_limit": 0.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": 0.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "---",
@@ -2642,6 +2845,13 @@
           "full_name": "汇添富纳斯达克100交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 50.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 50.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<50.0万",
@@ -2703,6 +2913,13 @@
           "full_name": "汇添富纳斯达克100交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 50.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 50.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -2756,6 +2973,13 @@
           "full_name": "汇添富纳斯达克100交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 50.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 50.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -2924,6 +3148,13 @@
           "full_name": "华泰柏瑞纳斯达克100交易型开放式指数证券投资基金发起式联接基金（QDII）",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -2989,6 +3220,13 @@
           "full_name": "华泰柏瑞纳斯达克100交易型开放式指数证券投资基金发起式联接基金（QDII）",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -3041,6 +3279,13 @@
           "full_name": "华泰柏瑞纳斯达克100交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -3107,6 +3352,13 @@
           "full_name": "宝盈纳斯达克100指数型发起式证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -3172,6 +3424,13 @@
           "full_name": "宝盈纳斯达克100指数型发起式证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -3322,6 +3581,13 @@
           "full_name": "万家纳斯达克100指数型发起式证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -3391,6 +3657,13 @@
           "full_name": "万家纳斯达克100指数型发起式证券投资基金(QDII)",
           "buy_status": "限大额",
           "daily_limit": 10.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",
@@ -3455,6 +3728,13 @@
           "full_name": "华夏纳斯达克100交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额<100.0万",
@@ -3517,6 +3797,13 @@
           "full_name": "华夏纳斯达克100交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "暂停申购",
           "daily_limit": 100.0,
+          "buy_status_history": [
+            {
+              "date": "2026-07-11",
+              "buy_status": "暂停申购",
+              "daily_limit": 100.0
+            }
+          ],
           "buy_rules": [
             {
               "condition": "0.0万<买入金额",

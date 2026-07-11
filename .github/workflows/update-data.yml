@@ -86,25 +86,21 @@ jobs:
         if: steps.mode.outputs.mode == 'incremental'
         run: |
           cd scripts
-          echo "=== [1/2] pipeline.fill（净值 + 涨跌幅 + YTD + 费率补漏）==="
+          echo "=== pipeline.fill（净值 + 申购状态 + 历史追踪）==="
           python -m pipeline.fill
-          echo "=== [2/2] pipeline.refresh（申购状态 + 限额 + 涨跌幅兜底 + ETF 场内价）==="
-          python -m pipeline.refresh
 
       # 5b. 完整流水线（慢，~12 分钟）
       - name: 🚀 完整流水线（扫描 + 补全 + 持仓）
         if: steps.mode.outputs.mode == 'full'
         run: |
           cd scripts
-          echo "=== [1/5] pipeline.scan（扫描 + 分类）==="
+          echo "=== [1/4] pipeline.scan（扫描 + 分类）==="
           python -m pipeline.scan
-          echo "=== [2/5] pipeline.enrich（规模 + 费率 + 基金经理）==="
+          echo "=== [2/4] pipeline.enrich（规模 + 费率 + 基金经理）==="
           python -m pipeline.enrich
-          echo "=== [3/5] pipeline.fill（净值 + 涨跌幅）==="
+          echo "=== [3/4] pipeline.fill（净值 + 申购状态 + 历史追踪）==="
           python -m pipeline.fill
-          echo "=== [4/5] pipeline.refresh（申购状态 + 限额）==="
-          python -m pipeline.refresh
-          echo "=== [5/5] pipeline.holdings（主动基金持仓）==="
+          echo "=== [4/4] pipeline.holdings（主动基金持仓）==="
           python -m pipeline.holdings
 
       - name: ✅ 一致性校验

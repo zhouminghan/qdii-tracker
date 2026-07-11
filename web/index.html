@@ -30,286 +30,14 @@
   <link rel="icon" href="data:,">
   <!-- 防闪烁：在首屏渲染前读取 sessionStorage / 系统偏好，立即应用 dark class（必须在 Tailwind CDN 之前） -->
   <script>(function(){try{var t=sessionStorage.getItem('qdii-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}})();</script>
-  <link rel="stylesheet" href="./css/tailwind.css?v=20260613a" />
+  <link rel="stylesheet" href="./css/tailwind.css?v=placeholder" />
   <!-- 纯常量配置（COMPANY_BRAND/GROUP_META/ETF_GROUPS 等 ~150 行）抽出为 config.js；
        用普通 script 全局作用域加载（非 ES Module），原内联块 0 改动即可引用。
        ?v= 版本戳防 GitHub Pages 强缓存（改文件后需 bump）。 -->
-  <script defer src="./js/config.js?v=20260613a"></script>
+  <script defer src="./js/config.js?v=placeholder"></script>
   <!-- 纯工具函数集（0 副作用 / 0 DOM）抽出为 utils.js；依赖 config.js 的全局常量。 -->
-  <script defer src="./js/utils.js?v=20260616b"></script>
-  <style>
-    body {
-      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
-      background: #f5f5f4;
-    }
-    .num {
-      font-family: "SF Mono", Monaco, Menlo, monospace;
-      font-variant-numeric: tabular-nums;
-    }
-    .up { color: #dc2626; }
-    .down { color: #16a34a; }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 2px 8px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 500;
-      white-space: nowrap;
-      border: 1px solid transparent;
-    }
-    .badge-open { background: #dcfce7; color: #166534; }
-    .badge-limit { background: #fef3c7; color: #92400e; }
-    .badge-paused { background: #fee2e2; color: #991b1b; }
-    .badge-qdii { background: #e0e7ff; color: #3730a3; padding: 1px 6px; font-size: 10px; }
-    .badge-usd { background: #fef3c7; color: #78350f; padding: 1px 6px; font-size: 10px; }
-    .badge-cny { background: #f1f5f9; color: #475569; padding: 1px 6px; font-size: 10px; }
-    .badge-estimate { display: none; }
-    .fade-in { animation: fade 0.2s ease; }
-    @keyframes fade { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* 市场状态指示点 */
-    .mkt-dot {
-      display: inline-block; width: 6px; height: 6px; border-radius: 50%;
-      vertical-align: middle; margin-right: 4px;
-    }
-    .mkt-dot.open  { background: #10b981; box-shadow: 0 0 0 0 rgba(16,185,129,0.6); animation: mkt-pulse 1.6s ease-out infinite; }
-    .mkt-dot.closed { background: #d1d5db; }
-    @keyframes mkt-pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(16,185,129,0.55); }
-      70%  { box-shadow: 0 0 0 6px rgba(16,185,129,0); }
-      100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
-    }
-    .tab-active {
-      background: #1c1917;
-      color: white;
-    }
-    .logo-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 700;
-      flex-shrink: 0;
-      box-shadow: 0 2px 6px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.25);
-      letter-spacing: -0.5px;
-      position: relative;
-      overflow: hidden;
-      text-shadow: 0 1px 2px rgba(0,0,0,.2);
-    }
-    /* 对角高光，模拟真 logo 的立体感 */
-    .logo-avatar::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 50%;
-      background: linear-gradient(to bottom, rgba(255,255,255,.18), transparent);
-      pointer-events: none;
-    }
-    /* 右下角轻微阴影增加立体感 */
-    .logo-avatar::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 40%;
-      background: linear-gradient(to top, rgba(0,0,0,.08), transparent);
-      pointer-events: none;
-    }
-    .logo-avatar > span { position: relative; z-index: 1; }
-    .logo-letter-1 { font-size: 18px; }
-    .logo-letter-2 { font-size: 13px; }
-    /* 费率弹窗 */
-    .fee-tip {
-      position: relative;
-      display: inline-block;
-      cursor: pointer;
-      border-bottom: 1px dotted #94a3b8;
-    }
-    .fee-tip:hover .fee-popover,
-    .fee-tip:focus-within .fee-popover { display: block; }
-    .fee-popover {
-      display: none;
-      position: absolute;
-      right: 0;
-      bottom: 100%;
-      margin-bottom: 4px;
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      padding: 10px 12px;
-      font-size: 11px;
-      min-width: 260px;
-      box-shadow: 0 10px 25px rgba(0,0,0,.1);
-      z-index: 100;
-      text-align: left;
-    }
-    .fee-popover table { width: 100%; border-collapse: collapse; }
-    .fee-popover th, .fee-popover td { padding: 2px 4px; text-align: left; }
-    .fee-popover th { color: #64748b; font-weight: 500; }
-    /* 分组筛选 Chips */
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 500;
-      background: #f5f5f4;
-      color: #57534e;
-      border: 1px solid transparent;
-      cursor: pointer;
-      transition: all 0.15s;
-      user-select: none;
-    }
-    .chip:hover { background: #e7e5e4; }
-    .chip.chip-active {
-      background: #1c1917;
-      color: white;
-    }
-    .chip-count {
-      font-size: 11px;
-      padding: 1px 7px;
-      border-radius: 999px;
-      background: rgba(0,0,0,.08);
-      font-variant-numeric: tabular-nums;
-    }
-    .chip.chip-active .chip-count { background: rgba(255,255,255,.2); }
-
-    /* ====== 深色模式覆盖 ====== */
-    /* 策略：CSS 覆盖为主（badge/chip/tab/表格/弹窗/走势图），Tailwind dark: 为辅（布局/文字） */
-    html { transition: background-color 0.2s, color 0.2s; }
-    html.dark body { background: #1c1917; color: #f5f5f4; }
-
-    /* Badge 深色：同色系深底 + 亮字 + 同色边框，保留色相语义 */
-    html.dark .badge-open   { background: rgba(22,101,52,0.25); color: #86efac; border-color: rgba(22,101,52,0.4); }
-    html.dark .badge-limit  { background: rgba(146,64,14,0.25); color: #fcd34d; border-color: rgba(146,64,14,0.4); }
-    html.dark .badge-paused { background: rgba(127,29,29,0.25); color: #fca5a5; border-color: rgba(127,29,29,0.4); }
-    html.dark .badge-qdii   { background: rgba(55,48,163,0.25); color: #a5b4fc; border-color: rgba(55,48,163,0.4); }
-    html.dark .badge-usd    { background: rgba(146,64,14,0.25); color: #fcd34d; border-color: rgba(146,64,14,0.4); }
-    html.dark .badge-cny    { background: rgba(41,37,36,0.5); color: #d6d3d1; border-color: #44403c; }
-
-    /* Tab active 深色：不用白底突兀，用 stone-700 柔和突出 */
-    html.dark .tab-active { background: #44403c; color: #e7e5e4; }
-
-    /* Chip 深色 */
-    html.dark .chip { background: #292524; color: #a8a29e; border-color: #44403c; }
-    html.dark .chip:hover { background: #44403c; }
-    html.dark .chip.chip-active { background: #44403c; color: #e7e5e4; }
-    html.dark .chip.chip-active .chip-count { background: rgba(255,255,255,.08); }
-
-    /* 费率弹窗深色 */
-    html.dark .fee-tip { border-bottom-color: #57534e; }
-    html.dark .fee-popover {
-      background: #292524; border-color: #44403c;
-      box-shadow: 0 10px 25px rgba(0,0,0,.4);
-    }
-    html.dark .fee-popover th { color: #a8a29e; }
-    html.dark .fee-popover .text-stone-700 { color: #d6d3d1; }
-    html.dark .fee-popover .text-stone-600 { color: #a8a29e; }
-    html.dark .fee-popover .text-stone-500 { color: #78716c; }
-    html.dark .fee-popover .text-stone-400 { color: #57534e; }
-    html.dark .fee-popover .border-stone-100 { border-color: #44403c; }
-    html.dark .fee-tip .text-stone-500 { color: #a8a29e; }
-
-    /* 表格深色（thead / 展开行 / hover） */
-    html.dark .bg-stone-50 { background: #1c1917 !important; }
-    html.dark .bg-stone-50\/60 { background: rgba(28,25,23,0.6) !important; }
-    html.dark thead.bg-stone-50 { background: #1c1917 !important; }
-    html.dark .border-stone-100 { border-color: #292524 !important; }
-    html.dark .border-stone-200 { border-color: #44403c !important; }
-    html.dark .divide-stone-100 > :not([hidden]) ~ :not([hidden]) { border-color: #292524; }
-    html.dark .hover\:bg-stone-50:hover,
-    html.dark .hover\:bg-stone-50\/50:hover { background: #292524 !important; }
-    html.dark .hover\:bg-stone-100:hover { background: #292524 !important; }
-
-    /* Badge 默认（buyStatusClass fallback）深色 */
-    html.dark .badge.bg-stone-100 { background: #292524 !important; color: #a8a29e !important; }
-    /* 费率 tooltip 内买费率文字深色 */
-    html.dark .fee-popover .text-stone-400 { color: #57534e !important; }
-
-    /* 市场状态指示点 */
-    html.dark .mkt-dot.closed { background: #57534e; }
-
-    /* 走势图 SVG 深色 */
-    html.dark .trend-grid-line { stroke: #44403c; }
-    html.dark .trend-grid-text { fill: #78716c; }
-    html.dark .trend-zero-line  { stroke: #57534e; }
-    html.dark #trend-cursor-line { stroke: #a8a29e; }
-    html.dark #trend-cursor-dot  { stroke: #292524; }
-
-    /* 走势图面积渐变深色：降低不透明度 */
-    html.dark #trend-svg stop:first-child { stop-opacity: 0.12; }
-
-    /* nav-date-sub 深色 */
-    html.dark .nav-date-sub { color: #57534e; }
-
-    /* 走势 tooltip 深色 */
-    html.dark #trend-tooltip,
-    html.dark .trend-tooltip-dark {
-      background: #292524; border-color: #44403c; color: #f5f5f4;
-    }
-
-    /* 涨跌色在深色下保持（红涨绿跌不变） */
-
-    /* Modal 遮罩深色 */
-    html.dark #detailModal,
-    html.dark #trendModal { background: rgba(0,0,0,0.6); }
-
-    /* 主题切换按钮 */
-    .theme-toggle {
-      width: 36px; height: 36px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s; cursor: pointer;
-      background: #f5f5f4; color: #1c1917;
-      border: 1px solid #d6d3d1;
-    }
-    .theme-toggle:hover { background: #e7e5e4; }
-    html.dark .theme-toggle {
-      background: #44403c; color: #f5f5f4;
-      border-color: #57534e;
-    }
-    html.dark .theme-toggle:hover { background: #57534e; }
-    .theme-toggle svg { width: 20px; height: 20px; }
-    /* 图标由 html.dark 控制，不依赖 JS */
-    .theme-toggle .icon-moon { display: none; }
-    .theme-toggle .icon-sun  { display: block; }
-    html.dark .theme-toggle .icon-moon { display: block; }
-    html.dark .theme-toggle .icon-sun  { display: none; }
-
-    .skip-link {
-      position: absolute;
-      left: -9999px;
-      top: auto;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-    }
-    .skip-link:focus {
-      left: 12px;
-      top: 12px;
-      width: auto;
-      height: auto;
-      padding: 8px 12px;
-      z-index: 1000;
-      border-radius: 8px;
-      background: #1c1917;
-      color: #fff;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .fade-in,
-      .mkt-dot.open { animation: none !important; }
-      * { transition: none !important; }
-    }
-  </style>
+  <script defer src="./js/utils.js?v=placeholder"></script>
+  <link rel="stylesheet" href="./css/app.css?v=placeholder" />
 </head>
 <body class="text-stone-900 dark:text-stone-100">
   <a href="#main-content" class="skip-link">跳到主内容</a>
@@ -645,6 +373,64 @@
     </div>
   </div>
 
+  <!-- 截图配置 Modal（上下布局） -->
+  <div id="ss-modal" class="hidden fixed inset-0 z-50 flex items-start justify-center p-4" style="background: rgba(0,0,0,0.4); backdrop-filter: blur(6px);" role="dialog" aria-modal="true" aria-label="分享导出">
+    <div class="ss-modal-dialog w-full max-w-4xl bg-white rounded-2xl shadow-2xl flex flex-col" style="max-height:92vh;overflow-y:auto;">
+      <!-- 顶部操作栏 -->
+      <div class="ss-top-bar">
+        <span class="ss-modal-title">📤 截图分享</span>
+        <div class="ss-top-actions">
+          <button id="ss-download-btn" onclick="downloadScreenshotPNG()" class="ss-save-primary">
+            <svg class="ss-save-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            保存
+          </button>
+          <button onclick="closeScreenshotModal()" class="ss-close-btn" aria-label="关闭">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- 筛选栏（横排） -->
+      <div class="ss-filters-bar">
+        <div class="ss-filter-group">
+          <span class="ss-filter-label">分类</span>
+          <div class="ss-chip-group" id="ss-group-filter">
+            <button class="ss-chip-btn active" data-val="all">全部</button>
+            <button class="ss-chip-btn" data-val="nasdaq">纳斯达克100</button>
+            <button class="ss-chip-btn" data-val="sp500">标普500</button>
+          </div>
+        </div>
+        <div class="ss-filter-group">
+          <span class="ss-filter-label">风格</span>
+          <div class="ss-chip-group" id="ss-style-filter">
+            <button class="ss-chip-btn active" data-val="cute">🎀 可爱</button>
+            <button class="ss-chip-btn" data-val="fresh">🌿 清新</button>
+            <button class="ss-chip-btn" data-val="notion">📝 手帐</button>
+            <button class="ss-chip-btn" data-val="notes">📒 笔记</button>
+            <button class="ss-chip-btn" data-val="glass">🪟 玻璃</button>
+            <button class="ss-chip-btn" data-val="warm">☕ 温暖</button>
+            <button class="ss-chip-btn" data-val="minimal">◻ 极简</button>
+          </div>
+        </div>
+        <div class="ss-filter-group">
+          <span class="ss-filter-label">布局</span>
+          <div class="ss-chip-group" id="ss-layout-filter">
+            <button class="ss-chip-btn active" data-val="dense">密集</button>
+            <button class="ss-chip-btn" data-val="balanced">均衡</button>
+            <button class="ss-chip-btn" data-val="sparse">稀疏</button>
+          </div>
+        </div>
+        <div class="ss-filter-group">
+          <span class="ss-filter-label">显示列</span>
+          <div id="ss-col-list" class="ss-col-grid"></div>
+        </div>
+      </div>
+
+      <!-- 预览区（可滚动） -->
+      <div id="ss-preview" class="ss-preview"></div>
+    </div>
+  </div>
+
   <footer class="max-w-7xl mx-auto px-3 sm:px-6 mt-4 pb-6">
     <div class="bg-stone-50 dark:bg-stone-800 rounded-xl p-5 text-xs text-stone-500 dark:text-stone-400 leading-relaxed border border-stone-200 dark:border-stone-700">
       <div class="font-semibold text-stone-700 dark:text-stone-300 mb-2">⚠️ 风险提示与免责声明</div>
@@ -652,17 +438,18 @@
       <p class="mt-2">📊 数据来源：East Money (AKShare) / 雪球 · 📜 MIT License · 数据由 GitHub Actions 每日自动更新</p>
     </div>
   </footer>
-  <script defer src="./js/main.js?v=20260616b"></script>
+  <script defer src="./js/main.js?v=placeholder"></script>
+  <script defer src="./js/screenshot.js?v=placeholder"></script>
 
   <!-- 模块化的独立功能模块（ES Modules，无构建过程） -->
   <!-- why 带 ?v=：浏览器对 .js 默认强缓存（GitHub Pages 也是），
        发布 workflow 会在上传前自动把这些版本戳统一改写为本次构建版本，避免手工 bump 漏改。 -->
   <script type="module">
-import { start as startMarketIndices } from './js/market-indices.js?v=20260616a';
-import { start as startEtfPremium } from './js/etf-premium.js?v=20260616a';
-import { start as startMarketTrend } from './js/market-trend.js?v=20260616a';
-import { start as startOffshoreLiveNav } from './js/offshore-live-nav.js?v=20260616a';
-import { start as startTheme } from './js/theme.js?v=20260616a';
+import { start as startMarketIndices } from './js/market-indices.js?v=placeholder';
+import { start as startEtfPremium } from './js/etf-premium.js?v=placeholder';
+import { start as startMarketTrend } from './js/market-trend.js?v=placeholder';
+import { start as startOffshoreLiveNav } from './js/offshore-live-nav.js?v=placeholder';
+import { start as startTheme } from './js/theme.js?v=placeholder';
 
     // 主题切换（深色/亮色 + 跟随系统）
     try { startTheme(); } catch (e) { console.error('theme init error:', e); }

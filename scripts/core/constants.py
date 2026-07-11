@@ -80,7 +80,7 @@ STANDARD_SHARE_KEY_ORDER = [
     "chg_1m", "chg_3m", "chg_6m", "chg_ytd", "chg_1y", "chg_2y", "chg_3y", "chg_since_inception",
     "scale", "scale_raw", "established", "manager",
     "fund_company", "fund_type_xq", "full_name",
-    "buy_status", "daily_limit", "buy_rules", "sell_rules",
+    "buy_status", "daily_limit", "buy_status_history", "buy_rules", "sell_rules",
     "mgmt_fee", "custody_fee", "fee", "first_buy_rate", "sale_service_fee",
     "sell_status", "buy_min",
     "chg_1w", "free_hold_days", "max_sell_rate",
