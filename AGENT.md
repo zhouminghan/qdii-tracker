@@ -12,7 +12,9 @@ cd scripts && python3 fundctl.py check    # 一致性校验
 cd ../web && python3 -m http.server 8765  # 本地开发
 ```
 
-## 任务流程（每次做功能/修 bug 按这个走）
+## Harness（任务流程 + 验收）
+
+每次做功能/修 bug：
 
 1. 检查 `.codebuddy/plans/`，有未完成的计划就续接，没有就新建
 2. 读本文件（规则）、README（架构）、MEMORY（踩坑）
@@ -20,6 +22,12 @@ cd ../web && python3 -m http.server 8765  # 本地开发
 4. 跑验收：`fundctl.py check`；pre-commit 通过。失败就回去改
 5. 浏览器验：启 web 服务，页面交互点一遍，截图确认
 6. 做得完就提交；这个场景容易再犯的 → 补一条反馈层回归
+
+**做完必跑**：
+- `fundctl.py check`：golden fixtures + 目录纪律 + 改动联动提示
+- `git commit` 前 pre-commit 自动跑 `architecture_lint.py` + `verify_data.py`（不通过阻止提交）+ `scan_scenarios.py`（提示不阻断）
+- 值得固化的 → 补 `feedback/ui_scenarios/` yaml 或 `golden_fixtures.json` fixture
+- `MEMORY.md` 记踩坑
 
 ## Rules
 
@@ -56,10 +64,3 @@ cd ../web && python3 -m http.server 8765  # 本地开发
 - offshore-live-nav：lsjz→pingzhongdata 兜底，settled 90min 静默
 - etf-premium：盘中 60s/午休 120s/settled 24h
 - market-indices：盘中 60s/盘后 5min/周末 30min
-
-## 验收（做完必跑）
-
-- `fundctl.py check`：golden fixtures + 目录纪律 + 改动联动提示
-- `git commit` 前 pre-commit hook 自动跑 `architecture_lint.py` + `verify_data.py`（不通过阻止提交）+ `scan_scenarios.py`（提示不阻断）
-- 跑完如果场景值得固化 → 补 `feedback/ui_scenarios/` 下的 yaml 或 `golden_fixtures.json` 的 fixture
-- `MEMORY.md` 记踩坑，改一次笔记一次
