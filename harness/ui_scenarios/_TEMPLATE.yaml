@@ -1,0 +1,38 @@
+# harness/ui_scenarios/_TEMPLATE.yaml
+#
+# 这是一份「模板」，不是真实场景——文件名前缀 _ 表示不会被当作待执行场景加载。
+# 复制本文件、去掉 _ 前缀、按真实 bug/功能改写，即可固化一条新的 UI 回归场景。
+#
+# 设计原则（对应 grilling 会话定下的决策）：
+#   - 工具无关：不写死用 Playwright/Selenium/其他，执行时由 Agent 现场发现可用工具去驱动
+#   - 声明式：只描述「打开什么页面 → 做什么交互 → 断言什么 DOM 属性等于什么值」
+#   - 期望值必须来自「已验证通过」的真实渲染结果（跑过浏览器、人确认过效果对），
+#     不能凭空编造，也不能盲目信任「刚改完的代码」——那是在固化 bug 而不是固化正确答案
+#
+# 命名建议：<场景简述>.yaml，例如 style-switch-stripe-color.yaml
+
+scenario: "一句话描述这个场景在验证什么（例如：切换风格后表格条纹背景色应跟随变化）"
+
+# 触发这条场景固化的背景（可选，但强烈建议填，方便日后回顾为什么需要它）
+origin:
+  bug_or_feature: "简述当时的 bug 现象或新功能需求"
+  root_cause: "根因是什么（可选，如果是 bug 修复）"
+  fixed_in: "修复/实现所在的文件路径（例如 web/js/screenshot.js）"
+
+# 执行步骤：本地起服务后，按顺序操作页面
+steps:
+  - open: "web/index.html"          # 相对项目根目录的路径，实际执行时会拼上 http://localhost:<port>/
+  - click: "#some-selector"          # CSS selector，点击
+  # 可用的动作类型（按需扩展，不限于以下几种）：
+  #   - open: <path>              打开页面
+  #   - click: <selector>          点击元素
+  #   - fill: { selector: <sel>, value: <str> }   填写输入框
+  #   - wait: <ms>                 固定等待（尽量少用，优先用下面的 wait_for）
+  #   - wait_for: <selector>       等待元素出现
+
+# 断言：每条描述一个「选择器 + 属性 + 期望值」
+assert:
+  - selector: "#some-selector"
+    property: "computedStyle.backgroundColor"   # 支持 computedStyle.* / boundingRect.* / textContent 等
+    expected: "rgb(255, 255, 255)"
+    note: "可选，说明为什么期望这个值"

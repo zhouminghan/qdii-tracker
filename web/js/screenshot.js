@@ -42,6 +42,7 @@
     tab: null,
     sp500: [],
     nasdaq: [],
+    activeFund: [],
     activeCols: [],
     sortKey: null,
     sortDir: 'desc',
@@ -89,6 +90,7 @@
     ssState.tab = tab;
     ssState.sp500 = flattenByGroup(groups, 'sp500');
     ssState.nasdaq = flattenByGroup(groups, 'nasdaq_passive');
+    ssState.activeFund = flattenByGroup(groups, 'active');
     ssState.activeCols = d.cols;
     ssState.sortKey = d.sort;
     ssState.sortDir = d.dir;
@@ -330,14 +332,17 @@
 
     var nasdaqLimit = calcLimit(ssState.nasdaq);
     var sp500Limit  = calcLimit(ssState.sp500);
+    var activeLimit = calcLimit(ssState.activeFund);
     var nasdaqNavDate = calcNavHeaderDate(ssState.nasdaq);
     var sp500NavDate  = calcNavHeaderDate(ssState.sp500);
+    var activeNavDate = calcNavHeaderDate(ssState.activeFund);
     function limitLabel(v) { return v > 0 ? '<span class="ss-limit-inline">当日最多 ¥' + formatLimit(v) + '</span>' : ''; }
 
     // 收集所有分类 section（不包外层，留给内层2 统一包）
     var sectionsHtml = '';
     if (f === 'all' || f === 'nasdaq') sectionsHtml += renderFundTable('纳斯达克100', ssState.nasdaq, limitLabel(nasdaqLimit), nasdaqNavDate);
     if (f === 'all' || f === 'sp500')  sectionsHtml += renderFundTable('标普500', ssState.sp500, limitLabel(sp500Limit), sp500NavDate);
+    if (f === 'all' || f === 'active') sectionsHtml += renderFundTable('美股主动', ssState.activeFund, limitLabel(activeLimit), activeNavDate);
 
     // 外层大框（.ss-phone-wrap，唯一带边框） + 内层1（市场指标） + 内层2（所有表格）
     var html =
@@ -355,16 +360,31 @@
       });
     });
 
-    // 弹窗宽度跟随 wrap 同步（用 scrollWidth 拿内容真实宽度，fit-content 模式下更准）
+    // 弹窗宽度跟随 wrap 同步：table-layout:auto 的表格宽度由父容器约束（父未撑开时 tbl.scrollWidth 不可信），
+    // 故不能直接读 wrap.scrollWidth。改为量出每个 .ss-tbl / .ss-mkt-header 因收缩溢出的差值（scrollWidth - 可用宽度），
+    // 取最大差值补偿到 wrap 当前宽度上，弹窗才能撑到真正容纳表格内容所需的宽度。
     requestAnimationFrame(function () {
       var modal = document.querySelector('.ss-modal-dialog');
       var wrap = document.querySelector('#ss-preview .ss-phone-wrap');
-      if (modal && wrap) {
-        // modal = wrap 宽度，但不超过 viewport 宽度（避免弹窗比视口还宽）
-        var maxW = window.innerWidth - 32; // 16px*2 padding of #ss-modal
-        var target = Math.min(Math.max(wrap.scrollWidth + 4, 320), maxW);
-        modal.style.width = target + 'px';
+      if (!modal || !wrap) return;
+
+      var maxDelta = 0;
+      document.querySelectorAll('#ss-preview .ss-tbl').forEach(function (tbl) {
+        var tblWrap = tbl.closest('.ss-tbl-wrap') || tbl.parentElement;
+        var delta = tbl.scrollWidth - tblWrap.clientWidth;
+        if (delta > maxDelta) maxDelta = delta;
+      });
+      var mktHeader = document.querySelector('#ss-preview .ss-mkt-header');
+      if (mktHeader) {
+        var mktDelta = mktHeader.scrollWidth - mktHeader.clientWidth;
+        if (mktDelta > maxDelta) maxDelta = mktDelta;
       }
+
+      var previewPadX = 32; // .ss-preview { padding: 24px 16px } 左右各 16px
+      var neededWrapW = wrap.offsetWidth + Math.max(0, maxDelta);
+      var maxW = window.innerWidth - 32; // 16px*2 padding of #ss-modal
+      var target = Math.min(Math.max(neededWrapW + previewPadX + 4, 320), maxW);
+      modal.style.width = target + 'px';
     });
   }
 
@@ -500,9 +520,10 @@
       var nameMap = {
         'nasdaq': '纳斯达克100',
         'sp500':  '标普500',
-        'all':    '纳斯达克100-标普500',
+        'active': '美股主动',
+        'all':    '纳斯达克100-标普500-美股主动',
       };
-      var filename = (nameMap[ssState.groupFilter] || '纳斯达克100-标普500') + '-' + dateStr + '.png';
+      var filename = (nameMap[ssState.groupFilter] || '纳斯达克100-标普500-美股主动') + '-' + dateStr + '.png';
 
       // iOS/移动端：使用分享面板（可直接保存到相册）
       if (navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {

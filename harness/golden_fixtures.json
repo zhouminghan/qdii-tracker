@@ -1,0 +1,18 @@
+{
+  "_schema": {
+    "_comment": "数据侧黄金样例：人工标注「这只基金应该长什么样」，用于防止分类规则/pipeline 改动误伤数据。verify_data.py 读取本文件逐条比对 web/data/*.json 实际内容。",
+    "fixtures": [
+      {
+        "code": "示例代码，如 096001",
+        "expected_category": "该基金应归属的分类，取值见 scripts/core/constants.py 的 CATEGORIES",
+        "note": "为什么这是一个值得固化的边界案例（比如：force_include 强制纳入 / passive_override 类型改写 / 曾经被误分类过）",
+        "checks": {
+          "nav_range": "[最小值, 最大值]，可选，净值应落在的合理区间，用于发现抓取异常（如 nav 变成 0 或负数）",
+          "chg_ytd_range": "[最小值, 最大值]，可选，今年涨跌幅合理区间",
+          "default_share_code": "该系列默认展示的份额代码，可选，用于校验 default_share_code 没有跑偏"
+        }
+      }
+    ]
+  },
+  "fixtures": []
+}

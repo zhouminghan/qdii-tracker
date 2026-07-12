@@ -47,3 +47,37 @@ cd ../web && python3 -m http.server 8765  # 本地开发
 24. **offshore-live-nav**：lsjz → pingzhongdata 兜底；settled 90min 静默；失败 15/30/60min 退避
 25. **etf-premium**：盘中 60s / 午休 120s / settled 24h 静默
 26. **market-indices**：盘中 60s / 盘后 5min / 周末 30min
+
+## Harness（验收基础设施）
+
+> 目录：`harness/`，跟 `scripts/`、`web/` 平级——专门存放"这个项目的验收真理"，
+> 不属于任何产品代码树。`scripts/` 保持纯数据流水线心智，不被验收逻辑污染。
+
+```
+harness/
+├── golden_fixtures.json      # 数据侧黄金样例：人工标注「这只基金应该长什么样」
+├── verify_data.py             # 纯 Python 确定性校验，比对 golden_fixtures 与 web/data/*.json
+└── ui_scenarios/
+    ├── _TEMPLATE.yaml         # 声明式场景模板（复制改写，不要直接编辑）
+    └── <场景名>.yaml           # 真实固化的 UI 回归场景
+```
+
+### 核心原则
+
+27. **数据侧确定性、UI 侧工具无关**：`verify_data.py` 是纯 Python，无浏览器依赖，直接跑；
+    `ui_scenarios/*.yaml` 只声明"打开什么页面 → 做什么交互 → 断言什么 DOM 属性等于什么值"，
+    不锁定 Playwright/Selenium/任何具体工具——执行时由 Agent 现场发现环境里可用的浏览器自动化工具去驱动。
+28. **空 fixtures/无场景 = 通过**：骨架阶段允许空跑，不阻塞现有流程；`fundctl.py check` 后续接入
+    `verify_data.run_verification()` 时，空列表视为通过。
+29. **信任模型：只固化「已验证通过」的结果，不盲信 diff**：往 `golden_fixtures.json` /
+    `ui_scenarios/*.yaml` 写期望值前，必须先跑一次实际验证（截图确认/断言跑绿），
+    捕获那个已确认对的值——绝不能"代码刚改完就直接拿渲染结果当基准"，
+    那是在把 bug 固化成"正确答案"（对应 harness.md 提到的 reward hacking 风险）。
+
+### 固化检查点（每次修 bug / 加功能，验收通过后必须过一遍）
+
+30. 问自己：**这个场景值得变成永久回归项吗？**（判断标准：属于容易再犯的边界情况 / 之前踩过坑 / 
+    改动触碰了分类规则或视觉配色联动这类"改一处、影响多处"的逻辑）
+    - 是 → 数据侧加一条 `golden_fixtures.json` fixture；UI 侧复制 `_TEMPLATE.yaml` 写一个新场景文件
+    - 否 → 说明为什么不需要（比如纯样式微调、一次性数据修正），继续收尾
+    - 这一步是流程收尾的强制环节，不是可选项——没有配套「命令」，靠这条规则本身约束执行。
