@@ -14,6 +14,8 @@ cd ../web && python3 -m http.server 8765  # 本地开发
 
 ## Harness（任务流程 + 验收）
 
+> 三层：**预防**=本文件规则 | **执行**=`fundctl.py`+`architecture_lint.py`+`pre-commit` | **反馈**=`feedback/`
+
 每次做功能/修 bug：
 
 1. 检查 `.codebuddy/plans/`，有未完成的计划就续接，没有就新建
