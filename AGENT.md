@@ -1,68 +1,65 @@
 # QDII Tracker
 
-> 约束与规则见下。架构与部署见 README。踩坑与架构决策见 [MEMORY.md](./MEMORY.md)。
+> 约束 + 踩坑速查。架构 + 功能 + 命令见 [README](./README.md)。决策细节见 [MEMORY.md](./MEMORY.md)。
 
 ## Commands
 
 ```bash
-cd scripts && python3 fundctl.py sync    # 全量：scan→enrich→fill→holdings
-cd scripts && python3 fundctl.py refresh  # 增量：fill
-cd scripts && python3 fundctl.py add --code 008888 --to active --keyword "关键词"
-cd scripts && python3 fundctl.py check    # 一致性校验
+cd scripts && python3 fundctl.py sync    # scan→enrich→fill→holdings
+cd scripts && python3 fundctl.py refresh  # fill 增量
+cd scripts && python3 fundctl.py add --code 008888 --to active --keyword "基金名"
+cd scripts && python3 fundctl.py check    # 一致性校验（含 golden fixtures）
+python3 feedback/verify_data.py           # 单独跑数据验收
 cd ../web && python3 -m http.server 8765  # 本地开发
 ```
 
-## Harness（任务流程 + 验收）
-
-> 三层：**预防**=本文件规则 | **执行**=`fundctl.py`+`architecture_lint.py`+`pre-commit` | **反馈**=`feedback/`
-
-每次做功能/修 bug：
-
-1. 检查 `.codebuddy/plans/`，有未完成的计划就续接，没有就新建
-2. 读本文件（规则）、README（架构）、MEMORY（踩坑）
-3. 写代码/改配置/补文档，每做完一步勾掉计划文件
-4. 跑验收：`fundctl.py check`；pre-commit 通过。失败就回去改
-5. 浏览器验：启 web 服务，页面交互点一遍，截图确认
-6. 做得完就提交；这个场景容易再犯的 → 补一条反馈层回归
-
-**做完必跑**：
-- `fundctl.py check`：golden fixtures + 目录纪律 + 改动联动提示
-- `git commit` 前 pre-commit 自动跑 `architecture_lint.py` + `verify_data.py`（不通过阻止提交）+ `scan_scenarios.py`（提示不阻断）
-- 值得固化的 → 补 `feedback/ui_scenarios/` yaml 或 `golden_fixtures.json` fixture
-- `MEMORY.md` 记踩坑
-
-## Rules
+## Critical Rules
 
 ### 数据流水线
-- scan 后必接 enrich + fill，否则覆盖丢数据
-- 数据文件不写时间戳，仅 meta.json 有 generated_at
-- 写盘前 normalize：`{cat}.json` → `normalize_share_keys()`，模板在 `core/constants.py`
-- nav_date 永不回退：lsjz 失败保留旧值
-- force_include 不继承子类：A/C/美元逐一加；跨分类挪动：(a)加全量子类 → (b)scan 查残留 → (c)enrich+fill
-- LOF chg_ytd 兜底：取兄弟份额（A/C 差 <1%）
-- ETF 无申购历史：`_update_history()` 跳过 "场内"
+- **scan 后必须接 enrich + fill**，否则覆盖丢失已有数据
+- **数据文件不写时间戳**：仅 `meta.json` 保留 `generated_at`
+- **写盘前 normalize**：`{cat}.json` → `normalize_share_keys()`
+- **nav_date 永不回退**：lsjz 失败保留旧值，禁用 `datetime.now()` 推算
+- **force_include 不继承子类**：A/C/美元逐一加入；跨分类挪动：(a) 全量子类加 → (b) scan 检查残留 → (c) enrich+fill
+- **LOF chg_ytd 兜底**：取同系列兄弟份额（A/C 差异 <1%）
+- **ETF 无申购历史**：`_update_history()` 跳过 `"场内"`
 
 ### 部署
-- 不干 CI 内嵌部署：commit+push → `gh workflow run deploy-pages.yml --ref main`
-- 不动既有 UI：红涨绿跌、主动基红色警告
-- 版本戳：`deploy-pages.yml` 自动 bump，新 JS/CSS 写 `?v=placeholder`
-- web/ 只放 `data/*.json`、`js/*.js`、`css/*.css`、`.nojekyll`；脚本可验：`scripts/architecture_lint.py`
+- **禁止 CI 内嵌部署**：仅 commit+push → `gh workflow run deploy-pages.yml --ref main`
+- **不改既有 UI**：红涨绿跌、主动基红色警告
+- **版本戳**：`deploy-pages.yml` 自动 bump，新 JS/CSS 写 `?v=placeholder`
+- **目录纪律**：`web/` 仅 `data/*.json` / `js/*.js` / `css/*.css` / `.nojekyll`
 
-### 截图分享
-- `screenshot.js` IIFE，`html-to-image` CDN 懒加载，CSS 在 `app.css`
-- 卡片：外层 `.ss-phone-wrap` 唯一带边框，内层 `.ss-inner` × 2（市场卡/表格）
-- 宽度：`fit-content` / `min-width: min(240px,92vw)` / `max-width:100%`；dialog 用 rAF 跟 wrap
-- 净值列：净值+涨跌，日期在 th 副标题（分组众数 nav_date）
-- 列筛选：locked 列不在面板显示；sortable 列可排
-- 表头对齐：申购居中（.ss-th-status），数字右对齐（.ss-th-num）
-- 窄屏换行：chip/col-grid 设 min-width:0；#ss-modal overflow:auto
-- iOS 截图：去 backdrop-filter，navigator.share()
-- 申购历史：`_update_history()` → buy_status_history[]
-- snapPng() 用 cloneNode 离屏，z-index:-1 沉遮罩下；别用 left:-99999px
-- 指标卡用 border 别用 box-shadow（截图显脏影）
+### 截图分享（全部约束）
+- **screenshot.js**：IIFE，`html-to-image` CDN 懒加载；CSS 独立 `app.css`
+- **卡片结构**：外层 `.ss-phone-wrap`（唯一带边框）+ 内层 `.ss-inner` × 2（无边框）→ 不改结构
+- **宽度自适应**：wrap `fit-content` + dialog `rAF` 同步 `style.width`
+- **窄屏**：`.ss-chip-group`/`.ss-col-grid` `min-width:0`；`.ss-tbl-wrap { overflow-x: auto }`
+- **净值列**：日期内联 `<span>·MM-DD</span>`，不换行
+- **列筛选**：`locked:true` 不显示面板；`sortable:true` 可排序
+- **表头对齐**：申购居中 / 数字右对齐 / 其余左对齐
+- **iPhone**：截前在克隆体上移除 `backdrop-filter`，`navigator.share()` 存相册
+- **申购历史**：`_update_history()` → `buy_status_history[]`；同状态只刷日期
+- **指标卡**：轮廓用 `border`，不用 `box-shadow`；7 风格覆盖 `border-color`，`box-shadow:none`
+- **`snapPng()`**：`cloneNode` 离屏渲染 → 不改可见 DOM；克隆体 `position:absolute` + `#ss-preview{position:relative}`（必须挂 preview 下）。踩坑详情见 [MEMORY.md](./MEMORY.md)
 
 ### 实时轮询
-- idle-scheduler：隐藏/空闲暂停，恢复 catch-up
-- offshore-live-nav：lsjz→pingzhongdata 兜底，settled 90min 静默
-- etf-premium：盘中 60s/午休 120s/settled 24h
-- market-indices：盘中 60s/盘后 5min/周末 30min
+- **idle-scheduler** 统一调度（隐藏/空闲暂停）；**offshore-live-nav** lsjz→pzd 兜底；**etf-premium** 盘中60s；**market-indices** 盘中60s/盘后5min
+
+## Harness（改 → 测 → 固）
+
+> 三层：**预防**=本文件 | **执行**=`fundctl.py check` + `pre-commit` | **反馈**=`feedback/`
+
+```
+feedback/   # golden_fixtures.json + verify_data.py + ui_scenarios/ (5 个真实场景)
+```
+
+**① 改** — 检查 `.codebuddy/plans/` 续接 → 读 AGENT/README/MEMORY → 每步勾计划文件
+
+**② 测** — 数据侧：`fundctl.py check`；UI 侧：启 web → Playwright (`test/`，gitignored)；一个手段不行就换一个
+
+**③ 固** — 提交 → 自问是否补 `feedback/` 回归项 → 同步 MEMORY.md
+
+### 设计约束
+- **数据侧确定性、UI 侧工具无关**：`verify_data.py` 纯 Python；`ui_scenarios/*.yaml` 声明式
+- **空 fixtures/无场景 = 通过**；**只固化验证通过的结果**
