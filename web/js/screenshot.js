@@ -281,9 +281,9 @@
         colW = c.key === 'name' ? 'style="width:50%"' : (c.key === 'buy_status' ? 'style="width:25%"' : 'style="width:25%"');
       }
       var inner = c.label + '<span class="ss-th-arrow">' + arrow + '</span>';
-      // 净值列：表头加日期副标题
+      // 净值列：日期内联到列名后，避免两行表头导致整行过高
       if (c.key === 'nav' && navHeaderDate) {
-        inner = c.label + '<div class="ss-th-nav-date">' + navHeaderDate.slice(5) + '</div>' + '<span class="ss-th-arrow">' + arrow + '</span>';
+        inner = c.label + '<span class="ss-th-nav-date">·' + navHeaderDate.slice(5) + '</span>' + '<span class="ss-th-arrow">' + arrow + '</span>';
       }
       if (sortable) {
         thead += '<th class="ss-th-sort' + curCls + alignCls + '" data-sort-key="' + c.key + '" ' + colW + '>' + inner + '</th>';
@@ -472,13 +472,19 @@
     var original = preview.querySelector('.ss-phone-wrap') || preview;
 
     var clone = original.cloneNode(true);
-    clone.style.position = 'fixed';
+    // position:absolute + z-index:-1 在 #ss-preview(position:relative) 内定位，
+    // 始终藏在预览内容后面（不会随页面滚动而闪现于半透明遮罩之上）
+    clone.style.position = 'absolute';
     clone.style.top = '0';
     clone.style.left = '0';
     clone.style.zIndex = '-1';
     clone.style.margin = '0';
     clone.style.minHeight = '0';
-    document.body.appendChild(clone);
+    // 克隆体必须挂在 #ss-preview 下（而非 document.body），否则 .ss-preview td / 
+    // .ss-preview table 等父级选择器不生效，clone 的 computedStyle 会丢失
+    // white-space:nowrap / border-spacing:0 / border-collapse:separate，
+    // 导致表头和表体列宽不一致（表格错位）
+    preview.appendChild(clone);
 
     // html-to-image 对 backdrop-filter 支持不佳（会渲染成纯色块），截图前在克隆体上关闭
     var blurs = clone.querySelectorAll('*');
@@ -495,7 +501,7 @@
       var dataUrl = await lib.toPng(clone, { backgroundColor: '#fffbf7', pixelRatio: 2 });
       return dataUrl;
     } finally {
-      document.body.removeChild(clone);
+      preview.removeChild(clone);
     }
   }
 
