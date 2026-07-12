@@ -12,7 +12,7 @@ import json
 import sys
 from pathlib import Path
 
-# 把项目根目录加进 sys.path，以便 import harness/ 下的模块
+# 把项目根目录加进 sys.path，以便 import feedback/ 下的模块
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from core.constants import CATEGORIES, DATA_DIR, HOLDINGS_CATEGORIES
@@ -21,7 +21,9 @@ from core.config_loader import get_config, save_config
 # 直接 import pipeline 模块（替代 subprocess 调用）
 from pipeline import scan, enrich, fill, holdings, reclassify, codegen
 
-from harness.verify_data import run_verification
+from feedback.verify_data import run_verification
+from feedback.scan_scenarios import find_related_scenarios
+from architecture_lint import run_lint as run_architecture_lint
 
 
 def _run(main_fn, *argv_extra):
@@ -130,10 +132,15 @@ def cmd_check(_args):
             if default_code and default_code not in share_codes:
                 errors.append(f"{cat}/{s.get('display_name','?')} default_share_code 无效: {default_code}")
 
-    # 4) golden fixtures 校验（harness/verify_data.py）
+    # 4) golden fixtures 校验（feedback/verify_data.py）
     golden_errors = run_verification()
     if golden_errors:
         errors.extend(golden_errors)
+
+    # 5) 目录纪律校验（scripts/architecture_lint.py，对应 AGENT.md 第11条）
+    lint_errors = run_architecture_lint()
+    if lint_errors:
+        errors.extend(lint_errors)
 
     if errors:
         print("❌ 一致性校验失败：")
@@ -142,6 +149,15 @@ def cmd_check(_args):
         raise SystemExit(1)
 
     print("✅ 一致性校验通过")
+
+    # 6) 联动提示（non-blocking）：本次改动是否有匹配的 UI 回归场景该重跑
+    related = find_related_scenarios()
+    if related:
+        print("\n💡 检测到未提交改动涉及以下文件，有关联的回归场景建议重跑确认：")
+        for changed_file, scenarios in related.items():
+            print(f"   {changed_file}")
+            for sc in scenarios:
+                print(f"     → {sc}")
 
 
 def main():

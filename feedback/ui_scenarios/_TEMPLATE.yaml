@@ -1,4 +1,4 @@
-# harness/ui_scenarios/_TEMPLATE.yaml
+# feedback/ui_scenarios/_TEMPLATE.yaml
 #
 # 这是一份「模板」，不是真实场景——文件名前缀 _ 表示不会被当作待执行场景加载。
 # 复制本文件、去掉 _ 前缀、按真实 bug/功能改写，即可固化一条新的 UI 回归场景。

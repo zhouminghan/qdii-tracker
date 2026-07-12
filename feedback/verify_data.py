@@ -1,29 +1,29 @@
 #!/usr/bin/env python3
 """
-harness/verify_data.py — 数据侧黄金样例校验
+feedback/verify_data.py — 数据侧黄金样例校验（Harness 反馈层组件之一）
 
 用途：
-    比对 harness/golden_fixtures.json 里人工标注的「应该长什么样」，
+    比对 feedback/golden_fixtures.json 里人工标注的「应该长什么样」，
     与 web/data/*.json 实际内容逐条核对，防止分类规则/pipeline 改动
     误伤基金数据（误分类、字段抓取失败变 null、涨跌幅跳变异常等）。
 
-设计原则（对应 harness.md 的「评测闭环防作弊」）：
+设计原则（对应 Harness Engineering「反馈层：绿灯不等于任务完成」）：
     - fixtures 为空时视为通过（骨架阶段允许空跑，不阻塞现有流程）
     - 每条 fixture 的检查值必须来自「已验证通过」的真实场景，不接受凭空编造
     - 校验失败时列出全部 diff，不因为第一条失败就退出（一次性看清所有问题）
 
 用法：
-    python3 harness/verify_data.py          # 独立运行
-    from harness.verify_data import run_verification  # 被 fundctl.py check 调用（后续接入时用）
+    python3 feedback/verify_data.py          # 独立运行
+    from feedback.verify_data import run_verification  # 被 fundctl.py check 调用
 """
 import json
 import sys
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).parent
-ROOT_DIR = HARNESS_DIR.parent
+FEEDBACK_DIR = Path(__file__).parent
+ROOT_DIR = FEEDBACK_DIR.parent
 DATA_DIR = ROOT_DIR / "web" / "data"
-FIXTURES_PATH = HARNESS_DIR / "golden_fixtures.json"
+FIXTURES_PATH = FEEDBACK_DIR / "golden_fixtures.json"
 
 
 def _load_fixtures() -> list:
