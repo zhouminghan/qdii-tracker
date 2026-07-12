@@ -60,15 +60,11 @@ function parseQtPayload(raw) {
 // codes 形如 ['sh513500', 'sz159941']
 // 返回 Promise<Object>：{ '513500': {price, changePct, nav, premium}, ... }
 function fetchByJsonp(codes) {
-  return new Promise((resolve) => {
-    if (!codes.length) { resolve({}); return; }
-    const s = document.createElement('script');
-    s.src = `https://qt.gtimg.cn/q=${codes.join(',')}&t=${Date.now()}`;
-    s.async = true;
-    const cleanup = () => { try { s.remove(); } catch (e) {} };
-    const timer = setTimeout(() => { cleanup(); resolve({}); }, 6000);
-    s.onload = () => {
-      clearTimeout(timer);
+  if (!codes.length) return Promise.resolve({});
+  return window.jsonpFetch(`https://qt.gtimg.cn/q=${codes.join(',')}&t=${Date.now()}`, {
+    timeoutMs: 6000,
+    failValue: {},
+    onData: () => {
       const result = {};
       for (const full of codes) {
         // full = 'sh513500'，全局变量 v_sh513500
@@ -81,11 +77,8 @@ function fetchByJsonp(codes) {
           result[pureCode] = parsed;
         }
       }
-      cleanup();
-      resolve(result);
-    };
-    s.onerror = () => { clearTimeout(timer); cleanup(); resolve({}); };
-    document.head.appendChild(s);
+      return result;
+    },
   });
 }
 

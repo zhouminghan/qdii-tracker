@@ -6,7 +6,7 @@ import json
 import time
 
 from core.constants import CATEGORIES, DATA_DIR, CURRENCY_RANK, SHARE_CLASS_RANK
-from core.utils import read_json, write_json, bump_generated_at, normalize_share_keys
+from core.utils import read_json, write_json, bump_generated_at, normalize_share_keys, calc_series_scale
 from sources.akshare_source import fetch_rank_data, fetch_purchase_data, fetch_etf_data
 from sources.eastmoney_source import fetch_lsjz
 from sources.xueqiu_source import fetch_basic_info, fetch_fee_detail
@@ -118,13 +118,7 @@ def main():
             series["shares"].sort(key=share_sort_key)
             series["default_share_code"] = series["shares"][0]["code"] if series["shares"] else None
             # series_scale 取 A 类人民币份额规模
-            a_rmb = [s for s in series["shares"]
-                     if s.get("share_class") in ("A", "默认")
-                     and s.get("currency", "人民币") == "人民币"]
-            if a_rmb:
-                series["series_scale"] = a_rmb[0].get("scale") or 0
-            else:
-                series["series_scale"] = next((s.get("scale") for s in series["shares"] if s.get("scale")), 0)
+            series["series_scale"] = calc_series_scale(series["shares"])
 
         # 系列按规模排序
         data["series"].sort(key=lambda s: -(s.get("series_scale") or 0))

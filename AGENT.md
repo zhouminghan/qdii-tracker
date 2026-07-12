@@ -42,12 +42,21 @@ cd ../web && python3 -m http.server 8765  # 本地开发
 20. **iOS**：截前移除 `backdrop-filter`，`navigator.share()` 存相册
 21. **申购历史**：`_update_history()` → `buy_status_history[]`；同状态只刷日期，变化 push 新条目
 22. **calcLimit()** 按分组分别求和；**flattenByGroup()** 取默认份额，不展开 A/C
+23. **指标卡轮廓用 border 不用 box-shadow**：`.ss-mkt-card` 靠实体描边区分边界，阴影在截图上显得像脏影；7 种风格各自覆盖 `border-color` 贴合自身色调，`box-shadow` 统一 `none`
+24. **`snapPng()` 用克隆节点离屏渲染，不改动可见 DOM**：截图前 `cloneNode(true)`，克隆体 `position:fixed; z-index:-1`（沉到弹窗遮罩之下，肉眼不可见但仍在正常布局坐标系内）；**不要**用 `left:-99999px` 挪出视口——`html-to-image` 对视口外坐标渲染结果为空白，已验证踩坑
 
 ### 实时轮询
-23. **idle-scheduler**：页面隐藏/空闲自动暂停，恢复 catch-up；所有轮询模块共用
-24. **offshore-live-nav**：lsjz → pingzhongdata 兜底；settled 90min 静默；失败 15/30/60min 退避
-25. **etf-premium**：盘中 60s / 午休 120s / settled 24h 静默
-26. **market-indices**：盘中 60s / 盘后 5min / 周末 30min
+25. **idle-scheduler**：页面隐藏/空闲自动暂停，恢复 catch-up；所有轮询模块共用
+26. **offshore-live-nav**：lsjz → pingzhongdata 兜底；settled 90min 静默；失败 15/30/60min 退避
+27. **etf-premium**：盘中 60s / 午休 120s / settled 24h 静默
+28. **market-indices**：盘中 60s / 盘后 5min / 周末 30min
+
+### 收拢的深模块（架构深化，2026-07-12）
+29. **`utils.js::jsonpFetch(urlOrBuilder, options)`**：收拢全项目 7 处重复的 JSONP/`<script>` 请求样板（main.js/offshore-live-nav.js/etf-premium.js/market-indices.js/market-trend.js）。两种模式：`usesCallback=false`（默认，脚本执行时写全局变量，如腾讯 `qt.gtimg.cn`）/ `usesCallback=true`（真 JSONP，`url` 传 `(cbName)=>url` 构造函数，如东财 `push2his`/`api.fund.eastmoney.com`）。新增/改造 JSONP 请求点必须复用此函数，不要再手写 `<script>`+超时+cleanup。
+30. **`utils.js::openModal(dialogId, {closeBtnId})` / `closeModal(dialogId, focusEl)`**：收拢 main.js `openDetail/closeDetail`、`openTrend/closeTrend`、market-trend.js `openIndexTrend` 三套重复的 Modal 生命周期（hidden 切换 + body 滚动锁定 + 关闭按钮聚焦）。焦点恢复变量（`LAST_FOCUS`）仍由调用方自己持有，`openModal` 只返回打开前的 `activeElement`，不在内部另存状态。新增 Modal 必须复用这两个函数。
+31. **`core/utils.py::calc_series_scale(shares)`**：收拢 enrich.py / reclassify.py 两处重复的"取 A 类人民币份额规模，否则任意有 scale 的份额"规则。注意 `fill.py` 的写回逻辑有额外的"仅当新规模非空才覆盖"防回退保护，与前两处不完全等价，**未纳入本次收拢**，保持独立实现。
+32. **`core/constants.py::HOLDINGS_CATEGORIES = ("active", "global_other")`**：收拢 fundctl.py/holdings.py/reclassify.py 三处重复硬编码的"哪些分类需要抓 holdings"规则。新增需要抓取持仓的分类时改这一处。
+33. **`utils.js::classifyBuyStatus(sh)`**：收拢 main.js `statusBadge` 与 screenshot.js `statusBadgeHtml` 重复的申购状态判断（`'none'|'paused'|'limited'|'limited_no_amount'|'open'`）。两处调用方 HTML 结构不同（一个带历史 tooltip，一个是纯展示徽章），只共享判断逻辑，不合并 HTML 拼装。
 
 ## Harness（验收基础设施）
 
@@ -65,19 +74,19 @@ harness/
 
 ### 核心原则
 
-27. **数据侧确定性、UI 侧工具无关**：`verify_data.py` 是纯 Python，无浏览器依赖，直接跑；
+34. **数据侧确定性、UI 侧工具无关**：`verify_data.py` 是纯 Python，无浏览器依赖，直接跑；
     `ui_scenarios/*.yaml` 只声明"打开什么页面 → 做什么交互 → 断言什么 DOM 属性等于什么值"，
     不锁定 Playwright/Selenium/任何具体工具——执行时由 Agent 现场发现环境里可用的浏览器自动化工具去驱动。
-28. **空 fixtures/无场景 = 通过**：骨架阶段允许空跑，`fundctl.py check` 已接入
+35. **空 fixtures/无场景 = 通过**：骨架阶段允许空跑，`fundctl.py check` 已接入
     `verify_data.run_verification()`，空列表视为通过。
-29. **信任模型：只固化「已验证通过」的结果，不盲信 diff**：往 `golden_fixtures.json` /
+36. **信任模型：只固化「已验证通过」的结果，不盲信 diff**：往 `golden_fixtures.json` /
     `ui_scenarios/*.yaml` 写期望值前，必须先跑一次实际验证（截图确认/断言跑绿），
     捕获那个已确认对的值——绝不能"代码刚改完就直接拿渲染结果当基准"，
     那是在把 bug 固化成"正确答案"（对应 harness.md 提到的 reward hacking 风险）。
 
 ### 固化检查点（每次修 bug / 加功能，验收通过后必须过一遍）
 
-30. 问自己：**这个场景值得变成永久回归项吗？**（判断标准：属于容易再犯的边界情况 / 之前踩过坑 / 
+37. 问自己：**这个场景值得变成永久回归项吗？**（判断标准：属于容易再犯的边界情况 / 之前踩过坑 /
     改动触碰了分类规则或视觉配色联动这类"改一处、影响多处"的逻辑）
     - 是 → 数据侧加一条 `golden_fixtures.json` fixture；UI 侧复制 `_TEMPLATE.yaml` 写一个新场景文件
     - 否 → 说明为什么不需要（比如纯样式微调、一次性数据修正），继续收尾

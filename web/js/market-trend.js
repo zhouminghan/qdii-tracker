@@ -94,31 +94,7 @@ async function fetchDayKWithFallback(secid) {
 // 从指定 host 拉日 K（JSONP）
 //   返回 [{date, nav, change}, ...] 升序，失败返回 null
 function fetchDayKFromHost(secid, host) {
-  return new Promise((resolve) => {
-    const cbName = `jsonp_mt_${secid.replace(/\W/g, '')}_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
-    const s = document.createElement('script');
-    s.async = true;
-    const cleanup = () => {
-      try { delete window[cbName]; } catch (e) { window[cbName] = undefined; }
-      try { s.remove(); } catch (e) {}
-    };
-    const timer = setTimeout(() => { cleanup(); resolve(null); }, 8000);
-
-    window[cbName] = (resp) => {
-      clearTimeout(timer);
-      try {
-        const klines = resp && resp.data && Array.isArray(resp.data.klines) ? resp.data.klines : null;
-        if (!klines || !klines.length) { cleanup(); resolve(null); return; }
-        const out = parseKlines(klines);
-        if (!out.length) { cleanup(); resolve(null); return; }
-        cleanup();
-        resolve(out);
-      } catch (err) {
-        cleanup();
-        resolve(null);
-      }
-    };
-
+  return window.jsonpFetch((cbName) => {
     const params = new URLSearchParams({
       cb: cbName,
       secid,
@@ -131,9 +107,17 @@ function fetchDayKFromHost(secid, host) {
       fields2: 'f51,f52,f53,f54,f55,f56',
       _: String(Date.now()),
     });
-    s.src = `https://${host}/api/qt/stock/kline/get?${params.toString()}`;
-    s.onerror = () => { clearTimeout(timer); cleanup(); resolve(null); };
-    document.head.appendChild(s);
+    return `https://${host}/api/qt/stock/kline/get?${params.toString()}`;
+  }, {
+    timeoutMs: 8000,
+    usesCallback: true,
+    failValue: null,
+    onData: (resp) => {
+      const klines = resp && resp.data && Array.isArray(resp.data.klines) ? resp.data.klines : null;
+      if (!klines || !klines.length) return null;
+      const out = parseKlines(klines);
+      return out.length ? out : null;
+    },
   });
 }
 
@@ -143,10 +127,10 @@ async function openIndexTrend(secid, evt) {
   const meta = META_BY_SECID[secid];
   if (!meta) return;
 
-  const modal = document.getElementById('trendModal');
-  if (!modal) return;
-  modal.classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
+  // 复用 utils.js 的 openModal（收拢自 main.js 原 openDetail/openTrend 的机械开窗步骤）。
+  // 注：原实现从未设置过焦点恢复变量，这里保持一致，不新增该行为。
+  if (typeof window.openModal !== 'function' || !document.getElementById('trendModal')) return;
+  window.openModal('trendModal');
 
   // 标题/副标题：从指标卡当前快照里读最新价（避免再发一次行情请求）
   const card = document.querySelector(`.market-card[data-symbol="${secid}"]`);

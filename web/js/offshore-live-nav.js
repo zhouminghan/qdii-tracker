@@ -72,51 +72,7 @@ function collectOffshoreDefaultShares(state) {
 
 // ==================== 数据源 1: lsjz（主选） ====================
 function fetchLsjzLatest(code) {
-  return new Promise((resolve) => {
-    const cbName = `jsonp_lsjz_${code}_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
-    const s = document.createElement('script');
-    s.async = true;
-
-    const cleanup = () => {
-      try { delete window[cbName]; } catch (_) { window[cbName] = undefined; }
-      try { s.remove(); } catch (_) {}
-    };
-
-    const timer = setTimeout(() => {
-      cleanup();
-      resolve(null);
-    }, REQUEST_TIMEOUT_MS);
-
-    window[cbName] = (resp) => {
-      clearTimeout(timer);
-      try {
-        const item = resp?.Data?.LSJZList?.[0];
-        if (!item) {
-          cleanup();
-          resolve(null);
-          return;
-        }
-        const nav = parseFloat(item.DWJZ);
-        const dailyChange = parseFloat(item.JZZZL);
-        const navDate = item.FSRQ || '';
-        if (!navDate || !Number.isFinite(nav)) {
-          cleanup();
-          resolve(null);
-          return;
-        }
-        cleanup();
-        resolve({
-          nav,
-          dailyChange: Number.isFinite(dailyChange) ? dailyChange : null,
-          navDate,
-          source: LIVE_SOURCE_LSJZ,
-        });
-      } catch (_) {
-        cleanup();
-        resolve(null);
-      }
-    };
-
+  return window.jsonpFetch((cbName) => {
     const params = new URLSearchParams({
       callback: cbName,
       fundCode: String(code),
@@ -124,13 +80,25 @@ function fetchLsjzLatest(code) {
       pageSize: '1',
       _: String(Date.now()),
     });
-    s.src = `https://api.fund.eastmoney.com/f10/lsjz?${params.toString()}`;
-    s.onerror = () => {
-      clearTimeout(timer);
-      cleanup();
-      resolve(null);
-    };
-    document.head.appendChild(s);
+    return `https://api.fund.eastmoney.com/f10/lsjz?${params.toString()}`;
+  }, {
+    timeoutMs: REQUEST_TIMEOUT_MS,
+    usesCallback: true,
+    failValue: null,
+    onData: (resp) => {
+      const item = resp?.Data?.LSJZList?.[0];
+      if (!item) return null;
+      const nav = parseFloat(item.DWJZ);
+      const dailyChange = parseFloat(item.JZZZL);
+      const navDate = item.FSRQ || '';
+      if (!navDate || !Number.isFinite(nav)) return null;
+      return {
+        nav,
+        dailyChange: Number.isFinite(dailyChange) ? dailyChange : null,
+        navDate,
+        source: LIVE_SOURCE_LSJZ,
+      };
+    },
   });
 }
 
@@ -140,49 +108,34 @@ function fetchLsjzLatest(code) {
 //   · 缺点：全量历史 JS 体积大（~100KB），但只取最后一条即可
 //   · 注意：需清掉旧全局变量，避免上次请求的残留数据污染本次
 function fetchPzdLatest(code) {
-  return new Promise((resolve) => {
-    // 清掉上次 pingzhongdata 留下的全局变量，避免 stale 污染
-    try { delete window.Data_netWorthTrend; } catch (_) { window.Data_netWorthTrend = undefined; }
-    try { delete window.fS_code; } catch (_) { window.fS_code = undefined; }
-
-    const s = document.createElement('script');
-    s.async = true;
-    const timer = setTimeout(() => { s.remove(); resolve(null); }, REQUEST_TIMEOUT_MS);
-    s.onload = () => {
-      clearTimeout(timer);
-      s.remove();
-      try {
-        // 校验 fS_code 与请求 code 一致，防止缓存错乱
-        if (window.fS_code && String(window.fS_code) !== String(code)) {
-          resolve(null);
-          return;
-        }
-        const arr = window.Data_netWorthTrend;
-        if (!Array.isArray(arr) || !arr.length) { resolve(null); return; }
-        // 取最后一条（最新净值）
-        const last = arr[arr.length - 1];
-        if (!last || last.y == null) { resolve(null); return; }
-        const nav = parseFloat(last.y);
-        const navDate = last.x ? new Date(last.x) : null;
-        const change = last.equityReturn != null ? parseFloat(last.equityReturn) : null;
-        if (!Number.isFinite(nav) || !navDate || isNaN(navDate.getTime())) {
-          resolve(null);
-          return;
-        }
-        const dateStr = `${navDate.getFullYear()}-${String(navDate.getMonth() + 1).padStart(2, '0')}-${String(navDate.getDate()).padStart(2, '0')}`;
-        resolve({
-          nav,
-          dailyChange: Number.isFinite(change) ? change : null,
-          navDate: dateStr,
-          source: LIVE_SOURCE_PZD,
-        });
-      } catch (_) {
-        resolve(null);
-      }
-    };
-    s.onerror = () => { clearTimeout(timer); s.remove(); resolve(null); };
-    s.src = `https://fund.eastmoney.com/pingzhongdata/${code}.js?rt=${Date.now()}`;
-    document.head.appendChild(s);
+  return window.jsonpFetch(`https://fund.eastmoney.com/pingzhongdata/${code}.js?rt=${Date.now()}`, {
+    timeoutMs: REQUEST_TIMEOUT_MS,
+    failValue: null,
+    beforeLoad: () => {
+      // 清掉上次 pingzhongdata 留下的全局变量，避免 stale 污染
+      try { delete window.Data_netWorthTrend; } catch (_) { window.Data_netWorthTrend = undefined; }
+      try { delete window.fS_code; } catch (_) { window.fS_code = undefined; }
+    },
+    onData: () => {
+      // 校验 fS_code 与请求 code 一致，防止缓存错乱
+      if (window.fS_code && String(window.fS_code) !== String(code)) return null;
+      const arr = window.Data_netWorthTrend;
+      if (!Array.isArray(arr) || !arr.length) return null;
+      // 取最后一条（最新净值）
+      const last = arr[arr.length - 1];
+      if (!last || last.y == null) return null;
+      const nav = parseFloat(last.y);
+      const navDate = last.x ? new Date(last.x) : null;
+      const change = last.equityReturn != null ? parseFloat(last.equityReturn) : null;
+      if (!Number.isFinite(nav) || !navDate || isNaN(navDate.getTime())) return null;
+      const dateStr = `${navDate.getFullYear()}-${String(navDate.getMonth() + 1).padStart(2, '0')}-${String(navDate.getDate()).padStart(2, '0')}`;
+      return {
+        nav,
+        dailyChange: Number.isFinite(change) ? change : null,
+        navDate: dateStr,
+        source: LIVE_SOURCE_PZD,
+      };
+    },
   });
 }
 

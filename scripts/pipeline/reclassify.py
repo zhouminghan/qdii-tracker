@@ -5,8 +5,8 @@
 import argparse
 import time
 
-from core.constants import CATEGORIES, DATA_DIR, HOLDINGS_DIR
-from core.utils import read_json, write_json, normalize_share_keys, normalize_holdings_keys, beijing_now_iso
+from core.constants import CATEGORIES, DATA_DIR, HOLDINGS_DIR, HOLDINGS_CATEGORIES
+from core.utils import read_json, write_json, normalize_share_keys, normalize_holdings_keys, beijing_now_iso, calc_series_scale
 from core.config_loader import get_config, save_config
 from sources.akshare_source import fetch_holdings
 
@@ -30,13 +30,7 @@ def update_series_category(series: dict, new_cat: str):
 
 
 def recalc_series_scale(series: dict):
-    a_rmb = [s for s in series["shares"]
-             if s.get("share_class") in ("A", "默认")
-             and s.get("currency", "人民币") == "人民币"]
-    if a_rmb:
-        series["series_scale"] = a_rmb[0].get("scale") or 0
-    else:
-        series["series_scale"] = next((s.get("scale") for s in series["shares"] if s.get("scale")), 0)
+    series["series_scale"] = calc_series_scale(series["shares"])
 
 
 def update_meta(now: str):
@@ -161,7 +155,7 @@ def main():
     write_json(to_fp, to_data)
     print(f"✅ {display_name} 已从 {from_cat} 移到 {to_cat}")
 
-    needs_holdings = to_cat in ("active", "global_other") and not args.no_holdings
+    needs_holdings = to_cat in HOLDINGS_CATEGORIES and not args.no_holdings
     if needs_holdings:
         print(f"\n📊 抓取 holdings...")
         default_code = series.get("default_share_code")

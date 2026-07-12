@@ -428,14 +428,13 @@
     }
     .ss-mkt-card {
       background: rgba(255,255,255,.8);
+      /* 用实体描边而非阴影：阴影在截图上会显得像脏影/瑕疵，border 则是干净的轮廓线 */
+      border: 1px solid rgba(92,61,46,.12);
       border-radius: 10px;
       padding: 8px 4px 7px;
       text-align: center;
       display: flex; flex-direction: column; justify-content: space-between;
       min-height: 90px; overflow: hidden;
-      /* 默认细描边+浅阴影，保证卡片背景与外层 wrap 背景接近时轮廓依然清晰；
-         notion/minimal/notes 已有实体 border，会覆盖描边但阴影仍叠加，不冲突 */
-      box-shadow: 0 0 0 1px rgba(92,61,46,.08), 0 1px 3px rgba(92,61,46,.05);
     }
     .ss-mkt-label { font-size: 9px; color: #c9a792; margin-bottom: 3px; font-weight: 600; letter-spacing: 0.1px; white-space: nowrap; }
     .ss-mkt-price { font-size: 14px; font-weight: 700; color: #5c3d2e; letter-spacing: -0.5px; }
@@ -461,7 +460,7 @@
     .ss-style-glass.ss-phone-wrap { background: rgba(255,255,255,.88); backdrop-filter: blur(24px); border-color: rgba(0,0,0,.08); box-shadow: 0 8px 40px rgba(0,0,0,.08); }
     .ss-style-glass .ss-inner { background: rgba(255,255,255,.6); }
     .ss-style-glass .ss-date-header { color: #8e8e93; border-color: rgba(0,0,0,.08); }
-    .ss-style-glass .ss-mkt-card { background: rgba(255,255,255,.5); box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.04); }
+    .ss-style-glass .ss-mkt-card { background: rgba(255,255,255,.5); border-color: rgba(0,0,0,.1); box-shadow: none; }
     .ss-style-glass .ss-mkt-label { color: #8e8e93; }
     .ss-style-glass .ss-mkt-price { color: #1d1d1f; }
     .ss-style-glass .ss-section-title { color: #1d1d1f; border-color: rgba(0,0,0,.08); }
@@ -478,7 +477,7 @@
     .ss-style-warm.ss-phone-wrap { background: linear-gradient(180deg, #fef9f0 0%, #fdf3e4 100%); border-color: #e8d5c0; box-shadow: 0 4px 20px rgba(180,140,100,.12); }
     .ss-style-warm .ss-inner { background: #fffdf8; }
     .ss-style-warm .ss-date-header { color: #b8956e; border-color: #e8d5c0; }
-    .ss-style-warm .ss-mkt-card { background: #fffaf0; box-shadow: 0 0 0 1px rgba(184,149,110,.25), 0 1px 3px rgba(180,140,100,.08); }
+    .ss-style-warm .ss-mkt-card { background: #fffaf0; border-color: rgba(184,149,110,.35); box-shadow: none; }
     .ss-style-warm .ss-mkt-label { color: #b8956e; }
     .ss-style-warm .ss-mkt-price { color: #4a3622; }
     .ss-style-warm .ss-section-title { color: #4a3622; border-color: #e8d5c0; }
@@ -495,7 +494,7 @@
     .ss-style-notion.ss-phone-wrap { background: #fefdf9; border: 2px dashed #d0c9c0; box-shadow: none; }
     .ss-style-notion .ss-inner { background: #faf9f5; }
     .ss-style-notion .ss-date-header { color: #8b8682; border-color: #d0c9c0; border-bottom-style: dashed; }
-    .ss-style-notion .ss-mkt-card { background: #fefdf9; border: 1px dashed #d0c9c0; border-radius: 8px; box-shadow: none; }
+    .ss-style-notion .ss-mkt-card { background: #fefdf9; border: 1px dashed #d0c9c0; border-radius: 8px; }
     .ss-style-notion .ss-mkt-label { color: #8b8682; }
     .ss-style-notion .ss-mkt-price { color: #2d2a27; }
     .ss-style-notion .ss-section-title { color: #2d2a27; border-color: #d0c9c0; border-bottom-style: dashed; }
@@ -529,7 +528,7 @@
     .ss-style-fresh.ss-phone-wrap { background: linear-gradient(180deg, #f6fcf8 0%, #f0f9f4 100%); border-color: #c8e6d4; box-shadow: 0 4px 20px rgba(100,180,140,.1); }
     .ss-style-fresh .ss-inner { background: rgba(255,255,255,.6); }
     .ss-style-fresh .ss-date-header { color: #7aaf8c; border-color: #d4ecd8; }
-    .ss-style-fresh .ss-mkt-card { background: rgba(255,255,255,.7); box-shadow: 0 0 0 1px rgba(122,175,140,.25), 0 1px 3px rgba(100,180,140,.06); }
+    .ss-style-fresh .ss-mkt-card { background: rgba(255,255,255,.7); border-color: rgba(122,175,140,.35); box-shadow: none; }
     .ss-style-fresh .ss-mkt-label { color: #7aaf8c; }
     .ss-style-fresh .ss-mkt-price { color: #2a4a32; }
     .ss-style-fresh .ss-section-title { color: #2a4a32; border-color: #d4ecd8; }

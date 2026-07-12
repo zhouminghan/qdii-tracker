@@ -104,6 +104,23 @@ def bump_generated_at(meta_fp: Path = None, data_dir: Path = None, now_str: str 
         write_json(meta_fp, meta)
 
 
+def calc_series_scale(shares: list) -> float:
+    """
+    计算一个系列（series）的规模：优先取 A/默认 类人民币份额的 scale，
+    否则取任意有 scale 的份额。
+
+    收拢原先散落两处的重复实现（enrich.py / reclassify.py 各自写一遍
+    同一条业务规则），改一处即全部生效。注意 fill.py 的写回逻辑有额外的
+    防回退保护（仅当新规模非空才覆盖），与这两处不完全等价，故未纳入收拢。
+    """
+    a_rmb = [s for s in shares
+             if s.get("share_class") in ("A", "默认")
+             and s.get("currency", "人民币") == "人民币"]
+    if a_rmb:
+        return a_rmb[0].get("scale") or 0
+    return next((s.get("scale") for s in shares if s.get("scale")), 0)
+
+
 def parse_scale(scale_str: str) -> float:
     """
     解析规模字符串 '31.11亿' -> 31.11（亿元）。

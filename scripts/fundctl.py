@@ -15,7 +15,7 @@ from pathlib import Path
 # 把项目根目录加进 sys.path，以便 import harness/ 下的模块
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from core.constants import CATEGORIES, DATA_DIR
+from core.constants import CATEGORIES, DATA_DIR, HOLDINGS_CATEGORIES
 from core.config_loader import get_config, save_config
 
 # 直接 import pipeline 模块（替代 subprocess 调用）
@@ -54,7 +54,7 @@ def cmd_add(args):
     _run(scan.main)
     _run(enrich.main, "--codes", code)
     _run(fill.main, "--codes", code)
-    if to_cat in ("active", "global_other"):
+    if to_cat in HOLDINGS_CATEGORIES:
         _run(holdings.main, "--codes", code)
 
     print("🎉 add 完成")

@@ -152,13 +152,10 @@
         queries.push(m.prefix + c);
       }
 
-      return new Promise((resolve) => {
-        const s = document.createElement('script');
-        s.src = `https://qt.gtimg.cn/q=${queries.join(',')}&t=${Date.now()}`;
-        s.async = true;
-        const timer = setTimeout(() => { s.remove(); resolve({}); }, 4000);
-        s.onload = () => {
-          clearTimeout(timer);
+      return jsonpFetch(`https://qt.gtimg.cn/q=${queries.join(',')}&t=${Date.now()}`, {
+        timeoutMs: 4000,
+        failValue: {},
+        onData: () => {
           const result = {};
           for (const c of codes) {
             const m = meta[c];
@@ -178,11 +175,8 @@
               }
             }
           }
-          s.remove();
-          resolve(result);
-        };
-        s.onerror = () => { clearTimeout(timer); s.remove(); resolve({}); };
-        document.head.appendChild(s);
+          return result;
+        },
       });
     }
 
@@ -881,12 +875,11 @@
       const st = sh.buy_status || '';
       const hist = (sh.buy_status_history || []).slice(-3).reverse();
       const histAttr = hist.length ? 'data-history=\'' + JSON.stringify(hist).replace(/'/g, '&#39;') + '\'' : '';
-  if (!st) return '<span class="text-stone-400 dark:text-stone-500 text-xs" ' + histAttr + '>—</span>';
-  if (sh.currency === '美元') return '<span class="text-stone-400 dark:text-stone-500 text-xs" ' + histAttr + '>—</span>';
+      const kind = classifyBuyStatus(sh);
+      if (kind === 'none' || kind === 'limited_no_amount') return '<span class="text-stone-400 dark:text-stone-500 text-xs" ' + histAttr + '>—</span>';
       const cls = buyStatusClass(st);
-      if (st.includes('暂停')) return '<span class="' + cls + ' buy-cell" ' + histAttr + '>暂停</span>';
-      if (st.includes('限') && sh.daily_limit > 0) return '<span class="' + cls + ' buy-cell" ' + histAttr + '>限 ¥' + formatLimit(sh.daily_limit) + '</span>';
-      if (st.includes('限') && !sh.daily_limit) return '<span class="text-stone-400 dark:text-stone-500 text-xs" ' + histAttr + '>—</span>';
+      if (kind === 'paused') return '<span class="' + cls + ' buy-cell" ' + histAttr + '>暂停</span>';
+      if (kind === 'limited') return '<span class="' + cls + ' buy-cell" ' + histAttr + '>限 ¥' + formatLimit(sh.daily_limit) + '</span>';
       return '<span class="' + cls + ' buy-cell" ' + histAttr + '>' + st + '</span>';
     }
 
@@ -977,14 +970,7 @@
       }
 
       // 打开 Modal
-      const modal = document.getElementById('detailModal');
-      LAST_FOCUS = document.activeElement;
-      modal.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-      requestAnimationFrame(() => {
-        const closeBtn = document.getElementById('detail-close');
-        if (closeBtn) closeBtn.focus();
-      });
+      LAST_FOCUS = openModal('detailModal', { closeBtnId: 'detail-close' });
 
       // 先填基础信息（来自列表数据）
       renderDetailBasic(series, share);
@@ -1046,15 +1032,11 @@
     }
 
     function closeDetail() {
-      document.getElementById('detailModal').classList.add('hidden');
-      document.body.style.overflow = '';
+      closeModal('detailModal', LAST_FOCUS);
       // 停止持仓自动刷新
       if (DETAIL_REFRESH_TIMER) {
         clearInterval(DETAIL_REFRESH_TIMER);
         DETAIL_REFRESH_TIMER = null;
-      }
-      if (LAST_FOCUS && typeof LAST_FOCUS.focus === 'function') {
-        LAST_FOCUS.focus();
       }
     }
 
@@ -1067,35 +1049,27 @@
 
     async function fetchPzdHistory(code) {
       // 重用 pingzhongdata 接口；返回 [{date, nav, change}, ...] 升序
-      return new Promise((resolve) => {
-        // 清掉旧全局变量，避免上一次成功的数据污染本次请求（尤其本次失败时）
-        try { delete window.Data_netWorthTrend; } catch (_) { window.Data_netWorthTrend = undefined; }
-        try { delete window.fS_code; } catch (_) { window.fS_code = undefined; }
-
-        const s = document.createElement('script');
-        s.src = `https://fund.eastmoney.com/pingzhongdata/${code}.js?rt=${Date.now()}`;
-        s.async = true;
-        const timer = setTimeout(() => { s.remove(); resolve(null); }, 8000);
-        s.onload = () => {
-          clearTimeout(timer);
-          s.remove();
+      return jsonpFetch(`https://fund.eastmoney.com/pingzhongdata/${code}.js?rt=${Date.now()}`, {
+        timeoutMs: 8000,
+        failValue: null,
+        beforeLoad: () => {
+          // 清掉旧全局变量，避免上一次成功的数据污染本次请求（尤其本次失败时）
+          try { delete window.Data_netWorthTrend; } catch (_) { window.Data_netWorthTrend = undefined; }
+          try { delete window.fS_code; } catch (_) { window.fS_code = undefined; }
+        },
+        onData: () => {
           // 校验 fS_code 与请求 code 一致，防止缓存/CDN 返回错误基金的数据
-          if (window.fS_code && String(window.fS_code) !== String(code)) {
-            resolve(null);
-            return;
-          }
+          if (window.fS_code && String(window.fS_code) !== String(code)) return null;
           // pingzhongdata 是脚本直接给全局变量赋值，读 window.Data_netWorthTrend
           const arr = window.Data_netWorthTrend;
-          if (!Array.isArray(arr) || !arr.length) { resolve(null); return; }
+          if (!Array.isArray(arr) || !arr.length) return null;
           const out = arr.map(p => ({
             date: new Date(p.x),
             nav: parseFloat(p.y),
             change: p.equityReturn != null ? parseFloat(p.equityReturn) : null,
           })).filter(p => Number.isFinite(p.nav));
-          resolve(out);
-        };
-        s.onerror = () => { clearTimeout(timer); s.remove(); resolve(null); };
-        document.head.appendChild(s);
+          return out;
+        },
       });
     }
 
@@ -1472,14 +1446,7 @@
         }
         if (series) break;
       }
-      const modal = document.getElementById('trendModal');
-      LAST_FOCUS = document.activeElement;
-      modal.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-      requestAnimationFrame(() => {
-        const closeBtn = document.getElementById('trend-close');
-        if (closeBtn) closeBtn.focus();
-      });
+      LAST_FOCUS = openModal('trendModal', { closeBtnId: 'trend-close' });
       document.getElementById('trend-title').textContent = series?.display_name || share?.name || `基金 ${code}`;
       document.getElementById('trend-subtitle').innerHTML = `
         <span class="num">${code}</span>
@@ -1510,11 +1477,7 @@
     }
 
     function closeTrend() {
-      document.getElementById('trendModal').classList.add('hidden');
-      document.body.style.overflow = '';
-      if (LAST_FOCUS && typeof LAST_FOCUS.focus === 'function') {
-        LAST_FOCUS.focus();
-      }
+      closeModal('trendModal', LAST_FOCUS);
     }
     // 点 trendModal 背景关闭
     // why 双层判断：trendModal 内部还套了一层全屏 .modal-overlay div（见 HTML 行 452），

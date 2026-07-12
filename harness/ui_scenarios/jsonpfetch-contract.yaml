@@ -1,0 +1,54 @@
+scenario: "jsonpFetch() 深模块：usesCallback 两种模式 + beforeLoad 清理 + 超时兜底 均按契约工作"
+
+origin:
+  bug_or_feature: "架构深化（改善代码架构 skill 扫描出的 Strong 候选）：全项目 7 处几乎逐字重复的
+    JSONP/<script> 请求样板（main.js fetchStocksLive/fetchPzdHistory、offshore-live-nav.js
+    fetchLsjzLatest/fetchPzdLatest、etf-premium.js fetchByJsonp、market-indices.js fetchAll、
+    market-trend.js fetchDayKFromHost），收拢成一个深模块。"
+  root_cause: "非 bug，是纯重构：7 个模块各自实现同一套 script 标签创建/超时/cleanup/onerror 骨架，
+    接口几乎等于实现，没有一处收拢复杂度。"
+  fixed_in: "web/js/utils.js::jsonpFetch(urlOrBuilder, options)"
+
+steps:
+  - open: "web/index.html"
+  - eval: |
+      // usesCallback=true 路径：真实调用 lsjz 接口验证回调机制本身工作正常
+      window.__jsonpFetchTestResult = await window.jsonpFetch((cbName) => {
+        const params = new URLSearchParams({ callback: cbName, fundCode: '000001', pageIndex: '1', pageSize: '1', _: String(Date.now()) });
+        return `https://api.fund.eastmoney.com/f10/lsjz?${params.toString()}`;
+      }, { timeoutMs: 8000, usesCallback: true, failValue: null, onData: (resp) => resp?.ErrCode });
+  - eval: |
+      // beforeLoad 清理钩子验证
+      window.__testMarker = 'stale';
+      await window.jsonpFetch('data:text/javascript,void(0)', {
+        timeoutMs: 2000, failValue: null,
+        beforeLoad: () => { window.__testMarker = 'cleared'; },
+        onData: () => window.__testMarker,
+      });
+  - eval: |
+      // 超时兜底验证（1500ms 超时，指向不可达地址）
+      window.__timeoutStart = Date.now();
+      window.__timeoutResult = await window.jsonpFetch('https://10.255.255.1/nonexistent.js', {
+        timeoutMs: 1500, failValue: 'TIMEOUT_FAILVALUE', onData: () => 'should-not-reach',
+      });
+      window.__timeoutElapsed = Date.now() - window.__timeoutStart;
+
+assert:
+  - selector: "window"
+    property: "eval(window.__jsonpFetchTestResult)"
+    expected: "0"
+    note: "ErrCode=0 表示 usesCallback=true 路径真实收到了服务端 JSONP 回调数据（业务层是否判定成功是另一件事，这里只验证回调机制本身通了）"
+  - selector: "window"
+    property: "eval(window.__testMarker)"
+    expected: "cleared"
+    note: "beforeLoad 必须在 script 创建前执行"
+  - selector: "window"
+    property: "eval(window.__timeoutResult)"
+    expected: "TIMEOUT_FAILVALUE"
+  - selector: "window"
+    property: "eval(window.__timeoutElapsed)"
+    expected: "~1500ms（允许 ±200ms 误差）"
+
+# 已用 Playwright 现场验证（2026-07-12）：三个断言全部通过（ErrCode=0 / marker=cleared /
+# timeoutElapsed=1501ms）。同时验证了 7 个真实调用点改造后功能不受影响（市场指标卡5张正常渲染、
+# 详情弹窗持仓行情、走势弹窗真实拉到历史净值），详见对应 plan 文档。

@@ -1,0 +1,37 @@
+scenario: "截图分享弹窗中，7 种风格下市场指标卡（.ss-mkt-card）轮廓应始终清晰可见，且不使用阴影"
+
+origin:
+  bug_or_feature: "指标卡轮廓时而消失：先是背景色与容器色接近导致看不清（用 box-shadow 描边修复过一次），
+    后来用户反馈截图带阴影不好看，box-shadow 被整体移除，结果轮廓又消失了。"
+  root_cause: ".ss-mkt-card base 规则一度只有 background，没有任何边框/阴影；
+    cute/warm/glass/fresh 4 个风格的卡片背景色与所在 .ss-inner 容器背景色非常接近，
+    纯靠背景色差分割卡片边界，色差不足时轮廓就消失。"
+  fixed_in: "web/css/app.css（.ss-mkt-card 及 .ss-style-{glass,warm,fresh} .ss-mkt-card 规则）
+    改为统一用 border（实体描边），不用 box-shadow（阴影在截图上显得像脏影）。"
+
+steps:
+  - open: "web/index.html"
+  - eval: |
+      window.__mktData = { usINX: { price: 1, changePct: 0, change: 0 } };
+      window.openScreenshotModal('offshore', [], [
+        { key: 'nasdaq_passive', items: [] }, { key: 'sp500', items: [] },
+        { key: 'active', items: [] }, { key: 'global_index', items: [] }, { key: 'global_other', items: [] },
+      ]);
+  - for_each_style: ["cute", "glass", "warm", "notion", "minimal", "fresh", "notes"]
+    click: "#ss-style-filter [data-val=\"{style}\"]"
+
+assert:
+  - selector: ".ss-mkt-card"
+    property: "computedStyle.borderStyle"
+    expected: "solid 或 dashed（非 none）"
+    note: "所有 7 种风格下都必须有实体边框，不能是 none"
+  - selector: ".ss-mkt-card"
+    property: "computedStyle.borderWidth"
+    expected: "1px"
+  - selector: ".ss-mkt-card"
+    property: "computedStyle.boxShadow"
+    expected: "none"
+    note: "关键约束：轮廓必须靠 border 实现，不能靠 box-shadow（用户明确要求不要阴影）"
+
+# 已用 Playwright 现场验证（2026-07-12）：7 种风格逐一切换后读取 getComputedStyle(.ss-mkt-card)，
+# 全部满足 borderWidth=1px + boxShadow=none，结果见对应 plan 文档。

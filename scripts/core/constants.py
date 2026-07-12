@@ -18,6 +18,11 @@ HOLDINGS_DIR = DATA_DIR / "holdings"
 # ============================================================
 CATEGORIES = ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf"]
 
+# 需要抓取 holdings（Top10 重仓股）的分类。
+# 收拢原先散落三处的重复硬编码（fundctl.py cmd_add / holdings.py / reclassify.py cmd_move），
+# 改一处即全部生效。
+HOLDINGS_CATEGORIES = ("active", "global_other")
+
 # ============================================================
 # 分类标签映射（原 scan_funds.py 的 label_map）
 # ============================================================

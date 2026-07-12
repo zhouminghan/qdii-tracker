@@ -5,7 +5,7 @@
 import json
 import time
 
-from core.constants import CATEGORIES, DATA_DIR, HOLDINGS_DIR
+from core.constants import CATEGORIES, DATA_DIR, HOLDINGS_DIR, HOLDINGS_CATEGORIES
 from core.utils import write_json, normalize_holdings_keys
 from core.config_loader import get_config
 from sources.akshare_source import fetch_holdings
@@ -24,7 +24,7 @@ def main():
 
     # 抓主动基金 + 全球/其他 QDII
     target_codes = []
-    for cat in ["active", "global_other"]:
+    for cat in HOLDINGS_CATEGORIES:
         fp = data_dir / f"{cat}.json"
         if not fp.exists():
             continue

@@ -15,6 +15,152 @@
  *   - COMPANY_BRAND（被 getLogo 使用）
  */
 
+// ==================== JSONP 请求（收拢全项目 7 处重复实现） ====================
+//
+// 深模块：接口只有 url + 几个选项，实现内部封装 <script> 标签创建/超时/cleanup/onerror
+// 这套完整生命周期。调用方只需提供「怎么从结果里取数据」（onData），不用关心
+// script 标签怎么创建怎么销毁。
+//
+// 两种底层模式，由 usesCallback 区分：
+//   · usesCallback=false（默认）：普通 <script> 加载，脚本执行时把数据写成全局变量
+//     （如腾讯 qt.gtimg.cn 返回 `var v_xxx = "..."`），onData() 在 onload 后被调用，
+//     自己去读 window 上的全局变量。适用：main.js fetchStocksLive/fetchPzdHistory、
+//     etf-premium.js fetchByJsonp、market-indices.js fetchAll、
+//     offshore-live-nav.js fetchPzdLatest。
+//   · usesCallback=true：真正的 JSONP，url 必须是函数 (cbName) => urlString，
+//     jsonpFetch 会生成唯一回调名、注册 window[cbName] 为接收函数，url 构造时把
+//     cbName 塞进查询参数。onData(data) 在回调触发时被调用，data 就是服务端返回的
+//     响应体。适用：offshore-live-nav.js fetchLsjzLatest、market-trend.js fetchDayKFromHost。
+//
+// @param {string|function(string|null): string} urlOrBuilder
+//   固定 url 字符串（usesCallback=false 时），或 (cbName) => url 的构造函数
+//   （usesCallback=true 时，cbName 会传入，用于拼接 callback 查询参数）。
+// @param {object} options
+//   @param {number}  [timeoutMs=8000]  超时毫秒数，超时后 resolve(failValue)
+//   @param {boolean} [usesCallback=false]  是否用真 JSONP 回调模式（见上）
+//   @param {*}       [failValue=null]  超时/网络错误/onData 抛异常时的兜底返回值
+//   @param {function} [beforeLoad]  script 创建前执行（如清理上次残留的全局变量）
+//   @param {function} onData  必填。usesCallback=true 时接收响应体；
+//     usesCallback=false 时不接收参数（自己读 window 全局变量）。
+//     返回值即为 Promise 的 resolve 值；返回 undefined 会被视为失败，改用 failValue。
+// @returns {Promise<*>}
+function jsonpFetch(urlOrBuilder, options) {
+  const {
+    timeoutMs = 8000,
+    usesCallback = false,
+    failValue = null,
+    beforeLoad = null,
+    onData,
+  } = options || {};
+
+  return new Promise((resolve) => {
+    if (typeof beforeLoad === 'function') {
+      try { beforeLoad(); } catch (_) { /* 清理失败不影响主流程 */ }
+    }
+
+    const s = document.createElement('script');
+    s.async = true;
+
+    let cbName = null;
+    const cleanup = () => {
+      if (cbName) { try { delete window[cbName]; } catch (_) { window[cbName] = undefined; } }
+      try { s.remove(); } catch (_) { /* 已被移除或从未挂载 */ }
+    };
+
+    const finish = (rawArg) => {
+      let result;
+      try { result = onData(rawArg); } catch (_) { result = failValue; }
+      cleanup();
+      resolve(result === undefined ? failValue : result);
+    };
+
+    const timer = setTimeout(() => { cleanup(); resolve(failValue); }, timeoutMs);
+
+    if (usesCallback) {
+      cbName = `jsonp_cb_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
+      window[cbName] = (data) => { clearTimeout(timer); finish(data); };
+      s.src = urlOrBuilder(cbName);
+    } else {
+      s.onload = () => { clearTimeout(timer); finish(); };
+      s.src = typeof urlOrBuilder === 'function' ? urlOrBuilder(null) : urlOrBuilder;
+    }
+
+    s.onerror = () => { clearTimeout(timer); cleanup(); resolve(failValue); };
+    document.head.appendChild(s);
+  });
+}
+// 挂到 window：本文件是普通 script（非 ES Module），main.js 直接用裸标识符调用即可；
+// 其余 ES Module 文件（offshore-live-nav.js/etf-premium.js/market-indices.js/market-trend.js）
+// 需要 window.jsonpFetch(...) 显式引用（项目里跨脚本引用全局函数的既有约定，见 market-trend.js 对
+// window.TREND_STATE / window.renderTrendChart 的用法）。
+window.jsonpFetch = jsonpFetch;
+
+// ==================== Modal 生命周期（收拢 main.js 两套平行复制） ====================
+//
+// 深模块：openDetail/closeDetail 与 openTrend/closeTrend 曾各自实现同一套"打开/关闭
+// 一个 Modal"的机械步骤（classList.hidden 切换 + body 滚动锁定 + 关闭按钮聚焦 + 焦点恢复）。
+// 收拢后调用方只需一行调用，不用关心内部步骤顺序。
+//
+// 设计约束（保持既有行为不变）：
+//   · 焦点恢复的"记住哪个元素"这件事，仍由调用方自己的 LAST_FOCUS 变量持有——
+//     openModal 只是把"读取 document.activeElement"这一步做了并返回，不在内部另存状态。
+//     这样 main.js 里 openDetail/openTrend 共享同一个 LAST_FOCUS 变量的既有行为
+//     （包括嵌套弹窗场景下的既有焦点恢复顺序）完全不变，只是替换了机械步骤的写法。
+//
+// @param {string} dialogId  Modal 根元素 id（如 'detailModal'）
+// @param {object} [options]
+//   @param {string} [closeBtnId]  关闭按钮 id，传入则在下一帧自动聚焦该按钮
+// @returns {Element|null} 打开前的 document.activeElement（调用方通常存入自己的
+//   LAST_FOCUS 变量，供后续 closeModal 时传回）；若 dialogId 找不到对应元素则返回 null
+function openModal(dialogId, options) {
+  const { closeBtnId } = options || {};
+  const modal = document.getElementById(dialogId);
+  if (!modal) return null;
+  const prevFocus = document.activeElement;
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  if (closeBtnId) {
+    requestAnimationFrame(() => {
+      const closeBtn = document.getElementById(closeBtnId);
+      if (closeBtn) closeBtn.focus();
+    });
+  }
+  return prevFocus;
+}
+
+// @param {string} dialogId  Modal 根元素 id
+// @param {Element|null} [focusEl]  关闭后要恢复焦点的元素（通常是调用方的 LAST_FOCUS）
+function closeModal(dialogId, focusEl) {
+  const modal = document.getElementById(dialogId);
+  if (!modal) return;
+  modal.classList.add('hidden');
+  document.body.style.overflow = '';
+  if (focusEl && typeof focusEl.focus === 'function') {
+    focusEl.focus();
+  }
+}
+window.openModal = openModal;
+window.closeModal = closeModal;
+
+// ==================== 申购状态分类（收拢 main.js/screenshot.js 两处重复判断） ====================
+//
+// 两处调用方（main.js statusBadge 的 tooltip 徽章 / screenshot.js statusBadgeHtml 的截图徽章）
+// 渲染的 HTML 结构完全不同（一个带历史 tooltip data 属性，一个是纯展示徽章），无法共用同一个
+// "拼 HTML"函数；但判断"该显示暂停/限购(带额度)/限购(无额度)/开放/无状态"这条业务规则本身是
+// 完全相同的，之前在两个文件里各写了一遍。这里只抽出"判断结果"这一层纯逻辑，两处调用方各自
+// 按判断结果去拼各自需要的 HTML，输出保持不变。
+//
+// @returns {string} 'none' | 'paused' | 'limited' | 'limited_no_amount' | 'open'
+function classifyBuyStatus(sh) {
+  const st = sh?.buy_status || '';
+  if (!st || sh?.currency === '美元') return 'none';
+  if (st.includes('暂停')) return 'paused';
+  if (st.includes('限') && sh.daily_limit > 0) return 'limited';
+  if (st.includes('限') && !sh.daily_limit) return 'limited_no_amount';
+  return 'open';
+}
+window.classifyBuyStatus = classifyBuyStatus;
+
 // ==================== 排序：份额 / 系列 ====================
 
 function shareSort(shares) {

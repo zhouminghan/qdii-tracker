@@ -54,9 +54,15 @@ qdii-tracker/
 │   ├── fundctl.py            # 统一入口（add/move/refresh/sync/check）
 │   ├── core/                 # 共享基础设施
 │   ├── sources/              # 数据源抽象层（akshare/eastmoney/xueqiu）
-│   └── pipeline/             # scan → enrich → fill → holdings
+│   └── pipeline/             # scan → enrich → fill → holdings + reclassify/codegen 等工具
+├── config/
+│   └── funds.json            # 基金分类配置（force_include / force_exclude / active_whitelist 等）
+├── harness/                  # 验收基础设施（数据黄金样例 + UI 回归场景）
+│   ├── golden_fixtures.json  # 数据侧人工标注期望值
+│   ├── verify_data.py        # 确定性校验脚本（已接入 fundctl.py check）
+│   └── ui_scenarios/         # 声明式 UI 回归场景（_TEMPLATE.yaml + 5 个真实场景）
 ├── web/                      # 前端（纯静态）
-│   ├── index.html            # 主入口（489 行）
+│   ├── index.html            # 主入口（491 行）
 │   ├── css/                  # Tailwind + app.css（样式独立文件）
 │   ├── js/                   # 11 个模块（main/config/utils/screenshot/market-indices 等）
 │   └── data/                 # 消费的 JSON（sp500/nasdaq_passive/active/global_index/global_other/etf/meta/holdings）

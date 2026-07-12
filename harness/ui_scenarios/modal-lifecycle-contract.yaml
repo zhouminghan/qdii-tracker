@@ -1,0 +1,42 @@
+scenario: "openModal/closeModal 深模块：3 种复用场景（基金详情/基金走势/指标走势）开关行为一致"
+
+origin:
+  bug_or_feature: "架构深化：main.js openDetail/closeDetail 与 openTrend/closeTrend 曾各自实现同一套
+    Modal 生命周期（hidden 切换 + body 滚动锁定 + 关闭按钮聚焦 + 焦点恢复），收拢成深模块。"
+  root_cause: "非 bug，是纯重构：两套几乎逐字重复的机械步骤，接口没有把复杂度收拢成可复用模块。"
+  fixed_in: "web/js/utils.js::openModal(dialogId, {closeBtnId}) / closeModal(dialogId, focusEl)；
+    main.js openDetail/openTrend、market-trend.js openIndexTrend 均改为调用这两个函数。"
+
+steps:
+  - open: "web/index.html"
+  - click: "button[onclick*=\"openDetail\"]"  # 基金详情按钮
+  - wait_for: "300ms"
+  - assert_and_close: "closeDetail via Escape key"
+  - click: "button[onclick*=\"openTrend\"]"    # 基金走势按钮
+  - wait_for: "1000ms"
+  - assert_and_close: "closeTrend via click on .modal-overlay"
+  - click: ".market-card"                       # 指标走势（market-trend.js openIndexTrend）
+  - wait_for: "800ms"
+  - assert_and_close: "closeTrend via Escape key"
+
+assert:
+  - selector: "#detailModal"
+    property: "classList.contains('hidden')"
+    expected: "false（打开后）→ true（Escape 后）"
+  - selector: "document.body"
+    property: "style.overflow"
+    expected: "'hidden'（打开后）→ ''（关闭后）"
+  - selector: "document.activeElement"
+    property: "id"
+    expected: "'detail-close'（详情打开后）/ 'trend-close'（走势打开后）"
+    note: "openModal 的 closeBtnId 选项必须在下一帧正确聚焦关闭按钮"
+  - selector: "#trendModal"
+    property: "classList.contains('hidden')"
+    expected: "false（点击市场指标卡打开后）→ true（Escape 后）"
+    note: "验证 market-trend.js openIndexTrend 复用 openModal 后行为与基金走势弹窗一致"
+
+# 已用 Playwright 现场验证（2026-07-12）：
+# - detailModal: 打开后 hidden=false, overflow=hidden, activeElement=detail-close；ESC后 hidden=true, overflow=''
+# - trendModal(基金): 打开后 activeElement=trend-close，标题正确显示基金名；遮罩点击后 hidden=true
+# - trendModal(市场指标): 打开后标题正确显示"📈 道琼斯"；ESC后 hidden=true, overflow=''
+# 三种场景开关行为完全一致，无回归。

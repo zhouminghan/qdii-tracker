@@ -111,15 +111,11 @@ function getMarketStatusLabel() {
 
 // JSONP 拉取所有标的，返回 { 'us.DJI': '原始字符串', ... }
 function fetchAll() {
-  return new Promise((resolve) => {
-    const codes = SYMBOLS.map(s => s.qq).join(',');
-    const s = document.createElement('script');
-    s.src = `https://qt.gtimg.cn/q=${codes}&t=${Date.now()}`;
-    s.async = true;
-    const cleanup = () => { try { s.remove(); } catch (e) {} };
-    const timer = setTimeout(() => { cleanup(); resolve({}); }, 8000);
-    s.onload = () => {
-      clearTimeout(timer);
+  const codes = SYMBOLS.map(s => s.qq).join(',');
+  return window.jsonpFetch(`https://qt.gtimg.cn/q=${codes}&t=${Date.now()}`, {
+    timeoutMs: 8000,
+    failValue: {},
+    onData: () => {
       const result = {};
       for (const sym of SYMBOLS) {
         // 腾讯 JSONP 生成 `var v_${symbol} = "..."`，symbol 不带点 → 变量名合法：
@@ -131,11 +127,8 @@ function fetchAll() {
         const raw = window[key];
         if (typeof raw === 'string' && raw) result[sym.qq] = raw;
       }
-      cleanup();
-      resolve(result);
-    };
-    s.onerror = () => { clearTimeout(timer); cleanup(); resolve({}); };
-    document.head.appendChild(s);
+      return result;
+    },
   });
 }
 

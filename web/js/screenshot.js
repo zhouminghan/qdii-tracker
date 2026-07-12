@@ -92,19 +92,6 @@
     });
   }
 
-  // JSZip 延迟加载（全部模式打包下载用）
-  let _jsZip = null;
-  function loadJSZip() {
-    if (_jsZip) return Promise.resolve(_jsZip);
-    return new Promise(function (resolve, reject) {
-      var s = document.createElement('script');
-      s.src = 'https://unpkg.com/jszip@3.10.1/dist/jszip.min.js';
-      s.onload = function () { _jsZip = window.JSZip; resolve(_jsZip); };
-      s.onerror = reject;
-      document.head.appendChild(s);
-    });
-  }
-
   // ==================== 公共 API ====================
   window.openScreenshotModal = function (tab, _seriesList, groups) {
     var cols = SCREENSHOT_COLS[tab];
@@ -357,7 +344,7 @@
     var sectionsHtml = '';
     for (var ci = 0; ci < SS_CATEGORIES.length; ci++) {
       var cat = SS_CATEGORIES[ci];
-      if (f !== 'all' && f !== cat.id) continue;
+      if (f !== cat.id) continue;
       var shares = ssState[cat.field];
       var lmt = calcLimit(shares);
       var navDate = calcNavHeaderDate(shares);
@@ -456,10 +443,10 @@
 
   function statusBadgeHtml(sh) {
     var st = sh.buy_status || '';
-    if (!st || sh.currency === '美元') return '<span class="ss-muted">—</span>';
-    if (st.includes('暂停'))       return '<span class="ss-badge ss-badge-paused">暂停</span>';
-    if (st.includes('限') && sh.daily_limit > 0) return '<span class="ss-badge ss-badge-limit">限 ¥' + formatLimit(sh.daily_limit) + '</span>';
-    if (st.includes('限') && !sh.daily_limit)    return '<span class="ss-muted">—</span>';
+    var kind = classifyBuyStatus(sh);
+    if (kind === 'none' || kind === 'limited_no_amount') return '<span class="ss-muted">—</span>';
+    if (kind === 'paused') return '<span class="ss-badge ss-badge-paused">暂停</span>';
+    if (kind === 'limited') return '<span class="ss-badge ss-badge-limit">限 ¥' + formatLimit(sh.daily_limit) + '</span>';
     return '<span class="ss-badge ss-badge-open">' + st + '</span>';
   }
 
@@ -473,108 +460,43 @@
 
   // ==================== 保存图片 ====================
   // 提取单张截图的核心逻辑（不含保存/下载，返回 dataUrl）
+  // 实现说明：不直接修改可见的 .ss-phone-wrap（曾经用 position:absolute+z-index:99999 把它挪到
+  // (0,0) 再截图再挪回来，两次样式切换在屏幕上会有明显的"跳动/闪烁"），
+  // 改为克隆节点、把克隆体固定在 (0,0) 但 z-index:-1（沉到截图弹窗的半透明遮罩之下，
+  // 肉眼不可见，但仍在正常布局坐标内，html-to-image 能正确渲染），截完直接丢弃克隆体，
+  // 全程不触碰可见 DOM，杜绝闪烁。
+  // 注：曾尝试把克隆体挪到视口外（left:-99999px）离屏截图，实测 html-to-image 渲染结果为
+  // 空白（很可能是其内部依赖 viewport 范围内的坐标/getBoundingClientRect 采样），故弃用该方案。
   async function snapPng() {
     var preview = document.getElementById('ss-preview');
-    var target = preview;
-    var wrap = preview.querySelector('.ss-phone-wrap');
-    var wrapSavedMinH = null, wrapSavedPos = null, wrapSavedTop = null, wrapSavedLeft = null, wrapSavedZ = null;
-    if (wrap) {
-      target = wrap;
-      wrapSavedMinH = wrap.style.minHeight;
-      wrap.style.minHeight = '0';
-      wrapSavedPos = wrap.style.position;
-      wrapSavedTop = wrap.style.top;
-      wrapSavedLeft = wrap.style.left;
-      wrapSavedZ = wrap.style.zIndex;
-      wrap.style.position = 'absolute';
-      wrap.style.top = '0';
-      wrap.style.left = '0';
-      wrap.style.zIndex = '99999';
-    }
+    var original = preview.querySelector('.ss-phone-wrap') || preview;
 
-    var blurs = target.querySelectorAll('*');
-    var restored = [];
+    var clone = original.cloneNode(true);
+    clone.style.position = 'fixed';
+    clone.style.top = '0';
+    clone.style.left = '0';
+    clone.style.zIndex = '-1';
+    clone.style.margin = '0';
+    clone.style.minHeight = '0';
+    document.body.appendChild(clone);
+
+    // html-to-image 对 backdrop-filter 支持不佳（会渲染成纯色块），截图前在克隆体上关闭
+    var blurs = clone.querySelectorAll('*');
     for (var i = 0; i < blurs.length; i++) {
       var el = blurs[i];
-      var bf = el.style.backdropFilter || getComputedStyle(el).backdropFilter;
-      var wbf = el.style.webkitBackdropFilter || getComputedStyle(el).webkitBackdropFilter;
-      if (bf && bf !== 'none') { restored.push({el:el, prop:'backdropFilter', val:bf}); el.style.backdropFilter = 'none'; }
-      if (wbf && wbf !== 'none') { restored.push({el:el, prop:'webkitBackdropFilter', val:wbf}); el.style.webkitBackdropFilter = 'none'; }
+      var bf = getComputedStyle(el).backdropFilter;
+      var wbf = getComputedStyle(el).webkitBackdropFilter;
+      if (bf && bf !== 'none') el.style.backdropFilter = 'none';
+      if (wbf && wbf !== 'none') el.style.webkitBackdropFilter = 'none';
     }
 
-    var lib = await loadHtmlToImage();
-    var dataUrl = await lib.toPng(target, { backgroundColor: '#fffbf7', pixelRatio: 2 });
-
-    if (wrap) {
-      wrap.style.minHeight = wrapSavedMinH;
-      wrap.style.position = wrapSavedPos;
-      wrap.style.top = wrapSavedTop;
-      wrap.style.left = wrapSavedLeft;
-      wrap.style.zIndex = wrapSavedZ;
+    try {
+      var lib = await loadHtmlToImage();
+      var dataUrl = await lib.toPng(clone, { backgroundColor: '#fffbf7', pixelRatio: 2 });
+      return dataUrl;
+    } finally {
+      document.body.removeChild(clone);
     }
-    for (var r = 0; r < restored.length; r++) {
-      restored[r].el.style[restored[r].prop] = restored[r].val;
-    }
-    return dataUrl;
-  }
-
-  // 生成全部 5 张图（逐一渲染 snap，收集 dataUrls）
-  async function snapAllCategories(btn) {
-    var cats = SS_CATEGORIES;
-    var results = [];
-    for (var ci = 0; ci < cats.length; ci++) {
-      btn.textContent = '生成中 (' + (ci + 1) + '/' + cats.length + ')...';
-      ssState.groupFilter = cats[ci].id;
-      renderTemplate();
-      await new Promise(function (res) { requestAnimationFrame(function () { requestAnimationFrame(res); }); });
-      var dataUrl = await snapPng();
-      results.push({ fileLabel: cats[ci].fileLabel, dataUrl: dataUrl });
-    }
-    ssState.groupFilter = 'all';
-    renderTemplate();
-    return results;
-  }
-
-  // dataUrl → Blob
-  function dataUrlToBlob(dataUrl) {
-    var parts = dataUrl.split(',');
-    var mime = parts[0].match(/:(.*?);/)[1];
-    var bytes = atob(parts[1]);
-    var arr = new Uint8Array(bytes.length);
-    for (var i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
-    return new Blob([arr], { type: mime });
-  }
-
-  // 桌面端：打成 zip 一次下载
-  async function downloadZip(results, dateStr) {
-    var JSZip = await loadJSZip();
-    var zip = new JSZip();
-    for (var i = 0; i < results.length; i++) {
-      zip.file(results[i].fileLabel + '-' + dateStr + '.png', dataUrlToBlob(results[i].dataUrl));
-    }
-    var blob = await zip.generateAsync({ type: 'blob' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = '美股基金汇总-' + dateStr + '.zip';
-    a.click();
-    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-  }
-
-  // 桌面端：单张下载
-  function downloadOnePng(dataUrl, filename) {
-    var a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = filename;
-    a.click();
-  }
-
-  // 移动端：逐张分享
-  async function shareOnePng(dataUrl, filename) {
-    var resp = await fetch(dataUrl);
-    var blob = await resp.blob();
-    var file = new File([blob], filename, { type: 'image/png' });
-    await navigator.share({ files: [file] });
   }
 
   window.downloadScreenshotPNG = async function () {
@@ -582,33 +504,25 @@
     if (!preview) return;
     var btn = document.getElementById('ss-download-btn');
     if (!btn) return;
+    btn.textContent = '生成中...';
     btn.disabled = true;
-    var isMobile = navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
     try {
+      var dataUrl = await snapPng();
+      var cat = SS_CATEGORIES.find(function (c) { return c.id === ssState.groupFilter; });
       var dateStr = new Date().toISOString().slice(0, 10);
-      var isAll = ssState.groupFilter === 'all';
+      var fname = (cat ? cat.fileLabel : '美股基金') + '-' + dateStr + '.png';
 
-      if (isAll) {
-        btn.textContent = '生成中...';
-        var results = await snapAllCategories(btn);
-        if (isMobile) {
-          for (var i = 0; i < results.length; i++) {
-            btn.textContent = '保存 (' + (i + 1) + '/' + results.length + ')...';
-            await shareOnePng(results[i].dataUrl, results[i].fileLabel + '-' + dateStr + '.png');
-          }
-        } else {
-          btn.textContent = '打包中...';
-          await downloadZip(results, dateStr);
-        }
-        btn.textContent = '完成';
+      if (navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+        var resp = await fetch(dataUrl);
+        var blob = await resp.blob();
+        var file = new File([blob], fname, { type: 'image/png' });
+        await navigator.share({ files: [file] });
       } else {
-        btn.textContent = '生成中...';
-        var cat = SS_CATEGORIES.find(function (c) { return c.id === ssState.groupFilter; });
-        var dataUrl = await snapPng();
-        var fname = (cat ? cat.fileLabel : '美股基金') + '-' + dateStr + '.png';
-        if (isMobile) await shareOnePng(dataUrl, fname);
-        else downloadOnePng(dataUrl, fname);
+        var a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = fname;
+        a.click();
       }
     } catch (e) {
       if (e.name === 'AbortError') { /* 用户取消分享 */ }
