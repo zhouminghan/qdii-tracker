@@ -8,7 +8,8 @@
 cd scripts && python3 fundctl.py sync    # 完整流水线（scan→enrich→fill→holdings）
 cd scripts && python3 fundctl.py refresh  # 增量更新（fill）
 cd scripts && python3 fundctl.py add --code 008888 --to active --keyword "基金名"
-cd scripts && python3 fundctl.py check    # 一致性校验
+cd scripts && python3 fundctl.py check    # 一致性校验（含 harness golden fixtures）
+python3 harness/verify_data.py            # 单独跑数据侧验收
 cd ../web && python3 -m http.server 8765  # 本地开发
 ```
 
@@ -67,8 +68,8 @@ harness/
 27. **数据侧确定性、UI 侧工具无关**：`verify_data.py` 是纯 Python，无浏览器依赖，直接跑；
     `ui_scenarios/*.yaml` 只声明"打开什么页面 → 做什么交互 → 断言什么 DOM 属性等于什么值"，
     不锁定 Playwright/Selenium/任何具体工具——执行时由 Agent 现场发现环境里可用的浏览器自动化工具去驱动。
-28. **空 fixtures/无场景 = 通过**：骨架阶段允许空跑，不阻塞现有流程；`fundctl.py check` 后续接入
-    `verify_data.run_verification()` 时，空列表视为通过。
+28. **空 fixtures/无场景 = 通过**：骨架阶段允许空跑，`fundctl.py check` 已接入
+    `verify_data.run_verification()`，空列表视为通过。
 29. **信任模型：只固化「已验证通过」的结果，不盲信 diff**：往 `golden_fixtures.json` /
     `ui_scenarios/*.yaml` 写期望值前，必须先跑一次实际验证（截图确认/断言跑绿），
     捕获那个已确认对的值——绝不能"代码刚改完就直接拿渲染结果当基准"，

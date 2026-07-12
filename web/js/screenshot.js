@@ -37,18 +37,29 @@
     etf:      { cols: ['name','buy_status'], sort: 'buy_status', dir: 'desc' },
   };
 
+  // 分类清单：key 对应 ssState 字段名 / chip data-val / 下载文件名
+  const SS_CATEGORIES = [
+    { id: 'nasdaq',  label: '纳斯达克100', fileLabel: '纳斯达克100', field: 'nasdaq',       srcKey: 'nasdaq_passive' },
+    { id: 'sp500',   label: '标普500',      fileLabel: '标普500',     field: 'sp500',        srcKey: 'sp500' },
+    { id: 'active',  label: '美股主动',      fileLabel: '美股主动',     field: 'activeFund',   srcKey: 'active' },
+    { id: 'gidx',    label: '全球指数',      fileLabel: '全球指数',     field: 'globalIndex',  srcKey: 'global_index' },
+    { id: 'goth',    label: '全球/其他',     fileLabel: '全球-其他',    field: 'globalOther',  srcKey: 'global_other' },
+  ];
+
   // ==================== 状态 ====================
   let ssState = {
     tab: null,
     sp500: [],
     nasdaq: [],
     activeFund: [],
+    globalIndex: [],
+    globalOther: [],
     activeCols: [],
     sortKey: null,
     sortDir: 'desc',
     groupFilter: 'all',
     styleMode:   'cute',
-    layoutMode:  'dense',   // 'dense' | 'balanced' | 'sparse'
+    layoutMode:  'dense',
   };
 
   // ==================== 数据展平（每系列仅取默认份额）====================
@@ -81,6 +92,19 @@
     });
   }
 
+  // JSZip 延迟加载（全部模式打包下载用）
+  let _jsZip = null;
+  function loadJSZip() {
+    if (_jsZip) return Promise.resolve(_jsZip);
+    return new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = 'https://unpkg.com/jszip@3.10.1/dist/jszip.min.js';
+      s.onload = function () { _jsZip = window.JSZip; resolve(_jsZip); };
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
   // ==================== 公共 API ====================
   window.openScreenshotModal = function (tab, _seriesList, groups) {
     var cols = SCREENSHOT_COLS[tab];
@@ -88,9 +112,9 @@
     var d = DEFAULTS[tab];
 
     ssState.tab = tab;
-    ssState.sp500 = flattenByGroup(groups, 'sp500');
-    ssState.nasdaq = flattenByGroup(groups, 'nasdaq_passive');
-    ssState.activeFund = flattenByGroup(groups, 'active');
+    for (var ci = 0; ci < SS_CATEGORIES.length; ci++) {
+      ssState[SS_CATEGORIES[ci].field] = flattenByGroup(groups, SS_CATEGORIES[ci].srcKey);
+    }
     ssState.activeCols = d.cols;
     ssState.sortKey = d.sort;
     ssState.sortDir = d.dir;
@@ -315,7 +339,6 @@
       }
       return total;
     }
-    // 净值列表头日期：取众数（多数份额同一净值日）
     function calcNavHeaderDate(shares) {
       var counts = {};
       for (var i = 0; i < shares.length; i++) {
@@ -329,29 +352,25 @@
       }
       return best;
     }
-
-    var nasdaqLimit = calcLimit(ssState.nasdaq);
-    var sp500Limit  = calcLimit(ssState.sp500);
-    var activeLimit = calcLimit(ssState.activeFund);
-    var nasdaqNavDate = calcNavHeaderDate(ssState.nasdaq);
-    var sp500NavDate  = calcNavHeaderDate(ssState.sp500);
-    var activeNavDate = calcNavHeaderDate(ssState.activeFund);
     function limitLabel(v) { return v > 0 ? '<span class="ss-limit-inline">当日最多 ¥' + formatLimit(v) + '</span>' : ''; }
 
-    // 收集所有分类 section（不包外层，留给内层2 统一包）
     var sectionsHtml = '';
-    if (f === 'all' || f === 'nasdaq') sectionsHtml += renderFundTable('纳斯达克100', ssState.nasdaq, limitLabel(nasdaqLimit), nasdaqNavDate);
-    if (f === 'all' || f === 'sp500')  sectionsHtml += renderFundTable('标普500', ssState.sp500, limitLabel(sp500Limit), sp500NavDate);
-    if (f === 'all' || f === 'active') sectionsHtml += renderFundTable('美股主动', ssState.activeFund, limitLabel(activeLimit), activeNavDate);
+    for (var ci = 0; ci < SS_CATEGORIES.length; ci++) {
+      var cat = SS_CATEGORIES[ci];
+      if (f !== 'all' && f !== cat.id) continue;
+      var shares = ssState[cat.field];
+      var lmt = calcLimit(shares);
+      var navDate = calcNavHeaderDate(shares);
+      sectionsHtml += renderFundTable(cat.label, shares, limitLabel(lmt), navDate);
+    }
 
-    // 外层大框（.ss-phone-wrap，唯一带边框） + 内层1（市场指标） + 内层2（所有表格）
-    var html =
+    var cardHtml =
       '<div class="ss-phone-wrap' + extraCls + '">' +
         renderMktBlock() +
         '<div class="ss-inner ss-table-block">' + sectionsHtml + '</div>' +
       '</div>';
 
-    document.getElementById('ss-preview').innerHTML = html;
+    document.getElementById('ss-preview').innerHTML = cardHtml;
 
     // 列头点击排序
     document.querySelectorAll('#ss-preview th.ss-th-sort').forEach(function (th) {
@@ -453,90 +472,143 @@
   }
 
   // ==================== 保存图片 ====================
+  // 提取单张截图的核心逻辑（不含保存/下载，返回 dataUrl）
+  async function snapPng() {
+    var preview = document.getElementById('ss-preview');
+    var target = preview;
+    var wrap = preview.querySelector('.ss-phone-wrap');
+    var wrapSavedMinH = null, wrapSavedPos = null, wrapSavedTop = null, wrapSavedLeft = null, wrapSavedZ = null;
+    if (wrap) {
+      target = wrap;
+      wrapSavedMinH = wrap.style.minHeight;
+      wrap.style.minHeight = '0';
+      wrapSavedPos = wrap.style.position;
+      wrapSavedTop = wrap.style.top;
+      wrapSavedLeft = wrap.style.left;
+      wrapSavedZ = wrap.style.zIndex;
+      wrap.style.position = 'absolute';
+      wrap.style.top = '0';
+      wrap.style.left = '0';
+      wrap.style.zIndex = '99999';
+    }
+
+    var blurs = target.querySelectorAll('*');
+    var restored = [];
+    for (var i = 0; i < blurs.length; i++) {
+      var el = blurs[i];
+      var bf = el.style.backdropFilter || getComputedStyle(el).backdropFilter;
+      var wbf = el.style.webkitBackdropFilter || getComputedStyle(el).webkitBackdropFilter;
+      if (bf && bf !== 'none') { restored.push({el:el, prop:'backdropFilter', val:bf}); el.style.backdropFilter = 'none'; }
+      if (wbf && wbf !== 'none') { restored.push({el:el, prop:'webkitBackdropFilter', val:wbf}); el.style.webkitBackdropFilter = 'none'; }
+    }
+
+    var lib = await loadHtmlToImage();
+    var dataUrl = await lib.toPng(target, { backgroundColor: '#fffbf7', pixelRatio: 2 });
+
+    if (wrap) {
+      wrap.style.minHeight = wrapSavedMinH;
+      wrap.style.position = wrapSavedPos;
+      wrap.style.top = wrapSavedTop;
+      wrap.style.left = wrapSavedLeft;
+      wrap.style.zIndex = wrapSavedZ;
+    }
+    for (var r = 0; r < restored.length; r++) {
+      restored[r].el.style[restored[r].prop] = restored[r].val;
+    }
+    return dataUrl;
+  }
+
+  // 生成全部 5 张图（逐一渲染 snap，收集 dataUrls）
+  async function snapAllCategories(btn) {
+    var cats = SS_CATEGORIES;
+    var results = [];
+    for (var ci = 0; ci < cats.length; ci++) {
+      btn.textContent = '生成中 (' + (ci + 1) + '/' + cats.length + ')...';
+      ssState.groupFilter = cats[ci].id;
+      renderTemplate();
+      await new Promise(function (res) { requestAnimationFrame(function () { requestAnimationFrame(res); }); });
+      var dataUrl = await snapPng();
+      results.push({ fileLabel: cats[ci].fileLabel, dataUrl: dataUrl });
+    }
+    ssState.groupFilter = 'all';
+    renderTemplate();
+    return results;
+  }
+
+  // dataUrl → Blob
+  function dataUrlToBlob(dataUrl) {
+    var parts = dataUrl.split(',');
+    var mime = parts[0].match(/:(.*?);/)[1];
+    var bytes = atob(parts[1]);
+    var arr = new Uint8Array(bytes.length);
+    for (var i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+    return new Blob([arr], { type: mime });
+  }
+
+  // 桌面端：打成 zip 一次下载
+  async function downloadZip(results, dateStr) {
+    var JSZip = await loadJSZip();
+    var zip = new JSZip();
+    for (var i = 0; i < results.length; i++) {
+      zip.file(results[i].fileLabel + '-' + dateStr + '.png', dataUrlToBlob(results[i].dataUrl));
+    }
+    var blob = await zip.generateAsync({ type: 'blob' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = '美股基金汇总-' + dateStr + '.zip';
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  // 桌面端：单张下载
+  function downloadOnePng(dataUrl, filename) {
+    var a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = filename;
+    a.click();
+  }
+
+  // 移动端：逐张分享
+  async function shareOnePng(dataUrl, filename) {
+    var resp = await fetch(dataUrl);
+    var blob = await resp.blob();
+    var file = new File([blob], filename, { type: 'image/png' });
+    await navigator.share({ files: [file] });
+  }
+
   window.downloadScreenshotPNG = async function () {
     var preview = document.getElementById('ss-preview');
     if (!preview) return;
-
     var btn = document.getElementById('ss-download-btn');
     if (!btn) return;
-    btn.textContent = '生成中...';
     btn.disabled = true;
+    var isMobile = navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
     try {
-      // 1. 选定实际捕获目标：手机模式取 .ss-phone-wrap（避开 preview 的 flex/padding/受限高度），
-      //    桌面模式直接取 .ss-preview 本身（无 wrap）
-      var target = preview;
-      var wrap = preview.querySelector('.ss-phone-wrap');
-      var wrapSavedMinH = null, wrapSavedPos = null, wrapSavedTop = null, wrapSavedLeft = null, wrapSavedZ = null;
-      if (wrap) {
-        target = wrap;
-        // 移除 wrap 的 min-height 限制（内容不足 480px 时不再撑出空白）
-        wrapSavedMinH = wrap.style.minHeight;
-        wrap.style.minHeight = '0';
-        // 把 wrap 定位到 (0,0)，确保 html-to-image 截到完整 wrap 而非其在 preview 内的偏移区域
-        wrapSavedPos = wrap.style.position;
-        wrapSavedTop = wrap.style.top;
-        wrapSavedLeft = wrap.style.left;
-        wrapSavedZ = wrap.style.zIndex;
-        wrap.style.position = 'absolute';
-        wrap.style.top = '0';
-        wrap.style.left = '0';
-        wrap.style.zIndex = '99999';
-      }
-
-      // 2. html-to-image 不渲染 backdrop-filter，提前移除
-      var blurs = target.querySelectorAll('*');
-      var restored = [];
-      for (var i = 0; i < blurs.length; i++) {
-        var el = blurs[i];
-        var bf = el.style.backdropFilter || getComputedStyle(el).backdropFilter;
-        var wbf = el.style.webkitBackdropFilter || getComputedStyle(el).webkitBackdropFilter;
-        if (bf && bf !== 'none') { restored.push({el:el, prop:'backdropFilter', val:bf}); el.style.backdropFilter = 'none'; }
-        if (wbf && wbf !== 'none') { restored.push({el:el, prop:'webkitBackdropFilter', val:wbf}); el.style.webkitBackdropFilter = 'none'; }
-      }
-
-      // 3. 生成完整截图
-      var lib = await loadHtmlToImage();
-      var dataUrl = await lib.toPng(target, {
-        backgroundColor: '#fffbf7',
-        pixelRatio: 2,
-        // target 已不含 save-bar（移出 wrap 后），无需再 filter
-      });
-
-      // 4. 恢复所有样式
-      if (wrap) {
-        wrap.style.minHeight = wrapSavedMinH;
-        wrap.style.position = wrapSavedPos;
-        wrap.style.top = wrapSavedTop;
-        wrap.style.left = wrapSavedLeft;
-        wrap.style.zIndex = wrapSavedZ;
-      }
-      for (var r = 0; r < restored.length; r++) {
-        restored[r].el.style[restored[r].prop] = restored[r].val;
-      }
-
       var dateStr = new Date().toISOString().slice(0, 10);
-      // 文件名随分类切换
-      var nameMap = {
-        'nasdaq': '纳斯达克100',
-        'sp500':  '标普500',
-        'active': '美股主动',
-        'all':    '纳斯达克100-标普500-美股主动',
-      };
-      var filename = (nameMap[ssState.groupFilter] || '纳斯达克100-标普500-美股主动') + '-' + dateStr + '.png';
+      var isAll = ssState.groupFilter === 'all';
 
-      // iOS/移动端：使用分享面板（可直接保存到相册）
-      if (navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
-        var resp = await fetch(dataUrl);
-        var blob = await resp.blob();
-        var file = new File([blob], filename, { type: 'image/png' });
-        await navigator.share({ files: [file] });
+      if (isAll) {
+        btn.textContent = '生成中...';
+        var results = await snapAllCategories(btn);
+        if (isMobile) {
+          for (var i = 0; i < results.length; i++) {
+            btn.textContent = '保存 (' + (i + 1) + '/' + results.length + ')...';
+            await shareOnePng(results[i].dataUrl, results[i].fileLabel + '-' + dateStr + '.png');
+          }
+        } else {
+          btn.textContent = '打包中...';
+          await downloadZip(results, dateStr);
+        }
+        btn.textContent = '完成';
       } else {
-        // 桌面端：直接下载文件
-        var a = document.createElement('a');
-        a.href = dataUrl;
-        a.download = filename;
-        a.click();
+        btn.textContent = '生成中...';
+        var cat = SS_CATEGORIES.find(function (c) { return c.id === ssState.groupFilter; });
+        var dataUrl = await snapPng();
+        var fname = (cat ? cat.fileLabel : '美股基金') + '-' + dateStr + '.png';
+        if (isMobile) await shareOnePng(dataUrl, fname);
+        else downloadOnePng(dataUrl, fname);
       }
     } catch (e) {
       if (e.name === 'AbortError') { /* 用户取消分享 */ }

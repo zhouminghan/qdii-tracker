@@ -10,12 +10,18 @@
 import argparse
 import json
 import sys
+from pathlib import Path
+
+# 把项目根目录加进 sys.path，以便 import harness/ 下的模块
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from core.constants import CATEGORIES, DATA_DIR
 from core.config_loader import get_config, save_config
 
 # 直接 import pipeline 模块（替代 subprocess 调用）
 from pipeline import scan, enrich, fill, holdings, reclassify, codegen
+
+from harness.verify_data import run_verification
 
 
 def _run(main_fn, *argv_extra):
@@ -124,8 +130,10 @@ def cmd_check(_args):
             if default_code and default_code not in share_codes:
                 errors.append(f"{cat}/{s.get('display_name','?')} default_share_code 无效: {default_code}")
 
-    # 注：原第 4 步"meta 与各数据 generated_at 差异校验"已移除——
-    # 各数据文件不再写 generated_at（仅 meta.json 保留），无差异可比。
+    # 4) golden fixtures 校验（harness/verify_data.py）
+    golden_errors = run_verification()
+    if golden_errors:
+        errors.extend(golden_errors)
 
     if errors:
         print("❌ 一致性校验失败：")
