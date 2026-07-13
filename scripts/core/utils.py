@@ -203,3 +203,20 @@ def normalize_holdings_keys(data: dict) -> dict:
             data["all_quarters"][quarter][i] = item_ordered
 
     return data
+
+
+def fetch_and_save_holdings(code: str, holdings_dir, fetch_fn, print_prefix: str = "") -> bool:
+    """抓取单只基金的持仓并写盘。收拢 holdings.py / reclassify.py 两处重复的
+    fetch→normalize→write→log 链条。返回 True=成功。"""
+    result = fetch_fn(code)
+    if result and "error" not in result:
+        normalize_holdings_keys(result)
+        write_json(holdings_dir / f"{code}.json", result)
+        top3 = result["holdings"][:3] if result["holdings"] else []
+        top_str = " | ".join(f"{h['stock_name']} {h['weight']}%" for h in top3)
+        print(f"  {print_prefix}✅ holdings/{code}.json - {top_str}")
+        return True
+    else:
+        err = (result or {}).get("error", "无数据") if result else "无数据"
+        print(f"  {print_prefix}⚠️  holdings/{code}.json 抓取失败: {err[:80]}")
+        return False

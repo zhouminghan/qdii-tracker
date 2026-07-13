@@ -153,6 +153,12 @@
     html.dark .chip.chip-active { background: #44403c; color: #e7e5e4; }
     html.dark .chip.chip-active .chip-count { background: rgba(255,255,255,.08); }
 
+    /* 分享按钮（tab 旁的 📤） */
+    .ss-share-btn { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+    .ss-share-btn:hover { background: #dcfce7; }
+    html.dark .ss-share-btn { background: rgba(74,222,128,.12); color: #86efac; border-color: rgba(74,222,128,.25); }
+    html.dark .ss-share-btn:hover { background: rgba(74,222,128,.2); }
+
     html.dark .fee-tip { border-bottom-color: #57534e; }
     html.dark .fee-popover {
       background: #292524; border-color: #44403c;
@@ -264,6 +270,68 @@
     html.dark .buy-hist-tip .tip-badge-paused { background: rgba(255,100,80,.18); color: #fca5a5; }
     html.dark .buy-hist-tip .tip-badge-limit  { background: rgba(240,168,120,.18); color: #f5b98e; }
     html.dark .buy-hist-tip .tip-badge-open   { background: rgba(100,200,130,.18); color: #a3e6b8; }
+
+    /* ====== 截图 Modal — 暗色模式 ====== */
+    html.dark .ss-modal-dialog { background: #292524; box-shadow: 0 20px 60px rgba(0,0,0,.4), 0 4px 20px rgba(0,0,0,.2); }
+    html.dark .ss-filters-bar { background: #1c1917; border-color: #44403c; }
+    html.dark .ss-filter-label { color: #a8a29e; }
+    html.dark .ss-chip-btn { background: #44403c; border-color: #57534e; color: #d6d3d1; }
+    html.dark .ss-chip-btn.active { background: #57534e; color: #f5f5f4; border-color: #78716c; }
+    html.dark .ss-chip-btn:hover { background: #57534e; }
+    html.dark .ss-preview { background: #1c1917; }
+    html.dark .ss-col-item { color: #d6d3d1; }
+    html.dark .ss-col-item.checked { background: rgba(255,255,255,.08); }
+    html.dark .ss-save-primary { box-shadow: 0 2px 6px rgba(0,0,0,.3); }
+    html.dark .ss-save-primary:hover { box-shadow: 0 4px 12px rgba(0,0,0,.4); }
+    html.dark .ss-muted { color: #78716c; }
+    html.dark .ss-section-title { color: #e7e5e4; border-color: #44403c; }
+    html.dark .ss-preview thead th { color: #a8a29e; border-color: #44403c; }
+    html.dark .ss-preview td { color: #d6d3d1; background: #292524; border-color: #44403c; }
+    html.dark .ss-preview tr:nth-child(even) td { background: #1c1917; }
+    html.dark .ss-date-header { color: #a8a29e; border-color: #44403c; }
+
+    /* 7 种风格 — 暗色变体（让预览卡在暗色模式下跟随主题，保存图片仍强制亮色） */
+    /* 指标卡统一样式（暗色下覆盖所有风格） */
+    html.dark .ss-mkt-card { background: rgba(255,255,255,.05); }
+    html.dark .ss-mkt-label { color: #78716c; }
+    html.dark .ss-mkt-price { color: #e7e5e4; }
+    /* 各风格独有的暗色变体 */
+    html.dark .ss-style-cute.ss-phone-wrap { background: linear-gradient(180deg, #1f1c1a 0%, #292524 100%); border-color: #44403c; }
+    html.dark .ss-style-cute .ss-inner { background: #292524; }
+    html.dark .ss-style-glass.ss-phone-wrap { background: rgba(40,40,40,.88); border-color: rgba(255,255,255,.1); }
+    html.dark .ss-style-glass .ss-inner { background: rgba(40,40,40,.6); }
+    html.dark .ss-style-glass .ss-mkt-card { background: rgba(255,255,255,.05); }
+    html.dark .ss-style-glass .ss-tbl thead { background: rgba(255,255,255,.05); }
+    html.dark .ss-style-glass td { color: #e7e5e4; }
+    html.dark .ss-style-glass tr:nth-child(even) td { background: rgba(255,255,255,.04); }
+    html.dark .ss-style-warm.ss-phone-wrap { background: linear-gradient(180deg, #2a221a 0%, #1f1a14 100%); border-color: #44403c; }
+    html.dark .ss-style-warm .ss-inner { background: #2a221a; }
+    html.dark .ss-style-warm .ss-mkt-card { background: #2a221a; }
+    html.dark .ss-style-warm .ss-tbl thead { background: rgba(60,45,25,.4); }
+    html.dark .ss-style-warm tr:nth-child(even) td { background: #1f1a14; }
+    html.dark .ss-style-notion.ss-phone-wrap { background: #1c1917; border-color: #44403c; }
+    html.dark .ss-style-notion .ss-inner { background: #292524; }
+    html.dark .ss-style-notion .ss-mkt-card { background: #1c1917; }
+    html.dark .ss-style-notion .ss-tbl thead { background: #292524; }
+    html.dark .ss-style-notion td { color: #d6d3d1; border-color: #44403c; }
+    html.dark .ss-style-notion tr:nth-child(even) td { background: #1c1917; }
+    html.dark .ss-style-minimal.ss-phone-wrap { background: #292524; border-color: #44403c; }
+    html.dark .ss-style-minimal .ss-inner { background: #1c1917; }
+    html.dark .ss-style-minimal .ss-mkt-card { background: #1c1917; border-color: #44403c; }
+    html.dark .ss-style-minimal .ss-tbl thead { background: #292524; }
+    html.dark .ss-style-minimal td { color: #d6d3d1; border-color: #44403c; }
+    html.dark .ss-style-minimal tr:nth-child(even) td { background: #1c1917; }
+    html.dark .ss-style-fresh.ss-phone-wrap { background: linear-gradient(180deg, #1c2620 0%, #1a2a22 100%); border-color: #2a4a32; }
+    html.dark .ss-style-fresh .ss-inner { background: #1c2620; }
+    html.dark .ss-style-fresh .ss-mkt-card { background: #1c2620; }
+    html.dark .ss-style-fresh .ss-tbl thead { background: rgba(42,74,50,.4); }
+    html.dark .ss-style-fresh tr:nth-child(even) td { background: #1a2a22; }
+    html.dark .ss-style-notes.ss-phone-wrap { background: #1f1c2a; border-color: #44403c; }
+    html.dark .ss-style-notes .ss-inner { background: #292524; }
+    html.dark .ss-style-notes .ss-mkt-card { background: #1f1c2a; }
+    html.dark .ss-style-notes .ss-tbl thead { background: #292524; }
+    html.dark .ss-style-notes td { color: #d6d3d1; border-color: #44403c; }
+    html.dark .ss-style-notes tr:nth-child(even) td { background: #1c1917; }
 
     /* ====== 截图 Modal ====== */
     /* min-width: 500px 让「分类/风格/布局/显示列」4 组筛选默认单行排布，避免窄屏宽度下桌面端被迫大量换行显得局促；

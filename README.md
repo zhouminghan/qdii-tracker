@@ -52,7 +52,7 @@ graph LR
 qdii-tracker/
 ├── scripts/                  # 数据流水线（Python）
 │   ├── fundctl.py            # 统一入口（add/move/refresh/sync/check）
-│   ├── architecture_lint.py  # 目录纪律强制校验（已接入 fundctl.py check + pre-commit）
+│   ├── architecture_lint.py  # 目录纪律强制校验（已接入 fundctl.py check）
 │   ├── core/                 # 共享基础设施
 │   ├── sources/              # 数据源抽象层（akshare/eastmoney/xueqiu）
 │   └── pipeline/             # scan → enrich → fill → holdings + reclassify/codegen 等工具
@@ -61,7 +61,7 @@ qdii-tracker/
 ├── feedback/                  # 反馈层基础设施（数据黄金样例 + UI 回归场景 + 改动联动扫描）
 │   ├── golden_fixtures.json  # 数据侧人工标注期望值
 │   ├── verify_data.py        # 确定性校验脚本（已接入 fundctl.py check）
-│   ├── scan_scenarios.py     # 改动↔场景联动扫描（已接入 fundctl.py check + pre-commit）
+│   ├── scan_scenarios.py     # 改动↔场景联动扫描（已接入 fundctl.py check）
 │   └── ui_scenarios/         # 声明式 UI 回归场景（_TEMPLATE.yaml + 5 个真实场景）
 ├── AGENT.md                  # 硬约束规则（长期稳定，改一次管很久）
 ├── MEMORY.md                 # 架构演进历史（收拢的深模块清单，只增不改）

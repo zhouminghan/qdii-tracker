@@ -129,15 +129,31 @@ def main():
     data_dir = DATA_DIR
     data_dir.mkdir(parents=True, exist_ok=True)
 
-    loaded_data = {}
+    loaded_data = _load_categories(data_dir)
+    s1 = _fill_nav_and_returns(loaded_data, only_codes)
+    s2 = _fill_basic_info(loaded_data, only_codes)
+    s3, f3 = _fill_ytd(loaded_data, only_codes)
+    s4, f4 = _fill_inception(loaded_data, only_codes)
+    _write_back(data_dir, loaded_data)
+    _fill_etf_prices(data_dir, only_codes)
+    _refresh_purchase_status(data_dir, only_codes)
+
+    print()
+    print(f"📊 总结：Pass1(净值) {s1[0]} / {s1[1]} / {s1[2]} | Pass2(基础) {s2} | Pass3(YTD) {s3}/{f3} | Pass4(成立来) {s4}/{f4}")
+
+
+def _load_categories(data_dir):
+    loaded = {}
     for cat in CATEGORIES:
         fp = data_dir / f"{cat}.json"
         if fp.exists():
-            loaded_data[cat] = read_json(fp)
+            loaded[cat] = read_json(fp)
         else:
             print(f"⚠️  {cat}.json 不存在，跳过（首次运行需先跑 scan + enrich）")
+    return loaded
 
-    # =================== Pass 1：净值 + 历史收益（并行） ===================
+
+def _fill_nav_and_returns(loaded_data, only_codes):
     targets = []
     for cat, d in loaded_data.items():
         is_etf = (cat == "etf")
@@ -145,23 +161,13 @@ def main():
             for sh in s["shares"]:
                 if only_codes and sh["code"] not in only_codes:
                     continue
-                if is_etf:
-                    probe_keys = ["chg_1m", "chg_1y"]
-                    missing = [k for k in probe_keys if sh.get(k) in (None, "", 0)]
-                    targets.append((cat, sh["code"], sh, missing or ["nav_date"], is_etf))
-                else:
-                    probe_keys = ["chg_1m", "chg_1y"]
-                    missing = [k for k in probe_keys if sh.get(k) in (None, "", 0)]
-                    targets.append((cat, sh["code"], sh, missing or ["daily-refresh"], is_etf))
+                probe_keys = ["chg_1m", "chg_1y"]
+                missing = [k for k in probe_keys if sh.get(k) in (None, "", 0)]
+                targets.append((cat, sh["code"], sh, missing or (["nav_date"] if is_etf else ["daily-refresh"]), is_etf))
 
     total = len(targets)
-    print(f"🎯 Pass 1: {total} 只基金需处理（场外每日刷新 nav/daily_change + 历史收益补漏；ETF 仅补漏历史收益 + nav_date）")
-    print(f"   数据源：lsjz API + pingzhongdata（{MAX_WORKERS} 线程并行，反爬限速）")
-    print()
-
-    success = 0
-    fail = 0
-    # 并行提交 API 调用
+    print(f"🎯 Pass 1: {total} 只基金需处理（lsjz+pzd，{MAX_WORKERS} 线程并行）")
+    success = fail = 0
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
         future_map = {}
         for cat, code, sh, missing, is_etf in targets:
@@ -177,17 +183,13 @@ def main():
                 fail += 1
                 continue
 
+            merged = None
             if lsjz and pzd:
                 for key in ("nav", "nav_date", "daily_change"):
-                    if key in lsjz:
-                        pzd[key] = lsjz[key]
+                    if key in lsjz: pzd[key] = lsjz[key]
                 merged = pzd
-            elif lsjz:
-                merged = lsjz
-            elif pzd:
-                merged = pzd
-            else:
-                merged = None
+            elif lsjz: merged = lsjz
+            elif pzd:  merged = pzd
 
             if merged:
                 up = merge_share_data(sh, merged, is_etf=is_etf)
@@ -196,247 +198,166 @@ def main():
                     cur_nd = sh.get("nav_date", "")
                     if new_nd and (not cur_nd or new_nd >= cur_nd):
                         sh["nav_date"] = new_nd
-                        if "nav_date" not in up:
-                            up.append("nav_date")
+                        if "nav_date" not in up: up.append("nav_date")
                 if up:
                     success += 1
-                    tag = "[ETF]" if is_etf else "     "
-                    src = "lsjz" if lsjz else "pzd"
-                    _safe_print(f"  [{i}/{total}] ✅ {tag} {code} [{src}] 补上 {up}")
+                    _safe_print(f"  [{i}/{total}] ✅ {'[ETF]' if is_etf else '     '} {code} [{('lsjz' if lsjz else 'pzd')}] 补上 {up}")
                 else:
-                    _safe_print(f"  [{i}/{total}] ✓  {code} 数据已是最新（无变化）")
+                    _safe_print(f"  [{i}/{total}] ✓  {code} 数据已是最新")
             else:
                 fail += 1
                 _safe_print(f"  [{i}/{total}] ❌ {code} lsjz+pzd 均失败")
+    return success, fail, total
 
-    # =================== Pass 2：F10 基础信息 + 费率（并行） ===================
-    print()
-    print("=" * 50)
-    print("Pass 2: 从 F10 补充规模/成立日期/基金经理/费率")
-    print("=" * 50)
-    f10_targets = []
-    for cat, d in loaded_data.items():
-        for s in d["series"]:
-            for sh in s["shares"]:
-                if only_codes and sh["code"] not in only_codes:
-                    continue
-                if sh.get("scale") in (None, "", 0) or \
-                   sh.get("established") in (None, "") or \
-                   sh.get("manager") in (None, "") or \
-                   sh.get("sale_service_fee") is None or \
-                   sh.get("mgmt_fee") is None or \
-                   sh.get("first_buy_rate") is None:
-                    f10_targets.append((cat, sh["code"], sh))
+
+def _fill_basic_info(loaded_data, only_codes):
+    print("\n" + "=" * 50 + "\nPass 2: F10 补充规模/成立日期/基金经理/费率\n" + "=" * 50)
+    f10_targets = [(cat, sh["code"], sh) for cat, d in loaded_data.items()
+                   for s in d["series"] for sh in s["shares"]
+                   if (not only_codes or sh["code"] in only_codes)
+                   and (sh.get("scale") in (None, "", 0) or sh.get("established") in (None, "")
+                        or sh.get("manager") in (None, "") or sh.get("sale_service_fee") is None
+                        or sh.get("mgmt_fee") is None or sh.get("first_buy_rate") is None)]
     total2 = len(f10_targets)
-    print(f"🎯 目标：{total2} 只缺基础信息/费率")
+    print(f"🎯 目标：{total2} 只")
     success2 = 0
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        future_map = {}
-        for cat, code, sh in f10_targets:
-            future = executor.submit(_fetch_f10_wrapped, code)
-            future_map[future] = (cat, code, sh)
-
+        future_map = {executor.submit(_fetch_f10_wrapped, code): (cat, code, sh)
+                      for cat, code, sh in f10_targets}
         for i, future in enumerate(as_completed(future_map), 1):
             cat, code, sh = future_map[future]
-            try:
-                info = future.result()
-            except Exception as e:
-                _safe_print(f"  [{i}/{total2}] ❌ {code} worker 异常: {e}")
-                continue
+            try: info = future.result()
+            except Exception as e: _safe_print(f"  [{i}/{total2}] ❌ {code} worker 异常: {e}"); continue
             if info:
                 changed = []
-                for key in ["scale", "scale_raw", "established", "manager",
-                            "sale_service_fee", "mgmt_fee", "custody_fee", "first_buy_rate"]:
+                for key in ["scale","scale_raw","established","manager","sale_service_fee","mgmt_fee","custody_fee","first_buy_rate"]:
                     if info.get(key) is not None and sh.get(key) in (None, "", 0):
-                        if key == "sale_service_fee" and sh.get("share_class") in ("A", "默认", "A(后端)"):
-                            if info[key] > 0.05:
-                                continue
-                        sh[key] = info[key]
-                        changed.append(key)
-                if changed:
-                    success2 += 1
-                    _safe_print(f"  [{i}/{total2}] ✅ {code} 补上 {changed}")
-            else:
-                _safe_print(f"  [{i}/{total2}] ❌ {code} F10 失败")
+                        if key == "sale_service_fee" and sh.get("share_class") in ("A", "默认", "A(后端)") and info[key] > 0.05: continue
+                        sh[key] = info[key]; changed.append(key)
+                if changed: success2 += 1; _safe_print(f"  [{i}/{total2}] ✅ {code} 补上 {changed}")
+            else: _safe_print(f"  [{i}/{total2}] ❌ {code} F10 失败")
 
-    # =================== Pass 2b：补 buy_rules / sell_rules ===================
-    print()
-    print("=" * 50)
-    print("Pass 2b: 从天天基金费率页补充买入/卖出规则（缺失时）")
-    print("=" * 50)
-    fee_targets = [(cat, sh["code"], sh)
-                   for cat, d in loaded_data.items()
-                   for s in d["series"]
-                   for sh in s["shares"]
-                   if (only_codes is None or sh["code"] in only_codes)
+    # Pass 2b
+    print("\n" + "=" * 50 + "\nPass 2b: 补充 buy_rules / sell_rules\n" + "=" * 50)
+    fee_targets = [(cat, sh["code"], sh) for cat, d in loaded_data.items()
+                   for s in d["series"] for sh in s["shares"]
+                   if (not only_codes or sh["code"] in only_codes)
                    and not sh.get("buy_rules") and not sh.get("sell_rules")]
     total2b = len(fee_targets)
-    print(f"🎯 目标：{total2b} 只缺买卖规则")
+    print(f"🎯 目标：{total2b} 只")
     success2b = 0
     for i, (cat, code, sh) in enumerate(fee_targets, 1):
         rules = fetch_fee_rules(code)
         if rules:
-            sh["buy_rules"] = rules.get("buy_rules", [])
-            sh["sell_rules"] = rules.get("sell_rules", [])
+            sh["buy_rules"] = rules.get("buy_rules", []); sh["sell_rules"] = rules.get("sell_rules", [])
             for rule in sh["sell_rules"]:
                 if rule["rate"] == 0:
                     m = re.search(r"(\d+(?:\.\d+)?)\s*[天日]", rule["condition"])
-                    if m:
-                        sh["free_hold_days"] = int(float(m.group(1)))
-                        break
+                    if m: sh["free_hold_days"] = int(float(m.group(1))); break
             success2b += 1
-        if (i) % 20 == 0:
-            print(f"  进度: {i}/{total2b}")
-    print(f"  ✅ 补上 {success2b}/{total2b} 只的买卖规则")
+        if (i) % 20 == 0: print(f"  进度: {i}/{total2b}")
+    print(f"  ✅ 补上 {success2b}/{total2b} 只")
+    return success2
 
-    # =================== Pass 3：YTD（并行） ===================
-    print()
-    print("=" * 50)
-    print("Pass 3: 补充今年来收益率 chg_ytd")
-    print("=" * 50)
-    ytd_targets = [(cat, sh["code"], sh)
-                   for cat, d in loaded_data.items()
-                   for s in d["series"]
-                   for sh in s["shares"]
-                   if (only_codes is None or sh["code"] in only_codes)
+
+def _fill_ytd(loaded_data, only_codes):
+    print("\n" + "=" * 50 + "\nPass 3: chg_ytd\n" + "=" * 50)
+    ytd_targets = [(cat, sh["code"], sh) for cat, d in loaded_data.items()
+                   for s in d["series"] for sh in s["shares"]
+                   if (not only_codes or sh["code"] in only_codes)
                    and sh.get("chg_ytd") in (None, "", 0)]
     total3 = len(ytd_targets)
-    print(f"🎯 目标：{total3} 只缺 YTD 数据")
-    success3 = 0
-    fail3 = 0
+    print(f"🎯 目标：{total3} 只")
+    s = f = 0
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        future_map = {}
-        for cat, code, sh in ytd_targets:
-            future = executor.submit(_fetch_ytd_wrapped, code)
-            future_map[future] = (cat, code, sh)
-
+        future_map = {executor.submit(_fetch_ytd_wrapped, code): (cat, code, sh) for cat, code, sh in ytd_targets}
         for i, future in enumerate(as_completed(future_map), 1):
             cat, code, sh = future_map[future]
-            try:
-                ytd = future.result()
-            except Exception as e:
-                _safe_print(f"  [{i}/{total3}] ❌ {code} worker 异常: {e}")
-                fail3 += 1
-                continue
-            if ytd is not None:
-                sh["chg_ytd"] = ytd
-                success3 += 1
-                _safe_print(f"  [{i}/{total3}] ✅ {code} YTD = {ytd:+.2f}%")
-            else:
-                fail3 += 1
-                _safe_print(f"  [{i}/{total3}] ❌ {code} 无累计收益率数据")
+            try: ytd = future.result()
+            except Exception as e: _safe_print(f"  [{i}/{total3}] ❌ {code} worker 异常: {e}"); f += 1; continue
+            if ytd is not None: sh["chg_ytd"] = ytd; s += 1; _safe_print(f"  [{i}/{total3}] ✅ {code} YTD = {ytd:+.2f}%")
+            else: f += 1; _safe_print(f"  [{i}/{total3}] ❌ {code} 无数据")
+    return s, f
 
-    # =================== Pass 4：成立来收益（并行） ===================
-    print()
-    print("=" * 50)
-    print("Pass 4: 补充成立来收益 chg_since_inception")
-    print("=" * 50)
-    inception_targets = [(cat, sh["code"], sh)
-                         for cat, d in loaded_data.items() if cat != "etf"
-                         for s in d["series"]
-                         for sh in s["shares"]
-                         if (only_codes is None or sh["code"] in only_codes)
+
+def _fill_inception(loaded_data, only_codes):
+    print("\n" + "=" * 50 + "\nPass 4: chg_since_inception\n" + "=" * 50)
+    inception_targets = [(cat, sh["code"], sh) for cat, d in loaded_data.items() if cat != "etf"
+                         for s in d["series"] for sh in s["shares"]
+                         if (not only_codes or sh["code"] in only_codes)
                          and sh.get("chg_since_inception") is None]
     total4 = len(inception_targets)
-    print(f"🎯 目标：{total4} 只缺成立来数据")
-    success4 = 0
-    fail4 = 0
+    print(f"🎯 目标：{total4} 只")
+    s = f = 0
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        future_map = {}
-        for cat, code, sh in inception_targets:
-            future = executor.submit(_fetch_inception_wrapped, code)
-            future_map[future] = (cat, code, sh)
-
+        future_map = {executor.submit(_fetch_inception_wrapped, code): (cat, code, sh) for cat, code, sh in inception_targets}
         for i, future in enumerate(as_completed(future_map), 1):
             cat, code, sh = future_map[future]
-            try:
-                val = future.result()
-            except Exception as e:
-                _safe_print(f"  [{i}/{total4}] ❌ {code} worker 异常: {e}")
-                fail4 += 1
-                continue
-            if val is not None:
-                sh["chg_since_inception"] = val
-                success4 += 1
-                if (i) % 10 == 0:
-                    _safe_print(f"  进度: {i}/{total4}")
-            else:
-                fail4 += 1
+            try: val = future.result()
+            except Exception as e: _safe_print(f"  [{i}/{total4}] ❌ {code} worker 异常: {e}"); f += 1; continue
+            if val is not None: sh["chg_since_inception"] = val; s += 1
+            else: f += 1
+            if (i) % 10 == 0: _safe_print(f"  进度: {i}/{total4}")
+    return s, f
 
-    # =================== 统一写回 ===================
+
+def _write_back(data_dir, loaded_data):
     print("\n💾 写回板块数据...")
     for cat, d in loaded_data.items():
         for s in d["series"]:
-            a_rmb = [sh for sh in s["shares"]
-                     if sh.get("share_class") in ("A", "默认")
-                     and sh.get("currency", "人民币") == "人民币"]
-            if a_rmb and a_rmb[0].get("scale"):
-                s["series_scale"] = a_rmb[0]["scale"]
-            elif not s.get("series_scale"):
-                s["series_scale"] = next((sh.get("scale") for sh in s["shares"] if sh.get("scale")), 0)
+            a_rmb = [sh for sh in s["shares"] if sh.get("share_class") in ("A", "默认") and sh.get("currency", "人民币") == "人民币"]
+            if a_rmb and a_rmb[0].get("scale"): s["series_scale"] = a_rmb[0]["scale"]
+            elif not s.get("series_scale"): s["series_scale"] = next((sh.get("scale") for sh in s["shares"] if sh.get("scale")), 0)
         fp = data_dir / f"{cat}.json"
         normalize_share_keys(d)
-        with open(fp, "w", encoding="utf-8") as f:
-            json.dump(d, f, ensure_ascii=False, indent=2)
+        with open(fp, "w", encoding="utf-8") as f: json.dump(d, f, ensure_ascii=False, indent=2)
         print(f"  ✅ {cat}.json")
-
     bump_generated_at()
 
-    print()
-    print(f"📊 总结：Pass1 成功 {success} / 失败 {fail} / 共 {total}")
-    print(f"         Pass2 成功 {success2} / 共 {total2}")
-    print(f"         Pass3 成功 {success3} / 失败 {fail3} / 共 {total3}")
-    print(f"         Pass4 成功 {success4} / 失败 {fail4} / 共 {total4}")
 
-    # 5. ETF 场内价（原在 refresh.py，归入净值类）
+def _fill_etf_prices(data_dir, only_codes):
     etf_fp = data_dir / "etf.json"
-    if etf_fp.exists():
-        etf_map = fetch_etf_data()
-        if etf_map:
-            etf_data = read_json(etf_fp)
-            etf_updated = 0
-            for series in etf_data.get("series", []):
-                for share in series.get("shares", []):
-                    if only_codes and share["code"] not in only_codes:
-                        continue
-                    info = etf_map.get(share["code"])
-                    if info:
-                        share["etf_price"] = info.get("etf_price")
-                        share["etf_change_pct"] = info.get("etf_change_pct")
-                        etf_updated += 1
-            normalize_share_keys(etf_data)
-            write_json(etf_fp, etf_data)
-            print(f"  💾 ETF 场内价 {etf_updated} 只")
+    if not etf_fp.exists(): return
+    etf_map = fetch_etf_data()
+    if not etf_map: return
+    etf_data = read_json(etf_fp)
+    etf_updated = 0
+    for series in etf_data.get("series", []):
+        for share in series.get("shares", []):
+            if only_codes and share["code"] not in only_codes: continue
+            info = etf_map.get(share["code"])
+            if info:
+                share["etf_price"] = info.get("etf_price"); share["etf_change_pct"] = info.get("etf_change_pct")
+                etf_updated += 1
+    normalize_share_keys(etf_data)
+    write_json(etf_fp, etf_data)
+    print(f"  💾 ETF 场内价 {etf_updated} 只")
 
-    # ========== 申购状态刷新 + buy_status_history 追踪（原 refresh.py 并入） ==========
+
+def _refresh_purchase_status(data_dir, only_codes):
     today = beijing_now_iso()[:10]
     purchase_map = fetch_purchase_data()
     rank_map = fetch_rank_data()
     for cat in CATEGORIES:
         fp = data_dir / f"{cat}.json"
-        if not fp.exists():
-            continue
+        if not fp.exists(): continue
         data = read_json(fp)
         updated = 0
         for series in data.get("series", []):
             for share in series.get("shares", []):
                 code = share["code"]
-                if only_codes and code not in only_codes:
-                    continue
-                if code in purchase_map:
-                    share.update(purchase_map[code])
-                    updated += 1
+                if only_codes and code not in only_codes: continue
+                if code in purchase_map: share.update(purchase_map[code]); updated += 1
                 if code in rank_map:
                     r = rank_map[code]
                     if r.get("nav_date", "") >= share.get("nav_date", ""):
                         for k, v in r.items():
-                            if v is not None and k not in ("nav_date", "nav", "nav_cum", "daily_change"):
+                            if v is not None and k not in ("nav_date","nav","nav_cum","daily_change"):
                                 share[k] = v
                 _update_history(share, today)
         normalize_share_keys(data)
         write_json(fp, data)
-        if updated:
-            print(f"  💾 {cat}.json 申购 {updated} 只")
+        if updated: print(f"  💾 {cat}.json 申购 {updated} 只")
 
 
 if __name__ == "__main__":

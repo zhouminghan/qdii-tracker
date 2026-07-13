@@ -117,20 +117,32 @@ COMPANY_DISPLAY_ALIAS = _CFG.get("company_alias", {})
 
 SHARE_CLASS_PATTERN = re.compile(r"([ABCDEFHIQR])\s*$")
 
+# 基金名称标准化：被 make_display_name() 和 extract_company_and_series() 共用。
+# 收拢原先两处逐行相同的正则链（12 条中 10 条重复），改一处即全部生效。
+_CLEANUP_PATTERNS = [
+    (re.compile(r"\([^)]*\)"), ""),           # 英文括号
+    (re.compile(r"（[^）]*）"), ""),           # 中文括号
+    (re.compile(r"(人民币|美元现汇|美元现钞|美现汇|美现钞|美元|美钞|美汇|现汇|现钞|欧元|港币|港元)"), ""),  # 币种
+    (re.compile(r"纳指100"), "纳斯达克100"),    # 纳指100 标准化
+    (re.compile(r"(?<!纳斯达克)纳指(?!\d)"), "纳斯达克"),  # 纳指标准化
+    (re.compile(r"发起(式)?"), ""),            # 发起式
+    (re.compile(r"\s*[ABCDEFHIQR]\s*$"), ""),  # 份额类尾缀
+    (re.compile(r"[汇钞]$"), ""),              # 汇/钞尾缀
+    (re.compile(r"\(?后端\)?"), ""),           # 后端
+    (re.compile(r"\s+"), ""),                  # 空白合并
+]
+
+
+def _normalize_fund_name(name: str) -> str:
+    """去除基金名中的括号/币种/份额类尾缀/纳指标准化，两处调用（make_display_name / extract_company_and_series）。"""
+    s = str(name).strip()
+    for pat, repl in _CLEANUP_PATTERNS:
+        s = pat.sub(repl, s)
+    return s.strip()
+
 
 def make_display_name(share_name: str) -> str:
-    name = str(share_name).strip()
-    name = re.sub(r"\([^)]*\)", "", name)
-    name = re.sub(r"（[^）]*）", "", name)
-    name = re.sub(r"(人民币|美元现汇|美元现钞|美现汇|美现钞|美元|美钞|美汇|现汇|现钞|欧元|港币|港元)", "", name)
-    name = re.sub(r"\s*[ABCDEFHIQR]\s*$", "", name)
-    name = re.sub(r"[汇钞]$", "", name.strip())
-    name = re.sub(r"\(?后端\)?", "", name)
-    name = re.sub(r"发起(式)?", "", name)
-    name = re.sub(r"纳指100", "纳斯达克100", name)
-    name = re.sub(r"(?<!纳斯达克)纳指(?!\d)", "纳斯达克", name)
-    name = re.sub(r"\s+", "", name).strip()
-    return name
+    return _normalize_fund_name(share_name)
 
 
 def extract_company_and_series(full_name: str) -> tuple[str, str]:
@@ -147,28 +159,7 @@ def extract_company_and_series(full_name: str) -> tuple[str, str]:
                 break
 
     remaining = full_name[len(company):] if (company and full_name.startswith(company)) else full_name
-    remaining = re.sub(r"\([^)]*\)", "", remaining)
-    remaining = re.sub(r"（[^）]*）", "", remaining)
-    remaining = re.sub(r"人民币", "", remaining)
-    remaining = re.sub(r"美元现汇", "", remaining)
-    remaining = re.sub(r"美元现钞", "", remaining)
-    remaining = re.sub(r"美现汇", "", remaining)
-    remaining = re.sub(r"美现钞", "", remaining)
-    remaining = re.sub(r"美元", "", remaining)
-    remaining = re.sub(r"美钞", "", remaining)
-    remaining = re.sub(r"美汇", "", remaining)
-    remaining = re.sub(r"欧元", "", remaining)
-    remaining = re.sub(r"现汇", "", remaining)
-    remaining = re.sub(r"现钞", "", remaining)
-    remaining = re.sub(r"纳指100", "纳斯达克100", remaining)
-    remaining = re.sub(r"(?<!纳斯达克)纳指(?!\d)", "纳斯达克", remaining)
-    remaining = re.sub(r"发起(式)?", "", remaining)
-    remaining = re.sub(r"\s*[ABCDEFHIQR]\s*$", "", remaining)
-    remaining = re.sub(r"[汇钞]$", "", remaining.strip())
-    remaining = re.sub(r"\(后端\)", "", remaining)
-    remaining = re.sub(r"后端", "", remaining)
-    remaining = re.sub(r"\s+", "", remaining)
-    remaining = remaining.strip()
+    remaining = _normalize_fund_name(remaining)
     return (company or "其他", remaining or full_name)
 
 

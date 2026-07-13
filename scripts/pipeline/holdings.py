@@ -6,7 +6,7 @@ import json
 import time
 
 from core.constants import CATEGORIES, DATA_DIR, HOLDINGS_DIR, HOLDINGS_CATEGORIES
-from core.utils import write_json, normalize_holdings_keys
+from core.utils import write_json, normalize_holdings_keys, fetch_and_save_holdings
 from core.config_loader import get_config
 from sources.akshare_source import fetch_holdings
 
@@ -57,21 +57,11 @@ def main():
     for i, (code, name) in enumerate(target_codes, 1):
         if only_codes and code not in only_codes:
             continue
-        result = fetch_holdings(code)
-        if result and "error" not in result:
-            normalize_holdings_keys(result)
-            write_json(holdings_dir / f"{code}.json", result)
+        ok = fetch_and_save_holdings(code, holdings_dir, fetch_holdings, f"[{i}/{total}] ")
+        if ok:
             success += 1
-            top_str = ""
-            if result["holdings"]:
-                top3 = result["holdings"][:3]
-                top_str = " | ".join(f"{h['stock_name']} {h['weight']}%" for h in top3)
-            print(f"  [{i}/{total}] ✅ {code} {name[:20]} - {top_str}")
         else:
             fail += 1
-            err = (result or {}).get("error", "未知") if result else "无数据"
-            print(f"  [{i}/{total}] ❌ {code} {name[:20]} - {err[:50]}")
-
         time.sleep(0.3)
 
     print()

@@ -48,18 +48,41 @@ cd ../web && python3 -m http.server 8765  # 本地开发
 
 ## Harness（改 → 测 → 固）
 
-> 三层：**预防**=本文件 | **执行**=`fundctl.py check` + `pre-commit` | **反馈**=`feedback/`
+> 三层：**预防**=本文件 | **执行**=`fundctl.py check` | **反馈**=`feedback/`（详见 `feedback/README.md`）
 
 ```
-feedback/   # golden_fixtures.json + verify_data.py + ui_scenarios/ (5 个真实场景)
+feedback/   # golden_fixtures.json + verify_data.py + scan_scenarios.py + ui_scenarios/ (5场景)
 ```
 
 **① 改** — 检查 `.codebuddy/plans/` 续接 → 读 AGENT/README/MEMORY → 每步勾计划文件
 
-**② 测** — 数据侧：`fundctl.py check`；UI 侧：启 web → Playwright (`test/`，gitignored)；一个手段不行就换一个
+**② 测** — 数据侧：`fundctl.py check`（含 verify + lint + scan_scenarios）；UI 侧：启 web → Playwright (`test/`，gitignored)；一个手段不行就换一个
+> Agent 执行路径：先跑 `fundctl.py check`（无浏览器依赖，秒级），再 `python3 -m http.server` 启服务 → `node test/self-check.js` 跑全量 UI 回归。
 
-**③ 固** — 提交 → 自问是否补 `feedback/` 回归项 → 同步 MEMORY.md
+**③ 固** — 提交 → `scan_scenarios.py` 会提示哪些 UI 场景需要重跑 → 自问是否补回归项 → 同步 MEMORY.md
 
 ### 设计约束
 - **数据侧确定性、UI 侧工具无关**：`verify_data.py` 纯 Python；`ui_scenarios/*.yaml` 声明式
 - **空 fixtures/无场景 = 通过**；**只固化验证通过的结果**
+
+## 可执行清单（Agent 照做）
+
+### 每次修改后
+```bash
+cd scripts && python3 fundctl.py check          # 数据侧（秒级，无浏览器）
+cd ../web && python3 -m http.server 8899 &      # 启服务
+NODE_PATH=~/.npm/_npx/<cache>/node_modules node test/self-check.js  # UI 全量
+kill $(lsof -t -i :8899)                        # 关服务
+```
+
+### 改截图分享额外检查
+- 保存 PNG 无外框阴影 → `snapPng()` 截前 `clone.style.boxShadow = 'none'`
+- 克隆体 `position:absolute` + 挂 `#ss-preview` → 不丢 CSS 上下文
+- 指标卡 border + no box-shadow → 7 风格全覆盖
+- 手机端表格 → `.ss-tbl-wrap { overflow-x: auto }`
+
+### 新增文件放哪
+- JS → `web/js/`；CSS → `web/css/`；测试 → `test/`（gitignored）
+- Python → `scripts/pipeline/` 或 `scripts/core/`
+- 回归场景 → `feedback/ui_scenarios/`（复制 `_TEMPLATE.yaml`）
+- 新 JS/CSS 必须在 `index.html` 加 `?v=placeholder`

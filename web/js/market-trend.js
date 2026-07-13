@@ -162,10 +162,8 @@ async function openIndexTrend(secid, evt) {
   TS.fullSeries = null;
   TS.range = '3m';
   TS.expanded = false;
-  TS.yMode = 'value';
-  TS.digits = meta.digits;
-  TS.navLabel = meta.kind === 'fx' ? '汇率' : '点位';
-  window.renderTrendRanges();
+  const trendDisplay = { yMode: 'value', digits: meta.digits, navLabel: meta.kind === 'fx' ? '汇率' : '点位' };
+  window.renderTrendRanges(trendDisplay);
 
   const result = await fetchDayKWithFallback(secid);
   if (!result || !result.series || !result.series.length) {
@@ -179,7 +177,7 @@ async function openIndexTrend(secid, evt) {
     return;
   }
   TS.fullSeries = result.series;
-  window.renderTrendChart();
+  window.renderTrendChart(trendDisplay);
 }
 
 // 5 张指标卡挂点击 + 视觉提示

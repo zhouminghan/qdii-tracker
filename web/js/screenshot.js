@@ -487,6 +487,7 @@
     preview.appendChild(clone);
 
     // html-to-image 对 backdrop-filter 支持不佳（会渲染成纯色块），截图前在克隆体上关闭
+    // .ss-phone-wrap 外框的 box-shadow 在保存图片的圆角上显脏影，截图前也关掉
     var blurs = clone.querySelectorAll('*');
     for (var i = 0; i < blurs.length; i++) {
       var el = blurs[i];
@@ -495,12 +496,18 @@
       if (bf && bf !== 'none') el.style.backdropFilter = 'none';
       if (wbf && wbf !== 'none') el.style.webkitBackdropFilter = 'none';
     }
+    clone.style.boxShadow = 'none';
+
+    // 截前临时切到亮色模式，保证保存的图片始终是亮色调（不受页面暗色主题影响）
+    var wasDark = document.documentElement.classList.contains('dark');
+    if (wasDark) document.documentElement.classList.remove('dark');
 
     try {
       var lib = await loadHtmlToImage();
       var dataUrl = await lib.toPng(clone, { backgroundColor: '#fffbf7', pixelRatio: 2 });
       return dataUrl;
     } finally {
+      if (wasDark) document.documentElement.classList.add('dark');
       preview.removeChild(clone);
     }
   }

@@ -195,80 +195,56 @@
     // 实际涵盖 纳指100(NDX) + 纳指科技(NDXT) 等纳斯达克家族指数，故 label 不再写「100」。
     // ETF_GROUPS 与 PASSIVE_HOLDINGS_OVERRIDE 已移到 web/js/config.js
 
-    function renderCategory(tab) {
-      const container = document.getElementById(`table-${tab}`);
+    function buildCategoryViewModel(tab) {
       const isEtf = tab === 'etf';
       const isOffshore = tab === 'offshore';
+      const showHoldings = isOffshore;
 
-      // 「场外」表头要不要加持仓列：只要包含 active 组就加
-      const showHoldings = isOffshore;  // 场外含主动基金，统一加持仓列
-
-      // 收集要渲染的 series 分组
       let groups;
-      let totalSeries = 0, totalShares = 0, totalScale = 0;
-
       if (isOffshore) {
-        // 场外 = sp500 + nasdaq_passive + active + global_index + global_other 五个分组
         groups = OFFSHORE_GROUPS.map(g => {
           const src = STATE.data[g.key];
-          const items = (src?.series || []).map(s => ({
-            ...s,
-            starred: OFFSHORE_STARRED.has(s.default_share_code),
-          }));
-          return {
-            ...g,
-            items,
-            sourceCat: g.key,
-            // active 和 global_other 都是主动型 —— 显示基金经理、展示持仓按钮
-            isActive: (g.key === 'active' || g.key === 'global_other'),
-          };
+          const items = (src?.series || []).map(s => ({ ...s, starred: OFFSHORE_STARRED.has(s.default_share_code) }));
+          return { ...g, items, sourceCat: g.key, isActive: (g.key === 'active' || g.key === 'global_other') };
         }).filter(g => g.items.length);
       } else if (isEtf) {
-        // ETF 按 etf_target 分组：sp500/nasdaq100 单独，其余（含 us50、other、空值）归入 global_other
         const src = STATE.data.etf;
         const byTarget = {};
         for (const s of src.series) {
-          const raw = s.etf_target;
-          const t = (raw === 'sp500' || raw === 'nasdaq100') ? raw : 'global_other';
+          const t = (s.etf_target === 'sp500' || s.etf_target === 'nasdaq100') ? s.etf_target : 'global_other';
           (byTarget[t] = byTarget[t] || []).push(s);
         }
         for (const key in byTarget) {
-          // 组内排序：starred 置顶，其余按规模降序
-          byTarget[key].sort((a, b) => {
-            if (a.starred && !b.starred) return -1;
-            if (!a.starred && b.starred) return 1;
-            return (b.series_scale || 0) - (a.series_scale || 0);
-          });
+          byTarget[key].sort((a, b) => (a.starred && !b.starred ? -1 : !a.starred && b.starred ? 1 : (b.series_scale || 0) - (a.series_scale || 0)));
         }
-        groups = ETF_GROUPS
-          .map(g => ({ ...g, items: byTarget[g.key] || [], sourceCat: 'etf', isActive: false }))
-          .filter(g => g.items.length);
+        groups = ETF_GROUPS.map(g => ({ ...g, items: byTarget[g.key] || [], sourceCat: 'etf', isActive: false })).filter(g => g.items.length);
       }
 
-      // 应用排序（每个分组内独立排序，不跨组）
       const sortConf = SORT_STATE[tab] || { key: 'series_scale', dir: 'desc' };
-      groups.forEach(g => {
-        g.items = sortSeries(g.items, sortConf.key, sortConf.dir);
-      });
+      groups.forEach(g => { g.items = sortSeries(g.items, sortConf.key, sortConf.dir); });
 
-      // 统计
+      let totalSeries = 0, totalShares = 0, totalScale = 0;
       groups.forEach(g => {
         totalSeries += g.items.length;
-        g.items.forEach(s => {
-          totalShares += s.shares.length;
-          totalScale += (s.series_scale || 0);
-        });
+        g.items.forEach(s => { totalShares += s.shares.length; totalScale += (s.series_scale || 0); });
       });
-      document.getElementById(`count-${tab}`).textContent =
-        `${totalSeries} 个系列 · ${totalShares} 只份额 · 总规模 ${totalScale.toFixed(0)} 亿`;
 
-      // 表头净值日期：按当前可见分组计算代表日期（众数，并列取更晚日期）。
-      // 默认分组 = 当前 CHIP_STATE 命中的组；若不存在则回退首组。
       const activeGroupKey = (CHIP_STATE[tab] && groups.some(g => g.key === CHIP_STATE[tab])) ? CHIP_STATE[tab] : (groups[0]?.key || '');
       const activeGroup = groups.find(g => g.key === activeGroupKey);
       const latestNavDate = pickGroupHeaderDate(activeGroup?.items || [], isEtf);
+
+      return { groups, sortConf, totalSeries, totalShares, totalScale, latestNavDate, isEtf, isOffshore, showHoldings };
+    }
+
+    function renderCategory(tab) {
+      const vm = buildCategoryViewModel(tab);
+      const container = document.getElementById(`table-${tab}`);
+      const { groups, sortConf, totalSeries, totalShares, totalScale, latestNavDate, isEtf, isOffshore, showHoldings } = vm;
+
+      document.getElementById(`count-${tab}`).textContent =
+        `${totalSeries} 个系列 · ${totalShares} 只份额 · 总规模 ${totalScale.toFixed(0)} 亿`;
+
       const navHeaderSub = fmtMD(latestNavDate);
-      // 按 tab 存储，供 renderSeries 判断行内是否需要重复显示日期
       STATE._navDate = STATE._navDate || {};
       STATE._navDate[tab] = latestNavDate;
 
@@ -409,8 +385,7 @@
       if (document.getElementById('ss-btn-' + tab)) return;
       var btn = document.createElement('button');
       btn.id = 'ss-btn-' + tab;
-      btn.className = 'chip';
-      btn.style.cssText = 'background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;';
+      btn.className = 'chip ss-share-btn';
       btn.textContent = '📤 分享';
       btn.onclick = function () {
         var allSeries = [];
@@ -1088,7 +1063,8 @@
       return series.filter(p => p.date >= start);
     }
 
-    function renderTrendChart() {
+    function renderTrendChart(trendDisplay) {
+      if (!trendDisplay) trendDisplay = { yMode: TREND_STATE.yMode, digits: TREND_STATE.digits, navLabel: TREND_STATE.navLabel };
       // 每次重渲染图表（首次/区间切换）都把列表收回为 5 条预览
       TREND_STATE.expanded = false;
       const wrap = document.getElementById('trend-chart');
@@ -1106,11 +1082,9 @@
       // why 不让指数也走 pct：道琼斯/汇率有公认的"绝对值阅读习惯"（例如汇率 6.7 vs 7.2），
       //   折成 % 反而失去了"实际位置"信息；基金净值则是另一回事——每只基金净值起点不同，
       //   用 % 才能横向对比。所以这里是有意分两条路。
-      const yMode = TREND_STATE.yMode === 'value' ? 'value' : 'pct';
-      // 数字精度：指数 2 位、汇率 4 位、基金净值 4 位（默认）
-      const digits = Number.isInteger(TREND_STATE.digits) ? TREND_STATE.digits : 4;
-      // tooltip / 列表里"净值"那一行的 label——指数模式称"点位"，汇率称"汇率"，否则保持"净值"
-      const navLabel = TREND_STATE.navLabel || '净值';
+      const yMode = trendDisplay.yMode === 'value' ? 'value' : 'pct';
+      const digits = Number.isInteger(trendDisplay.digits) ? trendDisplay.digits : 4;
+      const navLabel = trendDisplay.navLabel || '净值';
 
       const baseNav = data[0].nav;
       const pts = data.map(p => ({
@@ -1241,7 +1215,7 @@
 
       // 最近净值列表：默认 5 条预览，点「加载更多」展开为完整列表（带滚动）
       // 切换区间时强制收回，因为基准点变了，区间累计也跟着变
-      renderTrendList(pts);
+      renderTrendList(pts, trendDisplay);
 
       // ===== Hover 交互 =====
       const svg = document.getElementById('trend-svg');
@@ -1329,19 +1303,18 @@
     //   · 默认显示 5 条预览 + 「加载更多」按钮
     //   · 点击「加载更多」展开为完整历史（按日期降序，最新在最上），带 max-height 滚动
     //   · 数据来自当前区间已计算好的 pts（含 ret 字段），无需再请求接口
-    function renderTrendList(pts) {
+    function renderTrendList(pts, trendDisplay) {
+      if (!trendDisplay) trendDisplay = { yMode: TREND_STATE.yMode, digits: TREND_STATE.digits, navLabel: TREND_STATE.navLabel };
       const recent = document.getElementById('trend-recent');
       if (!recent) return;
       const expanded = TREND_STATE.expanded;
-      const all = pts.slice().reverse();  // 最新在前
+      const all = pts.slice().reverse();
       const view = expanded ? all : all.slice(0, 5);
       const fmtFullD = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
-      // 与 renderTrendChart 同口径：value 模式（指数/汇率）千分位+digits；pct 模式（基金）4 位定点
-      // navLabel：基金 = "净值"，指数 = "点位"，汇率 = "汇率"——表头第二列直接复用
-      const yMode = TREND_STATE.yMode === 'value' ? 'value' : 'pct';
-      const digits = Number.isInteger(TREND_STATE.digits) ? TREND_STATE.digits : 4;
-      const navLabel = TREND_STATE.navLabel || '单位净值';
+      const yMode = trendDisplay.yMode === 'value' ? 'value' : 'pct';
+      const digits = Number.isInteger(trendDisplay.digits) ? trendDisplay.digits : 4;
+      const navLabel = trendDisplay.navLabel || '单位净值';
       const fmtNav = (v) => yMode === 'value'
         ? v.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits })
         : v.toFixed(4);
@@ -1412,12 +1385,13 @@
       if (btn) {
         btn.addEventListener('click', () => {
           TREND_STATE.expanded = !TREND_STATE.expanded;
-          renderTrendList(pts);
+          renderTrendList(pts, trendDisplay);
         });
       }
     }
 
-    function renderTrendRanges() {
+    function renderTrendRanges(trendDisplay) {
+      if (!trendDisplay) trendDisplay = { yMode: TREND_STATE.yMode, digits: TREND_STATE.digits, navLabel: TREND_STATE.navLabel };
       const box = document.getElementById('trend-ranges');
       box.innerHTML = TREND_RANGES.map(r => `
         <button data-range="${r.key}" class="px-3 py-1.5 rounded-md text-xs border dark:border-stone-700 transition ${TREND_STATE.range === r.key ? 'bg-stone-900 dark:bg-stone-700 text-white dark:text-stone-200 border-transparent dark:border-stone-600' : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700'}">
@@ -1427,8 +1401,8 @@
       box.querySelectorAll('button[data-range]').forEach(btn => {
         btn.addEventListener('click', () => {
           TREND_STATE.range = btn.dataset.range;
-          renderTrendRanges();
-          renderTrendChart();
+          renderTrendRanges(trendDisplay);
+          renderTrendChart(trendDisplay);
         });
       });
     }
@@ -1460,12 +1434,8 @@
       TREND_STATE.fullSeries = null;
       TREND_STATE.range = '3m';
       TREND_STATE.expanded = false;
-      // 防污染：上次可能是指数 modal（market-trend.js 设了 yMode='value'），这里强制回到基金口径
-      // 三个字段缺省值 = 基金原行为：累计涨跌幅% / 净值 4 位定点 / 列名"单位净值"
-      TREND_STATE.yMode = 'pct';
-      TREND_STATE.digits = 4;
-      TREND_STATE.navLabel = '单位净值';
-      renderTrendRanges();
+      const trendDisplay = { yMode: 'pct', digits: 4, navLabel: '单位净值' };
+      renderTrendRanges(trendDisplay);
 
       const data = await fetchPzdHistory(code);
       if (!data || !data.length) {
@@ -1473,7 +1443,7 @@
         return;
       }
       TREND_STATE.fullSeries = data;
-      renderTrendChart();
+      renderTrendChart(trendDisplay);
     }
 
     function closeTrend() {

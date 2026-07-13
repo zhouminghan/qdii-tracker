@@ -6,7 +6,7 @@ import argparse
 import time
 
 from core.constants import CATEGORIES, DATA_DIR, HOLDINGS_DIR, HOLDINGS_CATEGORIES
-from core.utils import read_json, write_json, normalize_share_keys, normalize_holdings_keys, beijing_now_iso, calc_series_scale
+from core.utils import read_json, write_json, normalize_share_keys, normalize_holdings_keys, beijing_now_iso, calc_series_scale, fetch_and_save_holdings
 from core.config_loader import get_config, save_config
 from sources.akshare_source import fetch_holdings
 
@@ -65,19 +65,7 @@ def update_total_scale(data: dict):
 def fetch_holdings_for_code(code: str) -> bool:
     holdings_dir = HOLDINGS_DIR
     holdings_dir.mkdir(parents=True, exist_ok=True)
-
-    result = fetch_holdings(code)
-    if result and "error" not in result:
-        normalize_holdings_keys(result)
-        write_json(holdings_dir / f"{code}.json", result)
-        top3 = result["holdings"][:3] if result["holdings"] else []
-        top_str = " | ".join(f"{h['stock_name']} {h['weight']}%" for h in top3)
-        print(f"  ✅ holdings/{code}.json - {top_str}")
-        return True
-    else:
-        err = (result or {}).get("error", "无数据") if result else "无数据"
-        print(f"  ⚠️  holdings/{code}.json 抓取失败: {err[:80]}")
-        return False
+    return fetch_and_save_holdings(code, holdings_dir, fetch_holdings)
 
 
 def update_config_whitelist(series: dict, keyword: str, to_cat: str):
