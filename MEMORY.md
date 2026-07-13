@@ -32,8 +32,18 @@
 
 ### TREND_STATE yMode/digits/navLabel → 显式参数（2026-07-13）
 - **决策**：`renderTrendChart(trendDisplay)` / `renderTrendList(pts, trendDisplay)` 接受显式对象，不再读全局 TREND_STATE
-- **原因**：eliminates 时序耦合——main.js 和 market-trend.js 之前通过写入/擦除全局对象协调状态
+- **原因**：消除时序耦合——main.js 和 market-trend.js 之前通过写入/擦除全局对象协调状态
 - **向后兼容**：不传参数时 fallback 读 TREND_STATE（market-trend 的 window 调用路径已同步更新）
+
+### Apple 玻璃态 UI 设计（2026-07-13）
+- **决策**：全局玻璃拟态 + 随主题切换的中性色系（不固定紫色），深度层次靠 `backdrop-filter` + 阴影
+- **原因**：取代此前"不同组件不同配色"的碎片化视觉，统一为「玻璃白 + 深色渐变」双向跟随主题
+- **核心模式**：
+  - Chip/Tab/分享按钮的激活态 → 亮色深渐变+白字 / 暗色浅渐变+深字
+  - 市场卡/弹窗 → `backdrop-filter: blur(16px) saturate(180%)` 玻璃
+  - `.market-card:hover` → `translateY(-2px)` 上浮 + 阴影加深
+  - 表格行 → hover 紫底高亮（0.15s 平滑过渡）
+  - body 字体 → `-apple-system` + `SF Pro Text` + `antialiased`
 
 ## 关键约定（容易忘）
 
@@ -68,6 +78,11 @@
 - **指标卡 `.ss-mkt-card`**：`html.dark .ss-mkt-card { background: rgba(255,255,255,.05) }` 统一覆盖
 - **保存图片强制亮色**：`snapPng()` 截前 `classList.remove('dark')` → 截完恢复
 - **分享按钮 `style.cssText`** 覆盖 `.chip` 暗色 → 改为 CSS class `.ss-share-btn`
+
+### 玻璃态 UI
+- **`backdrop-filter` 需要 `-webkit-` 前缀**，否则 Safari/iOS 无效果
+- **`.market-card` 玻璃态需 `!important`** 覆盖 Tailwind 工具类背景色
+- **Tab/Chip/分享按钮激活态统一用中性渐变**（深底白字/浅底深字），不固定紫色——亮暗切换才显合理
 
 ## 深模块速查
 

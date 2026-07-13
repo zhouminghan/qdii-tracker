@@ -1,10 +1,12 @@
     body {
-      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
-      background: #f5f5f4;
+      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "SF Pro Text", sans-serif;
+      background: linear-gradient(135deg, #f5f5f7 0%, #efefef 50%, #f5f5f4 100%);
+      -webkit-font-smoothing: antialiased;
     }
     .num {
-      font-family: "SF Mono", Monaco, Menlo, monospace;
+      font-family: "SF Mono", "SF Mono SF", Monaco, Menlo, "ui-monospace", monospace;
       font-variant-numeric: tabular-nums;
+      letter-spacing: -0.01em;
     }
     .up { color: #dc2626; }
     .down { color: #16a34a; }
@@ -41,8 +43,11 @@
       100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
     }
     .tab-active {
-      background: #1c1917;
+      background: rgba(28,25,23,.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,.15);
     }
     .logo-avatar {
       width: 38px;
@@ -59,6 +64,7 @@
       position: relative;
       overflow: hidden;
       text-shadow: 0 1px 2px rgba(0,0,0,.2);
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
     }
     .logo-avatar::before {
       content: '';
@@ -92,39 +98,48 @@
       right: 0;
       bottom: 100%;
       margin-bottom: 4px;
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      padding: 10px 12px;
+      background: rgba(255,255,255,.85);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 12px;
+      padding: 12px 14px;
       font-size: 11px;
       min-width: 260px;
-      box-shadow: 0 10px 25px rgba(0,0,0,.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.04);
       z-index: 100;
       text-align: left;
     }
     .fee-popover table { width: 100%; border-collapse: collapse; }
     .fee-popover th, .fee-popover td { padding: 2px 4px; text-align: left; }
     .fee-popover th { color: #64748b; font-weight: 500; }
-    /* 分组筛选 Chips */
+    /* 分组筛选 Chips — Apple 风格 pill */
     .chip {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 12px;
+      padding: 6px 14px;
       border-radius: 999px;
       font-size: 12px;
       font-weight: 500;
-      background: #f5f5f4;
-      color: #57534e;
-      border: 1px solid transparent;
+      letter-spacing: -0.01em;
+      background: rgba(255,255,255,.85);
+      color: #44403c;
+      border: 1px solid rgba(0,0,0,.08);
+      box-shadow: 0 1px 2px rgba(0,0,0,.04);
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.2s cubic-bezier(0.25,0.1,0.25,1);
       user-select: none;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
-    .chip:hover { background: #e7e5e4; }
+    .chip:hover { background: rgba(255,255,255,1); transform: scale(1.02); box-shadow: 0 4px 12px rgba(0,0,0,.06); }
+    .chip:active { transform: scale(0.97); }
     .chip.chip-active {
-      background: #1c1917;
+      background: linear-gradient(135deg, #1c1917 0%, #292524 100%);
       color: white;
+      border-color: transparent;
+      box-shadow: 0 2px 8px rgba(0,0,0,.2);
     }
     .chip-count {
       font-size: 11px;
@@ -137,7 +152,7 @@
 
     /* ====== 深色模式覆盖 ====== */
     html { transition: background-color 0.2s, color 0.2s; }
-    html.dark body { background: #1c1917; color: #f5f5f4; }
+    html.dark body { background: linear-gradient(135deg, #1a1817 0%, #1f1c1a 50%, #1c1917 100%); color: #f5f5f4; }
 
     html.dark .badge-open   { background: rgba(22,101,52,0.25); color: #86efac; border-color: rgba(22,101,52,0.4); }
     html.dark .badge-limit  { background: rgba(146,64,14,0.25); color: #fcd34d; border-color: rgba(146,64,14,0.4); }
@@ -146,22 +161,37 @@
     html.dark .badge-usd    { background: rgba(146,64,14,0.25); color: #fcd34d; border-color: rgba(146,64,14,0.4); }
     html.dark .badge-cny    { background: rgba(41,37,36,0.5); color: #d6d3d1; border-color: #44403c; }
 
-    html.dark .tab-active { background: #44403c; color: #e7e5e4; }
+    html.dark .tab-active { background: rgba(255,255,255,.15); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: #f5f5f4; box-shadow: 0 2px 8px rgba(0,0,0,.3); }
+    html.dark .chip { background: rgba(255,255,255,.12); color: #d6d3d1; border-color: rgba(255,255,255,.15); }
+    html.dark .chip:hover { background: rgba(255,255,255,.18); }
+    html.dark .chip.chip-active { background: linear-gradient(135deg, #f5f5f4 0%, #e7e5e4 100%); color: #1c1917; border-color: transparent; box-shadow: 0 2px 8px rgba(255,255,255,.15); }
+    html.dark .chip.chip-active .chip-count { background: rgba(0,0,0,.15); }
 
-    html.dark .chip { background: #292524; color: #a8a29e; border-color: #44403c; }
-    html.dark .chip:hover { background: #44403c; }
-    html.dark .chip.chip-active { background: #44403c; color: #e7e5e4; }
-    html.dark .chip.chip-active .chip-count { background: rgba(255,255,255,.08); }
-
-    /* 分享按钮（tab 旁的 📤） */
-    .ss-share-btn { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
-    .ss-share-btn:hover { background: #dcfce7; }
-    html.dark .ss-share-btn { background: rgba(74,222,128,.12); color: #86efac; border-color: rgba(74,222,128,.25); }
-    html.dark .ss-share-btn:hover { background: rgba(74,222,128,.2); }
+    /* 分享按钮 — 跟随主题（与 chip active 统一） */
+    .ss-share-btn {
+      background: linear-gradient(135deg, #1c1917 0%, #292524 100%) !important;
+      color: white !important;
+      border-color: transparent !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,.2);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: all 0.2s cubic-bezier(0.25,0.1,0.25,1);
+    }
+    .ss-share-btn:hover { transform: scale(1.03); box-shadow: 0 4px 16px rgba(0,0,0,.25) !important; }
+    .ss-share-btn:active { transform: scale(0.97); }
+    html.dark .ss-share-btn {
+      background: linear-gradient(135deg, #f5f5f4 0%, #e7e5e4 100%) !important;
+      color: #1c1917 !important;
+      border-color: transparent !important;
+      box-shadow: 0 2px 8px rgba(255,255,255,.15);
+    }
+    html.dark .ss-share-btn:hover { box-shadow: 0 4px 16px rgba(255,255,255,.2) !important; }
 
     html.dark .fee-tip { border-bottom-color: #57534e; }
     html.dark .fee-popover {
-      background: #292524; border-color: #44403c;
+      background: rgba(40,40,40,.85); border-color: rgba(255,255,255,.08);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
       box-shadow: 0 10px 25px rgba(0,0,0,.4);
     }
     html.dark .fee-popover th { color: #a8a29e; }
@@ -270,6 +300,53 @@
     html.dark .buy-hist-tip .tip-badge-paused { background: rgba(255,100,80,.18); color: #fca5a5; }
     html.dark .buy-hist-tip .tip-badge-limit  { background: rgba(240,168,120,.18); color: #f5b98e; }
     html.dark .buy-hist-tip .tip-badge-open   { background: rgba(100,200,130,.18); color: #a3e6b8; }
+
+    /* ====== Apple 风格：玻璃卡 + 弹窗 ====== */
+    .market-card {
+      background: rgba(255,255,255,.7) !important;
+      backdrop-filter: blur(12px) saturate(180%);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      border: 1px solid rgba(0,0,0,.06) !important;
+      transition: all 0.2s cubic-bezier(0.25,0.1,0.25,1);
+    }
+    .market-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.06); }
+    .market-card:active { transform: scale(0.98); }
+    html.dark .market-card {
+      background: rgba(255,255,255,.05) !important;
+      border-color: rgba(255,255,255,.08) !important;
+    }
+    html.dark .market-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+
+    /* 详情弹窗 / 走势弹窗 透明度遮罩 */
+    #detailModal, #trendModal { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+
+    /* 详情/走势内部亮色卡片的玻璃感 */
+    #detailModal > div > div:first-child,
+    #trendModal > div > div:first-child {
+      background: rgba(255,255,255,.9) !important;
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid rgba(0,0,0,.06);
+    }
+    html.dark #detailModal > div > div:first-child,
+    html.dark #trendModal > div > div:first-child {
+      background: rgba(40,40,40,.9) !important;
+      border-color: rgba(255,255,255,.06);
+    }
+
+    /* ====== Apple 风格：表格行悬浮 + 玻璃卡 ====== */
+    #table-offshore tbody tr,
+    #table-etf tbody tr {
+      transition: background-color 0.15s ease;
+    }
+    #table-offshore tbody tr:hover,
+    #table-etf tbody tr:hover {
+      background: rgba(99,102,241,.04) !important;
+    }
+    html.dark #table-offshore tbody tr:hover,
+    html.dark #table-etf tbody tr:hover {
+      background: rgba(129,140,248,.08) !important;
+    }
 
     /* ====== 截图 Modal — 暗色模式 ====== */
     html.dark .ss-modal-dialog { background: #292524; box-shadow: 0 20px 60px rgba(0,0,0,.4), 0 4px 20px rgba(0,0,0,.2); }
