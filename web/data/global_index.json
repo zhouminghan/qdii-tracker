@@ -21,17 +21,17 @@
           "share_class": "A",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 1.4356,
+          "nav": 1.4064,
           "nav_cum": 1.4356,
-          "nav_date": "2026-07-10",
-          "daily_change": 0.98,
-          "chg_1m": 5.19,
-          "chg_3m": 16.61,
-          "chg_6m": 23.8,
-          "chg_ytd": 27.01,
-          "chg_1y": 45.02,
-          "chg_2y": 45.47,
-          "chg_since_inception": 43.56,
+          "nav_date": "2026-07-13",
+          "daily_change": -2.03,
+          "chg_1m": 0.54,
+          "chg_3m": 15.17,
+          "chg_6m": 18.76,
+          "chg_ytd": 24.43,
+          "chg_1y": 42.72,
+          "chg_2y": 43.25,
+          "chg_since_inception": 40.64,
           "scale": 2.22,
           "scale_raw": "2.22亿",
           "established": "2024-02-07",
@@ -40,7 +40,7 @@
           "daily_limit": 10.0,
           "buy_status_history": [
             {
-              "date": "2026-07-11",
+              "date": "2026-07-14",
               "buy_status": "限大额",
               "daily_limit": 10.0
             }
@@ -76,7 +76,7 @@
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": -1.9,
+          "chg_1w": -3.82,
           "free_hold_days": 7,
           "error": "'data'"
         },
@@ -86,17 +86,17 @@
           "share_class": "C",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 1.427,
+          "nav": 1.398,
           "nav_cum": 1.427,
-          "nav_date": "2026-07-10",
-          "daily_change": 0.97,
-          "chg_1m": 5.17,
-          "chg_3m": 16.53,
-          "chg_6m": 23.65,
-          "chg_ytd": 26.83,
-          "chg_1y": 44.65,
-          "chg_2y": 44.74,
-          "chg_since_inception": 42.7,
+          "nav_date": "2026-07-13",
+          "daily_change": -2.03,
+          "chg_1m": 0.52,
+          "chg_3m": 15.11,
+          "chg_6m": 18.62,
+          "chg_ytd": 24.26,
+          "chg_1y": 42.36,
+          "chg_2y": 42.54,
+          "chg_since_inception": 39.8,
           "scale": 1.26,
           "scale_raw": "1.26亿",
           "established": "2024-02-07",
@@ -105,7 +105,7 @@
           "daily_limit": 10.0,
           "buy_status_history": [
             {
-              "date": "2026-07-11",
+              "date": "2026-07-14",
               "buy_status": "限大额",
               "daily_limit": 10.0
             }
@@ -133,7 +133,7 @@
           "sale_service_fee": 0.25,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": -1.91,
+          "chg_1w": -3.82,
           "free_hold_days": 7,
           "error": "'data'"
         }
@@ -156,9 +156,9 @@
           "share_class": "A",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 4.1338,
-          "nav_date": "2026-07-10",
-          "daily_change": -2.52,
+          "nav": 3.8893,
+          "nav_date": "2026-07-13",
+          "daily_change": -5.91,
           "chg_1m": 29.31,
           "chg_3m": 43.54,
           "chg_6m": 110.87,
@@ -173,7 +173,7 @@
           "daily_limit": 10.0,
           "buy_status_history": [
             {
-              "date": "2026-07-11",
+              "date": "2026-07-14",
               "buy_status": "暂停申购",
               "daily_limit": 10.0
             }
@@ -222,9 +222,9 @@
           "share_class": "C",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 4.1057,
-          "nav_date": "2026-07-10",
-          "daily_change": -2.52,
+          "nav": 3.8627,
+          "nav_date": "2026-07-13",
+          "daily_change": -5.92,
           "chg_1m": 29.28,
           "chg_3m": 43.45,
           "chg_6m": 110.61,
@@ -239,7 +239,7 @@
           "daily_limit": 10.0,
           "buy_status_history": [
             {
-              "date": "2026-07-11",
+              "date": "2026-07-14",
               "buy_status": "暂停申购",
               "daily_limit": 10.0
             }
@@ -276,9 +276,9 @@
           "share_class": "I",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 4.128,
-          "nav_date": "2026-07-10",
-          "daily_change": -2.52,
+          "nav": 3.8837,
+          "nav_date": "2026-07-13",
+          "daily_change": -5.92,
           "chg_1m": 29.3,
           "chg_3m": 43.51,
           "chg_6m": 110.77,
@@ -293,7 +293,7 @@
           "daily_limit": 10.0,
           "buy_status_history": [
             {
-              "date": "2026-07-11",
+              "date": "2026-07-14",
               "buy_status": "暂停申购",
               "daily_limit": 10.0
             }
