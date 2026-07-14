@@ -40,7 +40,7 @@ cd ../web && python3 -m http.server 8765  # 本地开发
 - **表头对齐**：申购居中 / 数字右对齐 / 其余左对齐
 - **iPhone**：截前在克隆体上移除 `backdrop-filter`，`navigator.share()` 存相册
 - **玻璃态 UI**：Chip/Tab/分享按钮激活态中性渐变跟随主题（亮=深底白字，暗=浅底深字）；市场卡/弹窗 `backdrop-filter:blur`；`-webkit-` 前缀必配
-- **申购历史**：`_update_history()` → `buy_status_history[]`；同状态只刷日期
+- **申购历史**：`_update_history()` → `buy_status_history[]`；状态+额度都没变则保持原日期；任一变化追加新条目
 - **指标卡**：轮廓用 `border`，不用 `box-shadow`；7 风格覆盖 `border-color`，`box-shadow:none`
 - **`snapPng()`**：`cloneNode` 离屏渲染 → 不改可见 DOM；克隆体 `position:absolute` + `#ss-preview{position:relative}`（必须挂 preview 下）；截前 `clone.style.boxShadow='none'` 去外框阴影 + `classList.remove('dark')` 强制亮色 → 截后恢复暗色。踩坑详情见 [MEMORY.md](./MEMORY.md)
 

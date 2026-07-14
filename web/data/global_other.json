@@ -41,7 +41,7 @@
           "daily_limit": 100.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 100.0
             }
@@ -118,7 +118,7 @@
           "daily_limit": 100.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 100.0
             }
@@ -180,7 +180,7 @@
           "daily_limit": 0.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 0.0
             }
@@ -257,7 +257,7 @@
           "daily_limit": 10000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 10000.0
             }
@@ -451,7 +451,7 @@
           "daily_limit": 500.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 500.0
             }
@@ -535,7 +535,7 @@
           "daily_limit": 500.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 500.0
             }
@@ -606,7 +606,7 @@
           "daily_limit": 100000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 100000.0
             }
@@ -687,7 +687,7 @@
           "daily_limit": 0.01,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "暂停申购",
               "daily_limit": 0.01
             }
@@ -771,7 +771,7 @@
           "daily_limit": 100000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 100000.0
             }
@@ -847,7 +847,7 @@
           "daily_limit": 100000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 100000.0
             }
@@ -1044,7 +1044,7 @@
           "daily_limit": 100000000000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "暂停申购",
               "daily_limit": 100000000000.0
             }
@@ -1121,7 +1121,7 @@
           "daily_limit": 100000000000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "暂停申购",
               "daily_limit": 100000000000.0
             }
@@ -1312,7 +1312,7 @@
           "daily_limit": 100000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 100000.0
             }
@@ -1396,7 +1396,7 @@
           "daily_limit": 100000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 100000.0
             }
@@ -1614,7 +1614,7 @@
           "daily_limit": 100.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 100.0
             }
@@ -1860,7 +1860,7 @@
           "daily_limit": 100000000000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "开放申购",
               "daily_limit": 100000000000.0
             }
@@ -1935,7 +1935,7 @@
           "daily_limit": 100000000000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "开放申购",
               "daily_limit": 100000000000.0
             }
@@ -1993,7 +1993,7 @@
           "daily_limit": 0.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "开放申购",
               "daily_limit": 0.0
             }
@@ -2200,7 +2200,7 @@
           "daily_limit": 1000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 1000.0
             }
@@ -2276,7 +2276,7 @@
           "daily_limit": 1000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 1000.0
             }
@@ -2352,7 +2352,7 @@
           "daily_limit": 100000000000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "开放申购",
               "daily_limit": 100000000000.0
             }
@@ -2417,7 +2417,7 @@
           "daily_limit": 100000000000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "开放申购",
               "daily_limit": 100000000000.0
             }
@@ -2511,7 +2511,7 @@
           "daily_limit": 100000000000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "开放申购",
               "daily_limit": 100000000000.0
             }
@@ -2592,7 +2592,7 @@
           "daily_limit": 100000000000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "开放申购",
               "daily_limit": 100000000000.0
             }
@@ -2667,7 +2667,7 @@
           "daily_limit": 10000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "暂停申购",
               "daily_limit": 10000.0
             }
@@ -2821,7 +2821,7 @@
           "daily_limit": 100000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 100000.0
             }
@@ -2902,7 +2902,7 @@
           "daily_limit": 100000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 100000.0
             }
@@ -3106,7 +3106,7 @@
           "daily_limit": 100.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 100.0
             }
@@ -3274,7 +3274,7 @@
           "daily_limit": 5000000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 5000000.0
             }
@@ -3339,7 +3339,7 @@
           "daily_limit": 5000000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 5000000.0
             }
@@ -3425,7 +3425,7 @@
           "daily_limit": 600000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 600000.0
             }
@@ -3505,7 +3505,7 @@
           "daily_limit": 600000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 600000.0
             }
@@ -3704,7 +3704,7 @@
           "daily_limit": 100000000000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "开放申购",
               "daily_limit": 100000000000.0
             }
@@ -3785,7 +3785,7 @@
           "daily_limit": 100000000000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "开放申购",
               "daily_limit": 100000000000.0
             }
@@ -3919,7 +3919,7 @@
           "daily_limit": 500.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 500.0
             }
@@ -4004,7 +4004,7 @@
           "daily_limit": 500.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "限大额",
               "daily_limit": 500.0
             }
@@ -4088,7 +4088,7 @@
           "daily_limit": 100000000000.0,
           "buy_status_history": [
             {
-              "date": "2026-07-14",
+              "date": "2026-07-11",
               "buy_status": "开放申购",
               "daily_limit": 100000000000.0
             }

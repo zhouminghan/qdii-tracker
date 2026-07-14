@@ -17,7 +17,7 @@ from sources.akshare_source import fetch_ytd, fetch_inception_return, fetch_etf_
 
 
 def _update_history(share: dict, today: str):
-    """申购变更追踪：同状态只更新日期，不同状态 push 新条目到 buy_status_history 数组。ETF 跳过。"""
+    """申购变更追踪：状态和额度都没变 → 保持原有日期不写入；任一变化 → 追加新条目。ETF 跳过。"""
     status = share.get("buy_status", "")
     if not status or share.get("currency") == "美元" or "场内" in status:
         return
@@ -27,8 +27,9 @@ def _update_history(share: dict, today: str):
         history = []
         share["buy_status_history"] = history
     entry = {"date": today, "buy_status": status, "daily_limit": dlimit}
-    if history and history[-1].get("buy_status") == status:
-        history[-1].update(entry)
+    if history and history[-1].get("buy_status") == status and history[-1].get("daily_limit") == dlimit:
+        # 状态和额度都没变 → 保持原有日期，不写入
+        pass
     else:
         history.append(entry)
 
