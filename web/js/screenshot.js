@@ -504,7 +504,7 @@
 
     try {
       var lib = await loadHtmlToImage();
-      var dataUrl = await lib.toPng(clone, { backgroundColor: '#fffbf7', pixelRatio: 2 });
+      var dataUrl = await lib.toPng(clone, { pixelRatio: 2 });
       return dataUrl;
     } finally {
       if (wasDark) document.documentElement.classList.add('dark');
