@@ -55,3 +55,5 @@ akshare_cache/
 *.log
 logs/
 
+feedback/.fund_add_state.json
+.claude/

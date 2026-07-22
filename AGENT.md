@@ -87,3 +87,27 @@ kill $(lsof -t -i :8899)                        # 关服务
 - Python → `scripts/pipeline/` 或 `scripts/core/`
 - 回归场景 → `feedback/ui_scenarios/`（复制 `_TEMPLATE.yaml`）
 - 新 JS/CSS 必须在 `index.html` 加 `?v=placeholder`
+
+## Loop（异常自动修复闭环）
+
+每次触发数据更新（`fundctl.py sync` 或 `refresh`）后，自动运行诊断并在能力范围内修复。
+
+**触发点**：数据更新完成后、CI 流水线末尾、或手动 `fundctl.py diagnose`。
+
+**闭环路径**：
+- 诊断 `fundctl.py diagnose` → 输出异常列表
+- 自动修复：`missing_nav` 类异常 → 执行对应基金的 `refresh --code`；`missing_fee` → `sync`
+- 无法自动修复（`auto_fix: false`）→ 追加到 `feedback/anomalies.md`，下次运行检测是否已修复
+- 修复后重跑数据更新（最多 3 轮），再次诊断确认
+
+**状态文件**：`feedback/.fund_add_state.json` 记录 add 操作的进度（避免中断重来）。
+
+## Evolve（演进控制）
+
+完成功能 / 修复 bug 后：
+
+- Loop 捕捉到的规律性异常 → 提炼成 AGENT.md 新规则
+- 踩过的坑 → 记入 MEMORY.md
+- CI 耗时攀升 / 步骤增多 → 考虑合并或精简
+- 回复/技能拆分臃肿 → 按 reviewer / implement 维度拆分 Skill
+- 每季度检查一次：以上条目是否还有效？已过时的规则直接删除

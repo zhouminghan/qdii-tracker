@@ -24,6 +24,7 @@ from pipeline import scan, enrich, fill, holdings, reclassify, codegen
 from feedback.verify_data import run_verification
 from feedback.scan_scenarios import find_related_scenarios
 from architecture_lint import run_lint as run_architecture_lint
+from pipeline.diagnose import diagnose_all
 
 
 def _run(main_fn, *argv_extra):
@@ -160,6 +161,25 @@ def cmd_check(_args):
                 print(f"     → {sc}")
 
 
+def cmd_diagnose(args):
+    """诊断数据异常并给出修复建议"""
+    issues = diagnose_all()
+    if args.cat:
+        issues = [i for i in issues if i["cat"] == args.cat]
+    if args.json:
+        print(json.dumps(issues, ensure_ascii=False, indent=2))
+    else:
+        if not issues:
+            print("✅ 数据正常，无异常")
+        else:
+            print(f"⚠️ 发现 {len(issues)} 个异常:\n")
+            for item in issues:
+                print(f"  [{item['severity'].upper()}] {item['category']}")
+                print(f"  基金: {item['fund_name']}({item['fund_code']})")
+                print(f"  建议: {item['suggestion']}")
+                print(f"  可自动修复: {'✅' if item['auto_fix'] else '❌ 需人工'}\n")
+
+
 def main():
     p = argparse.ArgumentParser(description="QDII Tracker 统一命令")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -184,6 +204,11 @@ def main():
 
     p_sync = sub.add_parser("sync", help="全量同步")
     p_sync.set_defaults(func=cmd_sync)
+
+    p_diagnose = sub.add_parser("diagnose", help="诊断数据异常")
+    p_diagnose.add_argument("--cat", help="按分类筛选")
+    p_diagnose.add_argument("--json", action="store_true", help="JSON 输出")
+    p_diagnose.set_defaults(func=cmd_diagnose)
 
     p_check = sub.add_parser("check", help="一致性校验")
     p_check.set_defaults(func=cmd_check)
