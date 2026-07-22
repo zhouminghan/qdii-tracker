@@ -163,21 +163,22 @@ def cmd_check(_args):
 
 def cmd_diagnose(args):
     """诊断数据异常并给出修复建议"""
+    from pipeline.diagnose import diagnose_all, auto_fix as _auto_fix
     issues = diagnose_all()
     if args.cat:
         issues = [i for i in issues if i["cat"] == args.cat]
+
+    if args.auto_fix:
+        fixed, failed = _auto_fix(issues)
+        print(f"auto-fix: {fixed} 修复, {failed} 失败")
+
     if args.json:
         print(json.dumps(issues, ensure_ascii=False, indent=2))
+    elif issues:
+        for item in issues:
+            print(f"[{item['severity'].upper()}] {item['category']}: {item['fund_name']}({item['fund_code']}) → {item['suggestion']}")
     else:
-        if not issues:
-            print("✅ 数据正常，无异常")
-        else:
-            print(f"⚠️ 发现 {len(issues)} 个异常:\n")
-            for item in issues:
-                print(f"  [{item['severity'].upper()}] {item['category']}")
-                print(f"  基金: {item['fund_name']}({item['fund_code']})")
-                print(f"  建议: {item['suggestion']}")
-                print(f"  可自动修复: {'✅' if item['auto_fix'] else '❌ 需人工'}\n")
+        print("✅ 数据正常，无异常")
 
 
 def main():
@@ -208,6 +209,7 @@ def main():
     p_diagnose = sub.add_parser("diagnose", help="诊断数据异常")
     p_diagnose.add_argument("--cat", help="按分类筛选")
     p_diagnose.add_argument("--json", action="store_true", help="JSON 输出")
+    p_diagnose.add_argument("--auto-fix", action="store_true", help="自动修复 missing_nav 异常")
     p_diagnose.set_defaults(func=cmd_diagnose)
 
     p_check = sub.add_parser("check", help="一致性校验")

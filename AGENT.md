@@ -8,6 +8,7 @@
 cd scripts && python3 fundctl.py sync    # scan→enrich→fill→holdings
 cd scripts && python3 fundctl.py refresh  # fill 增量
 cd scripts && python3 fundctl.py add --code 008888 --to active --keyword "基金名"
+cd scripts && python3 fundctl.py diagnose  # 数据诊断（--cat X --json --auto-fix）
 cd scripts && python3 fundctl.py check    # 一致性校验（含 golden fixtures）
 python3 feedback/verify_data.py           # 单独跑数据验收
 cd ../web && python3 -m http.server 8765  # 本地开发

@@ -33,8 +33,6 @@ Thumbs.db
 *.iml
 
 # Claude Code / Codex / Cursor / CodeBuddy 等 AI 编辑器
-.claude/
-.claude-code/
 .cursor/
 .windsurf/
 .codebuddy/
