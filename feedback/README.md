@@ -1,6 +1,6 @@
-# feedback/ — Harness 工程（验收基础设施）
+# feedback/ — 反馈层（验收与诊断基础设施）
 
-> 三层 Harness：**预防**=`AGENT.md` | **执行**=`fundctl.py check` | **反馈**=本目录
+> 三层：**预防**=`AGENT.md` | **执行**=`fundctl.py` | **反馈**=本目录
 
 ## 目录
 
@@ -38,6 +38,6 @@ feedback/
 
 ## 对接 AGENT.md
 
-- AGENT.md 的「Harness（改 → 测 → 固）」三步循环描述使用方式
-- AGENT.md 的「设计约束」描述信任模型（空=通过 / 只固化验证过的）
-- 本文件是 feedback/ 目录自身的说明，是 AGENT.md 的子文档
+- AGENT.md `Harness` 章节：验收 + 任务流程
+- AGENT.md `Loop` 章节：诊断 → 自动修复闭环
+- 本文件是 feedback/ 目录自身的说明
