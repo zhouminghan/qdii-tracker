@@ -5,6 +5,16 @@
 🌐 **在线看板**：<https://zhouminghan.github.io/qdii-tracker/>
 📦 **源码仓库**：<https://github.com/zhouminghan/qdii-tracker>
 
+## 🤖 Agent 模式（Claude Code 开箱即用）
+
+```bash
+git clone https://github.com/zhouminghan/qdii-tracker.git
+cd qdii-tracker
+claude          # 启动 Claude Code，自动读 AGENT.md + .claude/skills/
+```
+
+支持：加基金 / 检查数据 / 改代码 → 自动 check + 更新文档
+
 [![Update](https://github.com/zhouminghan/qdii-tracker/actions/workflows/update-data.yml/badge.svg)](https://github.com/zhouminghan/qdii-tracker/actions/workflows/update-data.yml)
 [![License](https://img.shields.io/github/license/zhouminghan/qdii-tracker?color=orange)](https://github.com/zhouminghan/qdii-tracker/blob/main/LICENSE)
 

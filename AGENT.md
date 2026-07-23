@@ -91,24 +91,35 @@ kill $(lsof -t -i :8899)                        # 关服务
 
 ## Loop（异常自动修复闭环）
 
-每次触发数据更新（`fundctl.py sync` 或 `refresh`）后，自动运行诊断并在能力范围内修复。
-
-**触发点**：数据更新完成后、CI 流水线末尾、或手动 `fundctl.py diagnose`。
+每次触发数据更新后，自动运行诊断并在能力范围内修复。
 
 **闭环路径**：
 - 诊断 `fundctl.py diagnose` → 输出异常列表
-- 自动修复：`missing_nav` 类异常 → 执行对应基金的 `refresh --code`；`missing_fee` → `sync`
-- 无法自动修复（`auto_fix: false`）→ 追加到 `feedback/anomalies.md`，下次运行检测是否已修复
-- 修复后重跑数据更新（最多 3 轮），再次诊断确认
+- 自动修复：`missing_nav` → `refresh --code`；`missing_fee` → `sync`
+- 无法自动修复 → 追加 `feedback/anomalies.md`
+- 修复后重跑（最多 3 轮），再次诊断确认
 
-**状态文件**：`feedback/.fund_add_state.json` 记录 add 操作的进度（避免中断重来）。
+## 自动文档维护
 
-## Evolve（演进控制）
+每次改动代码后，必须检查并更新以下文件：
 
-完成功能 / 修复 bug 后：
+- AGENT.md 更新触发条件：新增 Critical Rule 或发现某约束被违反 3 次
+- MEMORY.md 更新触发条件：架构决策变更 / 新踩坑 / 依赖外部接口已知限制
+- `feedback/session-log.md`：每次会话结束追加 3-5 行摘要（做了什么/改了什么规则/留了什么待办）
+- 不确定是否该加 → session-log 写一条待确认，下次人工决定
 
-- Loop 捕捉到的规律性异常 → 提炼成 AGENT.md 新规则
-- 踩过的坑 → 记入 MEMORY.md
-- CI 耗时攀升 / 步骤增多 → 考虑合并或精简
-- 回复/技能拆分臃肿 → 按 reviewer / implement 维度拆分 Skill
-- 每季度检查一次：以上条目是否还有效？已过时的规则直接删除
+## Evolve（自进化 / 自动文档）
+
+**触发链路**：
+1. Agent 改代码 → post-edit.sh 自动 check → 通过
+2. Agent 追加 feedback/session-log.md 摘要
+3. 检查是否涉及架构决策 → 是 → 追加 MEMORY.md（append-only）
+4. feedback/anomalies.md 同类异常 ≥3 次 → 提示"是否追加到 AGENT.md？"
+5. AGENT.md gotchas ≥3 次 → 提示迁移到 MEMORY.md
+
+**人确认的门**：
+- AGENT.md 新增规则：Agent 提示 → 你确认 → 写入
+- MEMORY.md：Agent 直接写（append-only，不覆盖）
+- session-log.md：Agent 直接写（纯记录）
+
+- 每季度检查一次：以上条目是否还有效？已过时的规则/模型直接删除

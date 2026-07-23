@@ -102,3 +102,12 @@
 - `fill.py::main()` 已拆为 8 子函数，但 Pass 2b（买卖规则）仍是串行，可考虑并行化
 - `renderTrendChart`（~220 行）数据/坐标/交互三层仍揉在一起，待下一轮拆分
 - 远端 GitHub Pages 访问东方财富 push2/push2his 偶发 `ERR_EMPTY_RESPONSE`（本地正常）
+
+## Session 自动追加区（Agent 写入，人工定期审查）
+<!-- 每次会话结束若有新增决策/踩坑，追加在此 -->
+
+## 架构决策（append-only）
+<!-- 已有内容不变，Agent 新增时追加在最后一个条目下面 -->
+
+## Gotchas（append-only，从 AGENT.md 升级过来）
+<!-- 同类问题出现 3 次，从 AGENT.md gotchas 升级到此作为永久记录 -->
