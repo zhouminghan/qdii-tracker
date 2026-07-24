@@ -25,6 +25,10 @@ cd scripts && python3 fundctl.py diagnose
 - 单次尝试，不重试（避免 CI timeout）
 - 修复后跑 check 验证
 
+## 相关知识（详见 knowledge/）
+- 诊断引擎 4 项检测原理：`knowledge/modules/diagnose-engine.md`
+- 数据源异常模式：`knowledge/data-sources.md` 中各 API 的已知限制
+
 ## Gotchas
 - 入库 ≤3 天的新基金无净值是正常现象，diagnose 不报
 - auto-fix 只跑一次，不重试

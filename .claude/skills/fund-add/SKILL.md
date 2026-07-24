@@ -42,6 +42,11 @@ python3 fundctl.py diagnose --cat {CAT} --json
 - force_include 不跨分类继承
 - 新增后用 check 验证，不过不算完
 
+## 相关知识（详见 knowledge/）
+- 流水线架构：`knowledge/modules/fundctl.md`、`knowledge/architecture.md`
+- 分类规则 SSOT：`config/funds.json`（详见 `knowledge/modules/scan-pipeline.md`）
+- 常见坑点：`knowledge/gotchas.md`
+
 ## Gotchas
 - 新基金第 2 天才有净值，check 报 missing_nav 不是 bug（T+1 特性）
 - add 后 check 报"代码不存在于数据"：scan 没扫到，检查基金是否已上市

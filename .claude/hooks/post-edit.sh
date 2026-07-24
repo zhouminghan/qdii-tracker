@@ -24,4 +24,10 @@ if echo "$CHANGED_FILES" | grep -q 'web/data/'; then
 fi
 
 # 3. config/funds.json 改动 → 不自动拦截（confirmable_allow）
+
+# 4. 代码文件改动 → 提示更新图谱（不阻塞，只是提示）
+if echo "$CHANGED_FILES" | grep -qE '\.(py|js)$'; then
+    echo "💡 代码文件已修改。commit 前请运行：python3 scripts/tools/code_graph.py --incremental"
+fi
+
 exit 0

@@ -10,7 +10,7 @@
 ```bash
 git clone https://github.com/zhouminghan/qdii-tracker.git
 cd qdii-tracker
-claude          # 启动 Claude Code，自动读 AGENT.md + .claude/skills/
+claude          # 启动 Claude Code，自动读 AGENT.md + MEMORY.md + knowledge/ + .claude/skills/
 ```
 
 支持：加基金 / 检查数据 / 改代码 → 自动 check + 更新文档
@@ -74,7 +74,8 @@ qdii-tracker/
 │   ├── scan_scenarios.py     # 改动↔场景联动扫描（已接入 fundctl.py check）
 │   └── ui_scenarios/         # 声明式 UI 回归场景（_TEMPLATE.yaml + 5 个真实场景）
 ├── AGENT.md                  # 硬约束规则（长期稳定，改一次管很久）
-├── MEMORY.md                 # 架构演进历史（收拢的深模块清单，只增不改）
+├── MEMORY.md                 # 压缩索引，指向 knowledge/
+├── knowledge/                # AI Agent 知识库（ADR / 模块手册 / gotchas / 代码图谱）
 ├── web/                      # 前端（纯静态）
 │   ├── index.html            # 主入口（491 行）
 │   ├── css/                  # Tailwind + app.css（样式独立文件）

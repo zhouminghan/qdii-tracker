@@ -1,0 +1,28 @@
+name: KB 烟雾测试
+on:
+  push:
+    paths:
+      - 'scripts/**/*.py'
+      - 'web/js/**/*.js'
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    continue-on-error: true  # 可选：防遗忘提醒，不阻塞
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 图谱烟雾测试（代码可被解析）
+        run: |
+          cd scripts/tools
+          python3 code_graph.py build --dry-run
+
+      - name: 文档腐坏检测
+        run: |
+          cd scripts/tools
+          python3 kb_diagnose.py --check-staleness
