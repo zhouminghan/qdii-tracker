@@ -2,7 +2,7 @@
   "code": "017730",
   "latest_quarter": "2026Q2",
   "holdings_count": 10,
-  "total_weight": 30.38,
+  "total_weight": 31.01,
   "heavy_count": 0,
   "holdings": [
     {
@@ -79,11 +79,11 @@
     },
     {
       "rank": 10,
-      "stock_code": "03986",
-      "stock_name": "兆易创新",
-      "weight": 1.99,
-      "shares": 13.39,
-      "market_value": 13813.52
+      "stock_code": "300502",
+      "stock_name": "新易盛",
+      "weight": 2.62,
+      "shares": 29.93,
+      "market_value": 18166.72
     }
   ],
   "all_quarters": {
@@ -162,11 +162,11 @@
       },
       {
         "rank": 10,
-        "stock_code": "03986",
-        "stock_name": "兆易创新",
-        "weight": 1.99,
-        "shares": 13.39,
-        "market_value": 13813.52
+        "stock_code": "300502",
+        "stock_name": "新易盛",
+        "weight": 2.62,
+        "shares": 29.93,
+        "market_value": 18166.72
       }
     ],
     "2026Q1": [
@@ -252,5 +252,5 @@
       }
     ]
   },
-  "fetched_at": "2026-08-07T11:50:32.830814+08:00"
+  "fetched_at": "2026-09-02T04:35:54.647478+08:00"
 }

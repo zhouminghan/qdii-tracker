@@ -8,7 +8,7 @@
     {
       "rank": 1,
       "stock_code": "VN000000HPG4",
-      "stock_name": "和发集团",
+      "stock_name": "和发集团股份公司",
       "weight": 8.65,
       "shares": 5749.21,
       "market_value": 34678.96
@@ -40,7 +40,7 @@
     {
       "rank": 5,
       "stock_code": "VN000000STB4",
-      "stock_name": "西贡商信贸易股份银行",
+      "stock_name": "西贡财禄商业股份制银行",
       "weight": 6.37,
       "shares": 1336.63,
       "market_value": 25537.0
@@ -48,7 +48,7 @@
     {
       "rank": 6,
       "stock_code": "VN000000MBB5",
-      "stock_name": "军队股份制商业银行",
+      "stock_name": "军队商业银行股份公司",
       "weight": 5.99,
       "shares": 3682.01,
       "market_value": 24020.8
@@ -64,7 +64,7 @@
     {
       "rank": 8,
       "stock_code": "VN000000TCB8",
-      "stock_name": "越南科技商业银行",
+      "stock_name": "Vietnam Technological&Commercial Joint Stock Bank",
       "weight": 5.51,
       "shares": 2547.2,
       "market_value": 22090.74
@@ -72,7 +72,7 @@
     {
       "rank": 9,
       "stock_code": "VN000000VPB6",
-      "stock_name": "越南繁荣银行",
+      "stock_name": "Vietnam Prosperity JSC Bank",
       "weight": 4.74,
       "shares": 2720.45,
       "market_value": 19015.49
@@ -91,7 +91,7 @@
       {
         "rank": 1,
         "stock_code": "VN000000HPG4",
-        "stock_name": "和发集团",
+        "stock_name": "和发集团股份公司",
         "weight": 8.65,
         "shares": 5749.21,
         "market_value": 34678.96
@@ -123,7 +123,7 @@
       {
         "rank": 5,
         "stock_code": "VN000000STB4",
-        "stock_name": "西贡商信贸易股份银行",
+        "stock_name": "西贡财禄商业股份制银行",
         "weight": 6.37,
         "shares": 1336.63,
         "market_value": 25537.0
@@ -131,7 +131,7 @@
       {
         "rank": 6,
         "stock_code": "VN000000MBB5",
-        "stock_name": "军队股份制商业银行",
+        "stock_name": "军队商业银行股份公司",
         "weight": 5.99,
         "shares": 3682.01,
         "market_value": 24020.8
@@ -147,7 +147,7 @@
       {
         "rank": 8,
         "stock_code": "VN000000TCB8",
-        "stock_name": "越南科技商业银行",
+        "stock_name": "Vietnam Technological&Commercial Joint Stock Bank",
         "weight": 5.51,
         "shares": 2547.2,
         "market_value": 22090.74
@@ -155,7 +155,7 @@
       {
         "rank": 9,
         "stock_code": "VN000000VPB6",
-        "stock_name": "越南繁荣银行",
+        "stock_name": "Vietnam Prosperity JSC Bank",
         "weight": 4.74,
         "shares": 2720.45,
         "market_value": 19015.49
@@ -252,5 +252,5 @@
       }
     ]
   },
-  "fetched_at": "2026-08-07T11:50:41.796933+08:00"
+  "fetched_at": "2026-09-02T04:36:09.037315+08:00"
 }

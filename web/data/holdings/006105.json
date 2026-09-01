@@ -40,7 +40,7 @@
     {
       "rank": 5,
       "stock_code": "SBIN",
-      "stock_name": "印度国家银行有限公司",
+      "stock_name": "印度国家银行",
       "weight": 3.62,
       "shares": 85.6,
       "market_value": 6324.62
@@ -123,7 +123,7 @@
       {
         "rank": 5,
         "stock_code": "SBIN",
-        "stock_name": "印度国家银行有限公司",
+        "stock_name": "印度国家银行",
         "weight": 3.62,
         "shares": 85.6,
         "market_value": 6324.62
@@ -252,5 +252,5 @@
       }
     ]
   },
-  "fetched_at": "2026-08-07T11:50:43.293946+08:00"
+  "fetched_at": "2026-09-02T04:36:12.207063+08:00"
 }

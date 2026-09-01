@@ -2,7 +2,7 @@
   "code": "019075",
   "latest_quarter": "2026Q2",
   "holdings_count": 10,
-  "total_weight": 32.64,
+  "total_weight": 33.02,
   "heavy_count": 0,
   "holdings": [
     {
@@ -79,11 +79,11 @@
     },
     {
       "rank": 10,
-      "stock_code": "01088",
-      "stock_name": "中国神华",
-      "weight": 2.06,
-      "shares": 2.1,
-      "market_value": 73.18
+      "stock_code": "688498",
+      "stock_name": "源杰科技",
+      "weight": 2.44,
+      "shares": 0.05,
+      "market_value": 86.76
     }
   ],
   "all_quarters": {
@@ -162,11 +162,11 @@
       },
       {
         "rank": 10,
-        "stock_code": "01088",
-        "stock_name": "中国神华",
-        "weight": 2.06,
-        "shares": 2.1,
-        "market_value": 73.18
+        "stock_code": "688498",
+        "stock_name": "源杰科技",
+        "weight": 2.44,
+        "shares": 0.05,
+        "market_value": 86.76
       }
     ],
     "2026Q1": [
@@ -252,5 +252,5 @@
       }
     ]
   },
-  "fetched_at": "2026-08-07T11:50:51.571444+08:00"
+  "fetched_at": "2026-09-02T04:36:26.895132+08:00"
 }

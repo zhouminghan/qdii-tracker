@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-02T01:36:24.685076+08:00",
+  "generated_at": "2026-09-02T04:34:47.427910+08:00",
   "sp500": {
     "series": 7,
     "funds": 25
@@ -9,16 +9,16 @@
     "funds": 60
   },
   "active": {
-    "series": 25,
-    "funds": 72
+    "series": 24,
+    "funds": 70
   },
   "global_index": {
     "series": 2,
     "funds": 5
   },
   "global_other": {
-    "series": 20,
-    "funds": 57
+    "series": 21,
+    "funds": 60
   },
   "etf": {
     "series": 18,

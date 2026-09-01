@@ -2,7 +2,7 @@
   "code": "013328",
   "latest_quarter": "2026Q2",
   "holdings_count": 10,
-  "total_weight": 24.62,
+  "total_weight": 24.85,
   "heavy_count": 1,
   "holdings": [
     {
@@ -79,11 +79,11 @@
     },
     {
       "rank": 10,
-      "stock_code": "03661",
-      "stock_name": "圣邦股份",
-      "weight": 0.96,
-      "shares": 2.06,
-      "market_value": 208.98
+      "stock_code": "MRVL",
+      "stock_name": "迈威尔科技",
+      "weight": 1.19,
+      "shares": 0.13,
+      "market_value": 257.87
     }
   ],
   "all_quarters": {
@@ -162,11 +162,11 @@
       },
       {
         "rank": 10,
-        "stock_code": "03661",
-        "stock_name": "圣邦股份",
-        "weight": 0.96,
-        "shares": 2.06,
-        "market_value": 208.98
+        "stock_code": "MRVL",
+        "stock_name": "迈威尔科技",
+        "weight": 1.19,
+        "shares": 0.13,
+        "market_value": 257.87
       }
     ],
     "2026Q1": [
@@ -252,5 +252,5 @@
       }
     ]
   },
-  "fetched_at": "2026-08-07T11:50:49.816129+08:00"
+  "fetched_at": "2026-09-02T04:36:23.544160+08:00"
 }
