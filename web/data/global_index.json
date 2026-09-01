@@ -21,10 +21,10 @@
           "share_class": "A",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 1.3977,
+          "nav": 1.3954,
           "nav_cum": 1.3562,
-          "nav_date": "2026-08-31",
-          "daily_change": -0.31,
+          "nav_date": "2026-09-01",
+          "daily_change": -0.16,
           "chg_1m": 3.06,
           "chg_3m": -1.11,
           "chg_6m": 7.96,
@@ -110,10 +110,10 @@
           "share_class": "C",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 1.3889,
+          "nav": 1.3866,
           "nav_cum": 1.3479,
-          "nav_date": "2026-08-31",
-          "daily_change": -0.31,
+          "nav_date": "2026-09-01",
+          "daily_change": -0.17,
           "chg_1m": 3.04,
           "chg_3m": -1.17,
           "chg_6m": 7.83,
@@ -204,9 +204,9 @@
           "share_class": "A",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 3.6015,
-          "nav_date": "2026-08-31",
-          "daily_change": 1.46,
+          "nav": 3.5603,
+          "nav_date": "2026-09-01",
+          "daily_change": -1.14,
           "chg_1m": 29.31,
           "chg_3m": 43.54,
           "chg_6m": 110.87,
@@ -217,13 +217,18 @@
           "scale_raw": "1.42亿",
           "established": "2023-09-22",
           "manager": "李沐阳",
-          "buy_status": "暂停申购",
-          "daily_limit": 10.0,
+          "buy_status": "限大额",
+          "daily_limit": 100.0,
           "buy_status_history": [
             {
               "date": "2026-07-11",
               "buy_status": "暂停申购",
               "daily_limit": 10.0
+            },
+            {
+              "date": "2026-09-02",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
             }
           ],
           "buy_rules": [
@@ -270,9 +275,9 @@
           "share_class": "C",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 3.5757,
-          "nav_date": "2026-08-31",
-          "daily_change": 1.46,
+          "nav": 3.5347,
+          "nav_date": "2026-09-01",
+          "daily_change": -1.15,
           "chg_1m": 29.28,
           "chg_3m": 43.45,
           "chg_6m": 110.61,
@@ -283,13 +288,18 @@
           "scale_raw": "2.36亿",
           "established": "2023-09-22",
           "manager": "李沐阳",
-          "buy_status": "暂停申购",
-          "daily_limit": 10.0,
+          "buy_status": "限大额",
+          "daily_limit": 100.0,
           "buy_status_history": [
             {
               "date": "2026-07-11",
               "buy_status": "暂停申购",
               "daily_limit": 10.0
+            },
+            {
+              "date": "2026-09-02",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
             }
           ],
           "buy_rules": [
@@ -324,9 +334,9 @@
           "share_class": "I",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 3.5959,
-          "nav_date": "2026-08-31",
-          "daily_change": 1.46,
+          "nav": 3.5547,
+          "nav_date": "2026-09-01",
+          "daily_change": -1.15,
           "chg_1m": 29.3,
           "chg_3m": 43.51,
           "chg_6m": 110.77,
@@ -337,13 +347,18 @@
           "scale_raw": "0.05亿",
           "established": "2024-11-26",
           "manager": "李沐阳",
-          "buy_status": "暂停申购",
-          "daily_limit": 10.0,
+          "buy_status": "限大额",
+          "daily_limit": 100.0,
           "buy_status_history": [
             {
               "date": "2026-07-11",
               "buy_status": "暂停申购",
               "daily_limit": 10.0
+            },
+            {
+              "date": "2026-09-02",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
             }
           ],
           "buy_rules": [
