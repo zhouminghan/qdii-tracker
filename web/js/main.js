@@ -1021,4 +1021,3 @@
     window.renderCategory = renderCategory;
     window.fetchStocksLive = fetchStocksLive;
     window.loadData = loadData;
-    window.loadData = loadData;

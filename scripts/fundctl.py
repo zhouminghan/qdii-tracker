@@ -24,6 +24,7 @@ from core.config_loader import get_config, save_config
 from pipeline import scan, enrich, fill, holdings, reclassify, codegen
 
 from checks.verify_data import run_verification
+from checks.verify_purchase import run_verification as run_purchase_verification
 from checks.scan_scenarios import find_related_scenarios
 from checks.cross_validate import run_cross_validation
 from checks.architecture_lint import run_lint as run_architecture_lint
@@ -299,6 +300,9 @@ def cmd_check(_args):
             if default_code and default_code not in share_codes:
                 errors.append(f"{cat}/{s.get('display_name','?')} default_share_code 无效: {default_code}")
 
+    # 申购状态 / 日限额 / 变更历史一致性（防 ETF 污染、1e11 哨兵、历史漂移）
+    errors += run_purchase_verification()
+
     if errors:
         print("❌ 类内一致性校验失败：")
         for e in errors:
@@ -319,13 +323,15 @@ def cmd_check(_args):
     # ---- Layer 6/7: 跨源交叉验证 ----
     print("[LAYER 6/7] 跨源交叉验证 ...", end=" ")
     try:
-        cv_passed, cv_anomalies = run_cross_validation(sample_size=10)
+        cv_compared, cv_anomalies = run_cross_validation(sample_size=10)
         if cv_anomalies:
             print(f"⚠ {len(cv_anomalies)} 个异常")
             for a in cv_anomalies[:3]:
                 print(f"  ⚠ {a['code']} nav偏差: {a['deviation']:.2f}%")
+        elif cv_compared == 0:
+            print("⚠ 未验证（0 只完成跨源对比，lsjz/pzd 数据源不可用）")
         else:
-            print("OK ✓")
+            print(f"OK ✓（{cv_compared} 只对比）")
     except Exception as e:
         print(f"⚠ 跳过: {e}")
 

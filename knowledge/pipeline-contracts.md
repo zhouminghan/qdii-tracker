@@ -117,6 +117,15 @@
 | **输出文件** | 同文件覆写 |
 | **依赖** | `core.constants` |
 
+### 13. verify_purchase.py — 申购状态/限额/历史一致性校验
+
+| 属性 | 内容 |
+|------|------|
+| **职责** | 校验 buy_status / daily_limit / buy_status_history 语义一致性：ETF 历史必空、无 1e11 哨兵值、历史尾条与当前状态一致（防 G015/G016 复发） |
+| **输入文件** | `web/data/*.json` |
+| **输出文件** | 无（返回错误列表） |
+| **依赖** | `core.constants` |
+
 ---
 
 ## 依赖关系图
@@ -141,6 +150,7 @@ diagnose.py ─────────► (独立)
 architecture_lint.py ─► (独立)
 scan_scenarios.py ───► (独立)
 stamp_asset_version.py ► core.constants
+verify_purchase.py ───► core.constants
 ```
 
 > 注：`checks/` 模块通过 `fundctl.py` 统一调用，无兄弟模块依赖，各自独立。

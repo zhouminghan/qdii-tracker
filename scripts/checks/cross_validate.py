@@ -22,10 +22,14 @@ from sources.eastmoney_source import fetch_lsjz, fetch_pzd
 def run_cross_validation(sample_size: int = 20) -> tuple:
     """
     对前 sample_size 只基金进行跨源净值对比。
-    返回 (passed: bool, anomalies: list[dict])
+    返回 (compared: int, anomalies: list[dict])
+    - compared：实际完成双源对比（lsjz + pzd 均有净值）的基金数
+    - anomalies：偏差 > 0.5% 的异常列表
+    调用方应据 compared 区分「通过 / 未验证（数据源不可用）」，避免假绿。
     """
     anomalies = []
     checked = 0
+    compared = 0
 
     for cat_file in sorted(DATA_DIR.glob("*.json")):
         if cat_file.name == "meta.json":
@@ -57,6 +61,7 @@ def run_cross_validation(sample_size: int = 20) -> tuple:
                         continue  # 数据源不完整，跳过
 
                     deviation = abs(lsjz_nav - pzd_nav) / lsjz_nav * 100
+                    compared += 1
                     if deviation > 0.5:
                         anomalies.append({
                             "code": code,
@@ -69,8 +74,7 @@ def run_cross_validation(sample_size: int = 20) -> tuple:
                 except Exception:
                     continue  # 单只基金失败不阻塞整体
 
-    passed = len(anomalies) == 0
-    return passed, anomalies
+    return compared, anomalies
 
 
 def _latest_nav(records):
@@ -86,14 +90,18 @@ def _latest_nav(records):
 
 
 def main():
-    passed, anomalies = run_cross_validation()
+    compared, anomalies = run_cross_validation()
     if anomalies:
         for a in anomalies:
             print(f"⚠ {a['code']}({a['name']}) nav偏差: {a['deviation']:.2f}% "
                   f"(lsjz={a['lsjz_nav']}, pzd={a['pzd_nav']})")
+        sys.exit(1)
+    if compared == 0:
+        print("⚠ 未验证：0 只完成跨源对比（lsjz/pzd 数据源不可用），无法判定")
+        sys.exit(0)
     else:
-        print("✅ 跨源交叉验证通过")
-    sys.exit(0 if passed else 1)
+        print(f"✅ 跨源交叉验证通过（{compared} 只对比）")
+        sys.exit(0)
 
 
 if __name__ == "__main__":

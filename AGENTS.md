@@ -96,7 +96,7 @@ cd ../web && python3 -m http.server 8765                        # 本地开发
 ## 门禁
 
 ```bash
-cd scripts && python3 fundctl.py check    # Layer 0-6: nav_date→配置→lint→fixtures→一致性→文档→交叉验证
+cd scripts && python3 fundctl.py check    # Layer 0-6: nav_date→配置→lint→fixtures→一致性(含申购/限额)→文档→交叉验证
 ```
 
 不绿不提交。
@@ -114,7 +114,7 @@ scripts/
 ├── core/                 ← 基础设施（constants / utils / config_loader）
 ├── sources/              ← 数据源适配（akshare / eastmoney / xueqiu）
 ├── pipeline/             ← 数据生产链路（scan / enrich / fill / holdings / reclassify / codegen）
-└── checks/               ← 质量门禁（verify_data / cross_validate / diagnose / architecture_lint / scan_scenarios / stamp_asset_version）
+└── checks/               ← 质量门禁（verify_data / verify_purchase / cross_validate / diagnose / architecture_lint / scan_scenarios / stamp_asset_version）
 ```
 
 ## 知识库结构

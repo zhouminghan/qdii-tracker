@@ -21,6 +21,7 @@
 | G015 | 场内 ETF 的 `buy_status_history` 被误写入「暂停申购」噪音 | `_refresh_purchase_status` 先 `share.update(purchase_map[code])` 覆盖 ETF 的「场内交易」，`_update_history` 的「场内」跳过判断被覆盖后的值绕过 | `scripts/pipeline/fill.py:_refresh_purchase_status` → ETF（159/513/510 开头）跳过覆盖与追踪 | ✅已修复 | 2026-09-11 | 2026-09-11 |
 | G016 | 「开放申购」基金日限额显示为哨兵值 ¥1000 亿 | 东方财富 `fund_purchase_em` 对不限额返回 `100000000000`，未归一化直接入库并参与排序/历史追踪 | `scripts/sources/akshare_source.py:fetch_purchase_data` → `>=1e11` 归一化为 None | ✅已修复 | 2026-09-11 | 2026-09-11 |
 | G017 | 「限购 1 万」这类短暂放宽在申购变更 tooltip 里看不到 | tooltip 只展示最近 3 条，短促的额度变化被后续调整挤出，用户误判「没记录到」 | `web/js/main.js:statusBadge` → 展示最近 8 条 | ✅已修复 | 2026-09-11 | 2026-09-11 |
+| G018 | 跨源交叉验证「假绿」：数据源不可用时仍报 OK | `run_cross_validation` 网络失败逐只静默跳过，`anomalies` 为空即返回 passed=True，`check` 打印「OK ✓」 | `scripts/checks/cross_validate.py` → 返回 `compared` 计数，0 只对比时报「⚠ 未验证」 | ✅已修复 | 2026-09-11 | 2026-09-11 |
 
 ## Gotchas 生命周期规则
 - 已修复 → 保留条目，标记 `✅已修复`（不删——后人要知道坑存在过）

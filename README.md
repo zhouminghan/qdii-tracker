@@ -41,7 +41,7 @@ qdii-tracker/
 ├── scripts/          # 数据流水线（Python）
 │   ├── fundctl.py    # 统一入口（add/remove/move/refresh/sync/check/diagnose）
 │   ├── pipeline/     # 数据生产（scan/enrich/fill/holdings/reclassify/codegen）
-│   ├── checks/       # 质量门禁（verify_data/cross_validate/diagnose/architecture_lint）
+│   ├── checks/       # 质量门禁（verify_data/verify_purchase/cross_validate/diagnose/architecture_lint）
 │   ├── sources/      # 数据源（akshare/eastmoney/xueqiu）
 │   └── core/         # 共享基础设施（constants/utils/config_loader）
 ├── config/
