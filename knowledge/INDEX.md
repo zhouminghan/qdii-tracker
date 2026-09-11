@@ -16,7 +16,7 @@
 | 前端 | Vanilla JS + Tailwind CSS + html-to-image CDN | `web/` |
 | 配置 SSOT | JSON (`config/funds.json`) | `config/` |
 | CI/CD | GitHub Actions | `.github/workflows/` |
-| Agent 治理 | AGENT.md（操作协议已内联：fund-ops / code-change） | 根目录 |
+| Agent 治理 | AGENTS.md（操作协议已内联：fund-ops / code-change） | 根目录 |
 
 ## ASCII 架构全景图
 
@@ -83,7 +83,7 @@
 | web/data JSON 字段含义 | → `data-schema.md` |
 | 黄金样例校验格式 | → `golden-fixtures.md` |
 | 代码结构查询（结构记忆） | → `codegraph_explore`（CodeGraph MCP） |
-| Agent 行为约束 | → `AGENT.md` (根目录) |
+| Agent 行为约束 | → `AGENTS.md` (根目录) |
 | 完整功能描述 | → `README.md` (根目录) |
 
-**代码知识库双层架构**：`.codegraph/` = 结构记忆（自动维护，save→sync），`knowledge/` = 解释记忆（gotchas + data-sources + pipeline-contracts，人+AI 协作维护）。Agent 启动 → `AGENT.md` → `knowledge/INDEX.md` → `codegraph_explore`。
+**代码知识库双层架构**：`.codegraph/` = 结构记忆（自动维护，save→sync），`knowledge/` = 解释记忆（gotchas + data-sources + pipeline-contracts，人+AI 协作维护）。Agent 启动 → `AGENTS.md` → `knowledge/INDEX.md` → `codegraph_explore`。

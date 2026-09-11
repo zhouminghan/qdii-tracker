@@ -3,12 +3,12 @@
 scripts/architecture_lint.py — 目录纪律强制校验
 
 用途：
-    把 AGENT.md 第11条"目录纪律"从文字声明变成脚本强制校验：
+    把「目录纪律」从文字声明变成脚本强制校验：
     web/ 目录只能包含约定的产物类型，不能被前端调试文件、临时脚本、
     误放的数据文件污染——这类"改一处、无声无息扩散"的目录腐化，
     人眼 review 容易漏，脚本校验成本几乎为零。
 
-校验规则（对应 AGENT.md 第11条）：
+校验规则：
     web/ 顶层仅允许：
         - index.html（唯一入口）
         - robots.txt / sitemap.xml（SEO 静态文件）
@@ -96,7 +96,7 @@ def run_lint() -> list:
 def main():
     errors = run_lint()
     if errors:
-        print("❌ 目录纪律校验失败（AGENT.md 第11条）：")
+        print("❌ 目录纪律校验失败：")
         for e in errors:
             print(" -", e)
         raise SystemExit(1)

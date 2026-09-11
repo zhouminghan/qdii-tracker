@@ -1,6 +1,6 @@
 # US Fund Tracker · 美股基金追踪看板
 
-美股 QDII 基金追踪看板。纯静态部署，零后端。**🤖 Agent 模式开箱即用**（Codex 自动读 AGENT.md + knowledge/）。
+美股 QDII 基金追踪看板。纯静态部署，零后端。**🤖 Agent 模式开箱即用**（Codex 自动读 AGENTS.md + knowledge/）。
 
 🌐 **在线看板**：<https://zhouminghan.github.io/qdii-tracker/>
 📦 **源码仓库**：<https://github.com/zhouminghan/qdii-tracker>
@@ -61,7 +61,7 @@ qdii-tracker/
 └── test/             # 本地测试（gitignored）
 ```
 
-Agent 规则详见 [AGENT.md](./AGENT.md)。
+Agent 规则详见 [AGENTS.md](./AGENTS.md)。
 
 ## 🚀 部署（GitHub Pages）
 

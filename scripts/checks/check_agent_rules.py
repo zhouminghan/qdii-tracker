@@ -1,5 +1,5 @@
 """
-Agent 规则机器验证：检查 knowledge/ ↔ AGENT.md ↔ Skills ↔ 代码的一致性。
+Agent 规则机器验证：检查 knowledge/ ↔ AGENTS.md ↔ Skills ↔ 代码的一致性。
 被 fundctl.py check --agent-rules 调用。
 """
 import json
@@ -10,7 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent.parent.parent
 KNOWLEDGE_DIR = ROOT / "knowledge"
-# Skills 已内联到 AGENT.md（CodeBuddy→Codex 清理），此处保留可扩展目录：
+# Skills 已内联到 AGENTS.md（CodeBuddy→Codex 清理），此处保留可扩展目录：
 # 若未来重新拆分出独立 skills，放在 .codex/skills/。
 SKILLS_DIR = ROOT / ".codex" / "skills"
 
@@ -79,10 +79,10 @@ def _check_gotchas_refs():
 
 
 def _check_agent_commands():
-    """验证 AGENT.md 中的命令引用在 fundctl.py 中存在。"""
-    fp = ROOT / "AGENT.md"
+    """验证 AGENTS.md 中的命令引用在 fundctl.py 中存在。"""
+    fp = ROOT / "AGENTS.md"
     if not fp.exists():
-        return ["AGENT.md not found"]
+        return ["AGENTS.md not found"]
     content = fp.read_text(encoding="utf-8")
     # 提取 fundctl.py 子命令
     commands = re.findall(r'fundctl\.py\s+(\w+)', content)
@@ -99,7 +99,7 @@ def _check_agent_commands():
     errors = []
     for cmd in set(commands):
         if cmd not in valid and cmd != "check":
-            errors.append(f"AGENT.md 引用未知命令: fundctl.py {cmd}")
+            errors.append(f"AGENTS.md 引用未知命令: fundctl.py {cmd}")
     return errors
 
 
@@ -129,7 +129,7 @@ def _check_readme_tree():
 def _check_skills_refs():
     """验证 Skills 中引用的命令/文件存在。"""
     if not SKILLS_DIR.exists():
-        return []  # 无独立 skills 目录时跳过（操作协议已内联到 AGENT.md）
+        return []  # 无独立 skills 目录时跳过（操作协议已内联到 AGENTS.md）
     errors = []
     for skill_dir in SKILLS_DIR.iterdir():
         if skill_dir.is_symlink() or skill_dir.is_dir():
@@ -186,7 +186,7 @@ def check_agent_rules():
     else:
         print("  ✅ 全部有效")
 
-    print("Layer D: AGENT.md 命令引用有效性...")
+    print("Layer D: AGENTS.md 命令引用有效性...")
     errs = _check_agent_commands()
     if errs:
         all_errors.extend(errs)
