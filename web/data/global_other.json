@@ -2080,27 +2080,27 @@
           "fund_type_xq": "QDII-混合",
           "full_name": "广发全球科技三个月定期开放混合型证券投资基金(QDII)",
           "buy_status": "开放申购",
-          "daily_limit": 100000000000.0,
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-07-11",
               "buy_status": "暂停申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-08-26",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-05",
               "buy_status": "暂停申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-08",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             }
           ],
           "buy_rules": [
@@ -2176,27 +2176,27 @@
           "fund_type_xq": "QDII-混合",
           "full_name": "广发全球科技三个月定期开放混合型证券投资基金(QDII)",
           "buy_status": "开放申购",
-          "daily_limit": 100000000000.0,
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-07-11",
               "buy_status": "暂停申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-08-26",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-05",
               "buy_status": "暂停申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-08",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             }
           ],
           "buy_rules": [
@@ -2383,22 +2383,22 @@
           "fund_type_xq": "QDII-混合",
           "full_name": "招商普盛全球配置证券投资基金(QDII)",
           "buy_status": "开放申购",
-          "daily_limit": 100000000000.0,
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-07-11",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-05",
               "buy_status": "暂停申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-08",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             }
           ],
           "buy_rules": [
@@ -2468,22 +2468,22 @@
           "fund_type_xq": "QDII-混合",
           "full_name": "招商普盛全球配置证券投资基金(QDII)",
           "buy_status": "开放申购",
-          "daily_limit": 100000000000.0,
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-07-11",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-05",
               "buy_status": "暂停申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-08",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             }
           ],
           "buy_rules": [
@@ -3191,7 +3191,7 @@
             {
               "date": "2026-07-11",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-05",
@@ -3266,7 +3266,7 @@
             {
               "date": "2026-07-11",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-05",
@@ -3414,22 +3414,22 @@
           "fund_type_xq": "QDII-房地产信托",
           "full_name": "南方道琼斯美国精选REIT指数证券投资基金(QDII-LOF)",
           "buy_status": "开放申购",
-          "daily_limit": 100000000000.0,
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-07-11",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-05",
               "buy_status": "暂停申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-08",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             }
           ],
           "buy_rules": [
@@ -3505,22 +3505,22 @@
           "fund_type_xq": "QDII-房地产信托",
           "full_name": "南方道琼斯美国精选REIT指数证券投资基金(QDII-LOF)",
           "buy_status": "开放申购",
-          "daily_limit": 100000000000.0,
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-07-11",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-05",
               "buy_status": "暂停申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-08",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             }
           ],
           "buy_rules": [
@@ -4534,22 +4534,22 @@
           "fund_type_xq": "QDII-股票",
           "full_name": "嘉实全球创新龙头股票型证券投资基金（QDII）",
           "buy_status": "开放申购",
-          "daily_limit": 100000000000.0,
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-07-11",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-05",
               "buy_status": "暂停申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-08",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             }
           ],
           "buy_rules": [
@@ -4625,22 +4625,22 @@
           "fund_type_xq": "QDII-股票",
           "full_name": "嘉实全球创新龙头股票型证券投资基金（QDII）",
           "buy_status": "开放申购",
-          "daily_limit": 100000000000.0,
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-07-11",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-05",
               "buy_status": "暂停申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-08",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             }
           ],
           "buy_rules": [
@@ -4775,42 +4775,42 @@
           "fund_type_xq": "QDII-混合",
           "full_name": "嘉实全球产业精选混合型发起式证券投资基金（QDII）",
           "buy_status": "开放申购",
-          "daily_limit": 100000000000.0,
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-07-11",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-07-17",
               "buy_status": "暂停申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-07-20",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-08-10",
               "buy_status": "暂停申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-08-13",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-05",
               "buy_status": "暂停申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             },
             {
               "date": "2026-09-08",
               "buy_status": "开放申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             }
           ],
           "buy_rules": [

@@ -38,13 +38,7 @@ Thumbs.db
 .windsurf/
 .claude/
 
-# CodeBuddy — 追踪 CODEBUDDY.md + code-change/fund-ops 两个 skill，其余全部忽略
-.codebuddy/*
-!.codebuddy/CODEBUDDY.md
-!.codebuddy/skills/
-.codebuddy/skills/*
-!.codebuddy/skills/code-change/
-!.codebuddy/skills/fund-ops/
+# Codex / Agent 治理：AGENT.md 已内联操作协议；如需独立 skills 放 .codex/skills/（追踪）
 
 # CodeGraph 本地图谱（二进制产物，不进 git）
 .codegraph/

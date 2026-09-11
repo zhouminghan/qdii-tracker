@@ -39,7 +39,12 @@ def fetch_rank_data():
 
 
 def fetch_purchase_data():
-    """全量申购限额数据（原 enrich_data.py + refresh_purchase.py 各调一次）"""
+    """全量申购限额数据（原 enrich_data.py + refresh_purchase.py 各调一次）
+
+    日累计限定金额的单位是「元」。东方财富对「开放申购/不限额」返回哨兵值
+    100000000000（1e11），此处归一化为 None，避免把「不限额」当成 ¥1000 亿
+    写入数据、参与排序与历史追踪。
+    """
     print("🔍 拉取全量申购状态/限额...")
     df = _call_ak(ak.fund_purchase_em)
     print(f"  ✅ {len(df)} 条")
@@ -47,6 +52,8 @@ def fetch_purchase_data():
     for _, row in df.iterrows():
         code = str(row["基金代码"]).strip()
         limit = to_float(row.get("日累计限定金额"))
+        if limit is not None and limit >= 1e11:
+            limit = None  # 开放申购哨兵值（不限额）
         purchase_map[code] = {
             "buy_status": str(row.get("申购状态", "") or "").strip(),
             "sell_status": str(row.get("赎回状态", "") or "").strip(),

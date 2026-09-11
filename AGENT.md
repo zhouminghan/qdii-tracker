@@ -11,21 +11,39 @@
 
 ```
 用户任何基金操作意图 
-  → ❶ 加载 fund-ops Skill（MUST，禁止直接改 config/funds.json）
-  → ❷ Skill 内自动 3 轮循环：执行 → check → 失败则 diagnose+fix → re-check
-  → ❸ 一次性汇报结果（不在循环中间问用户）
+  → ❶ 识别操作类型（禁止直接改 config/funds.json）
+  → ❷ 按 add/remove/move/diagnose/check 调用 fundctl.py
+  → ❸ 自动 3 轮循环：执行 → check → 失败则 diagnose+fix → re-check（最多 3 轮，中途不打断用户）
+  → ❹ 一次性汇报结果（不在循环中间问用户）
 ```
 
 **覆盖关键词**：加/删/移除/调整分类/诊断/修复/检查数据/有没有异常
+
+| 意图 | 命令 |
+|------|------|
+| 新增基金 | `fundctl.py add --code X --to Y [--keyword K]` |
+| 删除基金 | `fundctl.py remove --code X`（执行前向用户确认代码和名称，不可逆） |
+| 调整分类 | `fundctl.py move --keyword K --from A --to B` |
+| 诊断/检查 | `fundctl.py diagnose [--cat C]` / `fundctl.py check` |
 
 ### 2. 代码修改（scripts/ web/ config/）
 
 ```
 修改任何代码文件
-  → ❶ 加载 code-change Skill
-  → ❷ blast-radius（codegraph_explore）
-  → ❸ 修改 → fundctl.py check → 文档同步
+  → ❶ blast-radius（codegraph_explore 确认影响范围）
+  → ❷ 修改
+  → ❸ fundctl.py check → 文档同步
 ```
+
+改中约束（按触及模块）：
+- `scan.py` 改后 MUST 接 `enrich + fill`
+- `fill.py`：nav_date 永不回退，lsjz 失败保留旧值
+- `checks/verify_data.py`：fixtures 格式变更 → 同步 `knowledge/golden-fixtures.md`
+- `core/constants.py`：改 CATEGORIES → 必须重跑全量 `sync`
+- `config/funds.json`：禁止直接编辑，走 `fundctl.py`
+- `web/js|css` 新文件 → `index.html` 加 `?v=` 版本戳
+- `web/js/screenshot.js` 改后浏览器验证 PNG 正常
+- `web/css/app.css` 改后检查暗色/玻璃态/响应式
 
 ### 3. 知识查询 / 经验沉淀
 
@@ -83,12 +101,10 @@ cd scripts && python3 fundctl.py check    # Layer 0-6: nav_date→配置→lint�
 
 不绿不提交。
 
-## Skills（2个）
+## 操作协议（原 fund-ops / code-change Skills，已内联）
 
-| Skill | 触发 | 职责 |
-|-------|------|------|
-| `fund-ops` | 加/删/调/诊断 基金 | 全生命周期 + auto-loop |
-| `code-change` | 改代码 | blast-radius + 改后验证 + 文档同步 |
+> CodeBuddy 时代的 `.codebuddy/skills/` 已移除，两个 Skill 的流程内联到本文件，
+> 与「任务路由」对应，避免重复维护。
 
 ## 代码结构
 

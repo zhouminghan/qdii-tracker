@@ -10,7 +10,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent.parent.parent
 KNOWLEDGE_DIR = ROOT / "knowledge"
-SKILLS_DIR = ROOT / ".codebuddy" / "skills"
+# Skills 已内联到 AGENT.md（CodeBuddy→Codex 清理），此处保留可扩展目录：
+# 若未来重新拆分出独立 skills，放在 .codex/skills/。
+SKILLS_DIR = ROOT / ".codex" / "skills"
 
 
 def _files_exist(paths):
@@ -67,6 +69,9 @@ def _check_gotchas_refs():
     for ref in refs:
         # 跳过明显不是文件路径的（如全大写的常量名）
         if ref.endswith(('.js', '.css', '.py', '.md', '.json', '.html')):
+            # 裸文件名（不含 /）无法可靠解析到唯一路径（如 stamp_asset_version.py），跳过
+            if "/" not in ref:
+                continue
             full = ROOT / ref
             if not full.exists():
                 errors.append(f"gotchas.md 引用不存在的文件: {ref}")
@@ -124,7 +129,7 @@ def _check_readme_tree():
 def _check_skills_refs():
     """验证 Skills 中引用的命令/文件存在。"""
     if not SKILLS_DIR.exists():
-        return ["Skills 目录不存在"]
+        return []  # 无独立 skills 目录时跳过（操作协议已内联到 AGENT.md）
     errors = []
     for skill_dir in SKILLS_DIR.iterdir():
         if skill_dir.is_symlink() or skill_dir.is_dir():

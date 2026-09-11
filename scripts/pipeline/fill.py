@@ -8,16 +8,23 @@ import re
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from core.constants import CATEGORIES, DATA_DIR, ETF_SKIP_FIELDS, ALWAYS_OVERWRITE_FIELDS
+from core.constants import CATEGORIES, DATA_DIR, ETF_SKIP_FIELDS, ALWAYS_OVERWRITE_FIELDS, ETF_CODE_PREFIXES
 from core.utils import to_float, read_json, write_json, bump_generated_at, normalize_share_keys, beijing_now_iso
 from sources.eastmoney_source import fetch_lsjz, fetch_pzd, fetch_f10, fetch_fee_rules
 from sources.akshare_source import fetch_ytd, fetch_inception_return, fetch_etf_data, fetch_purchase_data, fetch_rank_data
 
 
 def _update_history(share: dict, today: str):
-    """申购变更追踪：状态和额度都没变 → 保持原有日期不写入；任一变化 → 追加新条目。ETF 跳过。"""
+    """申购变更追踪：状态和额度都没变 → 保持原有日期不写入；任一变化 → 追加新条目。
+
+    跳过：
+    - 场内 ETF（代码 159/513/510 开头）：ETF 的「申购状态」来自 fund_purchase_em，
+      会与「场内交易」标记互相覆盖，追踪无意义（历史曾误写入「暂停申购」噪音）。
+    - 美元份额：限额口径与人民币不同，不参与追踪。
+    """
+    code = share.get("code", "")
     status = share.get("buy_status", "")
-    if not status or share.get("currency") == "美元" or "场内" in status:
+    if not status or share.get("currency") == "美元" or "场内" in status or code.startswith(ETF_CODE_PREFIXES):
         return
     dlimit = share.get("daily_limit", None)
     history = share.get("buy_status_history")
@@ -346,7 +353,10 @@ def _refresh_purchase_status(data_dir, only_codes):
             for share in series.get("shares", []):
                 code = share["code"]
                 if only_codes and code not in only_codes: continue
-                if code in purchase_map: share.update(purchase_map[code]); updated += 1
+                # 场内 ETF 不从 fund_purchase_em 覆盖 buy_status/daily_limit：
+                # 源接口对 ETF 会交替返回「暂停申购/场内交易」，覆盖后既污染展示又污染历史。
+                if code in purchase_map and not code.startswith(ETF_CODE_PREFIXES):
+                    share.update(purchase_map[code]); updated += 1
                 if code in rank_map:
                     r = rank_map[code]
                     if r.get("nav_date", "") >= share.get("nav_date", ""):

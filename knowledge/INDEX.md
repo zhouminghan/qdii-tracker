@@ -16,7 +16,7 @@
 | 前端 | Vanilla JS + Tailwind CSS + html-to-image CDN | `web/` |
 | 配置 SSOT | JSON (`config/funds.json`) | `config/` |
 | CI/CD | GitHub Actions | `.github/workflows/` |
-| Agent 治理 | AGENT.md + .codebuddy/skills/ (2 Skills: fund-ops, code-change) | 根目录 |
+| Agent 治理 | AGENT.md（操作协议已内联：fund-ops / code-change） | 根目录 |
 
 ## ASCII 架构全景图
 

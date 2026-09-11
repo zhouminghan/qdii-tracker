@@ -81,8 +81,8 @@
 | `buy_status` | string | 申购状态 | `"开放申购"`、`"限大额"`、`"暂停申购"`、`"封闭期"`、`"场内"` |
 | `sell_status` | string | 赎回状态 | `"开放赎回"`、`"暂停赎回"` |
 | `buy_min` | number\|null | 购买起点（元） | `10.0` |
-| `daily_limit` | number\|null | 日累计限额（元） | `200.0`（限大额时） |
-| `buy_status_history` | array | 申购变更追踪 | `[{date, buy_status, daily_limit}]`，状态或额度变化才追加 |
+| `daily_limit` | number\|null | 日累计限额（元） | `200.0`（限大额时）；`null` = 不限额/开放申购（东财哨兵值 1e11 已归一化） |
+| `buy_status_history` | array | 申购变更追踪 | `[{date, buy_status, daily_limit}]`，状态或额度变化才追加；场内 ETF 与美元份额不追踪 |
 
 ### 费率
 

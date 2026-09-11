@@ -850,7 +850,9 @@
 
     function statusBadge(sh) {
       const st = sh.buy_status || '';
-      const hist = (sh.buy_status_history || []).slice(-3).reverse();
+      // 历史变更最多展示 8 条：此前只取 3 条，像「限购 1 万」这类短暂放宽
+      // 又被后续几次调整挤出去，用户会误以为「没记录到」。
+      const hist = (sh.buy_status_history || []).slice(-8).reverse();
       const histAttr = hist.length ? 'data-history=\'' + JSON.stringify(hist).replace(/'/g, '&#39;') + '\'' : '';
       const kind = classifyBuyStatus(sh);
       if (kind === 'none' || kind === 'limited_no_amount') return '<span class="text-stone-400 dark:text-stone-500 text-xs" ' + histAttr + '>—</span>';
@@ -896,7 +898,8 @@
       if (!histData || !histData.length) {
         tip.innerHTML = '<div class="tip-header">申购变更记录</div><div class="tip-empty">暂无历史记录</div>';
       } else {
-        histData = histData.slice(-3).reverse();
+        // statusBadge 已按「最新在前」写入，这里仅反转为时间正序
+        histData = histData.reverse();
         var rows = '';
         for (var hi = 0; hi < histData.length; hi++) {
           var h = histData[hi];

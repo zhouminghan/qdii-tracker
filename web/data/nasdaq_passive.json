@@ -3224,7 +3224,7 @@
           "fund_type_xq": "QDII-股票",
           "full_name": "博时纳斯达克100交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "暂停申购",
-          "daily_limit": 100000000000.0,
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-07-11",
@@ -3234,7 +3234,7 @@
             {
               "date": "2026-09-08",
               "buy_status": "暂停申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             }
           ],
           "buy_rules": [
@@ -3294,7 +3294,7 @@
           "fund_type_xq": "QDII-股票",
           "full_name": "博时纳斯达克100交易型开放式指数证券投资基金发起式联接基金(QDII)",
           "buy_status": "暂停申购",
-          "daily_limit": 100000000000.0,
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-07-11",
@@ -3304,7 +3304,7 @@
             {
               "date": "2026-09-08",
               "buy_status": "暂停申购",
-              "daily_limit": 100000000000.0
+              "daily_limit": null
             }
           ],
           "buy_rules": [

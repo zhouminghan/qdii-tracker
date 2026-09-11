@@ -18,6 +18,9 @@
 | G012 | 详情 Modal「日买入限额」始终不显示「暂停」 | `render-modal.js:103` 用了不存在的字段 `share.purchase_state`，实际字段是 `share.buy_status` | `web/js/render-modal.js:103` | ✅已修复 | 2026-08-05 | 2026-08-05 |
 | G013 | 截图弹窗 + 申购浮层在亮色模式下完全无样式 | `.ss-*` 和 `.buy-hist-tip` 只有暗色覆盖（`html.dark`），亮色基础 CSS 全部缺失 | `web/css/app.css` → 补全 ~420 行亮色样式 | ✅已修复 | 2026-08-05 | 2026-08-05 |
 | G014 | 版本戳 `?v=` 漏打 ES module 单引号路径 | `stamp_asset_version.py` 正则只匹配双引号 `"`，5 处 `import from '...'` 从不更新 | `scripts/checks/stamp_asset_version.py` → 正则兼容双引号+单引号 | ✅已修复 | 2026-08-05 | 2026-08-05 |
+| G015 | 场内 ETF 的 `buy_status_history` 被误写入「暂停申购」噪音 | `_refresh_purchase_status` 先 `share.update(purchase_map[code])` 覆盖 ETF 的「场内交易」，`_update_history` 的「场内」跳过判断被覆盖后的值绕过 | `scripts/pipeline/fill.py:_refresh_purchase_status` → ETF（159/513/510 开头）跳过覆盖与追踪 | ✅已修复 | 2026-09-11 | 2026-09-11 |
+| G016 | 「开放申购」基金日限额显示为哨兵值 ¥1000 亿 | 东方财富 `fund_purchase_em` 对不限额返回 `100000000000`，未归一化直接入库并参与排序/历史追踪 | `scripts/sources/akshare_source.py:fetch_purchase_data` → `>=1e11` 归一化为 None | ✅已修复 | 2026-09-11 | 2026-09-11 |
+| G017 | 「限购 1 万」这类短暂放宽在申购变更 tooltip 里看不到 | tooltip 只展示最近 3 条，短促的额度变化被后续调整挤出，用户误判「没记录到」 | `web/js/main.js:statusBadge` → 展示最近 8 条 | ✅已修复 | 2026-09-11 | 2026-09-11 |
 
 ## Gotchas 生命周期规则
 - 已修复 → 保留条目，标记 `✅已修复`（不删——后人要知道坑存在过）

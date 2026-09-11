@@ -30,13 +30,7 @@
           "manager": "刘杰",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-09-08",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.8,
@@ -80,13 +74,7 @@
           "manager": "万琼",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-09-08",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.6,
@@ -131,13 +119,7 @@
           "manager": "艾小军",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-07-14",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.6,
@@ -182,13 +164,7 @@
           "manager": "赵宗庭",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-09-08",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.6,
@@ -232,13 +208,7 @@
           "manager": "张钟玉",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-09-08",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.5,
@@ -282,13 +252,7 @@
           "manager": "倪斌",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-09-08",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.6,
@@ -332,13 +296,7 @@
           "manager": "刘重杰",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-09-08",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.5,
@@ -382,13 +340,7 @@
           "manager": "张其思",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-09-08",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.6,
@@ -432,13 +384,7 @@
           "manager": "冉凌浩",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-09-08",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.8,
@@ -482,13 +428,7 @@
           "manager": "林伟斌",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-09-08",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.5,
@@ -532,13 +472,7 @@
           "manager": "柳军",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-09-08",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.8,
@@ -582,13 +516,7 @@
           "manager": "乐无穹",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-09-08",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.5,
@@ -632,13 +560,7 @@
           "manager": "万琼",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-09-08",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.5,
@@ -682,13 +604,7 @@
           "manager": "赵宗庭",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-09-08",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.6,
@@ -732,13 +648,7 @@
           "manager": "葛俊阳",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-09-08",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.5,
@@ -775,13 +685,7 @@
           "manager": "林伟斌",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-09-08",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.5,
@@ -824,13 +728,7 @@
           "manager": "乐无穹",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-09-08",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.5,
@@ -880,13 +778,7 @@
           "manager": "艾小军",
           "buy_status": "场内交易",
           "daily_limit": 0.0,
-          "buy_status_history": [
-            {
-              "date": "2026-07-14",
-              "buy_status": "暂停申购",
-              "daily_limit": 0.0
-            }
-          ],
+          "buy_status_history": [],
           "buy_rules": [],
           "sell_rules": [],
           "mgmt_fee": 0.6,
