@@ -38,7 +38,8 @@ Thumbs.db
 .windsurf/
 .claude/
 
-# Codex / Agent 治理：AGENT.md 已内联操作协议；如需独立 skills 放 .codex/skills/（追踪）
+# Agent 治理：AGENTS.md 已内联操作协议；个人 skill 安装到 .agents/skills/（本地，不追踪）
+.agents/
 
 # CodeGraph 本地图谱（二进制产物，不进 git）
 .codegraph/
