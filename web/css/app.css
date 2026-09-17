@@ -149,49 +149,48 @@
     }
     .chip.chip-active .chip-count { background: rgba(255,255,255,.2); }
 
-            /* ====== 深色模式覆盖（Graphite Dark Palette） ====== */
+            /* ====== 深色模式覆盖（Slate Dark Palette） ====== */
     /*
-     * Graphite Dark — 柔和石墨色系，比纯黑更护眼
-     * 分层：#0A0A0A 基底 → #141414 容器 → #1E1E1E 卡片 → #2A2A2A 弹窗
-     * 文本：#E8E8E6 主 → #A0A0A0 副 → #6B6B6B 三
-     * 边界：透明白色分割线（不要硬边框）
+     * Slate Dark — 蓝灰板岩色系，对齐金融仪表盘常用 dark palette
+     * 分层：#0B1220 基底 → #0F172A 容器 → #1E293B 卡片 → #334155 弹窗
+     * 文本：#F1F5F9 主 → #CBD5E1 副 → #94A3B8 三 → #64748B 四
+     * 对比度：txt-1/2/3 均 ≥ 4.5:1（AA）；txt-4 仅用于装饰/弱化
      */
     :root {
-      --dk-bg-root:    #0A0A0A;
-      --dk-bg-base:    #121212;
-      --dk-bg-card:    #1A1A1A;
-      --dk-bg-elevated:#262626;
-      --dk-glass:      rgba(26,26,26,0.82);
-      --dk-txt-1:      #E8E8E6;
-      --dk-txt-2:      #A0A0A0;
-      --dk-txt-3:      #6B6B6B;
-      --dk-txt-4:      #484848;
-      --dk-border:     rgba(255,255,255,0.08);
-      --dk-border-2:   rgba(255,255,255,0.12);
-      --dk-accent:     #FF9A45;
-      --dk-up:         #E54D42;
-      --dk-down:       #33A852;
+      --dk-bg-root:    #0B1220;
+      --dk-bg-base:    #0F172A;
+      --dk-bg-card:    #1E293B;
+      --dk-bg-elevated:#334155;
+      --dk-glass:      rgba(15,23,42,0.88);
+      --dk-txt-1:      #F1F5F9;
+      --dk-txt-2:      #CBD5E1;
+      --dk-txt-3:      #94A3B8;
+      --dk-txt-4:      #64748B;
+      --dk-border:     rgba(148,163,184,0.14);
+      --dk-border-2:   rgba(148,163,184,0.24);
+      --dk-accent:     #F59E0B;
+      --dk-up:         #F87171;
+      --dk-down:       #4ADE80;
     }
     html.dark body {
-      background: linear-gradient(175deg, #0A0A0A 0%, #121212 40%, #0F0F0F 100%);
+      background: linear-gradient(175deg, #0B1220 0%, #0F172A 42%, #0B1220 100%);
       color: var(--dk-txt-1);
     }
-    /* 氛围光 — 页面四边微弱的暖色光晕，模仿深色模式下的环境反射 */
+    /* 氛围光 — 顶部/底部微弱的冷色光晕，替代原暖橙光（更干净） */
     html.dark::before {
       content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
       background:
-        radial-gradient(ellipse 90% 60% at 50% 0%,   rgba(255,154,69,0.04)  0%, transparent 50%),
-        radial-gradient(ellipse 50% 70% at 85% 100%, rgba(255,154,69,0.03)  0%, transparent 50%),
-        radial-gradient(ellipse 50% 50% at 15% 100%, rgba(229,77,66,0.02)   0%, transparent 50%);
+        radial-gradient(ellipse 90% 60% at 50% 0%,   rgba(99,102,241,0.07)  0%, transparent 55%),
+        radial-gradient(ellipse 60% 70% at 90% 100%, rgba(56,189,248,0.05) 0%, transparent 55%);
     }
 
     /* ===== 徽章 ===== */
-    html.dark .badge-open   { background: rgba(51,168,82,.16); color: #4ADE80; border-color: rgba(51,168,82,.28); }
-    html.dark .badge-limit  { background: rgba(255,154,69,.14); color: #FFB86C; border-color: rgba(255,154,69,.22); }
-    html.dark .badge-paused { background: rgba(229,77,66,.14); color: #FF6B6B; border-color: rgba(229,77,66,.22); }
-    html.dark .badge-qdii   { background: rgba(99,102,241,.14); color: #A5B4FC; border-color: rgba(99,102,241,.22); }
-    html.dark .badge-usd    { background: rgba(255,154,69,.14); color: #FFB86C; border-color: rgba(255,154,69,.22); }
-    html.dark .badge-cny    { background: rgba(255,255,255,.06); color: var(--dk-txt-2); border-color: var(--dk-border); }
+    html.dark .badge-open   { background: rgba(74,222,128,.15); color: #4ADE80; border-color: rgba(74,222,128,.25); }
+    html.dark .badge-limit  { background: rgba(245,158,11,.16); color: #FBBF24; border-color: rgba(245,158,11,.24); }
+    html.dark .badge-paused { background: rgba(248,113,113,.15); color: #F87171; border-color: rgba(248,113,113,.24); }
+    html.dark .badge-qdii   { background: rgba(129,140,248,.15); color: #A5B4FC; border-color: rgba(129,140,248,.24); }
+    html.dark .badge-usd    { background: rgba(245,158,11,.16); color: #FBBF24; border-color: rgba(245,158,11,.24); }
+    html.dark .badge-cny    { background: rgba(148,163,184,.14); color: var(--dk-txt-2); border-color: var(--dk-border); }
 
     /* ===== Tabs ===== */
     html.dark .tab-active {
@@ -211,10 +210,10 @@
     /* ===== 分享按钮 — 推到最右 + 强调色区分 ===== */
     .ss-share-btn { margin-left: auto; }
     html.dark .ss-share-btn {
-      background: rgba(255,154,69,.15) !important; color: var(--dk-accent) !important;
-      border-color: rgba(255,154,69,.25) !important; box-shadow: none;
+      background: rgba(245,158,11,.15) !important; color: var(--dk-accent) !important;
+      border-color: rgba(245,158,11,.28) !important; box-shadow: none;
     }
-    html.dark .ss-share-btn:hover { background: rgba(255,154,69,.22) !important; }
+    html.dark .ss-share-btn:hover { background: rgba(245,158,11,.24) !important; }
 
     /* ===== Fee Popover ===== */
     html.dark .fee-tip { border-bottom-color: var(--dk-border); }
@@ -233,7 +232,7 @@
 
     /* ===== Tailwind stone → dark ===== */
     html.dark .bg-stone-50  { background: var(--dk-bg-card) !important; }
-    html.dark .bg-stone-50\/60 { background: rgba(26,26,26,.6) !important; }
+    html.dark .bg-stone-50\/60 { background: rgba(30,41,59,.6) !important; }
     html.dark thead.bg-stone-50 { background: var(--dk-bg-card) !important; }
     html.dark .border-stone-100 { border-color: var(--dk-border) !important; }
     html.dark .border-stone-200 { border-color: var(--dk-border-2) !important; }
@@ -252,11 +251,11 @@
     html.dark .text-stone-400 { color: var(--dk-txt-3) !important; }
     html.dark .text-stone-300 { color: var(--dk-txt-4) !important; }
     html.dark .dark\:text-stone-100 { color: var(--dk-txt-1) !important; }
-    html.dark .dark\:text-stone-200 { color: #D0D0D0 !important; }
+    html.dark .dark\:text-stone-200 { color: #E2E8F0 !important; }
     html.dark .dark\:text-stone-300 { color: var(--dk-txt-2) !important; }
     html.dark .dark\:text-stone-400 { color: var(--dk-txt-3) !important; }
     html.dark .dark\:text-stone-500 { color: var(--dk-txt-4) !important; }
-    html.dark .dark\:text-stone-300\/80 { color: rgba(160,160,160,.8) !important; }
+    html.dark .dark\:text-stone-300\/80 { color: rgba(203,213,225,.8) !important; }
     html.dark .dark\:bg-stone-900  { background: var(--dk-bg-card) !important; }
     html.dark .dark\:bg-stone-800  { background: var(--dk-bg-base) !important; }
     html.dark .dark\:bg-stone-950  { background: var(--dk-bg-root) !important; }
@@ -266,10 +265,10 @@
     html.dark .dark\:divide-stone-700 > :not([hidden]) ~ :not([hidden]) { border-color: var(--dk-border); }
     html.dark .dark\:hover\:bg-stone-800:hover   { background: var(--dk-bg-elevated) !important; }
     html.dark .dark\:hover\:bg-stone-700:hover   { background: var(--dk-bg-elevated) !important; }
-    html.dark .dark\:hover\:bg-stone-700\/50:hover { background: rgba(38,38,38,.5) !important; }
+    html.dark .dark\:hover\:bg-stone-700\/50:hover { background: rgba(51,65,85,.5) !important; }
     html.dark .dark\:bg-white\/10 { background: rgba(255,255,255,.06) !important; }
     html.dark .text-gray-100 { color: var(--dk-txt-1) !important; }
-    html.dark .text-gray-200 { color: #D0D0D0 !important; }
+    html.dark .text-gray-200 { color: #E2E8F0 !important; }
     html.dark .text-gray-300 { color: var(--dk-txt-2) !important; }
     html.dark .text-gray-400 { color: var(--dk-txt-3) !important; }
     html.dark .text-gray-500 { color: var(--dk-txt-4) !important; }
@@ -383,13 +382,13 @@
     html.dark .buy-hist-tip .tip-header    { color: var(--dk-accent); border-color: var(--dk-border); }
     html.dark .buy-hist-tip .tip-date      { color: var(--dk-txt-2); }
     html.dark .buy-hist-tip .tip-empty     { color: var(--dk-txt-3); }
-    html.dark .buy-hist-tip .tip-badge-paused { background: rgba(229,77,66,.18);  color: #FF6B6B; }
-    html.dark .buy-hist-tip .tip-badge-limit  { background: rgba(255,154,69,.16); color: #FFB86C; }
-    html.dark .buy-hist-tip .tip-badge-open   { background: rgba(51,168,82,.16);  color: #4ADE80; }
+    html.dark .buy-hist-tip .tip-badge-paused { background: rgba(248,113,113,.18); color: #F87171; }
+    html.dark .buy-hist-tip .tip-badge-limit  { background: rgba(245,158,11,.18); color: #FBBF24; }
+    html.dark .buy-hist-tip .tip-badge-open   { background: rgba(74,222,128,.16); color: #4ADE80; }
 
     /* ===== 表格行 hover ===== */
     html.dark #table-offshore tbody tr:hover,
-    html.dark #table-etf tbody tr:hover { background: rgba(255,154,69,.06) !important; }
+    html.dark #table-etf tbody tr:hover { background: rgba(148,163,184,.07) !important; }
     /* 表格奇数行微亮，偶数即底色，提高长表可读性 */
     #table-offshore tbody tr:nth-child(odd),
     #table-etf tbody tr:nth-child(odd) { background: rgba(255,255,255,.02); }
@@ -397,7 +396,7 @@
 
     /* ===== Market 卡片（玻璃材质） ===== */
     html.dark .market-card {
-      background: rgba(255,255,255,.05) !important;
+      background: rgba(148,163,184,.08) !important;
       border-color: var(--dk-border-2) !important;
       backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     }
@@ -781,7 +780,7 @@
     html.dark .ss-save-primary    { box-shadow: 0 2px 6px rgba(0,0,0,.5); }
     html.dark .ss-save-primary:hover { box-shadow: 0 4px 12px rgba(0,0,0,.7); }
     html.dark .ss-muted { color: var(--dk-txt-3); }
-    html.dark .ss-section-title { color: #D0D0D0; border-color: var(--dk-border); }
+    html.dark .ss-section-title { color: #E2E8F0; border-color: var(--dk-border); }
     html.dark .ss-preview thead th { color: var(--dk-txt-2); border-color: var(--dk-border); }
     html.dark .ss-preview td { color: var(--dk-txt-2); background: var(--dk-bg-elevated); border-color: var(--dk-border); }
     html.dark .ss-preview tr:nth-child(even) td { background: var(--dk-bg-card); }
@@ -789,44 +788,44 @@
 
     /* 7 种截图风格暗色变体 */
     html.dark .ss-mkt-label { color: var(--dk-txt-3); }
-    html.dark .ss-mkt-price { color: #D0D0D0; }
+    html.dark .ss-mkt-price { color: #E2E8F0; }
     html.dark .ss-mkt-card { background: rgba(255,255,255,.04); }
-    html.dark .ss-style-cute.ss-phone-wrap    { background: linear-gradient(180deg, #1A1A1A 0%, #262626 100%); border-color: var(--dk-border); }
-    html.dark .ss-style-cute .ss-inner        { background: #262626; }
-    html.dark .ss-style-glass.ss-phone-wrap   { background: rgba(26,26,26,.85); border-color: rgba(255,255,255,.06); }
-    html.dark .ss-style-glass .ss-inner       { background: rgba(26,26,26,.55); }
+    html.dark .ss-style-cute.ss-phone-wrap    { background: linear-gradient(180deg, #1E293B 0%, #334155 100%); border-color: var(--dk-border); }
+    html.dark .ss-style-cute .ss-inner        { background: #334155; }
+    html.dark .ss-style-glass.ss-phone-wrap   { background: rgba(30,41,59,.85); border-color: rgba(255,255,255,.06); }
+    html.dark .ss-style-glass .ss-inner       { background: rgba(30,41,59,.55); }
     html.dark .ss-style-glass .ss-mkt-card    { background: rgba(255,255,255,.03); }
     html.dark .ss-style-glass .ss-tbl thead   { background: rgba(255,255,255,.03); }
-    html.dark .ss-style-glass td               { color: #D0D0D0; }
+    html.dark .ss-style-glass td               { color: #E2E8F0; }
     html.dark .ss-style-glass tr:nth-child(even) td { background: rgba(255,255,255,.02); }
     html.dark .ss-style-warm.ss-phone-wrap    { background: linear-gradient(180deg, #2C241A 0%, #1F1A12 100%); border-color: rgba(255,154,69,.2); }
     html.dark .ss-style-warm .ss-inner        { background: #2C241A; }
     html.dark .ss-style-warm .ss-mkt-card     { background: #2C241A; }
     html.dark .ss-style-warm .ss-tbl thead    { background: rgba(80,60,30,.3); }
     html.dark .ss-style-warm tr:nth-child(even) td { background: #1F1A12; }
-    html.dark .ss-style-notion.ss-phone-wrap  { background: #1A1A1A; border-color: var(--dk-border); }
-    html.dark .ss-style-notion .ss-inner      { background: #262626; }
-    html.dark .ss-style-notion .ss-mkt-card   { background: #1A1A1A; }
-    html.dark .ss-style-notion .ss-tbl thead  { background: #262626; }
+    html.dark .ss-style-notion.ss-phone-wrap  { background: #1E293B; border-color: var(--dk-border); }
+    html.dark .ss-style-notion .ss-inner      { background: #334155; }
+    html.dark .ss-style-notion .ss-mkt-card   { background: #1E293B; }
+    html.dark .ss-style-notion .ss-tbl thead  { background: #334155; }
     html.dark .ss-style-notion td              { color: var(--dk-txt-2); border-color: var(--dk-border); }
-    html.dark .ss-style-notion tr:nth-child(even) td { background: #1A1A1A; }
-    html.dark .ss-style-minimal.ss-phone-wrap { background: #262626; border-color: var(--dk-border); }
-    html.dark .ss-style-minimal .ss-inner     { background: #1A1A1A; }
-    html.dark .ss-style-minimal .ss-mkt-card  { background: #1A1A1A; border-color: var(--dk-border); }
-    html.dark .ss-style-minimal .ss-tbl thead { background: #262626; }
+    html.dark .ss-style-notion tr:nth-child(even) td { background: #1E293B; }
+    html.dark .ss-style-minimal.ss-phone-wrap { background: #334155; border-color: var(--dk-border); }
+    html.dark .ss-style-minimal .ss-inner     { background: #1E293B; }
+    html.dark .ss-style-minimal .ss-mkt-card  { background: #1E293B; border-color: var(--dk-border); }
+    html.dark .ss-style-minimal .ss-tbl thead { background: #334155; }
     html.dark .ss-style-minimal td             { color: var(--dk-txt-2); border-color: var(--dk-border); }
-    html.dark .ss-style-minimal tr:nth-child(even) td { background: #1A1A1A; }
+    html.dark .ss-style-minimal tr:nth-child(even) td { background: #1E293B; }
     html.dark .ss-style-fresh.ss-phone-wrap   { background: linear-gradient(180deg, #1C2A20 0%, #182A1E 100%); border-color: rgba(51,168,82,.2); }
     html.dark .ss-style-fresh .ss-inner       { background: #1C2A20; }
     html.dark .ss-style-fresh .ss-mkt-card    { background: #1C2A20; }
     html.dark .ss-style-fresh .ss-tbl thead   { background: rgba(48,80,56,.3); }
     html.dark .ss-style-fresh tr:nth-child(even) td { background: #182A1E; }
     html.dark .ss-style-notes.ss-phone-wrap   { background: #1C1A28; border-color: var(--dk-border); }
-    html.dark .ss-style-notes .ss-inner       { background: #262626; }
+    html.dark .ss-style-notes .ss-inner       { background: #334155; }
     html.dark .ss-style-notes .ss-mkt-card    { background: #1C1A28; }
-    html.dark .ss-style-notes .ss-tbl thead   { background: #262626; }
+    html.dark .ss-style-notes .ss-tbl thead   { background: #334155; }
     html.dark .ss-style-notes td               { color: var(--dk-txt-2); border-color: var(--dk-border); }
-    html.dark .ss-style-notes tr:nth-child(even) td { background: #1A1A1A; }
+    html.dark .ss-style-notes tr:nth-child(even) td { background: #1E293B; }
 
     /* ===== 主题切换按钮 ===== */
     .theme-toggle {
