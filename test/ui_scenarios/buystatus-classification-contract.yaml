@@ -1,0 +1,45 @@
+scenario: "classifyBuyStatus() 判断结果在主表徽章与截图分享徽章两处渲染保持一致"
+
+origin:
+  bug_or_feature: "架构深化：main.js statusBadge 与 screenshot.js statusBadgeHtml 各自重写了一遍完全相同的
+    申购状态判断（暂停/限购(带额度)/限购(无额度)/开放/无状态），收拢判断逻辑（不合并 HTML 拼装，
+    因为两处输出结构不同——一个带历史 tooltip data 属性，一个是纯展示徽章）。"
+  root_cause: "非 bug，是纯重构：同一条业务规则被复制到两个文件，改一处容易漏改另一处。"
+  fixed_in: "web/js/utils.js::classifyBuyStatus(sh) 返回
+    'none'|'paused'|'limited'|'limited_no_amount'|'open'；
+    main.js statusBadge 与 screenshot.js statusBadgeHtml 均改为消费该函数的判断结果。"
+
+steps:
+  - open: "web/index.html"
+  - eval: |
+      window.__classifyTests = [
+        [{ buy_status: '', currency: '人民币' }, 'none'],
+        [{ buy_status: '开放申购', currency: '美元' }, 'none'],
+        [{ buy_status: '暂停申购', currency: '人民币' }, 'paused'],
+        [{ buy_status: '限购', daily_limit: 1000, currency: '人民币' }, 'limited'],
+        [{ buy_status: '限购', daily_limit: 0, currency: '人民币' }, 'limited_no_amount'],
+        [{ buy_status: '开放申购', currency: '人民币' }, 'open'],
+      ].map(([sh, expected]) => ({ sh, expected, got: window.classifyBuyStatus(sh) }));
+  - eval: |
+      // 截图分享 Modal 里渲染 3 种状态，验证 CSS 类与文案
+      window.__mktData = { usINX: { price: 1, changePct: 0, change: 0 } };
+      window.openScreenshotModal('offshore', [], [
+        { key: 'nasdaq_passive', items: [
+          { display_name: '测试暂停', default_share_code: 'C1', shares: [{ code: 'C1', currency: '人民币', nav: 1, buy_status: '暂停申购' }] },
+          { display_name: '测试限购', default_share_code: 'C2', shares: [{ code: 'C2', currency: '人民币', nav: 1, buy_status: '限购', daily_limit: 5000 }] },
+          { display_name: '测试开放', default_share_code: 'C3', shares: [{ code: 'C3', currency: '人民币', nav: 1, buy_status: '开放申购' }] },
+        ] },
+        { key: 'sp500', items: [] }, { key: 'active', items: [] }, { key: 'global_index', items: [] }, { key: 'global_other', items: [] },
+      ]);
+
+assert:
+  - selector: "window"
+    property: "eval(window.__classifyTests.every(t => t.got === t.expected))"
+    expected: "true"
+    note: "6 个分支全部与预期判断结果一致"
+  - selector: "#ss-preview .ss-badge"
+    property: "className + textContent（按出现顺序）"
+    expected: "['ss-badge ss-badge-open':'开放申购', 'ss-badge ss-badge-limit':'限 ¥5000', 'ss-badge ss-badge-paused':'暂停']"
+
+# 已用 Playwright 现场验证（2026-07-12）：6 个单元测试全 PASS；主表暂停徽章正常显示；
+# 截图分享 Modal 3 种状态渲染文案与 CSS 类完全正确（ss-badge-open/limit/paused）。

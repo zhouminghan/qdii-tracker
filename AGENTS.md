@@ -1,6 +1,6 @@
 # QDII Tracker
 
-> **双引擎架构**：`knowledge/`（解释记忆）+ `scripts/`（可执行代码）。结构记忆：`.codegraph/`。
+> **双引擎架构**：`knowledge/`（解释记忆）+ `scripts/`（可执行代码）。
 > 功能概览：[README](./README.md)
 
 ## 任务路由
@@ -30,7 +30,7 @@
 
 ```
 修改任何代码文件
-  → ❶ blast-radius（codegraph_explore 确认影响范围）
+  → ❶ blast-radius（grep 影响面 + `knowledge/pipeline-contracts.md`）
   → ❷ 修改
   → ❸ fundctl.py check → 文档同步
 ```
@@ -49,7 +49,7 @@
 
 ```
 查询："XX 在哪/怎么实现" 
-  → codegraph_explore → knowledge/INDEX.md → 源码 grep
+  → knowledge/INDEX.md → 源码 grep
 
 沉淀："记下来/这个教训/更新文档"
   → 判断去处：
@@ -63,7 +63,9 @@
 - nav_date 永不回退（lsjz 失败保留旧值）
 - scan 后必须接 enrich + fill
 - 禁止直接改 `config/funds.json`（通过 fund-ops Skill + fundctl.py）
-- 部署：commit+push → `gh workflow run deploy-pages.yml --ref main`
+- **提交/推送需确认**：任何 `git commit` / `git push` / 部署触发前，必须先向用户说明改动范围（哪些文件、为什么）并取得明确确认；未确认前只停留在工作区改动，不 `git add` / `commit` / `push`
+- **文档不滞后**：README 目录树 / 命令列表由 `doc_sync.py` 从真实状态自动生成；提交前 pre-commit 钩子自动 `--fix`，CI 用 `--check` 强制校验
+- 部署（确认后执行）：commit+push → `gh workflow run deploy-pages.yml --ref main`
 - 版本戳：本地 `?v=dev`（占位），部署时 `deploy-pages.yml` 自动 `stamp_asset_version.py --version ${GITHUB_SHA::12}` 替换为 commit SHA，无需手动改
 
 ### 自动联动（knowledge ↔ Agent ↔ README）
@@ -79,6 +81,8 @@
 | 踩坑 ≥3 次同一模式 | 提示"是否追加到 AGENTS.md 关键边界？" |
 
 > 原理：knowledge/ 是「解释记忆」、Skills 是「行为指令」。代码变了→记忆可能过期→自动提醒同步。文件结构变了→README 和 INDEX 自动同步。
+>
+> 现在这套「自动联动」已经**机器化**：`scripts/checks/doc_sync.py` 从 git 追踪文件 + `fundctl.py --help` 推导 README 目录树与命令列表（标记块内自动改写），并校验 knowledge/INDEX.md 路由与 AGENTS.md 模块登记是否滞后。本地由 `.githooks/pre-commit` 在每次 commit 前自动 `--fix`，CI 由 `ci.yml` 跑 `check --agent-rules` 强制 `--check`。
 
 ## Commands
 
@@ -89,7 +93,12 @@ cd scripts && python3 fundctl.py move --keyword X --from A --to B  # 调分类
 cd scripts && python3 fundctl.py refresh                        # 增量刷新
 cd scripts && python3 fundctl.py sync                           # 全量同步
 cd scripts && python3 fundctl.py check                          # 门禁（7层）
+cd scripts && python3 fundctl.py check --offline                # 门禁（跳过 Layer 6 跨源验证，断网/CI 用）
 cd scripts && python3 fundctl.py diagnose --auto-fix            # 诊断修复
+cd scripts && python3 fundctl.py probe                          # 数据源适配层探针
+cd scripts && python3 checks/doc_sync.py --fix                  # 文档自动同步（README 目录树/命令）
+cd test && python3 run_ui_scenarios.py                          # UI 回归场景
+./scripts/setup_hooks.sh                                        # 启用 pre-commit 文档同步
 cd ../web && python3 -m http.server 8765                        # 本地开发
 ```
 
@@ -114,7 +123,11 @@ scripts/
 ├── core/                 ← 基础设施（constants / utils / config_loader）
 ├── sources/              ← 数据源适配（akshare / eastmoney / xueqiu）
 ├── pipeline/             ← 数据生产链路（scan / enrich / fill / holdings / reclassify / codegen）
-└── checks/               ← 质量门禁（verify_data / verify_purchase / cross_validate / diagnose / architecture_lint / scan_scenarios / stamp_asset_version）
+└── checks/               ← 质量门禁（verify_data / verify_purchase / cross_validate / diagnose / architecture_lint / scan_scenarios / stamp_asset_version / check_agent_rules / doc_sync）
+
+test/                     ← 测试与回归（test_utils.py 单测 + ui_scenarios/ 声明式 UI 回归，Playwright 执行）
+.github/workflows/        ← ci.yml（单测+门禁，UI 回归仅本地）/ update-data.yml（数据）/ deploy-pages.yml（部署）
+.githooks/pre-commit      ← 提交前自动 doc_sync
 ```
 
 ## 知识库结构

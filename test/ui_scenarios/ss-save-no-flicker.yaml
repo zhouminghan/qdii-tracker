@@ -1,0 +1,48 @@
+scenario: "点击截图分享弹窗的“保存”按钮时，不应改动/闪烁可见的 .ss-phone-wrap（原始预览节点）"
+
+origin:
+  bug_or_feature: "点击保存截图时页面会闪一下：旧实现在截图前把可见的 .ss-phone-wrap 临时设为
+    position:absolute; top:0; left:0; z-index:99999（把它挪到屏幕左上角叠在最上层），截图后再
+    恢复原样式，两次切换在屏幕上产生明显的跳动。"
+  root_cause: "snapPng() 直接修改了用户正在看着的原始 DOM 节点的定位样式来配合 html-to-image 截图，
+    而不是用一个用户看不到的副本去截图。"
+  fixed_in: "web/js/screenshot.js snapPng()：改为 cloneNode 克隆一份 .ss-phone-wrap，
+    克隆体设置 position:fixed; top:0; left:0; z-index:-1（沉到弹窗遮罩之下，肉眼不可见，
+    但仍在正常布局坐标系内，html-to-image 能正确渲染），截图完丢弃克隆体，全程不触碰原始节点。
+    注：曾尝试把克隆体挪到视口外 left:-99999px 离屏截图，html-to-image 渲染结果为空白，已弃用。"
+
+steps:
+  - open: "web/index.html"
+  - eval: |
+      window.__mktData = { usINX: { price: 1, changePct: 0, change: 0 } };
+      window.openScreenshotModal('offshore', [], [
+        { key: 'nasdaq_passive', items: [{ display_name: 'x', default_share_code: 'C1',
+            shares: [{ code: 'C1', currency: '人民币', nav: 1, buy_status: '开放申购' }] }] },
+        { key: 'sp500', items: [] }, { key: 'active', items: [] },
+        { key: 'global_index', items: [] }, { key: 'global_other', items: [] },
+      ]);
+  - eval: |
+      // 用 MutationObserver 监听原始 .ss-phone-wrap 的 style 属性变化
+      window.__wrapMutated = false;
+      const wrap = document.querySelector('#ss-preview .ss-phone-wrap');
+      window.__mo = new MutationObserver((muts) => {
+        for (const m of muts) if (m.attributeName === 'style') window.__wrapMutated = true;
+      });
+      window.__mo.observe(wrap, { attributes: true });
+      navigator.share = undefined; // 强制走桌面下载分支
+  - click: "#ss-download-btn"
+  - wait_for: "() => !document.getElementById('ss-download-btn').disabled"
+
+assert:
+  - selector: "window"
+    property: "eval(window.__wrapMutated)"
+    expected: "false"
+    note: "保存过程中原始 .ss-phone-wrap 的 style 属性必须始终不变——没有可见的定位跳动"
+  - selector: "() => document.getElementById('ss-download-btn').textContent"
+    property: "textContent"
+    expected: "保存"
+    note: "保存完成后按钮文案应恢复"
+
+# 已用 Playwright 现场验证（2026-07-12）：
+# - mutatedOriginalWrapStyle: false（原始节点 rect/style 前后完全一致）
+# - 实际生成的 PNG（通过克隆体离屏渲染）内容完整、非空白，与直接截图字节数几乎一致

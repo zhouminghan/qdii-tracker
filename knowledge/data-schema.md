@@ -109,8 +109,9 @@
 
 ## 数据写入规则
 
+> 硬规则（`nav_date` 永不回退、scan 后接 enrich+fill）见 [AGENTS.md](../AGENTS.md) 关键边界；此处只列数据层特有约定。
+
 1. **写盘前 normalize**：`normalize_share_keys()` 固定 key 顺序，避免 diff 噪音
-2. **nav_date 永不回退**：lsjz 失败保留旧值，禁止 `datetime.now()` 推算
-3. **增量合并**：scan 保留已有字段（不覆盖 enrich/fill 产物）；fill 只补缺失不覆盖已有
-4. **meta.json**：仅 `generated_at` 保留时间戳，其他文件不写时间戳
-5. **holdings 单独存储**：`web/data/holdings/{code}.json`，每只基金一个文件
+2. **增量合并**：scan 保留已有字段（不覆盖 enrich/fill 产物）；fill 只补缺失不覆盖已有
+3. **meta.json**：仅 `generated_at` 保留时间戳，其他文件不写时间戳
+4. **holdings 单独存储**：`web/data/holdings/{code}.json`，每只基金一个文件

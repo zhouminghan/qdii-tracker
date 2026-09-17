@@ -1,4 +1,5 @@
 {
+  "schema_version": 1,
   "generated_at": "2026-09-17T01:58:43.774148+08:00",
   "sp500": {
     "series": 7,

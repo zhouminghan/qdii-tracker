@@ -17,8 +17,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from core.constants import CATEGORIES, DATA_DIR, HOLDINGS_CATEGORIES, ROOT_DIR
-from core.config_loader import get_config, save_config
+from core.constants import CATEGORIES, DATA_DIR, DATA_SCHEMA_VERSION, HOLDINGS_CATEGORIES, ROOT_DIR
+from core.config_loader import get_config, save_config, validate_config
 
 # 直接 import pipeline 模块（替代 subprocess 调用）
 from pipeline import scan, enrich, fill, holdings, reclassify, codegen
@@ -219,6 +219,8 @@ def _check_module_contracts():
 
 def cmd_check(_args):
     """分层短路校验：每层失败立即退出，不继续后续检查。"""
+    import time
+    _t0 = time.time()
 
     # ---- Layer 0/6: nav_date 新鲜度检查 (non-blocking warning) ----
     from datetime import datetime, timedelta
@@ -250,6 +252,22 @@ def cmd_check(_args):
         print(f"❌ 配置文件不存在: {config_fp}")
         raise SystemExit(1)
     print("  ✅ config/funds.json 存在")
+
+    cfg_errors = validate_config(get_config())
+    if cfg_errors:
+        print("❌ config/funds.json 内容非法：")
+        for e in cfg_errors:
+            print(f"  - {e}")
+        raise SystemExit(1)
+    print("  ✅ config/funds.json 结构合法")
+
+    # ---- meta.json schema 版本 ----
+    meta_fp = DATA_DIR / "meta.json"
+    meta = read_json(meta_fp) if meta_fp.exists() else {}
+    if meta.get("schema_version") != DATA_SCHEMA_VERSION:
+        print(f"❌ meta.json schema_version != {DATA_SCHEMA_VERSION}（字段演进未同步 schema 版本）")
+        raise SystemExit(1)
+    print(f"  ✅ meta.json schema_version = {DATA_SCHEMA_VERSION}")
 
     # ---- Layer 2/6: 目录结构校验（architecture_lint，纯结构，秒级） ----
     print("[LAYER 2/7] 目录纪律校验 ...")
@@ -320,27 +338,30 @@ def cmd_check(_args):
     else:
         print("OK ✓")
 
-    # ---- Layer 6/7: 跨源交叉验证 ----
+    # ---- Layer 6/7: 跨源交叉验证（需联网，--offline 跳过） ----
     print("[LAYER 6/7] 跨源交叉验证 ...", end=" ")
-    try:
-        cv_compared, cv_anomalies = run_cross_validation(sample_size=10)
-        if cv_anomalies:
-            print(f"⚠ {len(cv_anomalies)} 个异常")
-            for a in cv_anomalies[:3]:
-                print(f"  ⚠ {a['code']} nav偏差: {a['deviation']:.2f}%")
-        elif cv_compared == 0:
-            print("⚠ 未验证（0 只完成跨源对比，lsjz/pzd 数据源不可用）")
-        else:
-            print(f"OK ✓（{cv_compared} 只对比）")
-    except Exception as e:
-        print(f"⚠ 跳过: {e}")
+    if getattr(_args, 'offline', False):
+        print("⏭ 跳过（--offline）")
+    else:
+        try:
+            cv_compared, cv_anomalies = run_cross_validation(sample_size=10)
+            if cv_anomalies:
+                print(f"⚠ {len(cv_anomalies)} 个异常")
+                for a in cv_anomalies[:3]:
+                    print(f"  ⚠ {a['code']} nav偏差: {a['deviation']:.2f}%")
+            elif cv_compared == 0:
+                print("⚠ 未验证（0 只完成跨源对比，lsjz/pzd 数据源不可用）")
+            else:
+                print(f"OK ✓（{cv_compared} 只对比）")
+        except Exception as e:
+            print(f"⚠ 跳过: {e}")
 
     # ---- Layer 7: Agent 规则机器验证（可选，--agent-rules） ----
     if getattr(_args, 'agent_rules', False):
         from checks.check_agent_rules import check_agent_rules
         check_agent_rules()
 
-    print("\n✅ 全部分层校验通过")
+    print(f"\n✅ 全部分层校验通过（总耗时 {time.time() - _t0:.2f}s）")
 
     # 联动提示（non-blocking）：本次改动是否有匹配的 UI 回归场景该重跑
     related = find_related_scenarios()
@@ -350,6 +371,25 @@ def cmd_check(_args):
             print(f"   {changed_file}")
             for sc in scenarios:
                 print(f"     → {sc}")
+
+
+def cmd_probe(_args):
+    """数据源适配层探针：导入级健康检查（不发起网络请求）。"""
+    import importlib
+    print("数据源适配层探针（导入级，不发起网络请求）")
+    ok = True
+    for name in ("akshare_source", "eastmoney_source", "xueqiu_source"):
+        try:
+            mod = importlib.import_module(f"sources.{name}")
+        except Exception as e:  # noqa: BLE001
+            print(f"  ❌ sources.{name} 导入失败: {e}")
+            ok = False
+            continue
+        fns = sorted(n for n in dir(mod) if n.startswith("fetch_") and callable(getattr(mod, n)))
+        print(f"  ✅ sources.{name}: {len(fns)} 个 fetch_* 函数 -> {', '.join(fns)}")
+    if not ok:
+        raise SystemExit(1)
+    print("（实时连通性由 pipeline 实际 fetch + cross_validate 校验，probe 仅验导入面）")
 
 
 def cmd_diagnose(args):
@@ -409,7 +449,11 @@ def main():
 
     p_check = sub.add_parser("check", help="一致性校验")
     p_check.add_argument("--agent-rules", action="store_true", help="额外运行 Agent 规则机器验证")
+    p_check.add_argument("--offline", action="store_true", help="跳过跨源交叉验证（Layer 6，需联网）")
     p_check.set_defaults(func=cmd_check)
+
+    p_probe = sub.add_parser("probe", help="数据源适配层探针（导入级）")
+    p_probe.set_defaults(func=cmd_probe)
 
     args = p.parse_args()
     args.func(args)

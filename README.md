@@ -36,30 +36,51 @@ graph LR
 
 ## 📂 目录
 
-```
+<!-- DOCSYNC START: tree -->
+```text
 qdii-tracker/
-├── scripts/          # 数据流水线（Python）
-│   ├── fundctl.py    # 统一入口（add/remove/move/refresh/sync/check/diagnose）
-│   ├── pipeline/     # 数据生产（scan/enrich/fill/holdings/reclassify/codegen）
-│   ├── checks/       # 质量门禁（verify_data/verify_purchase/cross_validate/diagnose/architecture_lint）
-│   ├── sources/      # 数据源（akshare/eastmoney/xueqiu）
-│   └── core/         # 共享基础设施（constants/utils/config_loader）
-├── config/
-│   └── funds.json    # 基金分类 SSOT 配置
-├── web/              # 前端（纯静态）
+├── .github/    # CI 工作流（deploy-pages / update-data / ci）
+│   └── workflows/
+├── .githooks/    # 本地 pre-commit 钩子（提交前自动 doc_sync）
+│   └── pre-commit
+├── scripts/    # 数据流水线（Python）
+│   ├── checks/
+│   ├── core/
+│   ├── pipeline/
+│   ├── sources/
+│   ├── fundctl.py
+│   ├── requirements-dev.txt
+│   ├── requirements-ui.txt
+│   ├── requirements.txt
+│   └── setup_hooks.sh
+├── config/    # 基金分类 SSOT 配置
+│   └── funds.json
+├── web/    # 前端（纯静态）
+│   ├── css/
+│   ├── data/
+│   ├── js/
+│   ├── .nojekyll
 │   ├── index.html
-│   ├── css/          # app.css + tailwind.css
-│   └── js/           # config / utils / render-trend / main / screenshot
-├── knowledge/        # 解释记忆 — Agent 知识库
-│   ├── INDEX.md      # 总索引 + 架构全景
-│   ├── gotchas.md    # 踩坑记录 + 生命周期
-│   ├── pipeline-contracts.md  # 模块输入/输出契约
-│   ├── data-sources.md        # 数据源 + API端点 + 降级策略
-│   ├── data-schema.md         # JSON 字段定义
-│   └── golden-fixtures.md     # 黄金样例
-├── .codegraph/       # 代码图谱（结构记忆，自动维护）
-└── test/             # 本地测试（gitignored）
+│   ├── robots.txt
+│   └── sitemap.xml
+├── knowledge/    # 解释记忆 — Agent 知识库
+│   ├── INDEX.md
+│   ├── data-schema.md
+│   ├── data-sources.md
+│   ├── golden-fixtures.md
+│   ├── gotchas.md
+│   └── pipeline-contracts.md
+├── test/    # 测试与 UI 回归（pytest + Playwright）
+│   ├── ui_scenarios/
+│   ├── run_ui_scenarios.py
+│   ├── test_classify.py
+│   └── test_utils.py
+├── .gitignore
+├── AGENTS.md
+├── LICENSE
+└── README.md
 ```
+<!-- DOCSYNC END: tree -->
 
 Agent 规则详见 [AGENTS.md](./AGENTS.md)。
 
@@ -76,14 +97,35 @@ Agent 规则详见 [AGENTS.md](./AGENTS.md)。
 
 ```bash
 cd scripts && pip install -r requirements.txt
-python3 fundctl.py sync
-python3 fundctl.py check          # 门禁（必须全绿）
-cd ../web && python3 -m http.server 8765
-# 日常维护：
-python3 fundctl.py add --code X --to Y       # 新增
-python3 fundctl.py remove --code X            # 删除
-python3 fundctl.py move --keyword X --from A --to B  # 调分类
-python3 fundctl.py refresh                    # 增量刷新
+./scripts/setup_hooks.sh                      # 启用 pre-commit 文档同步（一次性）
+python3 fundctl.py sync                       # 全量同步
+python3 fundctl.py check --agent-rules        # 门禁 + Agent 规则 + 文档同步
+python3 fundctl.py check --offline            # 断网/CI 时跳过 Layer 6 跨源验证
+cd ../web && python3 -m http.server 8765      # 本地开发
+```
+
+日常维护命令（由 `doc_sync.py` 自动生成，请勿手改）：
+
+<!-- DOCSYNC START: commands -->
+```bash
+python3 fundctl.py add          # 新增/强制纳入一只基金
+python3 fundctl.py move         # 移动分类
+python3 fundctl.py remove       # 删除一只基金（从配置和数据中移除）
+python3 fundctl.py refresh      # 增量刷新
+python3 fundctl.py sync         # 全量同步
+python3 fundctl.py diagnose     # 诊断数据异常
+python3 fundctl.py check        # 一致性校验
+python3 fundctl.py probe        # 数据源适配层探针（导入级）
+```
+<!-- DOCSYNC END: commands -->
+
+```bash
+cd scripts && python3 checks/doc_sync.py --fix   # 手动文档同步
+
+# UI 回归（仅本地跑；云端 CI 不跑，避免每次下载 Chromium）
+pip install -r scripts/requirements-ui.txt       # 一次性
+python -m playwright install chromium            # 一次性（约 94MB）
+python test/run_ui_scenarios.py                  # 跑 6 条浏览器回归场景
 ```
 
 ## 📜 License

@@ -87,6 +87,12 @@ def run_verification() -> list:
             if chg is None or not (lo <= chg <= hi):
                 errors.append(f"[{code}] chg_ytd={chg} 超出预期区间 {chg_range}")
 
+        required_fields = checks.get("required_fields")
+        if required_fields:
+            for f in required_fields:
+                if share.get(f) in (None, "", []):
+                    errors.append(f"[{code}] 必需字段为空: {f}")
+
         expected_default = checks.get("default_share_code")
         if expected_default:
             actual_default = entry["series"].get("default_share_code")

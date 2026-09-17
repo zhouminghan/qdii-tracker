@@ -1,0 +1,29 @@
+#!/bin/sh
+# 提交前自动同步文档，防止 README 目录树 / 命令列表、knowledge/INDEX、AGENTS.md 滞后。
+# 只把 doc_sync 实际改动过的文档重新 add，避免 partial commit 时夹带未暂存文档。
+# 启用方式：scripts/setup_hooks.sh（git config core.hooksPath .githooks）
+set -e
+
+ROOT="$(git rev-parse --show-toplevel)"
+DOCS="README.md knowledge/INDEX.md AGENTS.md"
+
+cd "$ROOT"
+before=""
+for f in $DOCS; do
+  if [ -f "$f" ]; then before="$before $f:$(git hash-object "$f")"; fi
+done
+
+echo "🔄 pre-commit: 同步文档（doc_sync.py --fix）..."
+cd "$ROOT/scripts"
+python3 checks/doc_sync.py --fix
+
+cd "$ROOT"
+for f in $DOCS; do
+  [ -f "$f" ] || continue
+  after=$(git hash-object "$f")
+  case "$before" in
+    *"$f:$after"*) ;;                 # 内容没变，跳过
+    *) git add "$f"; echo "  ↳ 已重新 add：$f" ;;
+  esac
+done
+echo "✅ pre-commit: 文档已同步"

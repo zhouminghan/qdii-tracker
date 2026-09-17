@@ -35,6 +35,11 @@ permissions:
   contents: write
   actions: write
 
+# 防并发：同一时间只跑一个数据更新，避免手动触发与 cron 重叠导致 push 冲突
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-latest

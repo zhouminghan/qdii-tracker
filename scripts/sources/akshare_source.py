@@ -5,11 +5,10 @@ AKShare 数据源：全量批量接口 + 逐只接口。
 import akshare as ak
 
 from core.constants import AKSHARE_TIMEOUT
-from core.utils import to_float, call_ak
+from core.utils import to_float, make_timeout_caller
 
 
-def _call_ak(func, *args, **kwargs):
-    return call_ak(func, AKSHARE_TIMEOUT, *args, **kwargs)
+_call_ak = make_timeout_caller(AKSHARE_TIMEOUT)
 
 
 def fetch_rank_data():

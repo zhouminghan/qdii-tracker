@@ -1,0 +1,50 @@
+name: 🧪 CI 质量门禁
+
+# 每次 push / PR 都跑：单元测试 + 数据门禁 + Agent 规则 + 文档同步
+# （UI 回归只在本机跑：test/run_ui_scenarios.py，避免云端每次下载 Chromium）
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    name: 🧩 单元测试
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: |
+            scripts/requirements.txt
+            scripts/requirements-dev.txt
+      - name: 安装依赖
+        run: pip install -r scripts/requirements.txt -r scripts/requirements-dev.txt
+      - name: pytest
+        run: python -m pytest test/ -q
+
+  data-gate:
+    name: 🔒 数据 + Agent 门禁
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: scripts/requirements.txt
+      - name: 安装依赖
+        run: pip install -r scripts/requirements.txt
+      - name: 数据门禁（7 层）
+        run: |
+          cd scripts
+          python3 fundctl.py check --offline
+      - name: Agent 规则 + 文档同步校验
+        run: |
+          cd scripts
+          python3 fundctl.py check --agent-rules --offline

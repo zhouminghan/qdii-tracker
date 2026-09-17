@@ -11,8 +11,7 @@ __pycache__/
 scripts/tests/
 scripts/test_nav_date_display.py
 
-# Playwright 验证脚本临时产物
-test/
+# Playwright 运行时产物（浏览器缓存 / 报告；验证脚本 test/ 已纳入版本库）
 .playwright-cli/
 
 # 虚拟环境
@@ -40,10 +39,6 @@ Thumbs.db
 
 # Agent 治理：AGENTS.md 已内联操作协议；个人 skill 安装到 .agents/skills/（本地，不追踪）
 .agents/
-
-# CodeGraph 本地图谱（二进制产物，不进 git）
-.codegraph/
-
 
 # 临时文件
 *.swp

@@ -1,0 +1,68 @@
+scenario: "申购历史 tooltip 在单元格贴近 thead 顶部时自动朝下展开，避免视觉覆盖表头（'全球指数基金'复现路径）"
+
+origin:
+  bug_or_feature: "贴图修复：'全球指数基金'分组只有 2 行，悬停第一行 '限 ¥10' 单元格时 tooltip 默认朝上展开，与表格 thead 视觉重叠，
+    '类型/走势/持仓' 表头文字从 tooltip 背后透出，看起来像 tooltip 把表头文字 '贴' 在上面。"
+  root_cause: "showBuyTip() 用 `position: absolute` + `bottom: calc(100% + 8px)` 固定朝上展开，
+    当 cell.top 与 thead 底部之间的空间 < 弹层预估高度 + 8px 时，弹层会跨越 thead 渲染，
+    又因为 z-index 限制，视觉上压住 thead。"
+  fixed_in: |
+    web/js/main.js showBuyTip() 改用 `position: fixed` + cell.getBoundingClientRect() 计算坐标；
+    auto-flip 逻辑从"视口顶部 < 138px"改为"cell.top 与最近 thead 底部 之间空间 < 弹层预估高度 + 8px"。
+    翻转时 tooltip 挂到 document.body 上，避免父容器 overflow:hidden/auto 截断。
+    配套 web/css/app.css .buy-cell/.buy-hist-tip/.buy-hist-tip-below::after 调整箭头方向。
+
+steps:
+  - open: "web/index.html"
+  # 切到「全球指数基金」分组（仅 2 行，第一行贴近 thead）
+  - eval: |
+      const btn = Array.from(document.querySelectorAll('button.chip')).find(b => b.textContent.includes('全球指数'));
+      btn.click();
+  # 找第一行的 .buy-cell（'限 ¥10' 或 '暂停'），把它滚到视口中央
+  - eval: |
+      const rows = Array.from(document.querySelectorAll('#table-offshore tr.series-row')).filter(r => r.style.display !== 'none');
+      const cell = rows[0].querySelector('.buy-cell');
+      cell.scrollIntoView({ block: 'center' });
+      window.__buyCell = cell;
+  # 触发 hover
+  - eval: "window.__buyCell.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }))"
+  - wait_for: ".buy-hist-tip"
+
+assert:
+  # 1. 弹层应朝下（class 包含 buy-hist-tip-below）
+  - selector: ".buy-hist-tip"
+    property: "classList.contains('buy-hist-tip-below')"
+    expected: "true"
+    note: "第一行 cell 离 thead 太近，必须朝下"
+  # 2. 弹层顶端 y > thead 底部 y（不与 thead 视觉重叠）
+  - selector: "window"
+    property: |
+      eval((() => {
+        const tip = document.querySelector('.buy-hist-tip');
+        const thead = document.querySelector('#table-offshore thead');
+        if (!tip || !thead) return false;
+        const tr = tip.getBoundingClientRect();
+        const hr = thead.getBoundingClientRect();
+        return tr.top >= hr.bottom;  // 弹层顶端在 thead 底部之下
+      })())
+    expected: "true"
+  # 3. 弹层 bottom > cell.top（在 cell 之下展开）
+  - selector: "window"
+    property: |
+      eval((() => {
+        const tip = document.querySelector('.buy-hist-tip');
+        const cell = window.__buyCell;
+        if (!tip || !cell) return false;
+        const tr = tip.getBoundingClientRect();
+        const cr = cell.getBoundingClientRect();
+        return tr.top >= cr.bottom - 1;  // 弹层顶端在 cell 底部之下（容差 1px）
+      })())
+    expected: "true"
+  # 4. 弹层用 position: fixed（不再受父容器 overflow 影响）
+  - selector: ".buy-hist-tip"
+    property: "computedStyle.position"
+    expected: "fixed"
+
+# 已用 Playwright 现场验证（2026-07-31）：4 项断言全 PASS。
+# 对照场景：'标普500指数基金'中间行 hover 时，tooltip 仍默认朝上展开（className 不含 below），
+# 证明 auto-flip 只在空间不足时触发，不影响其他场景。

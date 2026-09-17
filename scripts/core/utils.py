@@ -11,7 +11,7 @@ from datetime import datetime
 
 import pytz
 
-from core.constants import DATA_DIR, STANDARD_SHARE_KEY_ORDER, STANDARD_HOLDINGS_KEY_ORDER, STANDARD_HOLDING_ITEM_KEY_ORDER
+from core.constants import DATA_DIR, HTTP_TIMEOUT, STANDARD_SHARE_KEY_ORDER, STANDARD_HOLDINGS_KEY_ORDER, STANDARD_HOLDING_ITEM_KEY_ORDER
 
 # ==================== 北京时间 ====================
 BEIJING_TZ = pytz.timezone('Asia/Shanghai')
@@ -105,6 +105,39 @@ def call_ak(func, timeout, *args, **kwargs):
     finally:
         signal.alarm(0)
         signal.signal(signal.SIGALRM, old)
+
+
+def make_timeout_caller(timeout):
+    """返回绑定了超时的调用器，消除 sources/ 里重复的 _call_ak 包装。"""
+    return lambda func, *args, **kwargs: call_ak(func, timeout, *args, **kwargs)
+
+
+def requests_get(url, headers=None, timeout=None, retries=2, backoff=0.5):
+    """带重试的 GET，只对瞬时故障（超时 / 5xx / 429 / 连接重置）重试；
+    DNS 解析失败与 4xx 视为永久性立即放弃。失败静默返回 None，由调用方处理。"""
+    import time
+    import requests
+
+    timeout = timeout if timeout is not None else HTTP_TIMEOUT
+    for attempt in range(retries + 1):
+        try:
+            r = requests.get(url, headers=headers, timeout=timeout)
+            if r.status_code == 200:
+                return r
+            # 仅对 5xx / 429 重试，其余 4xx 永久失败
+            if r.status_code not in (429, 500, 502, 503, 504):
+                return None
+        except requests.exceptions.Timeout:
+            pass
+        except requests.exceptions.ConnectionError as e:
+            # DNS 解析失败（无网络）是永久性故障，不重试，避免离线 check 卡 30s
+            if "nodename nor servname" in str(e) or "NameResolution" in str(e):
+                return None
+        except Exception:  # noqa: BLE001
+            pass
+        if attempt < retries:
+            time.sleep(backoff * (attempt + 1))
+    return None
 
 
 def bump_generated_at(meta_fp: Path = None, data_dir: Path = None, now_str: str = None):

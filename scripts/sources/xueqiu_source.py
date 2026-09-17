@@ -7,11 +7,10 @@ import re
 import akshare as ak
 
 from core.constants import XUEQIU_TIMEOUT
-from core.utils import to_float, parse_scale, call_ak
+from core.utils import to_float, parse_scale, make_timeout_caller
 
 
-def _call_ak(func, *args, **kwargs):
-    return call_ak(func, XUEQIU_TIMEOUT, *args, **kwargs)
+_call_ak = make_timeout_caller(XUEQIU_TIMEOUT)
 
 
 def fetch_basic_info(code: str):

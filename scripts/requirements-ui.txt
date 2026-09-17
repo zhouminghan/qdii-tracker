@@ -1,0 +1,2 @@
+# 仅本地 UI 回归需要（test/run_ui_scenarios.py）；不在云端 CI 安装，避免每次下载 Chromium
+playwright>=1.45

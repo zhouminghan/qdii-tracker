@@ -6,10 +6,8 @@ import json
 import re
 from datetime import datetime
 
-import requests
-
-from core.constants import HEADERS_EASTMONEY, HEADERS_FUND, HTTP_TIMEOUT
-from core.utils import to_float, BEIJING_TZ
+from core.constants import HEADERS_EASTMONEY, HEADERS_FUND
+from core.utils import to_float, BEIJING_TZ, requests_get
 
 
 def fetch_lsjz(code: str):
@@ -25,12 +23,8 @@ def fetch_lsjz(code: str):
         f"https://api.fund.eastmoney.com/f10/lsjz"
         f"?callback=jQuery&fundCode={code}&pageIndex=1&pageSize=1"
     )
-    try:
-        r = requests.get(url, headers=HEADERS_EASTMONEY, timeout=HTTP_TIMEOUT)
-    except Exception:
-        return None
-    if r.status_code != 200:
-        print(f"  ⚠️  fetch_lsjz({code}) HTTP {r.status_code}")
+    r = requests_get(url, headers=HEADERS_EASTMONEY)
+    if r is None:
         return None
     m = re.search(r"jQuery\((.*)\)", r.text, re.DOTALL)
     if not m:
@@ -70,11 +64,8 @@ def fetch_pzd(code: str):
     净值优先用 lsjz（更快），本函数作为历史收益的补充源。
     """
     url = f"https://fund.eastmoney.com/pingzhongdata/{code}.js"
-    try:
-        r = requests.get(url, headers=HEADERS_FUND, timeout=HTTP_TIMEOUT)
-    except Exception:
-        return None
-    if r.status_code != 200:
+    r = requests_get(url, headers=HEADERS_FUND)
+    if r is None:
         return None
     r.encoding = "utf-8"
     text = r.text
@@ -125,11 +116,8 @@ def fetch_f10(code: str):
     原逻辑来自 fill_missing.py。
     """
     url = f"https://fundf10.eastmoney.com/jbgk_{code}.html"
-    try:
-        r = requests.get(url, headers=HEADERS_EASTMONEY, timeout=HTTP_TIMEOUT)
-    except Exception:
-        return None
-    if r.status_code != 200:
+    r = requests_get(url, headers=HEADERS_EASTMONEY)
+    if r is None:
         return None
     r.encoding = "utf-8"
     text = r.text
@@ -159,8 +147,8 @@ def fetch_f10(code: str):
     # 从费率页抓取管理费/托管费/销售服务费/首档买入费率
     try:
         fee_url = f"https://fundf10.eastmoney.com/jjfl_{code}.html"
-        fr = requests.get(fee_url, headers=HEADERS_EASTMONEY, timeout=HTTP_TIMEOUT)
-        if fr.status_code == 200:
+        fr = requests_get(fee_url, headers=HEADERS_EASTMONEY)
+        if fr is not None:
             fr.encoding = "utf-8"
             fee_text = fr.text
             # 销售服务费
@@ -192,14 +180,11 @@ def fetch_fee_rules(code: str):
     返回 {"buy_rules": [...], "sell_rules": [...]} 或 None。
     """
     fee_url = f"https://fundf10.eastmoney.com/jjfl_{code}.html"
-    try:
-        fr = requests.get(fee_url, headers=HEADERS_EASTMONEY, timeout=HTTP_TIMEOUT)
-        if fr.status_code != 200:
-            return None
-        fr.encoding = "utf-8"
-        fee_text = fr.text
-    except Exception:
+    fr = requests_get(fee_url, headers=HEADERS_EASTMONEY)
+    if fr is None:
         return None
+    fr.encoding = "utf-8"
+    fee_text = fr.text
 
     def normalize_condition(cond: str, is_buy: bool = True) -> str:
         """统一费率条件格式：中文描述 → 远端符号格式"""

@@ -18,6 +18,9 @@ HOLDINGS_DIR = DATA_DIR / "holdings"
 # ============================================================
 CATEGORIES = ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf"]
 
+# web/data JSON 数据 schema 版本（字段演进时递增；fundctl.py check Layer 1 校验）
+DATA_SCHEMA_VERSION = 1
+
 # 需要抓取 holdings（Top10 重仓股）的分类。
 # 收拢原先散落三处的重复硬编码（fundctl.py cmd_add / holdings.py / reclassify.py cmd_move），
 # 改一处即全部生效。

@@ -13,7 +13,8 @@
   "checks": {
     "nav_range": "[最小值, 最大值]，可选，净值合理区间",
     "chg_ytd_range": "[最小值, 最大值]，可选，今年涨跌幅合理区间",
-    "default_share_code": "该系列默认展示的份额代码，可选"
+    "default_share_code": "该系列默认展示的份额代码，可选",
+    "required_fields": "[\"nav\", \"buy_status\", ...]，可选，这些字段不得为空（ETF 无 nav，勿列入）"
   }
 }
 ```
@@ -35,7 +36,8 @@
       "note": "被动基金被 passive_override 改写为 active 的边界案例",
       "checks": {
         "nav_range": [2.0, 4.0],
-        "chg_ytd_range": [-50, 50]
+        "chg_ytd_range": [-50, 50],
+        "required_fields": ["nav", "buy_status", "scale"]
       }
     },
     {
@@ -44,7 +46,8 @@
       "note": "主动基金 force_include 边界案例——广发全球精选",
       "checks": {
         "nav_range": [3.0, 10.0],
-        "chg_ytd_range": [-50, 100]
+        "chg_ytd_range": [-50, 100],
+        "required_fields": ["nav", "buy_status", "scale"]
       }
     },
     {
@@ -52,7 +55,8 @@
       "expected_category": "etf",
       "note": "ETF 边界案例——博时标普500ETF，场内交易基金（ETF 无 nav 字段）",
       "checks": {
-        "chg_ytd_range": [-50, 50]
+        "chg_ytd_range": [-50, 50],
+        "required_fields": ["buy_status", "scale", "chg_ytd"]
       }
     },
     {
@@ -61,7 +65,8 @@
       "note": "offshore 基金边界案例——鹏华港美互联",
       "checks": {
         "nav_range": [0.5, 3.0],
-        "chg_ytd_range": [-50, 100]
+        "chg_ytd_range": [-50, 100],
+        "required_fields": ["nav", "buy_status", "scale"]
       }
     }
   ]

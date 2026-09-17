@@ -5,7 +5,7 @@
 import json
 import re
 
-from core.constants import CATEGORIES, DATA_DIR, CATEGORY_LABELS, ETF_CODE_PREFIXES
+from core.constants import CATEGORIES, DATA_DIR, CATEGORY_LABELS, ETF_CODE_PREFIXES, DATA_SCHEMA_VERSION
 from core.utils import normalize_share_keys, beijing_now_iso, write_json
 from core.config_loader import get_config
 from sources.akshare_source import fetch_fund_names
@@ -394,6 +394,7 @@ def main():
         write_json(fp, out)
 
     meta = {
+        "schema_version": DATA_SCHEMA_VERSION,
         "generated_at": now,
         "sp500": {"series": len(by_category["sp500"]), "funds": len(classified["sp500"])},
         "nasdaq_passive": {"series": len(by_category["nasdaq_passive"]), "funds": len(classified["nasdaq_passive"])},

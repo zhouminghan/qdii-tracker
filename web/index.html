@@ -211,6 +211,83 @@
           <p class="text-[11px] text-stone-500 dark:text-stone-400 mt-3">⚠️ 免赎回费天数由各基金公司约定，QDII 为防短炒汇率波动普遍较长（多为 180d / 365d）。具体数字请展开系列看「卖出规则」列。</p>
         </div>
       </details>
+
+      <!-- 卡片 3：场外转场内（LOF）套利（在场外 / 场内 Tab 均显示） -->
+      <details class="bg-violet-50 dark:bg-stone-900/50 border border-violet-200 dark:border-stone-700 rounded-xl overflow-hidden mt-3" id="card-lof-transfer" data-for-tabs="offshore,etf" open>
+        <summary class="cursor-pointer px-5 py-3 text-sm font-medium text-violet-900 dark:text-stone-300 hover:bg-violet-100 dark:hover:bg-stone-700 transition flex items-center gap-2 select-none">
+          <span>🔁</span>
+          <span>场外转场内（LOF）怎么套利？—— 谁决定能不能搬进去卖</span>
+        </summary>
+        <div class="px-5 pb-4 pt-2 bg-white dark:bg-stone-800">
+          <p class="text-xs text-stone-500 dark:text-stone-400 mb-3">
+            结论先说：<b>QDII / FOF 决定这只基金“投什么”，LOF 才决定它“能不能在场内交易”</b>。
+            判断能不能“场外买了、搬到场内卖”，只看一个词——<b>LOF（上市开放式基金）</b>。
+          </p>
+
+          <!-- 能不能转 对照表 -->
+          <table class="w-full text-xs border border-stone-200 dark:border-stone-700 rounded-lg overflow-hidden">
+            <thead class="bg-stone-50 dark:bg-stone-900 text-stone-600 dark:text-stone-400">
+              <tr class="border-b border-stone-200 dark:border-stone-700">
+                <th class="text-left px-3 py-2 font-medium">基金类型</th>
+                <th class="text-left px-3 py-2 font-medium">买什么</th>
+                <th class="text-left px-3 py-2 font-medium">能否场外 → 场内</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-stone-100">
+              <tr>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">普通场外 QDII</td>
+                <td class="px-3 py-2 text-stone-600 dark:text-stone-400">投海外</td>
+                <td class="px-3 py-2 text-rose-700 dark:text-rose-300">❌ 通常不能</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">普通场外 FOF</td>
+                <td class="px-3 py-2 text-stone-600 dark:text-stone-400">买别的基金</td>
+                <td class="px-3 py-2 text-rose-700 dark:text-rose-300">❌ 通常不能</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">QDII-LOF（如 161128）</td>
+                <td class="px-3 py-2 text-stone-600 dark:text-stone-400">投海外 + 双通道</td>
+                <td class="px-3 py-2 text-emerald-700 dark:text-emerald-300">✅ 可以（A 类份额）</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300">FOF-LOF</td>
+                <td class="px-3 py-2 text-stone-600 dark:text-stone-400">买基金 + 双通道</td>
+                <td class="px-3 py-2 text-emerald-700 dark:text-emerald-300">✅ 可以（A 类份额）</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 关键坑：A/C 份额 -->
+          <div class="mt-3 bg-amber-50 dark:bg-stone-900/50 border border-amber-200 dark:border-stone-700 rounded-lg p-3">
+            <div class="text-xs font-medium text-amber-900 dark:text-stone-200 mb-1">⚠️ 别看到“LOF”就以为所有份额都能搬</div>
+            <p class="text-xs text-amber-800 dark:text-stone-300 leading-relaxed">
+              同一只基金的 <b>A 类、C 类</b> 可能是两套不同的份额代码：常见情况是<b>只有 A 类有上市份额</b>、能办“跨系统转托管”搬进券商账户；<b>C 类只是纯场外份额</b>，只能在场外不同销售机构之间转，<b>转不了场内</b>。
+              例：<b>161128 易方达标普信息科技(QDII-LOF)</b> —— 场内上市、能跨系统转托管的是 <b>A 类人民币份额</b>；C 类份额不行。
+            </p>
+          </div>
+
+          <!-- 操作流程 -->
+          <div class="mt-3">
+            <div class="text-xs font-medium text-stone-700 dark:text-stone-200 mb-2">📋 转托管套利三步（以 161128 为例）</div>
+            <ol class="list-decimal list-inside space-y-1 text-xs text-stone-600 dark:text-stone-300">
+              <li><b>先确认份额能转</b>：名字带“LOF”，且买的是 A 类上市份额（如 161128）。</li>
+              <li><b>场外申购</b>：T 日 15:00 前按当日净值成交，T+1 确认份额。</li>
+              <li><b>办理跨系统转托管</b>：T 日 15:00 前在支付宝 / 天天基金等渠道提交“转托管 → 跨系统转出”，填入券商的席位号；<b>T+2 日份额到券商账户</b>，即可按场内价格卖出。</li>
+            </ol>
+            <p class="text-[11px] text-stone-500 dark:text-stone-400 mt-2">前置准备：先在券商完成“场内外账户关联 / 登记股东账户”，才能拿到接收转托管份额的席位号。到账时间以基金公司 / 券商实际为准（通常 T+2，少数 QDII 类可能 T+3）。</p>
+          </div>
+
+          <!-- 溢价与风险 -->
+          <div class="mt-3 grid grid-cols-1 gap-2 text-xs">
+            <div class="bg-emerald-50 dark:bg-stone-900/50 border border-emerald-100 dark:border-stone-700 rounded-lg px-3 py-2 text-emerald-800 dark:text-stone-300">
+              💰 <b>套利原理</b>：溢价率 = (场内价 − 净值) ÷ 净值 × 100%。场外按净值申购 → 搬进券商 → 按更高的场内价卖出，赚的是这段<b>溢价</b>（再扣掉申购费、转托管费、卖出佣金等成本）。
+            </div>
+            <div class="bg-rose-50 dark:bg-stone-900/50 border border-rose-100 dark:border-stone-700 rounded-lg px-3 py-2 text-rose-800 dark:text-stone-300">
+              ⚠️ <b>主要风险</b>：① <b>时间差</b>——T 到 T+2 两天动不了，溢价可能缩水甚至转成折价；② <b>QDII 净值滞后</b>——净值是 T-1 甚至更早的海外收盘价，看到的“溢价”可能是假的；③ <b>限购</b>——QDII 额度紧张时场外限购 / 暂停申购，通道常被堵；④ <b>流动性</b>——场内成交清淡时砸盘卖不出；⑤ <b>汇率</b> 与综合成本。转托管份额还需为整数份。
+            </div>
+          </div>
+        </div>
+      </details>
     </div>
 
   </section>
