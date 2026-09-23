@@ -21,17 +21,17 @@
           "share_class": "A",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 1.39,
+          "nav": 1.3896,
           "nav_cum": 1.3954,
-          "nav_date": "2026-09-22",
-          "daily_change": -0.14,
-          "chg_1m": -5.36,
-          "chg_3m": -6.19,
-          "chg_6m": 18.66,
-          "chg_ytd": 22.34,
-          "chg_1y": 27.44,
-          "chg_2y": 47.23,
-          "chg_since_inception": 38.28,
+          "nav_date": "2026-09-23",
+          "daily_change": -0.03,
+          "chg_1m": -0.78,
+          "chg_3m": -5.28,
+          "chg_6m": 23.64,
+          "chg_ytd": 22.94,
+          "chg_1y": 27.26,
+          "chg_2y": 46.4,
+          "chg_since_inception": 38.96,
           "scale": 2.87,
           "scale_raw": "2.87亿",
           "established": "2024-02-07",
@@ -39,7 +39,7 @@
           "fund_company": "华安基金管理有限公司",
           "fund_type_xq": "QDII-股票",
           "full_name": "华安三菱日联日经225交易型开放式指数证券投资基金发起式联接基金(QDII)",
-          "buy_status": "暂停申购",
+          "buy_status": "限大额",
           "daily_limit": 10.0,
           "buy_status_history": [
             {
@@ -70,6 +70,11 @@
             {
               "date": "2026-09-19",
               "buy_status": "暂停申购",
+              "daily_limit": 10.0
+            },
+            {
+              "date": "2026-09-24",
+              "buy_status": "限大额",
               "daily_limit": 10.0
             }
           ],
@@ -102,9 +107,9 @@
           "fee": "0.06",
           "first_buy_rate": 0.6,
           "sale_service_fee": 0.0,
-          "sell_status": "暂停赎回",
+          "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": -2.67,
+          "chg_1w": 0.48,
           "free_hold_days": 7,
           "max_sell_rate": 1.5,
           "error": "'data'"
@@ -115,17 +120,17 @@
           "share_class": "C",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 1.381,
+          "nav": 1.3806,
           "nav_cum": 1.3866,
-          "nav_date": "2026-09-22",
-          "daily_change": -0.14,
-          "chg_1m": -5.38,
-          "chg_3m": -6.25,
-          "chg_6m": 18.51,
-          "chg_ytd": 22.11,
-          "chg_1y": 27.12,
-          "chg_2y": 46.5,
-          "chg_since_inception": 37.39,
+          "nav_date": "2026-09-23",
+          "daily_change": -0.03,
+          "chg_1m": -0.8,
+          "chg_3m": -5.34,
+          "chg_6m": 23.48,
+          "chg_ytd": 22.71,
+          "chg_1y": 26.95,
+          "chg_2y": 45.68,
+          "chg_since_inception": 38.06,
           "scale": 1.6,
           "scale_raw": "1.60亿",
           "established": "2024-02-07",
@@ -133,7 +138,7 @@
           "fund_company": "华安基金管理有限公司",
           "fund_type_xq": "QDII-股票",
           "full_name": "华安三菱日联日经225交易型开放式指数证券投资基金发起式联接基金(QDII)",
-          "buy_status": "暂停申购",
+          "buy_status": "限大额",
           "daily_limit": 10.0,
           "buy_status_history": [
             {
@@ -165,6 +170,11 @@
               "date": "2026-09-19",
               "buy_status": "暂停申购",
               "daily_limit": 10.0
+            },
+            {
+              "date": "2026-09-24",
+              "buy_status": "限大额",
+              "daily_limit": 10.0
             }
           ],
           "buy_rules": [
@@ -188,9 +198,9 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.25,
-          "sell_status": "暂停赎回",
+          "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": -2.68,
+          "chg_1w": 0.47,
           "free_hold_days": 7,
           "max_sell_rate": 1.5,
           "error": "'data'"
@@ -214,10 +224,10 @@
           "share_class": "A",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 3.7297,
+          "nav": 3.7828,
           "nav_cum": 3.5603,
-          "nav_date": "2026-09-22",
-          "daily_change": 1.51,
+          "nav_date": "2026-09-23",
+          "daily_change": 1.42,
           "chg_1m": 4.32,
           "chg_3m": -17.04,
           "chg_6m": 45.08,
@@ -230,7 +240,7 @@
           "scale_raw": "1.42亿",
           "established": "2023-09-22",
           "manager": "李沐阳",
-          "buy_status": "限大额",
+          "buy_status": "暂停申购",
           "daily_limit": 5.0,
           "buy_status_history": [
             {
@@ -251,6 +261,11 @@
             {
               "date": "2026-09-23",
               "buy_status": "限大额",
+              "daily_limit": 5.0
+            },
+            {
+              "date": "2026-09-24",
+              "buy_status": "暂停申购",
               "daily_limit": 5.0
             }
           ],
@@ -287,7 +302,7 @@
           "fee": "0.12",
           "first_buy_rate": 1.5,
           "sale_service_fee": 0.0,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 5.0,
           "chg_1w": 7.58,
           "free_hold_days": 30,
@@ -299,10 +314,10 @@
           "share_class": "C",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 3.7023,
+          "nav": 3.755,
           "nav_cum": 3.5347,
-          "nav_date": "2026-09-22",
-          "daily_change": 1.51,
+          "nav_date": "2026-09-23",
+          "daily_change": 1.42,
           "chg_1m": 4.3,
           "chg_3m": -17.09,
           "chg_6m": 44.89,
@@ -315,7 +330,7 @@
           "scale_raw": "2.36亿",
           "established": "2023-09-22",
           "manager": "李沐阳",
-          "buy_status": "限大额",
+          "buy_status": "暂停申购",
           "daily_limit": 5.0,
           "buy_status_history": [
             {
@@ -336,6 +351,11 @@
             {
               "date": "2026-09-23",
               "buy_status": "限大额",
+              "daily_limit": 5.0
+            },
+            {
+              "date": "2026-09-24",
+              "buy_status": "暂停申购",
               "daily_limit": 5.0
             }
           ],
@@ -360,7 +380,7 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.25,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 5.0,
           "chg_1w": 7.57,
           "free_hold_days": 7,
@@ -372,10 +392,10 @@
           "share_class": "I",
           "currency": "人民币",
           "fund_type": "指数型-海外股票",
-          "nav": 3.7236,
+          "nav": 3.7767,
           "nav_cum": 3.5547,
-          "nav_date": "2026-09-22",
-          "daily_change": 1.51,
+          "nav_date": "2026-09-23",
+          "daily_change": 1.43,
           "chg_1m": 4.31,
           "chg_3m": -17.06,
           "chg_6m": 45.01,
@@ -386,7 +406,7 @@
           "scale_raw": "0.05亿",
           "established": "2024-11-26",
           "manager": "李沐阳",
-          "buy_status": "限大额",
+          "buy_status": "暂停申购",
           "daily_limit": 5.0,
           "buy_status_history": [
             {
@@ -407,6 +427,11 @@
             {
               "date": "2026-09-23",
               "buy_status": "限大额",
+              "daily_limit": 5.0
+            },
+            {
+              "date": "2026-09-24",
+              "buy_status": "暂停申购",
               "daily_limit": 5.0
             }
           ],
@@ -431,7 +456,7 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.1,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 5.0,
           "chg_1w": 7.58,
           "free_hold_days": 7,
