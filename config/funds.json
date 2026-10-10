@@ -179,10 +179,7 @@
   "company_alias": {
     "国富": "国海富兰克林"
   },
-  "starred": [
-    "050025",
-    "160213"
-  ],
+  "starred": [],
   "passive_override": {
     "096001": {
       "type": "active",

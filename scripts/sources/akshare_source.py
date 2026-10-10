@@ -2,6 +2,8 @@
 AKShare 数据源：全量批量接口 + 逐只接口。
 从 enrich_data.py / fill_missing.py / refresh_purchase.py / scan_funds.py / fetch_holdings.py 提取。
 """
+import time
+
 import akshare as ak
 
 from core.constants import AKSHARE_TIMEOUT
@@ -10,11 +12,33 @@ from core.utils import to_float, make_timeout_caller
 
 _call_ak = make_timeout_caller(AKSHARE_TIMEOUT)
 
+# 全量批量接口从 GitHub Actions 美区 IP 访问 eastmoney 偶发 502/超时，
+# 统一做指数退避重试，重试耗尽后仍失败则由各 fetch 函数决定如何降级。
+_BATCH_RETRIES = 3
+_BATCH_BACKOFF = 3.0
+
+
+def _call_ak_batch(func, *args, **kwargs):
+    """带重试的批量接口调用（主线程专用，signal 超时仅主线程安全）。"""
+    last = None
+    for attempt in range(_BATCH_RETRIES):
+        try:
+            return _call_ak(func, *args, **kwargs)
+        except Exception as e:  # noqa: BLE001
+            last = e
+            if attempt < _BATCH_RETRIES - 1:
+                time.sleep(_BATCH_BACKOFF * (attempt + 1))
+    raise last
+
 
 def fetch_rank_data():
     """全量涨跌幅数据（原 enrich_data.py + refresh_purchase.py 各调一次）"""
     print("🔍 拉取全量涨跌幅排名...")
-    df = _call_ak(ak.fund_open_fund_rank_em, symbol="全部")
+    try:
+        df = _call_ak_batch(ak.fund_open_fund_rank_em, symbol="全部")
+    except Exception as e:  # noqa: BLE001
+        print(f"  ❌ {e}（已重试 {_BATCH_RETRIES} 次，降级跳过本轮涨跌幅刷新）")
+        return {}
     print(f"  ✅ {len(df)} 条")
     rank_map = {}
     for _, row in df.iterrows():
@@ -45,7 +69,11 @@ def fetch_purchase_data():
     写入数据、参与排序与历史追踪。
     """
     print("🔍 拉取全量申购状态/限额...")
-    df = _call_ak(ak.fund_purchase_em)
+    try:
+        df = _call_ak_batch(ak.fund_purchase_em)
+    except Exception as e:  # noqa: BLE001
+        print(f"  ❌ {e}（已重试 {_BATCH_RETRIES} 次，降级跳过本轮申购刷新）")
+        return {}
     print(f"  ✅ {len(df)} 条")
     purchase_map = {}
     for _, row in df.iterrows():
@@ -67,10 +95,10 @@ def fetch_etf_data():
     """ETF 场内数据（规模/价格，原 enrich_data.py）"""
     print("🔍 拉取全量 ETF 现货数据（含规模）...")
     try:
-        df = ak.fund_etf_spot_em()  # signal-based timeout not applicable in try/except context
+        df = _call_ak_batch(ak.fund_etf_spot_em)
         print(f"  ✅ {len(df)} 条")
-    except Exception as e:
-        print(f"  ❌ {e}")
+    except Exception as e:  # noqa: BLE001
+        print(f"  ❌ {e}（已重试 {_BATCH_RETRIES} 次，降级跳过本轮 ETF 现货刷新）")
         return {}
     etf_map = {}
     for _, row in df.iterrows():
@@ -139,7 +167,7 @@ def fetch_inception_return(code: str):
 def fetch_fund_names():
     """全量基金名称表（原 scan_funds.py）"""
     print("🔍 从 AKShare 获取全量基金名称表...")
-    df = _call_ak(ak.fund_name_em)
+    df = _call_ak_batch(ak.fund_name_em)
     print(f"✅ 全部基金: {len(df)} 只")
     return df
 

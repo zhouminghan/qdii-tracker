@@ -77,6 +77,7 @@ qdii-tracker/
 ├── test/    # 测试与 UI 回归（pytest + Playwright）
 │   ├── ui_scenarios/
 │   ├── run_ui_scenarios.py
+│   ├── test_akshare_source.py
 │   ├── test_classify.py
 │   ├── test_premium_history.py
 │   ├── test_purchase_history.py

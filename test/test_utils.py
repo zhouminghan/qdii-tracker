@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from core.utils import to_float, read_json, write_json, parse_scale, calc_series_scale
+from core.utils import to_float, read_json, write_json, parse_scale, calc_series_scale, call_ak
 
 
 def test_to_float_None():
@@ -57,6 +57,26 @@ def test_write_read_json(tmp_path):
     write_json(fp, data)
     result = read_json(fp)
     assert result == data
+
+
+def test_call_ak_returns_in_main_thread():
+    # 主线程走 signal 超时路径，快速函数应正常返回
+    assert call_ak(lambda: 7, timeout=5) == 7
+
+
+def test_call_ak_returns_in_worker_thread():
+    # fill 的 Pass 3/4 在子线程跑逐只接口，不能因 signal 不可用而静默失败
+    import threading
+
+    result = {}
+
+    def target():
+        result["v"] = call_ak(lambda: 42, timeout=5)
+
+    t = threading.Thread(target=target)
+    t.start()
+    t.join()
+    assert result["v"] == 42
 
 def test_write_json_atomic(tmp_path):
     """写入后不应有 .tmp 残留文件。"""

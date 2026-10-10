@@ -139,16 +139,6 @@ def _fetch_f10_wrapped(code: str):
         return fetch_f10(code)
 
 
-def _fetch_ytd_wrapped(code: str):
-    with _sem:
-        return fetch_ytd(code)
-
-
-def _fetch_inception_wrapped(code: str):
-    with _sem:
-        return fetch_inception_return(code)
-
-
 def _fetch_fee_rules_wrapped(code: str):
     with _sem:
         return fetch_fee_rules(code)
@@ -323,14 +313,17 @@ def _fill_ytd(loaded_data, only_codes):
     total3 = len(ytd_targets)
     print(f"🎯 目标：{total3} 只")
     s = f = 0
-    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        future_map = {executor.submit(_fetch_ytd_wrapped, code): (cat, code, sh) for cat, code, sh in ytd_targets}
-        for i, future in enumerate(as_completed(future_map), 1):
-            cat, code, sh = future_map[future]
-            try: ytd = future.result()
-            except Exception as e: _safe_print(f"  [{i}/{total3}] ❌ {code} worker 异常: {e}"); f += 1; continue
-            if ytd is not None: sh["chg_ytd"] = ytd; s += 1; _safe_print(f"  [{i}/{total3}] ✅ {code} YTD = {ytd:+.2f}%")
-            else: f += 1; _safe_print(f"  [{i}/{total3}] ❌ {code} 无数据")
+    # 逐只接口底层是 akshare 的 mini_racer（V8），并发调用会段错误；且 signal 超时
+    # 只在主线程生效，故此处串行执行（目标数通常很小）。
+    for i, (cat, code, sh) in enumerate(ytd_targets, 1):
+        try:
+            ytd = fetch_ytd(code)
+        except Exception as e:  # noqa: BLE001
+            _safe_print(f"  [{i}/{total3}] ❌ {code} 异常: {e}"); f += 1; continue
+        if ytd is not None:
+            sh["chg_ytd"] = ytd; s += 1; _safe_print(f"  [{i}/{total3}] ✅ {code} YTD = {ytd:+.2f}%")
+        else:
+            f += 1; _safe_print(f"  [{i}/{total3}] ❌ {code} 无数据")
     return s, f
 
 
@@ -343,15 +336,17 @@ def _fill_inception(loaded_data, only_codes):
     total4 = len(inception_targets)
     print(f"🎯 目标：{total4} 只")
     s = f = 0
-    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        future_map = {executor.submit(_fetch_inception_wrapped, code): (cat, code, sh) for cat, code, sh in inception_targets}
-        for i, future in enumerate(as_completed(future_map), 1):
-            cat, code, sh = future_map[future]
-            try: val = future.result()
-            except Exception as e: _safe_print(f"  [{i}/{total4}] ❌ {code} worker 异常: {e}"); f += 1; continue
-            if val is not None: sh["chg_since_inception"] = val; s += 1
-            else: f += 1
-            if (i) % 10 == 0: _safe_print(f"  进度: {i}/{total4}")
+    for i, (cat, code, sh) in enumerate(inception_targets, 1):
+        try:
+            val = fetch_inception_return(code)
+        except Exception as e:  # noqa: BLE001
+            _safe_print(f"  [{i}/{total4}] ❌ {code} 异常: {e}"); f += 1; continue
+        if val is not None:
+            sh["chg_since_inception"] = val; s += 1
+        else:
+            f += 1
+        if i % 10 == 0:
+            _safe_print(f"  进度: {i}/{total4}")
     return s, f
 
 

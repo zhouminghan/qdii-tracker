@@ -6,6 +6,7 @@ import json
 import os
 import re
 import signal
+import threading
 from pathlib import Path
 from datetime import datetime
 
@@ -93,9 +94,13 @@ def write_json(path: Path, data: dict):
 
 
 def call_ak(func, timeout, *args, **kwargs):
-    """给 akshare/雪球调用加超时（仅主线程安全，子线程中 signal 不可用）。
-    提取自 akshare_source.py 和 xueqiu_source.py 的两份重复实现。
+    """给 akshare/雪球调用加超时。
+    signal.alarm 仅在主线程可用；fill 的 Pass 3/4 在子线程里跑逐只接口，
+    子线程直接调用（不加超时），避免静默失败导致 YTD/成立来永远补不上。
     """
+    if threading.current_thread() is not threading.main_thread():
+        return func(*args, **kwargs)
+
     def handler(signum, frame):
         raise TimeoutError(f"akshare.{func.__name__} 超时 ({timeout}s)")
     old = signal.signal(signal.SIGALRM, handler)

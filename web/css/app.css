@@ -1021,34 +1021,6 @@
     .fav-star:hover { color: #f59e0b; }
     .fav-star.fav-on { color: #f59e0b; }
 
-    .watch-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 0.5rem;
-    }
-    .watch-card {
-      text-align: left;
-      background: #ffffff;
-      border: 1px solid #e7e5e4;
-      border-radius: 0.75rem;
-      padding: 0.625rem 0.75rem;
-      cursor: pointer;
-      transition: border-color 0.15s;
-    }
-    .watch-card:hover { border-color: #d6d3d1; }
-    html.dark .watch-card { background: #292524; border-color: #44403c; }
-    html.dark .watch-card:hover { border-color: #57534e; }
-
-    .watch-alert {
-      font-size: 12px;
-      color: #9f1239;
-      background: #fff1f2;
-      border: 1px solid #fecdd3;
-      border-radius: 9999px;
-      padding: 0.125rem 0.5rem;
-    }
-    html.dark .watch-alert { color: #fda4af; background: rgba(63, 7, 18, 0.5); border-color: #9f1239; }
-
     /* ===== 跨基金重仓透视 modal ===== */
     .hp-overlay {
       position: fixed;

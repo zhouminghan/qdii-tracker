@@ -112,27 +112,45 @@
         ` 或 <a href="${location.pathname}" class="underline">硬刷新页面</a>。`;
     }
 
-    async function loadData() {
-      const { meta, ver } = await fetchDataVersion();
-      STATE.dataVer = ver;
-      STATE.metaGeneratedAt = meta?.generated_at || '';
+    function renderLoadError(message) {
+      const html = `<div class="px-4 py-10 text-center text-stone-400 dark:text-stone-500 text-sm">
+        <div>⚠️ 数据加载失败${message ? '（' + message + '）' : ''}，请检查网络后重试。</div>
+        <button type="button" onclick="location.reload()" class="mt-3 underline font-medium hover:text-stone-700 dark:hover:text-stone-200">点此重试</button>
+      </div>`;
+      RENDER_TABS.forEach(tab => {
+        const c = document.getElementById(`table-${tab}`);
+        if (c) c.innerHTML = html;
+      });
+    }
 
-      await Promise.all(DATA_CATEGORIES.map(async (cat) => {
-        const res = await fetch(`./data/${cat}.json?v=${ver}`);
-        STATE.data[cat] = await res.json();
-      }));
+    async function loadData() {
       try {
-        const sl = await (await fetch(`./data/sparklines.json?v=${ver}`)).json();
-        STATE.sparklines = sl.sparklines || {};
-      } catch (_) {
-        STATE.sparklines = {};
+        const { meta, ver } = await fetchDataVersion();
+        STATE.dataVer = ver;
+        STATE.metaGeneratedAt = meta?.generated_at || '';
+
+        const settled = await Promise.allSettled(DATA_CATEGORIES.map(async (cat) => {
+          const res = await fetch(`./data/${cat}.json?v=${ver}`);
+          if (!res.ok) throw new Error(`${cat}.json HTTP ${res.status}`);
+          STATE.data[cat] = await res.json();
+        }));
+        const failed = settled.find(r => r.status === 'rejected');
+        if (failed) throw failed.reason;
+
+        try {
+          const sl = await (await fetch(`./data/sparklines.json?v=${ver}`)).json();
+          STATE.sparklines = sl.sparklines || {};
+        } catch (_) {
+          STATE.sparklines = {};
+        }
+        RENDER_TABS.forEach(renderCategory);
+        // 纯静态模式：首屏数据全部来自 data/*.json（GitHub Actions 离线生成）
+        // 陈旧兜底：loadData 同时被 offshore-live-nav.js 的 reloadData 复用，
+        //           meta 刷新后会自动重算陈旧状态（清除或显示 banner），无需单独改 live-nav
+        renderStalenessBanner(STATE.metaGeneratedAt);
+      } catch (e) {
+        renderLoadError(e?.message || '');
       }
-      RENDER_TABS.forEach(renderCategory);
-      if (typeof renderWatchlist === 'function') renderWatchlist();
-      // 纯静态模式：首屏数据全部来自 data/*.json（GitHub Actions 离线生成）
-      // 陈旧兜底：loadData 同时被 offshore-live-nav.js 的 reloadData 复用，
-      //           meta 刷新后会自动重算陈旧状态（清除或显示 banner），无需单独改 live-nav
-      renderStalenessBanner(STATE.metaGeneratedAt);
     }
 
     // ==================== 动态拉取最新净值/行情 ====================
@@ -208,12 +226,13 @@
       const isEtf = tab === 'etf';
       const isOffshore = tab === 'offshore';
       const showHoldings = isOffshore;
+      const favOf = (code) => (typeof isFav === 'function') && !!isFav(code);
 
       let groups;
       if (isOffshore) {
         groups = OFFSHORE_GROUPS.map(g => {
           const src = STATE.data[g.key];
-          const items = (src?.series || []).map(s => ({ ...s, starred: OFFSHORE_STARRED.has(s.default_share_code) }));
+          const items = (src?.series || []).map(s => ({ ...s, starred: favOf(s.default_share_code) }));
           return { ...g, items, sourceCat: g.key, isActive: (g.key === 'active' || g.key === 'global_other') };
         }).filter(g => g.items.length);
       } else if (isEtf) {
@@ -221,7 +240,7 @@
         const byTarget = {};
         for (const s of src.series) {
           const t = (s.etf_target === 'sp500' || s.etf_target === 'nasdaq100') ? s.etf_target : 'global_other';
-          (byTarget[t] = byTarget[t] || []).push(s);
+          (byTarget[t] = byTarget[t] || []).push({ ...s, starred: favOf(s.default_share_code) });
         }
         for (const key in byTarget) {
           byTarget[key].sort((a, b) => (a.starred && !b.starred ? -1 : !a.starred && b.starred ? 1 : (b.series_scale || 0) - (a.series_scale || 0)));
@@ -697,7 +716,7 @@
               <button type="button" class="fav-star${fav ? ' fav-on' : ''}" data-fav="${defCode}" onclick="event.stopPropagation(); window.toggleFav('${defCode}')" title="${fav ? '取消自选' : '加入自选'}" aria-label="${fav ? '取消自选' : '加入自选'}">${fav ? '★' : '☆'}</button>
               ${getLogo(series.company)}
               <div class="min-w-0">
-                <div class="font-medium truncate">${series.starred ? '⭐ ' : ''}${isEtf ? def.name : series.display_name}</div>
+                <div class="font-medium truncate">${isEtf ? def.name : series.display_name}</div>
                 <div class="text-xs text-stone-500 dark:text-stone-400 num mt-0.5">
                   ${def.code}${isEtf ? '' : ' · ' + def.share_class + (def.currency === '美元' ? ' · 美元' : '')}
                   <span class="badge ${isEtf ? 'badge-qdii' : 'badge-qdii'} ml-1">${isEtf ? 'ETF' : 'QDII'}</span>
