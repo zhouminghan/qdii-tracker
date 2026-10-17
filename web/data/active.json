@@ -1612,13 +1612,13 @@
           "error": "'data'"
         }
       ],
-      "display_name": "国富全球科技互联混合",
-      "category": "active",
+      "series_id": "国海富兰克林__全球科技互联混合__active",
       "etf_target": null,
-      "series_id": "其他__国富全球科技互联混合__active",
-      "series_name": "国富全球科技互联混合",
-      "company_display": "其他",
-      "company": "其他",
+      "series_name": "全球科技互联混合",
+      "category": "active",
+      "company_display": "国海富兰克林",
+      "display_name": "国富全球科技互联混合",
+      "company": "国海富兰克林",
       "default_share_code": "006373",
       "series_scale": 58.83
     },
@@ -4993,13 +4993,13 @@
           "max_sell_rate": 1.5
         }
       ],
-      "company_display": "其他",
+      "series_id": "国海富兰克林__亚洲机会股票__active",
       "etf_target": null,
-      "series_name": "国富亚洲机会股票",
+      "series_name": "亚洲机会股票",
       "category": "active",
+      "company_display": "国海富兰克林",
       "display_name": "国富亚洲机会股票",
-      "company": "其他",
-      "series_id": "其他__国富亚洲机会股票__active",
+      "company": "国海富兰克林",
       "default_share_code": "457001",
       "series_scale": 11.58
     },

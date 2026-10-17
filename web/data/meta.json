@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-17T01:50:01.252757+08:00",
+  "generated_at": "2026-10-17T14:46:50.895046+08:00",
   "sp500": {
     "series": 7,
     "funds": 25
@@ -22,7 +22,7 @@
     "funds": 58
   },
   "etf": {
-    "series": 18,
-    "funds": 18
+    "series": 19,
+    "funds": 19
   }
 }

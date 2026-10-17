@@ -92,24 +92,40 @@
       return { stale: false };
     }
 
-    function renderStalenessBanner(generatedAtStr) {
-      const mainEl = document.getElementById('main-content');
-      if (!mainEl) return;
-      let banner = document.getElementById('staleness-banner');
+    function showStalenessToast(ageH, generatedAtStr) {
+      const old = document.getElementById('staleness-toast');
+      if (old) old.remove();
+      const toast = document.createElement('div');
+      toast.id = 'staleness-toast';
+      toast.className = 'stale-toast';
+      toast.setAttribute('role', 'alert');
+      toast.innerHTML =
+        `<div class="stale-toast-msg">⚠️ 数据可能陈旧（约 ${ageH} 小时前更新）</div>` +
+        `<div class="stale-toast-actions">` +
+        `<button type="button" class="stale-toast-btn" id="stale-retry">重试加载</button>` +
+        `<a href="${location.pathname}" class="stale-toast-link">硬刷新</a>` +
+        `<button type="button" class="stale-toast-close" id="stale-close" aria-label="关闭提醒">×</button>` +
+        `</div>`;
+      document.body.appendChild(toast);
+
+      const dismiss = () => toast.remove();
+      toast.querySelector('#stale-close').addEventListener('click', dismiss);
+      toast.querySelector('#stale-retry').addEventListener('click', () => {
+        dismiss();
+        if (typeof loadData === 'function') loadData(); else location.reload();
+      });
+      window.setTimeout(dismiss, 8000);
+    }
+
+    function renderStalenessNotice(generatedAtStr) {
       const st = getDataFreshnessState(generatedAtStr);
-      if (!st.stale) {
-        if (banner) banner.remove();
-        return;
-      }
-      if (!banner) {
-        banner = document.createElement('div');
-        banner.id = 'staleness-banner';
-        banner.className = 'rounded-xl px-4 py-3 text-xs border border-amber-300 bg-amber-50 text-amber-900 dark:bg-stone-900/50 dark:border-stone-700 dark:text-amber-200';
-        mainEl.insertBefore(banner, mainEl.firstChild);
-      }
-      banner.innerHTML = `⚠️ 数据可能陈旧（最后更新约 ${st.ageH} 小时前），部署可能未成功。` +
-        `<button type="button" onclick="if(typeof loadData==='function'){loadData()}else{location.reload()}" class="ml-2 underline font-medium">点此重试加载</button>` +
-        ` 或 <a href="${location.pathname}" class="underline">硬刷新页面</a>。`;
+      if (!st.stale) return;  // 数据新鲜：不弹、不常驻
+      try {
+        const key = 'qdii-stale-toast';
+        if (sessionStorage.getItem(key) === generatedAtStr) return;  // 同一份数据只提醒一次
+        sessionStorage.setItem(key, generatedAtStr);
+      } catch (_) { /* sessionStorage 不可用时降级为每次提示 */ }
+      showStalenessToast(st.ageH, generatedAtStr);
     }
 
     function renderLoadError(message) {
@@ -144,10 +160,11 @@
           STATE.sparklines = {};
         }
         RENDER_TABS.forEach(renderCategory);
+        if (typeof renderPortfolio === 'function') renderPortfolio();
         // 纯静态模式：首屏数据全部来自 data/*.json（GitHub Actions 离线生成）
         // 陈旧兜底：loadData 同时被 offshore-live-nav.js 的 reloadData 复用，
         //           meta 刷新后会自动重算陈旧状态（清除或显示 banner），无需单独改 live-nav
-        renderStalenessBanner(STATE.metaGeneratedAt);
+        renderStalenessNotice(STATE.metaGeneratedAt);
       } catch (e) {
         renderLoadError(e?.message || '');
       }
@@ -1091,14 +1108,20 @@
         sec.style.display = isCurrent ? '' : 'none';
         sec.setAttribute('aria-hidden', isCurrent ? 'false' : 'true');
       });
-      // 市场参照系：投资知识页不展示，场外/场内展示
+      // 市场参照系：投资知识/市场温度页不展示，场外/场内展示
       const market = document.getElementById('market-overview');
-      if (market) market.style.display = (tab === 'knowledge') ? 'none' : '';
+      if (market) market.style.display = (tab === 'knowledge' || tab === 'temperature') ? 'none' : '';
       document.querySelectorAll('.tab-btn').forEach(btn => {
         const isCurrent = btn.dataset.tab === tab;
         btn.setAttribute('aria-selected', isCurrent ? 'true' : 'false');
         btn.setAttribute('tabindex', isCurrent ? '0' : '-1');
       });
+      if (tab === 'portfolio' && typeof window.renderPortfolio === 'function') {
+        window.renderPortfolio();
+      }
+      if (tab === 'temperature' && typeof window.renderTemperature === 'function') {
+        window.renderTemperature();
+      }
     }
 
     document.querySelectorAll('.tab-btn').forEach(btn => {

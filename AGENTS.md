@@ -37,6 +37,7 @@
 
 改中约束（按触及模块）：
 - `scan.py` 改后 MUST 接 `enrich + fill`
+- `enrich.py`：`--codes` 时只更新选中代码，不批量覆盖其它基金的申购状态/涨跌幅（否则 `fill --codes` 的历史追踪对不上）
 - `fill.py`：nav_date 永不回退，lsjz 失败保留旧值
 - `checks/verify_data.py`：fixtures 格式变更 → 同步 `scripts/checks/golden-fixtures.json`
 - `core/constants.py`：改 CATEGORIES → 必须重跑全量 `sync`
@@ -135,7 +136,7 @@ scripts/
 ├── fundctl.py            ← 统一入口
 ├── core/                 ← 基础设施（constants / utils / config_loader）
 ├── sources/              ← 数据源适配（akshare / eastmoney / xueqiu）
-├── pipeline/             ← 数据生产链路（scan / enrich / fill / holdings / reclassify / codegen / sparklines / premium_history）
+├── pipeline/             ← 数据生产链路（scan / enrich / fill / holdings / reclassify / codegen / sparklines / premium_history / market_temperature）
 └── checks/               ← 质量门禁（verify_data / verify_purchase / cross_validate / diagnose / architecture_lint / scan_scenarios / stamp_asset_version / check_agent_rules / doc_sync / build_snapshot）
 
 test/                     ← 测试与回归（test_utils.py 单测 + ui_scenarios/ 声明式 UI 回归，Playwright 执行）
@@ -158,7 +159,7 @@ scripts/checks/
 
 ```
 web/
-├── index.html            # 三 Tab（场外/场内/投资知识）+ 站内搜索 + 表头吸顶
+├── index.html            # 五 Tab（场外/场内/投资知识/我的组合/市场温度）+ 站内搜索 + 表头吸顶
 ├── css/
 │   ├── app.css           # 自定义样式 + 暗色 token（zinc 中性）+ 补齐 tailwind 缺失类
 │   └── tailwind.css      # Tailwind 构建产物（只含原应用用到的部分工具类）
@@ -167,5 +168,8 @@ web/
     ├── utils.js          # 工具函数（JSONP / 格式化 / Modal）
     ├── render-trend.js   # 历史净值走势图（SVG + Crosshair + JSONP）
     ├── main.js           # 主渲染 + Tab 切换 + 搜索 + 吸顶 + 投资知识筛选
+    ├── portfolio.js      # 我的组合（持仓/盈亏/配比，localStorage + 本地种子文件）
+    ├── market-temperature.js # 市场温度（红绿灯 + 四指标打分，读 web/data/market-temperature.json）
+    ├── bj-clock.js       # 顶栏北京时间（精确到秒，tabular-nums 防跳动）
     └── screenshot.js     # 截图分享
 ```

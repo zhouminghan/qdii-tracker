@@ -58,6 +58,15 @@ def test_extract_company_and_series():
     )
 
 
+def test_extract_company_alias():
+    assert scan.extract_company_and_series("国富全球科技互联混合(QDII)人民币A") == (
+        "国海富兰克林", "全球科技互联混合"
+    )
+    assert scan.extract_company_and_series("浦银全球智能科技(QDII)A") == (
+        "浦银安盛", "全球智能科技"
+    )
+
+
 def test_classify_force_exclude():
     # 012535 在 config/funds.json 的 force_exclude 中
     assert scan.classify_fund("012535", "任何基金", "QDII") == "exclude"

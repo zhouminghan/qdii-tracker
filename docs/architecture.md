@@ -59,11 +59,20 @@
 | **输出文件** | `web/js/config.js`（替换 AUTO-GENERATED CONFIG 块） |
 | **依赖** | `core.constants` |
 
+### 7. market_temperature.py — 市场温度评分
+
+| 属性 | 内容 |
+|------|------|
+| **职责** | 抓取纳指趋势 / VIX / 10 年期美债 / 美元指数，按可配置阈值打分并加权，生成红绿灯信号 |
+| **输入文件** | 新浪 `.NDX`、Yahoo `^VIX`、东财中美国债收益率、东财美元指数（失败时复用旧快照） |
+| **输出文件** | `web/data/market-temperature.json` |
+| **依赖** | `core.constants`、`core.utils`、`akshare`、`requests` |
+
 ---
 
 ## checks/ — 质量门禁 + 诊断 + 辅助
 
-### 7. verify_data.py — 黄金样例校验
+### 8. verify_data.py — 黄金样例校验
 
 | 属性 | 内容 |
 |------|------|
@@ -72,7 +81,7 @@
 | **输出文件** | 无（返回错误列表） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 8. cross_validate.py — 跨源交叉验证
+### 9. cross_validate.py — 跨源交叉验证
 
 | 属性 | 内容 |
 |------|------|
@@ -81,7 +90,7 @@
 | **输出文件** | 无（返回异常列表） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 9. diagnose.py — 诊断引擎
+### 10. diagnose.py — 诊断引擎
 
 | 属性 | 内容 |
 |------|------|
@@ -90,7 +99,7 @@
 | **输出文件** | 无（只输出诊断报告；--auto-fix 时调 `fundctl.py refresh` 修复） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 10. architecture_lint.py — 目录纪律校验
+### 11. architecture_lint.py — 目录纪律校验
 
 | 属性 | 内容 |
 |------|------|
@@ -99,7 +108,7 @@
 | **输出文件** | 无（返回错误列表） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 11. scan_scenarios.py — 改动↔场景联动
+### 12. scan_scenarios.py — 改动↔场景联动
 
 | 属性 | 内容 |
 |------|------|
@@ -108,7 +117,7 @@
 | **输出文件** | 无（返回映射字典，non-blocking 提示） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 12. stamp_asset_version.py — 版本戳
+### 13. stamp_asset_version.py — 版本戳
 
 | 属性 | 内容 |
 |------|------|
@@ -117,7 +126,7 @@
 | **输出文件** | 同文件覆写 |
 | **依赖** | `core.constants` |
 
-### 13. verify_purchase.py — 申购状态/限额/历史一致性校验
+### 14. verify_purchase.py — 申购状态/限额/历史一致性校验
 
 | 属性 | 内容 |
 |------|------|
@@ -139,6 +148,7 @@ fill.py ────────► core.constants, core.utils, sources.eastmone
 holdings.py ────► core.constants, core.utils, core.config_loader, sources.akshare_source
 reclassify.py ──► core.constants, core.utils, core.config_loader, sources.akshare_source
 codegen.py ─────► core.constants
+market_temperature.py ► core.constants, core.utils, akshare, requests
 ```
 
 ### checks/ （质量门禁）

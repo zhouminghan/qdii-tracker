@@ -48,6 +48,9 @@ Thumbs.db
 # ==================== 项目数据 ====================
 # web/data/ 是前端消费目录，永远追踪
 
+# 个人持仓种子数据（本地专用，不提交；部署后访客走 localStorage）
+web/portfolio/
+
 # AKShare 的缓存目录（如果有）
 .akshare/
 akshare_cache/

@@ -80,6 +80,11 @@ def main():
         for series in data["series"]:
             for share in series["shares"]:
                 code = share["code"]
+                # add 流程用 `--codes` 只补单只基金；此时绝不能批量覆盖其它份额的
+                # 申购状态/涨跌幅，否则 fill --codes 只对单只做 history 追踪，
+                # 其它基金会出现 buy_status_history 尾条与当前状态不一致，触发门禁。
+                if only_codes and code not in only_codes:
+                    continue
                 # 涨跌幅数据：防回退
                 rank_info = rank_map.get(code, {})
                 if rank_info:

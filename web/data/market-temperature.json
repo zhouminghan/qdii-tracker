@@ -1,0 +1,70 @@
+{
+  "generated_at": "2026-10-16T16:58:29.923298+08:00",
+  "schema_version": 1,
+  "score": 68,
+  "band": "yellow",
+  "verdict": "黄灯 · 中性区间",
+  "summary": "市场处于合理区间，适合定投或谨慎操作。",
+  "weights": {
+    "nasdaq_trend": 0.4,
+    "vix": 0.2,
+    "treasury_10y": 0.2,
+    "dxy": 0.2
+  },
+  "indicators": {
+    "nasdaq_trend": {
+      "score": 90,
+      "label": "趋势偏强",
+      "raw": {
+        "price": 29935.59,
+        "ma200": 27719.36,
+        "pct_above_ma": 8.0,
+        "date": "2026-10-15"
+      },
+      "note": "纳指 100 位于 200 日线上方 8.0%。",
+      "source": "新浪",
+      "stale": false
+    },
+    "vix": {
+      "score": 75,
+      "label": "情绪平稳",
+      "raw": {
+        "value": 16.02,
+        "date": "2026-10-16"
+      },
+      "note": "VIX 16.0，恐慌情绪温和。",
+      "source": "Yahoo Finance",
+      "stale": false
+    },
+    "treasury_10y": {
+      "score": 30,
+      "label": "利率压制",
+      "raw": {
+        "value": 5.1,
+        "date": "2026-10-15"
+      },
+      "note": "10 年期美债收益率 5.10%。",
+      "source": "东方财富",
+      "stale": false
+    },
+    "dxy": {
+      "score": 55,
+      "label": "美元中性",
+      "raw": {
+        "value": 101.76,
+        "date": "2026-10-16"
+      },
+      "note": "美元指数 101.8。",
+      "source": "东方财富",
+      "stale": false
+    }
+  },
+  "positives": [
+    "纳指趋势偏强，位于 200 日线上方 8.0%。",
+    "VIX 16.0，恐慌情绪温和。"
+  ],
+  "risks": [
+    "10 年期美债收益率 5.10%，压制高估值资产。"
+  ],
+  "disclaimer": "本评分仅为基于公开数据的量化情绪参考，不构成投资建议。权重与阈值可调，历史表现不代表未来。"
+}

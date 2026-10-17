@@ -144,20 +144,35 @@ def make_display_name(share_name: str) -> str:
     return _normalize_fund_name(share_name)
 
 
+def _company_match_list():
+    """返回 (匹配串, 规范公司名) 列表，按匹配串长度降序。
+
+    规范公司名来自 company_brand；company_alias（如「国富 → 国海富兰克林」）
+    也作为前缀匹配项，避免简称命名的基金被误归为「其他」。
+    """
+    entries = [(c, c) for c in FUND_COMPANIES]
+    for alias, canonical in COMPANY_DISPLAY_ALIAS.items():
+        entries.append((alias, canonical))
+    return sorted(entries, key=lambda e: len(e[0]), reverse=True)
+
+
 def extract_company_and_series(full_name: str) -> tuple[str, str]:
     company = ""
-    for c in sorted(FUND_COMPANIES, key=len, reverse=True):
-        if full_name.startswith(c):
-            company = c
+    matched = ""
+    for match, canonical in _company_match_list():
+        if full_name.startswith(match):
+            company = canonical
+            matched = match
             break
     if not company:
         tail = re.sub(r"(发起|联接|QDII|\([^)]*\)|（[^）]*）|[A-Z]$)", "", full_name).strip()
-        for c in sorted(FUND_COMPANIES, key=len, reverse=True):
-            if tail.endswith(c):
-                company = c
+        for match, canonical in _company_match_list():
+            if tail.endswith(match):
+                company = canonical
+                matched = match
                 break
 
-    remaining = full_name[len(company):] if (company and full_name.startswith(company)) else full_name
+    remaining = full_name[len(matched):] if (matched and full_name.startswith(matched)) else full_name
     remaining = _normalize_fund_name(remaining)
     return (company or "其他", remaining or full_name)
 

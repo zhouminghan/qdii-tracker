@@ -61,6 +61,8 @@
         <button type="button" id="tab-offshore" role="tab" aria-controls="panel-offshore" aria-selected="true" tabindex="0" class="tab-btn tab-active px-3 sm:px-4 py-2 rounded-lg transition text-xs sm:text-sm" data-tab="offshore">🏦 <span class="hidden sm:inline">场外基金</span><span class="sm:hidden">场外</span></button>
         <button type="button" id="tab-etf" role="tab" aria-controls="panel-etf" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="etf">📈 <span class="hidden sm:inline">场内 ETF</span><span class="sm:hidden">ETF</span></button>
         <button type="button" id="tab-knowledge" role="tab" aria-controls="panel-knowledge" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="knowledge">📚 <span class="hidden sm:inline">投资知识</span><span class="sm:hidden">知识</span></button>
+        <button type="button" id="tab-portfolio" role="tab" aria-controls="panel-portfolio" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="portfolio">📊 <span class="hidden sm:inline">我的组合</span><span class="sm:hidden">组合</span></button>
+        <button type="button" id="tab-temperature" role="tab" aria-controls="panel-temperature" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="temperature">🚦 <span class="hidden sm:inline">市场温度</span><span class="sm:hidden">温度</span></button>
       </div>
       <div class="header-spacer"></div>
       <button type="button" id="holdings-perspective-btn" class="perspective-btn" title="跨基金重仓股透视">
@@ -70,6 +72,11 @@
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 10.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"/></svg>
         <input id="fund-search" type="search" placeholder="搜索项目内基金 / 代码" aria-label="搜索项目内基金（仅本站，不联网）" autocomplete="off" spellcheck="false" class="w-36 lg:w-44 bg-transparent outline-none text-stone-800 dark:text-stone-100 placeholder:text-stone-400 dark:placeholder:text-stone-500 text-xs" />
       </label>
+      <div class="bj-clock" id="bj-clock" title="北京时间" aria-label="北京时间">
+        <span class="bj-clock-label">北京</span>
+        <span class="bj-clock-date">--</span>
+        <span class="bj-clock-time">--:--:--</span>
+      </div>
       <button type="button" class="theme-toggle" id="themeToggle" title="切换主题" aria-label="切换深色模式">
         <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
@@ -435,6 +442,41 @@
         <div class="skeleton" role="status" aria-label="加载中">加载中…</div>
       </div>
     </section>
+
+    <section id="panel-portfolio" role="tabpanel" aria-labelledby="tab-portfolio" data-category="portfolio">
+      <div class="flex items-end justify-between mb-3 gap-4">
+        <div class="min-w-0">
+          <div class="flex items-baseline gap-2 flex-wrap">
+            <h2 class="text-lg font-bold" id="portfolio-title">📊 我的组合</h2>
+            <span class="text-xs text-stone-400 dark:text-stone-500 tracking-wider">· 数据仅存本地浏览器</span>
+          </div>
+          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">记录持仓份额与成本，实时按站点净值/场内价估算市值、盈亏与资产配比。</p>
+        </div>
+        <span class="text-xs text-stone-500 dark:text-stone-400 flex-shrink-0" id="count-portfolio">--</span>
+      </div>
+      <div id="portfolio-root">
+        <div class="skeleton" role="status" aria-label="加载中">加载中…</div>
+      </div>
+    </section>
+
+    <section id="panel-temperature" role="tabpanel" aria-labelledby="tab-temperature" data-category="temperature">
+      <div class="flex items-end justify-between mb-3 gap-4">
+        <div class="min-w-0">
+          <div class="flex items-baseline gap-2 flex-wrap">
+            <h2 class="text-lg font-bold" id="temperature-title">🚦 市场温度</h2>
+            <span class="text-xs text-stone-400 dark:text-stone-500 tracking-wider">· 纳指趋势 · VIX · 美债 · 美元</span>
+          </div>
+          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">四个指标加权打分，衡量当前美股 QDII 的持有环境，分数越高越友好。</p>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <button type="button" id="temperature-save" class="temp-save-btn" title="保存市场温度海报">保存图片</button>
+          <span class="text-[11px] text-stone-400 dark:text-stone-500 text-right" id="temperature-updated">--</span>
+        </div>
+      </div>
+      <div id="temperature-root">
+        <div class="skeleton" role="status" aria-label="加载中">加载中…</div>
+      </div>
+    </section>
   </main>
 
   <!-- 基金详情 Modal -->
@@ -589,6 +631,9 @@
   </footer>
   <script defer src="./js/main.js?v=dev"></script>
   <script defer src="./js/watchlist.js?v=dev"></script>
+  <script defer src="./js/portfolio.js?v=dev"></script>
+  <script defer src="./js/market-temperature.js?v=dev"></script>
+  <script defer src="./js/bj-clock.js?v=dev"></script>
   <script defer src="./js/holdings-perspective.js?v=dev"></script>
   <script defer src="./js/premium-history.js?v=dev"></script>
   <script defer src="./js/screenshot.js?v=dev"></script>

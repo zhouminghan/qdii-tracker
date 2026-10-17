@@ -1035,13 +1035,13 @@
           "max_sell_rate": 1.5
         }
       ],
-      "company": "其他",
-      "company_display": "其他",
-      "series_id": "其他__浦银全球智能科技__global_other",
-      "category": "global_other",
-      "series_name": "浦银全球智能科技",
-      "display_name": "浦银全球智能科技",
+      "series_id": "浦银安盛__全球智能科技__global_other",
       "etf_target": null,
+      "series_name": "全球智能科技",
+      "category": "global_other",
+      "company_display": "浦银安盛",
+      "display_name": "浦银全球智能科技",
+      "company": "浦银安盛",
       "default_share_code": "006555",
       "series_scale": 18.5
     },
@@ -4098,13 +4098,13 @@
           "max_sell_rate": 1.5
         }
       ],
-      "display_name": "创金合信全球芯片产业股票",
-      "category": "global_other",
+      "series_id": "创金合信__全球芯片产业股票__global_other",
       "etf_target": null,
-      "series_id": "其他__创金合信全球芯片产业股票__global_other",
-      "series_name": "创金合信全球芯片产业股票",
-      "company_display": "其他",
-      "company": "其他",
+      "series_name": "全球芯片产业股票",
+      "category": "global_other",
+      "company_display": "创金合信",
+      "display_name": "创金合信全球芯片产业股票",
+      "company": "创金合信",
       "default_share_code": "017653",
       "series_scale": 2.67
     },

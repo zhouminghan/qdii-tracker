@@ -1,7 +1,7 @@
 {
   "category": "etf",
   "label": "板块6 · 场内 ETF",
-  "series_count": 18,
+  "series_count": 19,
   "series": [
     {
       "series_id": "广发__纳斯达克ETF广发__etf",
@@ -400,50 +400,6 @@
       "series_scale": 73.84
     },
     {
-      "series_id": "易方达__纳斯达克ETF易方达__etf",
-      "company": "易方达",
-      "company_display": "易方达",
-      "series_name": "纳斯达克ETF易方达",
-      "display_name": "纳斯达克ETF易方达",
-      "category": "etf",
-      "etf_target": "nasdaq100",
-      "shares": [
-        {
-          "code": "159696",
-          "name": "纳指ETF易方达",
-          "share_class": "默认",
-          "currency": "人民币",
-          "fund_type": "指数型-海外股票",
-          "nav_date": "2026-10-15",
-          "chg_1m": 7.43,
-          "chg_3m": 14.71,
-          "chg_6m": 13.71,
-          "chg_ytd": 13.89,
-          "chg_1y": 33.88,
-          "scale": 50.11,
-          "scale_raw": "50.11亿",
-          "established": "2023-08-17",
-          "manager": "林伟斌",
-          "buy_status": "场内交易",
-          "daily_limit": 0.0,
-          "buy_status_history": [],
-          "buy_rules": [],
-          "sell_rules": [],
-          "mgmt_fee": 0.5,
-          "custody_fee": 0.1,
-          "fee": "nan",
-          "sale_service_fee": 0.8,
-          "sell_status": "场内交易",
-          "buy_min": 0.0,
-          "etf_price": 2.19,
-          "etf_change_pct": -0.73,
-          "error": "'data'"
-        }
-      ],
-      "default_share_code": "159696",
-      "series_scale": 50.11
-    },
-    {
       "series_id": "华泰柏瑞__纳斯达克ETF华泰柏瑞__etf",
       "company": "华泰柏瑞",
       "company_display": "华泰柏瑞",
@@ -486,6 +442,50 @@
       ],
       "default_share_code": "513110",
       "series_scale": 50.98
+    },
+    {
+      "series_id": "易方达__纳斯达克ETF易方达__etf",
+      "company": "易方达",
+      "company_display": "易方达",
+      "series_name": "纳斯达克ETF易方达",
+      "display_name": "纳斯达克ETF易方达",
+      "category": "etf",
+      "etf_target": "nasdaq100",
+      "shares": [
+        {
+          "code": "159696",
+          "name": "纳指ETF易方达",
+          "share_class": "默认",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "nav_date": "2026-10-15",
+          "chg_1m": 7.43,
+          "chg_3m": 14.71,
+          "chg_6m": 13.71,
+          "chg_ytd": 13.89,
+          "chg_1y": 33.88,
+          "scale": 50.11,
+          "scale_raw": "50.11亿",
+          "established": "2023-08-17",
+          "manager": "林伟斌",
+          "buy_status": "场内交易",
+          "daily_limit": 0.0,
+          "buy_status_history": [],
+          "buy_rules": [],
+          "sell_rules": [],
+          "mgmt_fee": 0.5,
+          "custody_fee": 0.1,
+          "fee": "nan",
+          "sale_service_fee": 0.8,
+          "sell_status": "场内交易",
+          "buy_min": 0.0,
+          "etf_price": 2.19,
+          "etf_change_pct": -0.73,
+          "error": "'data'"
+        }
+      ],
+      "default_share_code": "159696",
+      "series_scale": 50.11
     },
     {
       "series_id": "汇添富__纳斯达克ETF汇添富__etf",
@@ -792,7 +792,49 @@
       ],
       "default_share_code": "159612",
       "series_scale": 8.44
+    },
+    {
+      "shares": [
+        {
+          "code": "513880",
+          "name": "日经225ETF华安",
+          "share_class": "默认",
+          "currency": "人民币",
+          "fund_type": "指数型-海外股票",
+          "nav_date": "2026-10-16",
+          "chg_1m": 0.58,
+          "chg_3m": -0.11,
+          "chg_6m": 8.63,
+          "chg_ytd": 18.47,
+          "chg_1y": 23.65,
+          "scale": 27.3,
+          "scale_raw": "27.3亿",
+          "established": "2019-06-12",
+          "manager": "倪斌",
+          "buy_status": "场内交易",
+          "daily_limit": 0.0,
+          "buy_rules": [],
+          "sell_rules": [],
+          "mgmt_fee": 0.2,
+          "custody_fee": 0.05,
+          "fee": "nan",
+          "sell_status": "场内交易",
+          "buy_min": 0.0,
+          "error": "'data'",
+          "etf_price": 2.129,
+          "etf_change_pct": 1.28
+        }
+      ],
+      "series_id": "华安__日经225ETF华安__etf",
+      "etf_target": "other",
+      "series_name": "日经225ETF华安",
+      "category": "etf",
+      "company_display": "华安",
+      "display_name": "日经225ETF华安",
+      "company": "华安",
+      "default_share_code": "513880",
+      "series_scale": 27.3
     }
   ],
-  "total_scale": 0
+  "total_scale": 1698.65
 }

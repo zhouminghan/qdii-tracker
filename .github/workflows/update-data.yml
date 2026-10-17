@@ -108,6 +108,13 @@ jobs:
           echo "=== [4/4] pipeline.holdings（主动基金持仓）==="
           python -m pipeline.holdings
 
+      # 市场温度评分：独立于基金数据，增量/完整两种模式都执行
+      - name: 🟢 市场温度评分
+        run: |
+          cd scripts
+          echo "=== pipeline.market_temperature（纳指趋势 + VIX + 美债 + 美元指数）==="
+          python -m pipeline.market_temperature
+
       - name: ✅ 一致性校验
         run: |
           cd scripts
