@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-22T02:24:08.414216+08:00",
+  "generated_at": "2026-10-23T02:18:18.124479+08:00",
   "schema_version": 1,
   "score": 64,
   "band": "yellow",
@@ -13,26 +13,26 @@
   },
   "indicators": {
     "nasdaq_trend": {
-      "score": 81,
+      "score": 86,
       "label": "趋势偏强",
       "raw": {
-        "price": 29490.28,
-        "ma200": 27780.8,
-        "pct_above_ma": 6.15,
-        "date": "2026-10-20"
+        "price": 29822.52,
+        "ma200": 27802.91,
+        "pct_above_ma": 7.26,
+        "date": "2026-10-21"
       },
-      "note": "纳指 100 位于 200 日线上方 6.2%。",
+      "note": "纳指 100 位于 200 日线上方 7.3%。",
       "source": "新浪",
       "stale": false
     },
     "vix": {
-      "score": 75,
-      "label": "情绪平稳",
+      "score": 65,
+      "label": "情绪偏紧",
       "raw": {
-        "value": 16.6,
-        "date": "2026-10-21"
+        "value": 19.68,
+        "date": "2026-10-22"
       },
-      "note": "VIX 16.6，恐慌情绪温和。",
+      "note": "VIX 19.7，恐慌情绪中性。",
       "source": "Yahoo Finance",
       "stale": false
     },
@@ -51,17 +51,16 @@
       "score": 55,
       "label": "美元中性",
       "raw": {
-        "value": 101.76,
-        "date": "2026-10-16"
+        "value": 101.6,
+        "date": "2026-10-22"
       },
-      "note": "美元指数 101.8。",
+      "note": "美元指数 101.6。",
       "source": "东方财富",
       "stale": false
     }
   },
   "positives": [
-    "纳指趋势偏强，位于 200 日线上方 6.2%。",
-    "VIX 16.6，恐慌情绪温和。"
+    "纳指趋势偏强，位于 200 日线上方 7.3%。"
   ],
   "risks": [
     "10 年期美债收益率 5.10%，压制高估值资产。"
