@@ -361,7 +361,7 @@
                     <svg class="w-3.5 h-3.5 text-stone-400 hover:text-stone-700 dark:hover:text-stone-300 transition-colors" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                       <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                     </svg>
-                    <div class="hidden group-hover:block group-focus-within:block absolute right-0 top-full mt-2 z-50 w-72 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg shadow-lg p-3 text-left text-xs text-stone-700 dark:text-stone-300 font-normal normal-case pointer-events-none">
+                    <div class="hidden group-hover:block absolute right-0 top-full mt-2 z-50 w-72 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg shadow-lg p-3 text-left text-xs text-stone-700 dark:text-stone-300 font-normal normal-case pointer-events-none">
                       <div class="font-semibold text-stone-800 dark:text-stone-200 mb-1.5">📌 溢价率</div>
                       <div class="mb-2 font-mono text-stone-600 dark:text-stone-400">(场内价 − 净值) ÷ 净值 × 100%</div>
                       <div class="space-y-1 text-stone-600 dark:text-stone-400 leading-relaxed">
