@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-23T02:18:18.124479+08:00",
+  "generated_at": "2026-10-24T02:08:24.804081+08:00",
   "schema_version": 1,
-  "score": 64,
+  "score": 55,
   "band": "yellow",
   "verdict": "黄灯 · 中性区间",
   "summary": "市场处于合理区间，适合定投或谨慎操作。",
@@ -13,26 +13,26 @@
   },
   "indicators": {
     "nasdaq_trend": {
-      "score": 86,
+      "score": 70,
       "label": "趋势偏强",
       "raw": {
-        "price": 29822.52,
-        "ma200": 27802.91,
-        "pct_above_ma": 7.26,
-        "date": "2026-10-21"
+        "price": 28958.69,
+        "ma200": 27819.5,
+        "pct_above_ma": 4.09,
+        "date": "2026-10-22"
       },
-      "note": "纳指 100 位于 200 日线上方 7.3%。",
+      "note": "纳指 100 位于 200 日线上方 4.1%。",
       "source": "新浪",
       "stale": false
     },
     "vix": {
-      "score": 65,
+      "score": 50,
       "label": "情绪偏紧",
       "raw": {
-        "value": 19.68,
-        "date": "2026-10-22"
+        "value": 20.08,
+        "date": "2026-10-23"
       },
-      "note": "VIX 19.7，恐慌情绪中性。",
+      "note": "VIX 20.1，恐慌情绪中性。",
       "source": "Yahoo Finance",
       "stale": false
     },
@@ -60,7 +60,7 @@
     }
   },
   "positives": [
-    "纳指趋势偏强，位于 200 日线上方 7.3%。"
+    "纳指趋势偏强，位于 200 日线上方 4.1%。"
   ],
   "risks": [
     "10 年期美债收益率 5.10%，压制高估值资产。"
