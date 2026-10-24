@@ -4,22 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="light dark" />
-  <meta name="theme-color" content="#fafaf9" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#1c1917" media="(prefers-color-scheme: dark)" />
-  <title>US Fund Tracker · 美股基金看板</title>
+  <meta name="theme-color" content="#fcfcfc" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)" />
+  <title>US Fund Tracker，美股基金看板</title>
   <meta name="description" content="QDII/ETF 美股基金实时净值看板，追踪标普500、纳斯达克100等跨境基金。" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "US Fund Tracker · 美股基金看板",
+    "name": "US Fund Tracker，美股基金看板",
     "url": "https://zhouminghan.github.io/qdii-tracker/",
     "description": "美股 QDII 基金追踪看板，纯静态部署，自动更新。",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Web"
   }
   </script>
-  <meta property="og:title" content="US Fund Tracker · 美股基金看板" />
+  <meta property="og:title" content="US Fund Tracker，美股基金看板" />
   <meta property="og:description" content="QDII/ETF 美股基金实时净值看板。" />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="zh_CN" />
@@ -88,7 +88,6 @@
   <section id="panel-knowledge" role="tabpanel" aria-labelledby="tab-knowledge" data-category="knowledge" class="max-w-7xl mx-auto px-3 sm:px-6 pt-6 sm:pt-8">
     <div class="flex items-baseline gap-2 mb-3">
       <h2 class="text-lg font-bold">📚 投资知识</h2>
-      <span class="text-xs text-stone-400 dark:text-stone-500">· 场内/场外、A/C 类、LOF 套利、选基、溢价</span>
     </div>
     <div class="flex flex-wrap items-center gap-2 mb-4" id="kb-chips" role="group" aria-label="投资知识分类">
       <button type="button" class="chip chip-active" data-kb-filter="onshore" aria-pressed="true">场内 vs 场外</button>
@@ -128,8 +127,8 @@
               </tr>
               <tr>
                 <td class="px-3 py-2 text-stone-500 dark:text-stone-400">起购门槛</td>
-                <td class="px-3 py-2 text-stone-700 dark:text-stone-300"><b>10 元</b>起 · 可定投</td>
-                <td class="px-3 py-2 text-stone-700 dark:text-stone-300"><b>100 份</b>起（部分 1 份）· 多数券商也支持定投</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300"><b>10 元</b>起，可定投</td>
+                <td class="px-3 py-2 text-stone-700 dark:text-stone-300"><b>100 份</b>起（部分 1 份），多数券商也支持定投</td>
               </tr>
               <tr>
                 <td class="px-3 py-2 text-stone-500 dark:text-stone-400">费率</td>
@@ -202,7 +201,7 @@
               <tr>
                 <td class="px-3 py-2"><span class="badge badge-qdii" style="padding:4px 10px;">D 类</span></td>
                 <td class="px-3 py-2 text-stone-700 dark:text-stone-300">C 类的<b>互联网直销版</b>，在支付宝/天天基金等平台销售<br>0 申购费 + 销售服务费更低（常 0.01~0.2%），持 7~30 天免赎回</td>
-                <td class="px-3 py-2 text-emerald-700 dark:text-stone-300"><b>短线省钱版</b> · 比 C 类费率更低</td>
+                <td class="px-3 py-2 text-emerald-700 dark:text-stone-300"><b>短线省钱版</b>，比 C 类费率更低</td>
               </tr>
               <tr>
                 <td class="px-3 py-2"><span class="badge badge-qdii" style="padding:4px 10px;">E 类</span></td>
@@ -212,7 +211,7 @@
               <tr>
                 <td class="px-3 py-2"><span class="badge badge-qdii" style="padding:4px 10px;">F / I 类</span></td>
                 <td class="px-3 py-2 text-stone-700 dark:text-stone-300"><b>基金公司官方 APP 直销</b>专属（如广发基金、易方达 e 钱包）<br>管理费/申购费最低，I 类起购门槛通常 500~1000 万</td>
-                <td class="px-3 py-2 text-emerald-700 dark:text-stone-300"><b>资金量大</b>最划算 · 需下载官方 APP</td>
+                <td class="px-3 py-2 text-emerald-700 dark:text-stone-300"><b>资金量大</b>最划算，需下载官方 APP</td>
               </tr>
             </tbody>
           </table>
@@ -371,7 +370,6 @@
         <div class="min-w-0">
           <div class="flex items-baseline gap-2 flex-wrap">
             <h2 class="text-lg font-bold">📊 市场参照系</h2>
-            <span class="text-xs text-stone-400 dark:text-stone-500 tracking-wider">· 美股大盘 + 美元/人民币汇率</span>
           </div>
           <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">美元/人民币 是 USD/CNY 口径（1 美元值多少元）：<b class="text-rose-600 dark:text-rose-400">数值↑ = 美元升值 / 人民币贬值 → QDII 净值受益 ↑</b>；反之拖累。</p>
         </div>
@@ -395,7 +393,6 @@
         <div class="min-w-0">
           <div class="flex items-baseline gap-2 flex-wrap">
             <h2 class="text-lg font-bold" id="offshore-title">🏦 场外基金</h2>
-            <span class="text-xs text-stone-400 dark:text-stone-500 tracking-wider">· 支付宝 / 天天基金可买</span>
           </div>
           <p class="text-xs text-stone-500 dark:text-stone-400 mt-1" id="offshore-subtitle">按申购时当日 15:00 收盘净值成交，T+1 出净值，支持 10 元起小额定投。</p>
         </div>
@@ -415,7 +412,6 @@
         <div class="min-w-0">
           <div class="flex items-baseline gap-2 flex-wrap">
             <h2 class="text-lg font-bold" id="etf-title">📈 场内 ETF</h2>
-            <span class="text-xs text-stone-400 dark:text-stone-500 tracking-wider">· 需股票账户</span>
           </div>
           <p class="text-xs text-stone-500 dark:text-stone-400 mt-1" id="etf-subtitle">盘中实时交易（T+0 / T+1），费率最低（0.15~0.5%），支持一手 100 份起买。</p>
         </div>
@@ -448,7 +444,6 @@
         <div class="min-w-0">
           <div class="flex items-baseline gap-2 flex-wrap">
             <h2 class="text-lg font-bold" id="portfolio-title">📊 我的组合</h2>
-            <span class="text-xs text-stone-400 dark:text-stone-500 tracking-wider">· 数据仅存本地浏览器</span>
           </div>
           <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">记录持仓份额与成本，实时按站点净值/场内价估算市值、盈亏与资产配比。</p>
         </div>
@@ -464,7 +459,6 @@
         <div class="min-w-0">
           <div class="flex items-baseline gap-2 flex-wrap">
             <h2 class="text-lg font-bold" id="temperature-title">🚦 市场温度</h2>
-            <span class="text-xs text-stone-400 dark:text-stone-500 tracking-wider">· 纳指趋势 · VIX · 美债 · 美元</span>
           </div>
           <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">四个指标加权打分，衡量当前美股 QDII 的持有环境，分数越高越友好。</p>
         </div>
@@ -500,13 +494,13 @@
         <div class="p-3 sm:p-6 space-y-4 sm:space-y-6">
           <!-- 顶部信息卡片 -->
           <section>
-            <div class="text-xs tracking-widest text-stone-500 dark:text-stone-400 uppercase mb-3">OVERVIEW · 基础信息</div>
+            <div class="text-xs tracking-widest text-stone-500 dark:text-stone-400 uppercase mb-3">OVERVIEW，基础信息</div>
             <div id="detail-info" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3"></div>
           </section>
 
           <!-- 持仓 -->
           <section>
-            <div class="text-xs tracking-widest text-stone-500 dark:text-stone-400 uppercase mb-3">HOLDINGS · 前十大重仓股</div>
+            <div class="text-xs tracking-widest text-stone-500 dark:text-stone-400 uppercase mb-3">HOLDINGS，前十大重仓股</div>
             <div id="detail-holdings" class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 p-3 sm:p-5 overflow-x-auto">
               <div class="text-center py-12 text-stone-400 dark:text-stone-500 text-sm">加载中...</div>
             </div>
@@ -514,7 +508,7 @@
 
           <!-- 业绩表现 -->
           <section>
-            <div class="text-xs tracking-widest text-stone-500 dark:text-stone-400 uppercase mb-3">PERFORMANCE · 业绩表现</div>
+            <div class="text-xs tracking-widest text-stone-500 dark:text-stone-400 uppercase mb-3">PERFORMANCE，业绩表现</div>
             <div class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 p-4">
               <div id="detail-perf" class="grid grid-cols-4 md:grid-cols-8 gap-2"></div>
             </div>
@@ -522,7 +516,7 @@
 
           <!-- 费率 -->
           <section>
-            <div class="text-xs tracking-widest text-stone-500 dark:text-stone-400 uppercase mb-3">FEES · 费率结构</div>
+            <div class="text-xs tracking-widest text-stone-500 dark:text-stone-400 uppercase mb-3">FEES，费率结构</div>
             <div id="detail-fee" class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-5 py-3"></div>
           </section>
         </div>
@@ -554,7 +548,7 @@
           </div>
           <!-- 最近净值列表 -->
           <div>
-            <div class="text-xs tracking-widest text-stone-500 dark:text-stone-400 uppercase mb-2">RECENT · 最近净值</div>
+            <div class="text-xs tracking-widest text-stone-500 dark:text-stone-400 uppercase mb-2">RECENT，最近净值</div>
             <div id="trend-recent" class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 overflow-hidden text-xs"></div>
           </div>
         </div>
@@ -626,7 +620,7 @@
     <div class="bg-stone-50 dark:bg-stone-800 rounded-xl p-5 text-xs text-stone-500 dark:text-stone-400 leading-relaxed border border-stone-200 dark:border-stone-700">
       <div class="font-semibold text-stone-700 dark:text-stone-300 mb-2">⚠️ 风险提示与免责声明</div>
       <p>基金投资有风险，过往业绩不代表未来表现。QDII 基金受汇率波动、海外市场风险影响。本页面数据来自 AKShare 与天天基金公开接口，仅供个人研究参考，不构成投资建议。限额字段以基金 APP 实际显示为准。</p>
-      <p class="mt-2">📊 数据来源：East Money (AKShare) / 雪球 · 📜 MIT License · 数据由 GitHub Actions 每日自动更新</p>
+      <p class="mt-2">📊 数据来源：East Money (AKShare) / 雪球，📜 MIT License，数据由 GitHub Actions 每日自动更新</p>
     </div>
   </footer>
   <script defer src="./js/main.js?v=dev"></script>
@@ -677,9 +671,9 @@ import { start as startTheme } from './js/theme.js?v=dev';
     });
 
     // 场外 QDII 主表实时净值 overlay：
-    //   · 仅更新每个系列的 default share（外层行）
-    //   · 子份额展开行仍显示本地静态净值
-    //   · 15:00~次日06:00 北京时间按节奏轮询；页面隐藏/闲置由 idle-scheduler 自动暂停
+    //  ，仅更新每个系列的 default share（外层行）
+    //  ，子份额展开行仍显示本地静态净值
+    //  ，15:00~次日06:00 北京时间按节奏轮询；页面隐藏/闲置由 idle-scheduler 自动暂停
     startOffshoreLiveNav({
       state: window.STATE,
       reloadData: () => (typeof window.loadData === 'function' ? window.loadData() : Promise.resolve()),

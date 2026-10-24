@@ -189,7 +189,7 @@
           <td class="py-2.5 px-3">
             <div class="font-medium truncate">${name}</div>
             <div class="text-xs text-stone-500 dark:text-stone-400 num mt-0.5">${code} ${plat}</div>
-            <div class="text-[11px] text-stone-400 dark:text-stone-500 num mt-0.5">${money(r.shares)} 份 · 成本 ${money(r.avgCost)} · 现价 ${money(r.price)}</div>
+            <div class="text-[11px] text-stone-400 dark:text-stone-500 num mt-0.5">${money(r.shares)} 份，成本 ${money(r.avgCost)}，现价 ${money(r.price)}</div>
           </td>
           <td class="py-2.5 px-3 text-right num">¥${money(r.cost)}</td>
           <td class="py-2.5 px-3 text-right num font-medium">${money(r.value)}</td>
@@ -293,7 +293,7 @@
       return `<div class="flex items-center justify-between gap-3 py-1.5 border-b border-stone-100 dark:border-stone-700/50 last:border-0">
         <div class="min-w-0">
           <div class="text-xs truncate">${side} ${name}</div>
-          <div class="text-[11px] text-stone-400 dark:text-stone-500 num">${a.date || ''} · ${money(a.qty)} 份 @ ${money(a.price)}${a.fee ? ' · 费 ' + money(a.fee) : ''}</div>
+          <div class="text-[11px] text-stone-400 dark:text-stone-500 num">${a.date || ''}，${money(a.qty)} 份 @ ${money(a.price)}${a.fee ? '，费 ' + money(a.fee) : ''}</div>
         </div>
         <div class="text-xs num whitespace-nowrap">${money(a.amount)}</div>
       </div>`;

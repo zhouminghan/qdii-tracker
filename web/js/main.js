@@ -33,8 +33,8 @@
 
     // ==================== 数据加载 ====================
     // 版本号策略：先拉 meta.json（绕缓存），用其 generated_at 当所有数据文件的 query 版本号
-    //   · 数据没变 → query 一致 → 浏览器/Pages CDN 缓存命中，秒开
-    //   · Actions 推了新数据 → meta.generated_at 变 → query 变 → 自动失效
+    //  ，数据没变 → query 一致 → 浏览器/Pages CDN 缓存命中，秒开
+    //  ，Actions 推了新数据 → meta.generated_at 变 → query 变 → 自动失效
     // 比单纯用 Date.now() 更友好（既破旧缓存又能享受 CDN 加速）
     async function fetchDataVersion() {
       try {
@@ -50,8 +50,8 @@
     // why：部署链路若意外断裂（CDN/部署失败），用户打开页面看到旧数据。
     //      浏览器侧显示可见提示，避免被旧数据误导。
     // 判定逻辑：
-    //   · 周末不检测（美股无交易，数据本就不更新）
-    //   · 工作日：算"最近一个已完成 run"的完成日凌晨 00:00（北京）作为 expected_min
+    //  ，周末不检测（美股无交易，数据本就不更新）
+    //  ，工作日：算"最近一个已完成 run"的完成日凌晨 00:00（北京）作为 expected_min
     //     run 在工作日 22:00 启动、次日 ~04:00 前完成并写 generated_at
     //     generated_at 早于 expected_min - 6h（容忍 run 提前完成）→ 陈旧
     //   why 不用固定 age 阈值：周末 gap 使周一数据天然 age≈56h，固定阈值会误报或漏报；
@@ -173,13 +173,13 @@
     // ==================== 动态拉取最新净值/行情 ====================
     // 当前架构：纯静态模式 —— 净值/估值/申购状态全部由 GitHub Actions 离线生成进 data/*.json
     // 仅以下两处仍走浏览器实时请求（按需触发，不影响首屏）：
-    //   · fetchStocksLive    持仓 Top10 股票实时行情（详情 Modal 打开 + 5 分钟轮询）
-    //   · fetchPzdHistory    历史净值走势（点击「📈 走势」按钮时）
+    //  ，fetchStocksLive    持仓 Top10 股票实时行情（详情 Modal 打开 + 5 分钟轮询）
+    //  ，fetchPzdHistory    历史净值走势（点击「📈 走势」按钮时）
 
     // 持仓股票批量行情：支持美股 / 港股 / A 股（腾讯一个接口通吃，仅前缀不同）
-    //   · 美股：us{CODE}       例 usAAPL
-    //   · 港股：hk{CODE}       例 hk00700  （5 位数字）
-    //   · A 股：sh/sz{CODE}    例 sh600519 / sz000001
+    //  ，美股：us{CODE}       例 usAAPL
+    //  ，港股：hk{CODE}       例 hk00700  （5 位数字）
+    //  ，A 股：sh/sz{CODE}    例 sh600519 / sz000001
     //
     // 入参：codes = ['AAPL', '00700', '600519', ...]（原始代码，无前缀）
     // 返回：{ AAPL: {price, change_pct, market}, 00700: {...}, ... }
@@ -230,8 +230,8 @@
     // isTradingDay / fmtMD / getLocalParts / getMarketSession 已移到 web/js/utils.js
 
     // 注：基金数据更新时间不再做全局展示——
-    //   · 每只基金的「净值日」列已表达单条新鲜度，全局时间冗余
-    //   · 顶部只保留「📡 行情」状态，避免与实时行情时间混淆
+    //  ，每只基金的「净值日」列已表达单条新鲜度，全局时间冗余
+    //  ，顶部只保留「📡 行情」状态，避免与实时行情时间混淆
 
 
     // ETF 分组配置（按跟踪标的）
@@ -334,9 +334,9 @@
       const estimateHeaderHtml = '';
 
       // 「净值」列头：场外 QDII / 场内 ETF 共用结构
-      //   · 标题：场外 = "净值"，ETF = "最新价"
-      //   · 副标 = nav_date（MM-DD 格式）
-      //   · 整列可点击 → 按当日涨跌幅排序（不是按净值数字本身）
+      //  ，标题：场外 = "净值"，ETF = "最新价"
+      //  ，副标 = nav_date（MM-DD 格式）
+      //  ，整列可点击 → 按当日涨跌幅排序（不是按净值数字本身）
       const delayTip = !isEtf
         ? '<span class="ml-1 text-stone-400 dark:text-stone-500" title="QDII 净值通常在 T+1~T+2 个工作日披露，日期滞后于海外交易日属正常。">ⓘ</span>'
         : '';
@@ -349,10 +349,10 @@
       // 「溢价率」列头：仅 ETF 显示，可点击排序（按 etf_premium 数值降序为默认）
       // 排序 key 用 'etf_premium'，由 sortableTh 自动接入现有排序逻辑（compareByKey 已支持任意数值字段，详见 SORT 注释）
       // 设计要点：
-      //   · 排序点击区只包裹"溢价率 + sortIcon"，ⓘ 图标独立成块（避免点 ⓘ 触发排序）
-      //   · ⓘ hover 气泡用 .group + group-hover:block 实现纯 CSS 显示，不引第三方库
-      //   · 气泡用 absolute right-0 防止超出表格右边界；z-50 防被相邻列遮挡
-      //   · pointer-events-none 让气泡本身不再触发 hover-out（鼠标停留在气泡上时不会闪烁）
+      //  ，排序点击区只包裹"溢价率 + sortIcon"，ⓘ 图标独立成块（避免点 ⓘ 触发排序）
+      //  ，ⓘ hover 气泡用 .group + group-hover:block 实现纯 CSS 显示，不引第三方库
+      //  ，气泡用 absolute right-0 防止超出表格右边界；z-50 防被相邻列遮挡
+      //  ，pointer-events-none 让气泡本身不再触发 hover-out（鼠标停留在气泡上时不会闪烁）
       const premiumHeaderHtml = isEtf ? `
               <th class="text-right py-3 px-3 font-medium select-none">
                 <div class="inline-flex items-center justify-end gap-1.5">
@@ -365,8 +365,8 @@
                       <div class="font-semibold text-stone-800 dark:text-stone-200 mb-1.5">📌 溢价率</div>
                       <div class="mb-2 font-mono text-stone-600 dark:text-stone-400">(场内价 − 净值) ÷ 净值 × 100%</div>
                       <div class="space-y-1 text-stone-600 dark:text-stone-400 leading-relaxed">
-                        <div>· <b class="text-stone-700 dark:text-stone-300">场内价</b>：盘中实时价（每分钟刷新）</div>
-                        <div>· <b class="text-stone-700 dark:text-stone-300">净值</b>：上一交易日收盘净值（T-1）</div>
+                        <div><b class="text-stone-700 dark:text-stone-300">场内价</b>：盘中实时价（每分钟刷新）</div>
+                        <div><b class="text-stone-700 dark:text-stone-300">净值</b>：上一交易日收盘净值（T-1）</div>
                       </div>
                       <div class="mt-2 pt-2 border-t border-stone-100 dark:border-stone-700 text-stone-500 dark:text-stone-400 leading-relaxed">⚠️ 溢价 &gt;3% 通常是 QDII 限购引发的资金抢筹信号，回归净值时高位买入会亏损</div>
                     </div>
@@ -577,8 +577,8 @@
       const countEl = document.getElementById(`count-${tab}`);
       if (countEl) {
         countEl.textContent = searchQ
-          ? `搜索到 ${visibleSeries} 个系列 · ${visibleShares} ${tab === 'etf' ? '只 ETF' : '只份额'}`
-          : `${visibleSeries} 个系列 · ${visibleShares} ${tab === 'etf' ? '只 ETF' : '只份额'} · 总规模 ${visibleScale.toFixed(0)} 亿`;
+          ? `搜索到 ${visibleSeries} 个系列，${visibleShares} ${tab === 'etf' ? '只 ETF' : '只份额'}`
+          : `${visibleSeries} 个系列，${visibleShares} ${tab === 'etf' ? '只 ETF' : '只份额'}，总规模 ${visibleScale.toFixed(0)} 亿`;
       }
 
       // 切组时重算当前分组表头日期，并同步更新副标与行内日期显隐。
@@ -676,8 +676,8 @@
         : '--';
 
       // 外层行展示（大分类）：
-      //   · 场内 ETF —— etf_price + etf_change_pct（腾讯行情实时）
-      //   · 场外 QDII —— nav + daily_change；15:00~24:00 可能被 _live_* overlay 临时覆盖
+      //  ，场内 ETF —— etf_price + etf_change_pct（腾讯行情实时）
+      //  ，场外 QDII —— nav + daily_change；15:00~24:00 可能被 _live_* overlay 临时覆盖
       const offshoreDisp = isEtf ? null : getOffshoreDisplayValues(def);
       let price, dailyChange, rowNavDate, rowIsLive;
       if (isEtf) {
@@ -735,7 +735,7 @@
               <div class="min-w-0">
                 <div class="font-medium truncate">${isEtf ? def.name : series.display_name}</div>
                 <div class="text-xs text-stone-500 dark:text-stone-400 num mt-0.5">
-                  ${def.code}${isEtf ? '' : ' · ' + def.share_class + (def.currency === '美元' ? ' · 美元' : '')}
+                  ${def.code}${isEtf ? '' : '，' + def.share_class + (def.currency === '美元' ? '，美元' : '')}
                   <span class="badge ${isEtf ? 'badge-qdii' : 'badge-qdii'} ml-1">${isEtf ? 'ETF' : 'QDII'}</span>
                   ${navAgeBadge}
                 </div>
@@ -774,7 +774,7 @@
                       : p > 1 ? '溢价'
                       : p < -1 ? '折价'
                       : '接近净值';
-            return `<td class="py-3 px-3 text-right num ${cls}" title="${tip} · (场内价 - 净值) / 净值">${sign}${p.toFixed(2)}% <button type="button" class="premium-hist-btn" onclick="event.stopPropagation(); window.openPremiumHistory('${defCode}')" title="查看历史溢价曲线" aria-label="查看历史溢价曲线">▾</button></td>`;
+            return `<td class="py-3 px-3 text-right num ${cls}" title="${tip}，(场内价 - 净值) / 净值">${sign}${p.toFixed(2)}% <button type="button" class="premium-hist-btn" onclick="event.stopPropagation(); window.openPremiumHistory('${defCode}')" title="查看历史溢价曲线" aria-label="查看历史溢价曲线">▾</button></td>`;
           })()}
           ${changeCell(def.chg_1m)}
           ${changeCell(def.chg_ytd)}
@@ -1037,7 +1037,7 @@
           else { cls = 'tip-badge-open'; label = s; }
           rows += '<div class="tip-row"><span class="tip-date">' + h.date + '</span><span class="tip-badge ' + cls + '">' + label + '</span></div>';
         }
-        tip.innerHTML = '<div class="tip-header">申购变更 · 最近' + histData.length + '次</div>' + rows;
+        tip.innerHTML = '<div class="tip-header">申购变更，最近' + histData.length + '次</div>' + rows;
       }
       document.body.appendChild(tip);
     }

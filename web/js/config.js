@@ -21,8 +21,8 @@ const RENDER_TABS = ['offshore', 'etf'];
 
 // 场外 Tab 内部的分组配置（对应 Chips 的 5 个筛选项）
 const OFFSHORE_GROUPS = [
-  { key: 'sp500',          label: '📊 标普500 指数基金',  desc: 'S&P 500 · 被动跟踪' },
-  { key: 'nasdaq_passive', label: '💻 纳指100 指数基金',  desc: 'NASDAQ 100 · 被动跟踪' },
+  { key: 'sp500',          label: '📊 标普500 指数基金',  desc: 'S&P 500，被动跟踪' },
+  { key: 'nasdaq_passive', label: '💻 纳指100 指数基金',  desc: 'NASDAQ 100，被动跟踪' },
   { key: 'active',         label: '🎯 美股主动基金',      desc: '精选 19 只重仓美股的主动 QDII' },
   { key: 'global_index',   label: '🌍 全球指数基金',      desc: '跟踪海外非美指数（日经225 等）' },
   { key: 'global_other',   label: '🌐 全球/其他 QDII',    desc: '全球配置型 / 非美股核心方向' },
@@ -235,8 +235,8 @@ const PASSIVE_HOLDINGS_OVERRIDE = {
 // ==================== ETF 分组 ====================
 
 const ETF_GROUPS = [
-  { key: 'sp500',        label: '📊 跟踪 标普500 指数',    desc: 'S&P 500 · 美股大盘蓝筹' },
-  { key: 'nasdaq100',    label: '💻 跟踪 纳斯达克 指数',   desc: 'NASDAQ 100 / NDXT 等纳斯达克家族 · 美股科技龙头' },
+  { key: 'sp500',        label: '📊 跟踪 标普500 指数',    desc: 'S&P 500，美股大盘蓝筹' },
+  { key: 'nasdaq100',    label: '💻 跟踪 纳斯达克 指数',   desc: 'NASDAQ 100 / NDXT 等纳斯达克家族，美股科技龙头' },
   { key: 'global_other', label: '🌐 全球/其他 ETF',        desc: '日经225 / 全球配置 / 其他跨境方向' },
 ];
 
@@ -244,16 +244,16 @@ const ETF_GROUPS = [
 
 const GROUP_META = {
   offshore: {
-    sp500:          { title: '📊 标普500 指数基金', subtitle: '被动跟踪美国大盘 500 强 · 支付宝 / 天天基金可买，按当日净值成交' },
-    nasdaq_passive: { title: '💻 纳指100 指数基金', subtitle: '被动跟踪美股科技 100 强（苹果 / 微软 / 英伟达等）· 长期定投首选' },
-    active:         { title: '🎯 美股主动基金',     subtitle: '重仓美股的主动 QDII · 基金经理择股，费率较高但可能跑赢指数' },
-    global_index:   { title: '🌍 全球指数基金',     subtitle: '跟踪海外非美指数（日经225 等）· T+0 当天披露净值' },
-    global_other:   { title: '🌐 全球 / 其他 QDII', subtitle: '全球配置或非美股核心方向（医疗 / 能源 / 海外 / 混合等）· 分散投资' },
+    sp500:          { title: '📊 标普500 指数基金', subtitle: '被动跟踪 S&P 500 大盘' },
+    nasdaq_passive: { title: '💻 纳指100 指数基金', subtitle: '被动跟踪美股科技 100 强' },
+    active:         { title: '🎯 美股主动基金',     subtitle: '重仓美股的主动 QDII' },
+    global_index:   { title: '🌍 全球指数基金',     subtitle: '跟踪日经225 等非美指数' },
+    global_other:   { title: '🌐 全球 / 其他 QDII', subtitle: '全球配置与非美股核心方向' },
   },
   etf: {
-    sp500:        { title: '📊 标普500 ETF',       subtitle: 'S&P 500 指数 ETF · 证券账户买卖，盘中实时涨跌，费率仅 0.15~0.5%' },
-      nasdaq100:    { title: '💻 纳斯达克 ETF',       subtitle: 'NASDAQ 100 / NDXT 等纳斯达克家族 · 美股科技龙头 ETF 版本，流动性强' },
-    global_other: { title: '🌐 全球/其他 ETF',     subtitle: '中证·美国50 等头部美股浓缩版 + 全球配置 / 其他跨境方向' },
+    sp500:        { title: '📊 标普500 ETF',       subtitle: 'S&P 500 指数 ETF，盘中实时涨跌' },
+    nasdaq100:    { title: '💻 纳斯达克 ETF',       subtitle: '纳斯达克 100 科技龙头 ETF' },
+    global_other: { title: '🌐 全球/其他 ETF',     subtitle: '美国50 与全球配置方向' },
   },
 };
 
@@ -264,25 +264,25 @@ const GROUP_NOTICE = {
     sp500: {
       tone: 'sky',
       items: [
-        '被动跟踪 · 风险可控；常因 QDII 限购留有 5~10% 现金仓位，<b>长期可能少赚 1~2 个点</b>，但不会跑偏 · 是稳健首选',
+        '被动跟踪，风险可控；常因 QDII 限购留有 5~10% 现金仓位，<b>长期可能少赚 1~2 个点</b>，但不会跑偏，是稳健首选',
       ],
     },
     nasdaq_passive: {
       tone: 'sky',
       items: [
-        '被动跟踪 · 风险可控；<b>限购常态化</b>（多数仅 1元~1万/日），现金仓位拖累 1~2 个点 · 长期定投仍是稳健首选',
+        '被动跟踪，风险可控；<b>限购常态化</b>（多数仅 1元~1万/日），现金仓位拖累 1~2 个点，长期定投仍是稳健首选',
       ],
     },
     global_index: {
       tone: 'sky',
       items: [
-        '被动跟踪 · 风险可控 · 分散配置（日经225 / 中韩半导体等非美指数）',
+        '被动跟踪，风险可控，分散配置（日经225 / 中韩半导体等非美指数）',
       ],
     },
     active: {
       tone: 'rose',
       items: [
-        '<b>部分基金挂羊头卖狗肉</b>：名义"美股主动"实际重仓 A 股/港股 · 管理费 1.2~1.8%/年 · 季报只披露 Top10 · 想稳优先选上方<b>被动指数</b>',
+        '<b>部分基金挂羊头卖狗肉</b>：名义"美股主动"实际重仓 A 股/港股，管理费 1.2~1.8%/年，季报只披露 Top10，想稳优先选上方<b>被动指数</b>',
       ],
     },
   },

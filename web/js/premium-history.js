@@ -34,7 +34,7 @@
     modal.innerHTML = `
       <div class="hp-panel" role="dialog" aria-modal="true" aria-label="历史溢价曲线">
         <div class="flex items-center justify-between mb-2">
-          <h2 class="text-base font-bold">📈 ${name} · 历史溢价</h2>
+          <h2 class="text-base font-bold">📈 ${name}，历史溢价</h2>
           <button type="button" class="hp-close" aria-label="关闭" onclick="document.getElementById('${MODAL_ID}').remove()">✕</button>
         </div>
         <p class="text-xs text-stone-500 dark:text-stone-400 mb-3">溢价 = (场内价 − 净值) ÷ 净值；历史净值替代盘中 IOPV，与实时溢价口径一致。</p>

@@ -50,7 +50,7 @@
     if (!raw) return '—';
     switch (key) {
       case 'nasdaq_trend':
-        return `${raw.price ?? '—'} · 200日线 ${raw.ma200 ?? '—'} · ${fmtPct(raw.pct_above_ma)}`;
+        return `${raw.price ?? '—'}，200日线 ${raw.ma200 ?? '—'}，${fmtPct(raw.pct_above_ma)}`;
       case 'vix':
         return raw.value != null ? Number(raw.value).toFixed(1) : '—';
       case 'treasury_10y':
@@ -170,7 +170,7 @@
             <span class="temp-ind-label" data-label>${item.label || '暂无数据'}</span>
           </div>
           <div class="temp-ind-raw" data-raw>${formatRaw(ind.key, item.raw)}</div>
-          <div class="temp-ind-note" data-note>${item.note || ''}${item.stale ? ' <span class="temp-stale">· 旧数据</span>' : ''}</div>
+          <div class="temp-ind-note" data-note>${item.note || ''}${item.stale ? ' <span class="temp-stale">旧数据</span>' : ''}</div>
           <div class="temp-ind-source">${item.source || ''}</div>
         </article>`;
     }).join('');
@@ -316,9 +316,9 @@
   }
 
   function bandOf(score) {
-    if (score >= BAND_GREEN_MIN) return { band: 'green', verdict: '绿灯 · 机会区间', summary: '市场整体偏乐观，适合关注或分批买入。' };
-    if (score >= BAND_YELLOW_MIN) return { band: 'yellow', verdict: '黄灯 · 中性区间', summary: '市场处于合理区间，适合定投或谨慎操作。' };
-    return { band: 'red', verdict: '红灯 · 防守区间', summary: '市场风险偏高，控制仓位、避免追高。' };
+    if (score >= BAND_GREEN_MIN) return { band: 'green', verdict: '绿灯，机会区间', summary: '市场整体偏乐观，适合关注或分批买入。' };
+    if (score >= BAND_YELLOW_MIN) return { band: 'yellow', verdict: '黄灯，中性区间', summary: '市场处于合理区间，适合定投或谨慎操作。' };
+    return { band: 'red', verdict: '红灯，防守区间', summary: '市场风险偏高，控制仓位、避免追高。' };
   }
 
   function labelOf(score) {
@@ -376,7 +376,7 @@
       const labelEl = card.querySelector('[data-label]');
       if (labelEl) labelEl.textContent = labelOf(ndxScore);
       const rawEl = card.querySelector('[data-raw]');
-      if (rawEl) rawEl.textContent = `${price.toFixed(2)} · 200日线 ${raw.ma200.toFixed(2)} · ${(pct >= 0 ? '+' : '') + pct.toFixed(2)}%`;
+      if (rawEl) rawEl.textContent = `${price.toFixed(2)}，200日线 ${raw.ma200.toFixed(2)}，${(pct >= 0 ? '+' : '') + pct.toFixed(2)}%`;
       const noteEl = card.querySelector('[data-note]');
       if (noteEl) noteEl.textContent = `纳指 100 位于 200 日线${pct >= 0 ? '上方' : '下方'} ${Math.abs(pct).toFixed(1)}%`;
     }

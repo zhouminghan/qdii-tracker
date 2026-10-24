@@ -9,8 +9,9 @@
   const KEY = 'qdii-favs';
   const HIDDEN_KEY = 'qdii-favs-hidden';
   // 默认自选（default_share_code）：场外 博时标普500ETF联接 / 国泰纳斯达克100指数，
-  // 场内 标普500ETF博时 / 纳指ETF国泰。默认始终点亮，用户取消后记入 hidden 不再重置。
-  const DEFAULT_FAVS = ['050025', '160213', '513500', '513100'];
+  // 场内 标普500ETF博时 + 纳指 ETF（国泰 / 博时 / 华夏 / 嘉实）。
+  // 默认始终点亮，用户取消后记入 hidden 不再重置。
+  const DEFAULT_FAVS = ['050025', '160213', '513500', '513100', '513390', '513300', '159501'];
 
   function readList(key) {
     try {

@@ -88,8 +88,8 @@
   function renderDetailBasic(series, share) {
     document.getElementById('detail-title').textContent = series.display_name;
     document.getElementById('detail-subtitle').innerHTML =
-      '<span class="num">' + share.code + '</span> · ' + share.share_class +
-      (share.currency === '美元' ? ' · 美元' : '') +
+      '<span class="num">' + share.code + '</span>，' + share.share_class +
+      (share.currency === '美元' ? '，美元' : '') +
       '<span class="badge badge-qdii ml-1">QDII</span>' +
       (share.manager ? '<span class="text-stone-500 dark:text-stone-400 ml-2">基金经理 <span class="text-stone-900 dark:text-stone-200 font-medium">' + share.manager + '</span></span>' : '');
 
@@ -153,9 +153,9 @@
 
     var listHtml =
       '<div class="text-xs text-stone-500 dark:text-stone-400 mb-2 flex justify-between flex-wrap gap-2">' +
-      '<span>' + (data.latest_quarter || '最新季报') + ' · 当日涨跌按持仓股票所属市场分别取实时行情</span>' +
+      '<span>' + (data.latest_quarter || '最新季报') + '，当日涨跌按持仓股票所属市场分别取实时行情</span>' +
       '<span class="text-stone-400 dark:text-stone-500"><span class="mkt-dot open"></span>盘中实时 <span class="ml-2"><span class="mkt-dot closed"></span>已收盘</span>' +
-      '<span class="ml-2 text-stone-300 dark:text-stone-600">·</span> <span class="ml-2">持仓截至 ' + (data.fetched_at || '').slice(0, 10) + '</span></span></div>' +
+      '<span class="ml-2">持仓截至 ' + (data.fetched_at || '').slice(0, 10) + '</span></span></div>' +
       '<table class="w-full text-sm"><thead class="text-xs text-stone-500 dark:text-stone-400 border-b border-stone-200 dark:border-stone-700"><tr>' +
       '<th class="text-left py-2 font-medium w-8">#</th><th class="text-left py-2 font-medium">股票名称</th><th class="text-left py-2 font-medium">代码</th>' +
       '<th class="text-right py-2 font-medium">占净值比</th><th class="text-right py-2 font-medium">当日涨跌</th>' +
@@ -165,7 +165,7 @@
         var chg = stock ? stock.change_pct : null;
         var market = stock && stock.market ? stock.market : (/^\d{5}$/.test(h.stock_code) ? 'HK' : /^\d{6}$/.test(h.stock_code) ? 'A' : 'US');
         var sess = getMarketSession(market);
-        var dotTitle = sess === 'open' ? market + ' 市场盘中实时' : market + ' 市场已收盘 · 显示最近成交';
+        var dotTitle = sess === 'open' ? market + ' 市场盘中实时' : market + ' 市场已收盘，显示最近成交';
         var dot = '<span class="mkt-dot ' + sess + '" title="' + dotTitle + '"></span>';
         var chgInner = chg == null
           ? '<span class="text-stone-300 dark:text-stone-600">--</span>'

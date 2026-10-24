@@ -286,7 +286,7 @@
       var inner = c.label + '<span class="ss-th-arrow">' + arrow + '</span>';
       // 净值列：日期内联到列名后，避免两行表头导致整行过高
       if (c.key === 'nav' && navHeaderDate) {
-        inner = c.label + '<span class="ss-th-nav-date">·' + navHeaderDate.slice(5) + '</span>' + '<span class="ss-th-arrow">' + arrow + '</span>';
+        inner = c.label + '<span class="ss-th-nav-date">' + navHeaderDate.slice(5) + '</span>' + '<span class="ss-th-arrow">' + arrow + '</span>';
       }
       if (sortable) {
         thead += '<th class="ss-th-sort' + curCls + alignCls + '" data-sort-key="' + c.key + '" ' + colW + '>' + inner + '</th>';
@@ -313,7 +313,7 @@
 
     // 单表结构：thead+tbody 同表，列宽自然对齐
     return '<div class="ss-section">' +
-      '<div class="ss-section-title">' + label + ' · ' + shares.length + ' 只' + (limitLabel || '') + '</div>' +
+      '<div class="ss-section-title">' + label + '，' + shares.length + ' 只' + (limitLabel || '') + '</div>' +
       '<div class="ss-tbl-wrap"><table class="ss-tbl"><thead>' + thead + '</thead><tbody>' + tbody + '</tbody></table></div>' +
       '</div>';
   }

@@ -1,8 +1,8 @@
 // ==================== render-trend.js — 历史净值走势图 ====================
 // 从 main.js 提取，独立为普通 script（全局作用域），通过 window 访问 STATE / openModal 等。
 // 数据来源：fund.eastmoney.com/pingzhongdata/{code}.js（JSONP）
-//   · Data_netWorthTrend: [{x: ts_ms, y: 单位净值, equityReturn: 日涨跌%}, ...]
-//   · 数据从基金成立日起算（多则 10+ 年），可支持 1 月 ~ 全部 各档区间筛选
+//  ，Data_netWorthTrend: [{x: ts_ms, y: 单位净值, equityReturn: 日涨跌%}, ...]
+//  ，数据从基金成立日起算（多则 10+ 年），可支持 1 月 ~ 全部 各档区间筛选
 
 (function () {
   let TREND_STATE = { code: null, fullSeries: null, range: '3m', expanded: false };
@@ -139,7 +139,7 @@
     wrap.innerHTML = `
       <div class="flex items-baseline justify-between flex-wrap gap-2 mb-2">
         <div class="text-sm text-stone-500 dark:text-stone-400">区间累计 <span class="font-bold ${totalChgCls} num text-base ml-1">${totalChgStr}</span>${headExtra}</div>
-        <div class="text-xs text-stone-400 dark:text-stone-500 num">${fmtFullD(pts[0].date)} ~ ${fmtFullD(pts[pts.length - 1].date)} · ${pts.length} 个交易日</div>
+        <div class="text-xs text-stone-400 dark:text-stone-500 num">${fmtFullD(pts[0].date)} ~ ${fmtFullD(pts[pts.length - 1].date)}，${pts.length} 个交易日</div>
       </div>
       <div class="relative" id="trend-chart-inner">
         <svg viewBox="0 0 ${W} ${H}" class="w-full" style="height:auto; display:block;" id="trend-svg">
@@ -345,8 +345,8 @@
     document.getElementById('trend-title').textContent = series?.display_name || share?.name || `基金 ${code}`;
     document.getElementById('trend-subtitle').innerHTML = `
       <span class="num">${code}</span>
-      ${share?.share_class ? ` · ${share.share_class}` : ''}
-      ${share?.nav != null ? ` · 当前净值 <span class="font-medium num text-stone-700 dark:text-stone-300">${share.nav.toFixed(4)}</span>` : ''}
+      ${share?.share_class ? `，${share.share_class}` : ''}
+      ${share?.nav != null ? `，当前净值 <span class="font-medium num text-stone-700 dark:text-stone-300">${share.nav.toFixed(4)}</span>` : ''}
       ${share?.nav_date ? ` <span class="text-stone-400">(${share.nav_date})</span>` : ''}
     `;
     document.getElementById('trend-chart').innerHTML = '<div class="text-center py-12 text-stone-400 dark:text-stone-500 text-sm">⏳ 拉取历史净值中...</div>';

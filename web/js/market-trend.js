@@ -142,8 +142,8 @@ async function openIndexTrend(secid, evt) {
   if (subEl) {
     subEl.innerHTML = `
       <span class="num">${secid}</span>
-      ${lastPrice ? ` · 最新 <span class="font-medium num text-stone-700 dark:text-stone-300">${lastPrice}</span>` : ''}
-      <span class="text-stone-400 dark:text-stone-500 ml-1">· 日 K（东方财富）</span>
+      ${lastPrice ? `，最新 <span class="font-medium num text-stone-700 dark:text-stone-300">${lastPrice}</span>` : ''}
+      <span class="text-stone-400 dark:text-stone-500 ml-1">日 K（东方财富）</span>
     `;
   }
 
