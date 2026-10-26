@@ -38,6 +38,9 @@ const INDICES = [
   { secid: '100.NDX',    name: '纳斯达克综合',   emoji: '💻', digits: 2, kind: 'stock' },
   { secid: '100.NDX100', name: '纳斯达克 100',   emoji: '🚀', digits: 2, kind: 'stock' },
   { secid: '133.USDCNH', name: '美元/人民币',    emoji: '💵', digits: 4, kind: 'fx'    },
+  { secid: '100.N225',   name: '日经 225',       emoji: '🇯🇵', digits: 2, kind: 'stock' },
+  { secid: '100.HSI',    name: '恒生指数',       emoji: '🇭🇰', digits: 2, kind: 'stock' },
+  { secid: '100.SX5E',   name: '欧洲斯托克 50',  emoji: '🇪🇺', digits: 2, kind: 'stock' },
 ];
 const META_BY_SECID = Object.fromEntries(INDICES.map(it => [it.secid, it]));
 

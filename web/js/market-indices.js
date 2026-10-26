@@ -42,6 +42,13 @@ const SYMBOLS = [
   { qq: 'fxUSDCNY', name: '美元/人民币',    emoji: '💵', digits: 4, kind: 'fx'    },
 ];
 
+// 全球指数卡：东财 push2 实时行情（腾讯不提供日经/斯托克50，恒生腾讯有但统一走东财更一致）
+const GLOBAL_SYMBOLS = [
+  { em: '100.N225', name: '日经 225',      emoji: '🇯🇵', digits: 2 },
+  { em: '100.HSI',  name: '恒生指数',      emoji: '🇭🇰', digits: 2 },
+  { em: '100.SX5E', name: '欧洲斯托克 50', emoji: '🇪🇺', digits: 2 },
+];
+
 // data-symbol 与 HTML 模板里的旧 secid 对齐（避免必须改 HTML）
 const DATA_SYMBOL_MAP = {
   'usDJI':    '100.DJIA',
@@ -198,8 +205,71 @@ function renderCard(item, parsed) {
   `;
 }
 
+function fetchGlobalQuotes() {
+  const ut = 'fa5fd1943c7b386f172d6893dbfba10b';
+  const hosts = ['push2.eastmoney.com', 'push2delay.eastmoney.com'];
+  const parse = (data) => {
+    const d = data && data.data;
+    if (!d) return null;
+    const price = Number(d.f43) / 100;   // 东财 f43 = 价格 × 100
+    const changePct = Number(d.f170) / 100; // f170 = 涨跌幅% × 100
+    if (!Number.isFinite(price) || price <= 0) return null;
+    return { price, changePct: Number.isFinite(changePct) ? changePct : 0 };
+  };
+  const fetchOne = async (secid) => {
+    for (const host of hosts) {
+      const r = await window.jsonpFetch(
+        (cb) => `https://${host}/api/qt/stock/get?secid=${secid}&fields=f43,f170&cb=${cb}&ut=${ut}`,
+        { usesCallback: true, timeoutMs: 5000, failValue: null, onData: parse }
+      );
+      if (r) return r;
+    }
+    return null;
+  };
+  return Promise.all(GLOBAL_SYMBOLS.map((g) => fetchOne(g.em))).then((results) => {
+    const map = {};
+    GLOBAL_SYMBOLS.forEach((g, i) => { map[g.em] = results[i]; });
+    return map;
+  });
+}
+
+function renderGlobalCard(item, parsed) {
+  const card = document.querySelector(`.market-card[data-symbol="${item.em}"]`);
+  if (!card) return;
+  if (!parsed) {
+    const cached = card.dataset.lastPrice;
+    if (cached) {
+      card.innerHTML = `
+        <div class="text-[11px] text-stone-400 dark:text-stone-500 mb-0.5">${item.emoji} ${item.name}</div>
+        <div class="text-base sm:text-lg font-semibold tabular-nums text-stone-400 dark:text-stone-500">${cached}</div>
+        <div class="text-[11px] text-stone-300 dark:text-stone-600">📡 暂时无法刷新</div>
+      `;
+    } else {
+      card.innerHTML = `
+        <div class="text-[11px] text-stone-400 dark:text-stone-500 mb-0.5">${item.emoji} ${item.name}</div>
+        <div class="text-base font-semibold text-stone-300 dark:text-stone-600">-</div>
+        <div class="text-[11px] text-stone-300 dark:text-stone-600">数据源加载中…</div>
+      `;
+    }
+    return;
+  }
+  const { price, changePct } = parsed;
+  const up = changePct > 0;
+  const flat = Math.abs(changePct) < 0.005;
+  const colorCls = flat ? 'text-stone-500' : (up ? 'text-rose-600' : 'text-emerald-600');
+  const arrow = flat ? '—' : (up ? '↑' : '↓');
+  const sign = up ? '+' : '';
+  card.dataset.lastPrice = price.toFixed(item.digits);
+  card.innerHTML = `
+    <div class="text-[11px] text-stone-500 dark:text-stone-400 mb-0.5">${item.emoji} ${item.name}</div>
+    <div class="text-base sm:text-lg font-semibold tabular-nums">${price.toFixed(item.digits)}</div>
+    <div class="text-[11px] tabular-nums ${colorCls}">${arrow} ${sign}${changePct.toFixed(2)}%</div>
+  `;
+}
+
 async function refreshAll() {
   const map = await fetchAll();
+  const globalMap = await fetchGlobalQuotes();
   let okCount = 0;
   window.__mktData = window.__mktData || {};
   for (const sym of SYMBOLS) {
@@ -209,6 +279,11 @@ async function refreshAll() {
       window.__mktData[sym.qq] = { name: sym.name, price: parsed.price, change: parsed.change, changePct: parsed.changePct };
     }
     renderCard(sym, parsed);
+  }
+  for (const g of GLOBAL_SYMBOLS) {
+    const parsed = globalMap[g.em];
+    if (parsed) okCount++;
+    renderGlobalCard(g, parsed);
   }
   const el = document.getElementById('market-update-time');
   if (el) {
@@ -222,7 +297,7 @@ async function refreshAll() {
       el.dataset.everOk = '1';
       // 状态标签：只反映「现在能不能交易」，不带时间戳
       // why 不显示时间：见 getMarketStatusLabel 注释
-      el.textContent = `📡 美股 ${getMarketStatusLabel()}`;
+      el.textContent = `📡 行情 ${getMarketStatusLabel()}`;
     }
   }
 }

@@ -377,14 +377,17 @@
           <span id="market-update-time">📡 行情加载中…</span>
         </span>
       </div>
-      <!-- 指标卡网格（5 张：道琼斯 / 标普500 / 纳斯达克 / 纳指100 / 美元/人民币） -->
-      <div id="market-cards" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
+      <!-- 指标卡网格：美股 5 张 + 全球 3 张 -->
+      <div id="market-cards" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
         <!-- 由 JS 动态填充。data-symbol 与 MarketIndices 模块的 secid 一一对应。 -->
         <div data-symbol="100.DJIA"   class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
         <div data-symbol="100.SPX"    class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
         <div data-symbol="100.NDX"    class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
         <div data-symbol="100.NDX100" class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
         <div data-symbol="133.USDCNH" class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
+        <div data-symbol="100.N225"  class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
+        <div data-symbol="100.HSI"   class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
+        <div data-symbol="100.SX5E"  class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
       </div>
     </section>
 

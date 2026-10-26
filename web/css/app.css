@@ -1145,6 +1145,7 @@
     }
 
     .csv-export-btn { margin-left: 0.25rem; }
+    #etf-chips .csv-export-btn { margin-left: auto; }
 
     .perspective-btn {
       display: none;
@@ -1516,3 +1517,4 @@
     .tab-active { background: var(--indigo-3) !important; color: var(--indigo-11) !important; }
     html.dark .tab-btn { color: var(--gray-11) !important; }
     html.dark .tab-active { background: var(--indigo-3) !important; color: var(--indigo-11) !important; }
+
