@@ -14,7 +14,7 @@ steps:
   - eval: |
       window.__classifyTests = [
         [{ buy_status: '', currency: '人民币' }, 'none'],
-        [{ buy_status: '开放申购', currency: '美元' }, 'none'],
+        [{ buy_status: '开放申购', currency: '美元' }, 'open'],
         [{ buy_status: '暂停申购', currency: '人民币' }, 'paused'],
         [{ buy_status: '限购', daily_limit: 1000, currency: '人民币' }, 'limited'],
         [{ buy_status: '限购', daily_limit: 0, currency: '人民币' }, 'limited_no_amount'],
@@ -43,3 +43,4 @@ assert:
 
 # 已用 Playwright 现场验证（2026-07-12）：6 个单元测试全 PASS；主表暂停徽章正常显示；
 # 截图分享 Modal 3 种状态渲染文案与 CSS 类完全正确（ss-badge-open/limit/paused）。
+# 2026-10-29 更新：美元份额不再一律返回 none，按真实状态分类（开放申购→open）。

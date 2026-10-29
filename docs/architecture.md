@@ -21,16 +21,16 @@
 | **职责** | 批量拉取涨跌幅/限额/申购状态，逐只拉取规模/经理/成立时间/费率 |
 | **输入文件** | `web/data/{cat}.json`（6 个分类） |
 | **输出文件** | 同文件覆写 |
-| **依赖** | `core.constants`、`core.utils`、`sources.akshare_source`、`sources.eastmoney_source`、`sources.xueqiu_source` |
+| **依赖** | `core.constants`、`core.utils`、`sources.akshare_source`、`sources.eastmoney_source`、`sources.xueqiu_source`、`sources.ths_source` |
 
 ### 3. fill.py — 补全缺失
 
 | 属性 | 内容 |
 |------|------|
-| **职责** | Pass 1: lsjz+pzd 双源补净值/收益（4 线程并行）；Pass 2: F10 补规模/经理/成立/费率；Pass 2b: 补 buy_rules/sell_rules；Pass 3: 补 chg_ytd；Pass 4: 补 chg_since_inception；最后刷新申购状态 |
+| **职责** | Pass 1: lsjz+pzd 双源补净值/收益（4 线程并行）；Pass 2: F10 补规模/经理/成立/费率；Pass 2b: 补 buy_rules/sell_rules；Pass 3: 补 chg_ytd；Pass 4: 补 chg_since_inception；最后刷新申购状态。支持 `--scope otc|etf`（场外/场内拆分）与 `--codes`（单基金） |
 | **输入文件** | `web/data/{cat}.json`（6 个分类） |
 | **输出文件** | 同文件覆写 + `web/data/meta.json`（bump_generated_at） |
-| **依赖** | `core.constants`、`core.utils`、`sources.eastmoney_source`、`sources.akshare_source` |
+| **依赖** | `core.constants`、`core.utils`、`sources.eastmoney_source`、`sources.akshare_source`、`sources.ths_source` |
 
 ### 4. holdings.py — 持仓抓取
 
@@ -143,8 +143,8 @@
 
 ```
 scan.py ────────► core.constants, core.utils, core.config_loader, sources.akshare_source
-enrich.py ──────► core.constants, core.utils, sources.akshare_source, sources.eastmoney_source, sources.xueqiu_source
-fill.py ────────► core.constants, core.utils, sources.eastmoney_source, sources.akshare_source
+enrich.py ──────► core.constants, core.utils, sources.akshare_source, sources.eastmoney_source, sources.xueqiu_source, sources.ths_source
+fill.py ────────► core.constants, core.utils, sources.eastmoney_source, sources.akshare_source, sources.ths_source
 holdings.py ────► core.constants, core.utils, core.config_loader, sources.akshare_source
 reclassify.py ──► core.constants, core.utils, core.config_loader, sources.akshare_source
 codegen.py ─────► core.constants

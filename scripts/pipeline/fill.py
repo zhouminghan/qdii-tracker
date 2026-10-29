@@ -8,10 +8,11 @@ import re
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from core.constants import CATEGORIES, DATA_DIR, ETF_SKIP_FIELDS, ALWAYS_OVERWRITE_FIELDS, ETF_CODE_PREFIXES
+from core.constants import CATEGORIES, OTC_CATEGORIES, ETF_CATEGORIES, DATA_DIR, ETF_SKIP_FIELDS, ALWAYS_OVERWRITE_FIELDS, ETF_CODE_PREFIXES
 from core.utils import to_float, read_json, write_json, bump_generated_at, normalize_share_keys, beijing_now_iso
 from sources.eastmoney_source import fetch_lsjz, fetch_pzd, fetch_f10, fetch_fee_rules
 from sources.akshare_source import fetch_ytd, fetch_inception_return, fetch_etf_data, fetch_purchase_data, fetch_rank_data
+from sources.ths_source import apply_ths_limit_fallback, merge_purchase_info
 
 
 def _update_history(share: dict, today: str):
@@ -44,14 +45,15 @@ def _update_history(share: dict, today: str):
 
 
 def _normalize_purchase_state(share: dict):
-    """把不可申购状态（暂停申购/封闭期）的 daily_limit 归一到 None（额度无意义）。"""
+    """把「暂停/封闭/开放」状态的 daily_limit 归一到 None（额度无意义或不限额）。"""
     status = share.get("buy_status", "")
-    if "暂停" in status or "封闭" in status:
+    if "暂停" in status or "封闭" in status or "开放" in status:
         share["daily_limit"] = None
     hist = share.get("buy_status_history")
     if isinstance(hist, list):
         for h in hist:
-            if "暂停" in h.get("buy_status", "") or "封闭" in h.get("buy_status", ""):
+            if ("暂停" in h.get("buy_status", "") or "封闭" in h.get("buy_status", "")
+                    or "开放" in h.get("buy_status", "")):
                 h["daily_limit"] = None
 
 
@@ -80,7 +82,8 @@ def merge_share_data(share: dict, pzd: dict, is_etf: bool = False):
     """
     合并 pzd 数据到 share。
     - nav/nav_date/daily_change：每天都会变 → 强制覆盖（ETF 跳过这三个字段）
-    - 历史收益（chg_1m/3m/6m/1y）：只填空白，避免旧值被异常返回污染
+    - 历史收益（chg_1m/3m/6m/1y）：pzd 是这些非排名份额的唯一新鲜来源，强制覆盖，
+      避免早期「成立来≈近1年」的旧值被冻结（新份额首年 pzd 的近1年=成立来）
     防回退机制：nav_date 只允许前进。
     """
     updated = []
@@ -92,16 +95,17 @@ def merge_share_data(share: dict, pzd: dict, is_etf: bool = False):
         if not new_nav_date:
             skip_nav_fields = True
         elif cur_nav_date and new_nav_date < cur_nav_date:
-            for key in ("chg_1m", "chg_3m", "chg_6m", "chg_1y"):
+            for key in ("chg_1m", "chg_3m", "chg_6m", "chg_1y", "chg_ytd", "chg_since_inception"):
                 new_val = pzd.get(key)
                 if new_val is not None and share.get(key) in (None, "", 0):
                     share[key] = new_val
                     updated.append(key)
             return updated
 
+    return_keys = {"chg_1m", "chg_3m", "chg_6m", "chg_1y", "chg_ytd", "chg_since_inception"}
     candidate_keys = [
         "nav", "nav_date", "daily_change",
-        "chg_1m", "chg_3m", "chg_6m", "chg_1y",
+        "chg_1m", "chg_3m", "chg_6m", "chg_1y", "chg_ytd", "chg_since_inception",
     ]
     for key in candidate_keys:
         if is_etf and key in ETF_SKIP_FIELDS:
@@ -112,7 +116,7 @@ def merge_share_data(share: dict, pzd: dict, is_etf: bool = False):
         if new_val is None:
             continue
         cur = share.get(key)
-        if key in ALWAYS_OVERWRITE_FIELDS:
+        if key in ALWAYS_OVERWRITE_FIELDS or key in return_keys:
             share[key] = new_val
             if cur != new_val:
                 updated.append(key)
@@ -155,28 +159,39 @@ def main():
     import argparse
     parser = argparse.ArgumentParser(description="补全缺失字段：净值/YTD/历史收益/费率")
     parser.add_argument("--codes", help="逗号分隔的基金代码，仅处理这些；不传=全量")
+    parser.add_argument("--scope", choices=("all", "otc", "etf"), default="all",
+                        help="场外(otc)/场内(etf)拆分，不传=全部")
     args = parser.parse_args()
     only_codes = set(args.codes.split(",")) if args.codes else None
+    scope = args.scope
 
     data_dir = DATA_DIR
     data_dir.mkdir(parents=True, exist_ok=True)
 
-    loaded_data = _load_categories(data_dir)
+    categories = {
+        "all": CATEGORIES,
+        "otc": list(OTC_CATEGORIES),
+        "etf": list(ETF_CATEGORIES),
+    }[scope]
+
+    loaded_data = _load_categories(data_dir, categories)
     s1 = _fill_nav_and_returns(loaded_data, only_codes)
     s2 = _fill_basic_info(loaded_data, only_codes)
     s3, f3 = _fill_ytd(loaded_data, only_codes)
     s4, f4 = _fill_inception(loaded_data, only_codes)
     _write_back(data_dir, loaded_data)
-    _fill_etf_prices(data_dir, only_codes)
-    _refresh_purchase_status(data_dir, only_codes)
+    if scope in ("all", "etf"):
+        _fill_etf_prices(data_dir, only_codes)
+    _refresh_purchase_status(data_dir, only_codes, categories)
 
     print()
     print(f"📊 总结：Pass1(净值) {s1[0]} / {s1[1]} / {s1[2]} | Pass2(基础) {s2} | Pass3(YTD) {s3}/{f3} | Pass4(成立来) {s4}/{f4}")
 
 
-def _load_categories(data_dir):
+def _load_categories(data_dir, categories=None):
+    categories = categories or CATEGORIES
     loaded = {}
-    for cat in CATEGORIES:
+    for cat in categories:
         fp = data_dir / f"{cat}.json"
         if fp.exists():
             loaded[cat] = read_json(fp)
@@ -383,11 +398,12 @@ def _fill_etf_prices(data_dir, only_codes):
     print(f"  💾 ETF 场内价 {etf_updated} 只")
 
 
-def _refresh_purchase_status(data_dir, only_codes):
+def _refresh_purchase_status(data_dir, only_codes, categories=None):
+    categories = categories or CATEGORIES
     today = beijing_now_iso()[:10]
     purchase_map = fetch_purchase_data()
     rank_map = fetch_rank_data()
-    for cat in CATEGORIES:
+    for cat in categories:
         fp = data_dir / f"{cat}.json"
         if not fp.exists(): continue
         data = read_json(fp)
@@ -399,7 +415,9 @@ def _refresh_purchase_status(data_dir, only_codes):
                 # 场内 ETF 不从 fund_purchase_em 覆盖 buy_status/daily_limit：
                 # 源接口对 ETF 会交替返回「暂停申购/场内交易」，覆盖后既污染展示又污染历史。
                 if code in purchase_map and not code.startswith(ETF_CODE_PREFIXES):
-                    share.update(purchase_map[code]); updated += 1
+                    merge_purchase_info(share, purchase_map[code]); updated += 1
+                if not code.startswith(ETF_CODE_PREFIXES):
+                    apply_ths_limit_fallback(share)
                 if code in rank_map:
                     r = rank_map[code]
                     if r.get("nav_date", "") >= share.get("nav_date", ""):

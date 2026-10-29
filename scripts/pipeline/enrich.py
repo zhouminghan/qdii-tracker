@@ -5,10 +5,11 @@
 import json
 import time
 
-from core.constants import CATEGORIES, DATA_DIR, CURRENCY_RANK, SHARE_CLASS_RANK, RATE_LIMIT_DELAY
+from core.constants import CATEGORIES, DATA_DIR, CURRENCY_RANK, SHARE_CLASS_RANK, RATE_LIMIT_DELAY, ETF_CODE_PREFIXES
 from core.utils import read_json, write_json, bump_generated_at, normalize_share_keys, calc_series_scale
 from sources.akshare_source import fetch_rank_data, fetch_purchase_data, fetch_etf_data
 from sources.eastmoney_source import fetch_lsjz
+from sources.ths_source import apply_ths_limit_fallback, merge_purchase_info
 from sources.xueqiu_source import fetch_basic_info, fetch_fee_detail
 
 
@@ -98,7 +99,9 @@ def main():
                         for k, v in rank_info.items():
                             if v is not None:
                                 share[k] = v
-                share.update(purchase_map.get(code, {}))
+                merge_purchase_info(share, purchase_map.get(code, {}))
+                if not code.startswith(ETF_CODE_PREFIXES):
+                    apply_ths_limit_fallback(share)
                 share.update(basic_info_map.get(code, {}))
                 share.update(fee_detail_map.get(code, {}))
 

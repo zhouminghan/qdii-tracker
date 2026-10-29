@@ -93,7 +93,7 @@
 cd scripts && python3 fundctl.py add --code X --to Y          # 新增
 cd scripts && python3 fundctl.py remove --code X               # 删除
 cd scripts && python3 fundctl.py move --keyword X --from A --to B  # 调分类
-cd scripts && python3 fundctl.py refresh                        # 增量刷新
+cd scripts && python3 fundctl.py refresh --scope otc|etf [--codes X,Y]  # 增量刷新（可按场外/场内拆分 + 单基金）
 cd scripts && python3 fundctl.py sync                           # 全量同步
 cd scripts && python3 fundctl.py check                          # 门禁（7层）
 cd scripts && python3 fundctl.py check --offline                # 门禁（跳过 Layer 6 跨源验证，断网/CI 用）
@@ -135,7 +135,7 @@ cd scripts && python3 fundctl.py check --offline --agent-rules  # 数据 + Agent
 scripts/
 ├── fundctl.py            ← 统一入口
 ├── core/                 ← 基础设施（constants / utils / config_loader）
-├── sources/              ← 数据源适配（akshare / eastmoney / xueqiu）
+├── sources/              ← 数据源适配（akshare / eastmoney / xueqiu / ths）
 ├── pipeline/             ← 数据生产链路（scan / enrich / fill / holdings / reclassify / codegen / sparklines / premium_history / market_temperature）
 └── checks/               ← 质量门禁（verify_data / verify_purchase / cross_validate / diagnose / architecture_lint / scan_scenarios / stamp_asset_version / check_agent_rules / doc_sync / build_snapshot）
 

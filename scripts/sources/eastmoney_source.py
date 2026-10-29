@@ -99,6 +99,7 @@ def fetch_pzd(code: str):
                 chg = to_float(last.get("equityReturn"))
                 if chg is not None:
                     result["daily_change"] = chg
+                result.update(_compute_period_returns(arr))
         except Exception:
             pass
 
@@ -108,6 +109,31 @@ def fetch_pzd(code: str):
         result["pzd_name"] = m.group(1)
 
     return result if result else None
+
+
+def _compute_period_returns(arr: list) -> dict:
+    """从净值序列逐日复利计算「成立来」与「今年来」。
+
+    Data_netWorthTrend 的 equityReturn 是复权后的日收益率，逐日复利即累计收益。
+    非排名份额（D/F/I/美元/联接）不在 fund_open_fund_rank_em 里，靠这里保持
+    chg_ytd / chg_since_inception 每日刷新；与 akshare「累计收益率走势」存在
+    分红口径的轻微差异，可接受。
+    """
+    now = datetime.now(BEIJING_TZ)
+    year_start_ms = int(datetime(now.year, 1, 1, tzinfo=BEIJING_TZ).timestamp() * 1000)
+    cum = 1.0
+    ytd = None
+    for item in arr:
+        er = to_float(item.get("equityReturn"))
+        if er is None:
+            continue
+        cum *= (1 + er / 100)
+        if item.get("x", 0) >= year_start_ms:
+            ytd = (ytd if ytd is not None else 1.0) * (1 + er / 100)
+    out = {"chg_since_inception": round((cum - 1) * 100, 2)}
+    if ytd is not None:
+        out["chg_ytd"] = round((ytd - 1) * 100, 2)
+    return out
 
 
 def fetch_pzd_history(code: str):

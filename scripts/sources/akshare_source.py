@@ -78,11 +78,14 @@ def fetch_purchase_data():
     purchase_map = {}
     for _, row in df.iterrows():
         code = str(row["基金代码"]).strip()
+        buy_status = str(row.get("申购状态", "") or "").strip()
         limit = to_float(row.get("日累计限定金额"))
         if limit is not None and limit >= 1e11:
             limit = None  # 开放申购哨兵值（不限额）
+        if "开放" in buy_status:
+            limit = None  # 开放申购=不限额，额度无意义（部分份额源返回 0 而非哨兵值）
         purchase_map[code] = {
-            "buy_status": str(row.get("申购状态", "") or "").strip(),
+            "buy_status": buy_status,
             "sell_status": str(row.get("赎回状态", "") or "").strip(),
             "buy_min": to_float(row.get("购买起点")),
             "daily_limit": limit,

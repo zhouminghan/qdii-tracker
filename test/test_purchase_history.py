@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from pipeline.fill import _normalize_purchase_state, _compact_history, _update_history
+from pipeline.fill import _normalize_purchase_state, _compact_history, _update_history, merge_share_data
 
 
 def _rmb(code="016055"):
@@ -97,3 +97,22 @@ def test_update_history_skips_etf_and_usd():
     ):
         _update_history(sh, "2026-09-08")
         assert "buy_status_history" not in sh
+
+
+def test_merge_share_data_overwrites_stale_chg():
+    # 非排名份额（D/F/I/美元）只靠 pzd 刷新收益；旧值必须被覆盖，不能冻结
+    share = {"code": "023402", "nav_date": "2026-10-20", "chg_1y": 67.61, "chg_ytd": 39.58, "chg_since_inception": 63.64}
+    pzd = {"nav_date": "2026-10-27", "nav": 5.6559, "chg_1m": -11.87, "chg_1y": 17.42, "chg_ytd": 22.08, "chg_since_inception": 37.73}
+    merge_share_data(share, pzd)
+    assert share["chg_1y"] == 17.42
+    assert share["chg_1m"] == -11.87
+    assert share["chg_ytd"] == 22.08
+    assert share["chg_since_inception"] == 37.73
+
+
+def test_merge_share_data_does_not_overwrite_when_nav_stale():
+    # 防回退：pzd 净值比本地旧时，不覆盖已有收益，只补空白
+    share = {"code": "270023", "nav_date": "2026-10-27", "chg_1y": 18.05}
+    pzd = {"nav_date": "2026-10-20", "nav": 5.0, "chg_1y": 99.0}
+    merge_share_data(share, pzd)
+    assert share["chg_1y"] == 18.05

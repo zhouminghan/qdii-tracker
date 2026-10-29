@@ -414,7 +414,7 @@
         return statusBadgeHtml(sh);
       case 'daily_limit':
         if (sh.buy_status && sh.buy_status.includes('限') && sh.daily_limit > 0) {
-          return '¥' + formatLimit(sh.daily_limit);
+          return (sh.currency === '美元' ? '$' : '¥') + formatLimit(sh.daily_limit);
         }
         return '—';
       case 'nav': {
@@ -447,9 +447,10 @@
   function statusBadgeHtml(sh) {
     var st = sh.buy_status || '';
     var kind = classifyBuyStatus(sh);
-    if (kind === 'none' || kind === 'limited_no_amount') return '<span class="ss-muted">—</span>';
+    if (kind === 'none') return '<span class="ss-muted">—</span>';
+    if (kind === 'limited_no_amount') return '<span class="ss-badge ss-badge-limit">限购</span>';
     if (kind === 'paused') return '<span class="ss-badge ss-badge-paused">暂停</span>';
-    if (kind === 'limited') return '<span class="ss-badge ss-badge-limit">限 ¥' + formatLimit(sh.daily_limit) + '</span>';
+    if (kind === 'limited') return '<span class="ss-badge ss-badge-limit">限 ' + (sh.currency === '美元' ? '$' : '¥') + formatLimit(sh.daily_limit) + '</span>';
     return '<span class="ss-badge ss-badge-open">' + st + '</span>';
   }
 

@@ -18,6 +18,10 @@ HOLDINGS_DIR = DATA_DIR / "holdings"
 # ============================================================
 CATEGORIES = ["sp500", "nasdaq_passive", "active", "global_index", "global_other", "etf"]
 
+# 场外/场内拆分：fill/enrich 支持按 scope 只跑其中一组，避免每次都全量。
+OTC_CATEGORIES = ("sp500", "nasdaq_passive", "active", "global_index", "global_other")
+ETF_CATEGORIES = ("etf",)
+
 # web/data JSON 数据 schema 版本（字段演进时递增；fundctl.py check Layer 1 校验）
 DATA_SCHEMA_VERSION = 1
 

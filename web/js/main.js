@@ -625,7 +625,7 @@
         amber: { bg: 'bg-amber-50/70 dark:bg-stone-900/50', border: 'border-amber-200 dark:border-stone-700', text: 'text-amber-900 dark:text-stone-300', icon: '⚠️' },
         rose:  { bg: 'bg-rose-50/70 dark:bg-stone-900/50',  border: 'border-rose-200 dark:border-stone-700',  text: 'text-rose-900 dark:text-stone-300',  icon: '🚨' },
       }[cfg.tone] || { bg: 'bg-stone-50 dark:bg-stone-900/50', border: 'border-stone-200 dark:border-stone-700', text: 'text-stone-700 dark:text-stone-300', icon: '📌' };
-      // 计算日限额汇总（所有场外分组：只统计默认份额、跳过暂停的基金）
+      // 计算日限额汇总（所有场外分组：只统计默认份额即 A 类、跳过暂停的基金）
       let limitSummary = '';
       if (tab === 'offshore') {
         const src = STATE.data[filter];
@@ -639,7 +639,7 @@
             else if (def.buy_status.includes('开放') && !def.daily_limit) { openCount++; }
           }
           const parts = [];
-          if (totalLimit > 0) parts.push(`当前每日可购买 <b class="text-indigo-600 dark:text-indigo-400">¥${formatLimit(totalLimit)}</b>`);
+          if (totalLimit > 0) parts.push(`当前每日可购买 <b class="text-indigo-600 dark:text-indigo-400">¥${formatLimit(totalLimit)}</b><span class="text-stone-400 dark:text-stone-500">（仅A类）</span>`);
           if (openCount > 0) parts.push(`${openCount} 只开放申购`);
           if (parts.length) limitSummary = parts.join(' + ');
         }
@@ -982,10 +982,11 @@
       const hist = (sh.buy_status_history || []).slice(-8).reverse();
       const histAttr = hist.length ? 'data-history=\'' + JSON.stringify(hist).replace(/'/g, '&#39;') + '\'' : '';
       const kind = classifyBuyStatus(sh);
-      if (kind === 'none' || kind === 'limited_no_amount') return '<span class="text-stone-400 dark:text-stone-500 text-xs" ' + histAttr + '>—</span>';
+      if (kind === 'none') return '<span class="text-stone-400 dark:text-stone-500 text-xs" ' + histAttr + '>—</span>';
       const cls = buyStatusClass(st);
+      if (kind === 'limited_no_amount') return '<span class="' + cls + ' buy-cell" ' + histAttr + '>限购</span>';
       if (kind === 'paused') return '<span class="' + cls + ' buy-cell" ' + histAttr + '>暂停</span>';
-      if (kind === 'limited') return '<span class="' + cls + ' buy-cell" ' + histAttr + '>限 ¥' + formatLimit(sh.daily_limit) + '</span>';
+      if (kind === 'limited') return '<span class="' + cls + ' buy-cell" ' + histAttr + '>限 ' + (sh.currency === '美元' ? '$' : '¥') + formatLimit(sh.daily_limit) + '</span>';
       return '<span class="' + cls + ' buy-cell" ' + histAttr + '>' + st + '</span>';
     }
 

@@ -25,6 +25,9 @@
 | G019 | 新增 Tailwind 类静默失效（顶栏/序号/卡片配色不生效） | 预编译 `tailwind.css` 只含原应用用到的部分工具类；新加的 `flex-1`/`md:flex`/`list-decimal`/`w-36`/`bg-violet-50` 等不在产物里，无报错但样式不生效 | `web/index.html` + `web/css/app.css` → 在 app.css 用自定义类补齐（`.header-spacer`/`.fund-search` 等），或用已编译类 | ✅已修复 | 2026-09-29 | 2026-09-29 |
 | G020 | 申购变更 tooltip 连续两条都显示「暂停」（博时纳斯达克100ETF联接 07-11/09-08） | `_update_history` 把 `daily_limit` 也当变化信号；「暂停申购」的额度是数据源噪音（100→None），导致同一「暂停」被重复追加 | `scripts/pipeline/fill.py:_update_history` → 暂停/封闭态 `daily_limit` 归一为 None，`_normalize_purchase_state` + `_compact_history` 自愈 | ✅已修复 | 2026-09-29 | 2026-09-29 |
 | G021 | `fundctl.py add` 后门禁报 `buy_status_history` 尾条与当前状态不一致 | `add` 走 `enrich --codes X`，enrich 仍批量把 `purchase_map` 覆盖到所有份额，而 `fill --codes X` 只对新增份额做 `_update_history`，其余基金历史未同步 | `scripts/pipeline/enrich.py` Step4 → `--codes` 时跳过非选中代码 | ✅已修复 | 2026-10-16 | 2026-10-16 |
+| G022 | 美元份额限购额度缺额：天天基金 `fund_purchase_em` 返回 0，同花顺 `money` 又滞后/口径打架（000906 显示 280 万 vs 实际 280 美元，013404 显示 200 万 vs 实际 75 美元） | 同花顺对部分美元份额缓存了机构级旧额度，单靠一个源无法可靠取值 | `scripts/sources/ths_source.py` → `_MANUAL_LIMIT_OVERRIDE` 静态人工确认值优先命中（不联网），`_USD_LIMIT_CAP` 拦截超百万美元的滞后值 | ✅已修复 | 2026-10-29 | 2026-10-29 |
+| G023 | 「开放申购」份额 `daily_limit=0.0`（招商普盛全球 D 025339），语义应为 None（不限额） | 天天基金 `fund_purchase_em` 对部分开放份额返回 0 而非哨兵值 1e11，旧逻辑只归一 `>=1e11` | `scripts/sources/akshare_source.py:fetch_purchase_data` → 开放状态一律 `daily_limit=None`；`fill.py:_normalize_purchase_state` / `verify_purchase.py` 同步校验 | ✅已修复 | 2026-10-29 | 2026-10-29 |
+| G024 | D/F/I/美元/联接等非排名份额的收益字段长期冻结（近1年≈成立来旧值，118 只） | 这些份额不在 akshare `fund_open_fund_rank_em` 里，只能靠 pingzhongdata；`merge_share_data` 对历史收益「只填空白」从不覆盖，早期旧值永久留存 | `scripts/pipeline/fill.py:merge_share_data` → 非回退场景强制覆盖 `chg_1m/3m/6m/1y`；`scripts/sources/eastmoney_source.py:_compute_period_returns` 从净值序列复利算出 `chg_ytd/chg_since_inception` 并同样覆盖 | ✅已修复 | 2026-10-29 | 2026-10-29 |
 
 ## Gotchas 生命周期规则
 - 已修复 → 保留条目，标记 `✅已修复`（不删——后人要知道坑存在过）

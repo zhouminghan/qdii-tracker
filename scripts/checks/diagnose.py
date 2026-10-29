@@ -17,6 +17,7 @@ def diagnose_all():
     suggestions = []
     suggestions += _check_missing_nav()
     suggestions += _check_buy_status_anomaly()
+    suggestions += _check_missing_limit()
     suggestions += _check_nav_regression()
     suggestions += _check_fee_anomalies()
     return suggestions
@@ -91,6 +92,29 @@ def _check_buy_status_anomaly():
                         "fund_name": share.get("name", "?"),
                         "cat": cat_name,
                         "suggestion": "申购状态日期缺失，下一次 fill 会自动补充",
+                        "auto_fix": False
+                    })
+    return issues
+
+
+def _check_missing_limit():
+    """限购份额缺额度：buy_status 含「限」但 daily_limit 为空/0，提示人工确认或补数据源。"""
+    issues = []
+    for path in _data_files():
+        data = _load_cat(path)
+        cat_name = data.get("meta", {}).get("name", os.path.basename(path))
+        for series in data.get("series", []):
+            for share in series.get("shares", []):
+                status = share.get("buy_status", "") or ""
+                limit = share.get("daily_limit")
+                if "限" in status and (limit is None or limit <= 0):
+                    issues.append({
+                        "severity": "warning",
+                        "category": "missing_limit",
+                        "fund_code": share["code"],
+                        "fund_name": share.get("name", "?"),
+                        "cat": cat_name,
+                        "suggestion": "限购但无额度：补 sources.ths_source 人工覆盖或同花顺数据源",
                         "auto_fix": False
                     })
     return issues

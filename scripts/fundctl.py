@@ -136,10 +136,13 @@ def cmd_remove(args):
 
 def cmd_refresh(args):
     """增量刷新（fill 已包含净值 + 申购状态 + 历史追踪）"""
+    fill_args = []
+    if args.scope and args.scope != "all":
+        fill_args += ["--scope", args.scope]
     if args.codes:
-        _run(fill.main, "--codes", args.codes)
+        _run(fill.main, *fill_args, "--codes", args.codes)
     else:
-        _run(fill.main)
+        _run(fill.main, *fill_args)
     _run(market_temperature.main)
 
 
@@ -371,7 +374,7 @@ def cmd_probe(_args):
     import importlib
     print("数据源适配层探针（导入级，不发起网络请求）")
     ok = True
-    for name in ("akshare_source", "eastmoney_source", "xueqiu_source"):
+    for name in ("akshare_source", "eastmoney_source", "xueqiu_source", "ths_source"):
         try:
             mod = importlib.import_module(f"sources.{name}")
         except Exception as e:  # noqa: BLE001
@@ -429,6 +432,8 @@ def main():
 
     p_refresh = sub.add_parser("refresh", help="增量刷新")
     p_refresh.add_argument("--codes", help="逗号分隔，仅刷新这些代码")
+    p_refresh.add_argument("--scope", choices=("all", "otc", "etf"), default="all",
+                           help="场外(otc)/场内(etf)拆分，不传=全部")
     p_refresh.set_defaults(func=cmd_refresh)
 
     p_sync = sub.add_parser("sync", help="全量同步")

@@ -153,7 +153,7 @@ window.closeModal = closeModal;
 // @returns {string} 'none' | 'paused' | 'limited' | 'limited_no_amount' | 'open'
 function classifyBuyStatus(sh) {
   const st = sh?.buy_status || '';
-  if (!st || sh?.currency === '美元') return 'none';
+  if (!st) return 'none';
   if (st.includes('暂停')) return 'paused';
   if (st.includes('限') && sh.daily_limit > 0) return 'limited';
   if (st.includes('限') && !sh.daily_limit) return 'limited_no_amount';
