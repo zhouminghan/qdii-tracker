@@ -27,7 +27,7 @@
 
 | 属性 | 内容 |
 |------|------|
-| **职责** | Pass 1: lsjz+pzd 双源补净值/收益（4 线程并行）；Pass 2: F10 补规模/经理/成立/费率；Pass 2b: 补 buy_rules/sell_rules；Pass 3: 补 chg_ytd；Pass 4: 补 chg_since_inception；最后刷新申购状态。支持 `--scope otc|etf`（场外/场内拆分）与 `--codes`（单基金） |
+| **职责** | Pass 1: lsjz+pzd 双源补净值/收益（4 线程并行）；Pass 2: F10 补规模/经理/成立/费率；Pass 2b: 补 buy_rules/sell_rules；Pass 3: 补 chg_ytd；Pass 4: 补 chg_since_inception；最后刷新申购状态（美元份额同样追踪 buy_status_history）。`_fill_etf_prices` 每日刷新 ETF 场内价/涨跌/规模并重算 series_scale/total_scale。支持 `--scope otc|etf`（场外/场内拆分）与 `--codes`（单基金） |
 | **输入文件** | `web/data/{cat}.json`（6 个分类） |
 | **输出文件** | 同文件覆写 + `web/data/meta.json`（bump_generated_at） |
 | **依赖** | `core.constants`、`core.utils`、`sources.eastmoney_source`、`sources.akshare_source`、`sources.ths_source` |
@@ -130,7 +130,7 @@
 
 | 属性 | 内容 |
 |------|------|
-| **职责** | 校验 buy_status / daily_limit / buy_status_history 语义一致性：ETF 历史必空、无 1e11 哨兵值、历史尾条与当前状态一致（防 G015/G016 复发） |
+| **职责** | 校验 buy_status / daily_limit / buy_status_history 语义一致性：ETF 历史必空、无 1e11 哨兵值、历史尾条与当前状态一致（含美元份额）（防 G015/G016 复发） |
 | **输入文件** | `web/data/*.json` |
 | **输出文件** | 无（返回错误列表） |
 | **依赖** | `core.constants` |

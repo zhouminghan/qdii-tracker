@@ -28,6 +28,7 @@
 | G022 | 美元份额限购额度缺额：天天基金 `fund_purchase_em` 返回 0，同花顺 `money` 又滞后/口径打架（000906 显示 280 万 vs 实际 280 美元，013404 显示 200 万 vs 实际 75 美元） | 同花顺对部分美元份额缓存了机构级旧额度，单靠一个源无法可靠取值 | `scripts/sources/ths_source.py` → `_MANUAL_LIMIT_OVERRIDE` 静态人工确认值优先命中（不联网），`_USD_LIMIT_CAP` 拦截超百万美元的滞后值 | ✅已修复 | 2026-10-29 | 2026-10-29 |
 | G023 | 「开放申购」份额 `daily_limit=0.0`（招商普盛全球 D 025339），语义应为 None（不限额） | 天天基金 `fund_purchase_em` 对部分开放份额返回 0 而非哨兵值 1e11，旧逻辑只归一 `>=1e11` | `scripts/sources/akshare_source.py:fetch_purchase_data` → 开放状态一律 `daily_limit=None`；`fill.py:_normalize_purchase_state` / `verify_purchase.py` 同步校验 | ✅已修复 | 2026-10-29 | 2026-10-29 |
 | G024 | D/F/I/美元/联接等非排名份额的收益字段长期冻结（近1年≈成立来旧值，118 只） | 这些份额不在 akshare `fund_open_fund_rank_em` 里，只能靠 pingzhongdata；`merge_share_data` 对历史收益「只填空白」从不覆盖，早期旧值永久留存 | `scripts/pipeline/fill.py:merge_share_data` → 非回退场景强制覆盖 `chg_1m/3m/6m/1y`；`scripts/sources/eastmoney_source.py:_compute_period_returns` 从净值序列复利算出 `chg_ytd/chg_since_inception` 并同样覆盖 | ✅已修复 | 2026-10-29 | 2026-10-29 |
+| G025 | 美元份额规模缺失：雪球 `fund_individual_basic_info_xq` 对美元份额无「最新规模」，`enrich` 每月会把已有值清空；真实来源是天天基金 F10「资产规模」，但美元份额披露单位是「亿美元」，旧解析只认「亿元」 | 雪球与 F10 两源覆盖范围不一致，且美元规模单位与人民币不同 | `scripts/sources/eastmoney_source.py:fetch_f10` → 同时解析 `亿元`/`亿美元`；美元份额由 `fill` Pass2（enrich 之后）用 F10 补回 | ✅已修复 | 2026-10-29 | 2026-10-29 |
 
 ## Gotchas 生命周期规则
 - 已修复 → 保留条目，标记 `✅已修复`（不删——后人要知道坑存在过）

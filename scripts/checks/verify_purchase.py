@@ -55,8 +55,8 @@ def run_verification() -> list:
             if hdl is not None and hdl >= 1e11:
                 errors.append(f"{label}: 历史条目 daily_limit 出现哨兵值 {hdl}")
 
-        # 3) 非 ETF、非美元份额：历史尾条必须与当前状态一致
-        if not is_etf and sh.get("currency") != "美元" and hist:
+        # 3) 非 ETF 份额：历史尾条必须与当前状态一致（美元份额已纳入追踪）
+        if not is_etf and hist:
             last = hist[-1]
             if (last.get("buy_status") != sh.get("buy_status")
                     or last.get("daily_limit") != sh.get("daily_limit")):

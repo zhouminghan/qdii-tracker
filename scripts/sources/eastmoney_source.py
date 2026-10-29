@@ -253,13 +253,14 @@ def fetch_f10(code: str):
     if m:
         result["manager"] = m.group(1).strip()
 
-    # 资产规模
-    m = re.search(r"资产规模[：:]</?\w*[^>]*>?\s*([\d.]+)\s*亿元", text)
+    # 资产规模（人民币份额披露为亿元；部分美元份额披露为亿美元）
+    m = re.search(r"资产规模[：:]</?\w*[^>]*>?\s*([\d.]+)\s*(亿元|亿美元)", text)
     if m:
         scale_num = to_float(m.group(1))
         if scale_num:
+            unit = "亿" if m.group(2) == "亿元" else "亿美元"
             result["scale"] = scale_num
-            result["scale_raw"] = f"{scale_num}亿"
+            result["scale_raw"] = f"{scale_num}{unit}"
 
     # 从费率页抓取管理费/托管费/销售服务费/首档买入费率
     try:

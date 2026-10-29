@@ -38,7 +38,7 @@
 改中约束（按触及模块）：
 - `scan.py` 改后 MUST 接 `enrich + fill`
 - `enrich.py`：`--codes` 时只更新选中代码，不批量覆盖其它基金的申购状态/涨跌幅（否则 `fill --codes` 的历史追踪对不上）
-- `fill.py`：nav_date 永不回退，lsjz 失败保留旧值
+- `fill.py`：nav_date 永不回退，lsjz 失败保留旧值；美元份额已纳入 `buy_status_history` 追踪；ETF 规模/场内价/涨跌随每日 fill 刷新（`_fill_etf_prices` 重算 `series_scale`/`total_scale`）
 - `checks/verify_data.py`：fixtures 格式变更 → 同步 `scripts/checks/golden-fixtures.json`
 - `core/constants.py`：改 CATEGORIES → 必须重跑全量 `sync`
 - `config/funds.json`：禁止直接编辑，走 `fundctl.py`

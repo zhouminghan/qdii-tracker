@@ -9,7 +9,7 @@ import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from core.constants import CATEGORIES, OTC_CATEGORIES, ETF_CATEGORIES, DATA_DIR, ETF_SKIP_FIELDS, ALWAYS_OVERWRITE_FIELDS, ETF_CODE_PREFIXES
-from core.utils import to_float, read_json, write_json, bump_generated_at, normalize_share_keys, beijing_now_iso
+from core.utils import to_float, read_json, write_json, bump_generated_at, normalize_share_keys, beijing_now_iso, calc_series_scale
 from sources.eastmoney_source import fetch_lsjz, fetch_pzd, fetch_f10, fetch_fee_rules
 from sources.akshare_source import fetch_ytd, fetch_inception_return, fetch_etf_data, fetch_purchase_data, fetch_rank_data
 from sources.ths_source import apply_ths_limit_fallback, merge_purchase_info
@@ -21,14 +21,13 @@ def _update_history(share: dict, today: str):
     跳过：
     - 场内 ETF（代码 159/513/510 开头）：ETF 的「申购状态」来自 fund_purchase_em，
       会与「场内交易」标记互相覆盖，追踪无意义（历史曾误写入「暂停申购」噪音）。
-    - 美元份额：限额口径与人民币不同，不参与追踪。
 
     「暂停申购/封闭期」的 daily_limit 无意义（数据源会返回 100/None/0.01 等噪音），
     统一归一到 None，避免「暂停→暂停」仅因额度噪音被重复记录。
     """
     code = share.get("code", "")
     status = share.get("buy_status", "")
-    if not status or share.get("currency") == "美元" or "场内" in status or code.startswith(ETF_CODE_PREFIXES):
+    if not status or "场内" in status or code.startswith(ETF_CODE_PREFIXES):
         return
     _normalize_purchase_state(share)
     dlimit = share.get("daily_limit", None)
@@ -392,10 +391,17 @@ def _fill_etf_prices(data_dir, only_codes):
             info = etf_map.get(share["code"])
             if info:
                 share["etf_price"] = info.get("etf_price"); share["etf_change_pct"] = info.get("etf_change_pct")
+                # 场内规模随申赎每天变动，跟随每日 fill 刷新（此前只在首次缺失时补一次）
+                if info.get("etf_scale_yi"):
+                    share["scale"] = info["etf_scale_yi"]
+                    share["scale_raw"] = f"{info['etf_scale_yi']:.2f}亿"
                 etf_updated += 1
+        # 场内每系列单份额，series_scale 直接跟随份额规模；total_scale 同步重算
+        series["series_scale"] = calc_series_scale(series.get("shares", []))
+    etf_data["total_scale"] = round(sum(s.get("series_scale") or 0 for s in etf_data.get("series", [])), 2)
     normalize_share_keys(etf_data)
     write_json(etf_fp, etf_data)
-    print(f"  💾 ETF 场内价 {etf_updated} 只")
+    print(f"  💾 ETF 场内价/规模 {etf_updated} 只")
 
 
 def _refresh_purchase_status(data_dir, only_codes, categories=None):

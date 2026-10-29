@@ -90,13 +90,18 @@ def test_update_history_appends_limit_change_when_limited():
     assert sh["buy_status_history"][-1]["daily_limit"] == 1000.0
 
 
-def test_update_history_skips_etf_and_usd():
-    for sh in (
-        {"code": "513500", "currency": "人民币", "buy_status": "暂停申购", "daily_limit": None},
-        {"code": "016055", "currency": "美元", "buy_status": "暂停申购", "daily_limit": None},
-    ):
-        _update_history(sh, "2026-09-08")
-        assert "buy_status_history" not in sh
+def test_update_history_skips_etf():
+    etf = {"code": "513500", "currency": "人民币", "buy_status": "暂停申购", "daily_limit": None}
+    _update_history(etf, "2026-09-08")
+    assert "buy_status_history" not in etf
+
+
+def test_update_history_tracks_usd():
+    usd = {"code": "016055", "currency": "美元", "buy_status": "暂停申购", "daily_limit": None}
+    _update_history(usd, "2026-09-08")
+    assert usd["buy_status_history"] == [
+        {"date": "2026-09-08", "buy_status": "暂停申购", "daily_limit": None}
+    ]
 
 
 def test_merge_share_data_overwrites_stale_chg():
