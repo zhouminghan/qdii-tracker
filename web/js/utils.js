@@ -616,3 +616,28 @@ function fmtMV(v) {
   if (v >= 10000) return `${(v / 10000).toFixed(2)}亿`;
   return `${v.toFixed(0)}万`;
 }
+
+// ==================== 数字滚动（Count Up） ====================
+// 用 easeOutCubic 在 duration 内从 0 滚到目标值；尊重 prefers-reduced-motion。
+function animateCount(el, to, opts) {
+  opts = opts || {};
+  const fmt = opts.fmt || function (v) { return String(Math.round(v)); };
+  const duration = opts.duration || 520;
+  if (!el || to == null || !isFinite(to)) {
+    if (el) el.textContent = fmt(to);
+    return;
+  }
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    el.textContent = fmt(to);
+    return;
+  }
+  const from = 0;
+  const start = performance.now();
+  function frame(now) {
+    const t = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - t, 3);
+    el.textContent = fmt(from + (to - from) * eased);
+    if (t < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}

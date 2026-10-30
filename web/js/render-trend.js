@@ -92,8 +92,8 @@
     const yOf = (v) => PAD_T + (H - PAD_T - PAD_B) * (1 - (v - lo) / (hi - lo));
 
     const totalChg = pts[pts.length - 1].ret;
-    const upColor = '#dc2626';
-    const downColor = '#16a34a';
+    const upColor = 'var(--red-9)';
+    const downColor = 'var(--green-9)';
     const lineColor = totalChg >= 0 ? upColor : downColor;
 
     const yField = yMode === 'value' ? 'nav' : 'ret';
@@ -157,7 +157,7 @@
           ${xLabels.map(l => `<text class="trend-grid-text" x="${xOf(l.i).toFixed(1)}" y="${H - 8}" font-size="10" fill="#a8a29e" text-anchor="middle">${l.label}</text>`).join('')}
           <g id="trend-cursor" style="display:none;">
             <line id="trend-cursor-line" y1="${PAD_T}" y2="${H - PAD_B}" stroke="#525252" stroke-width="0.8" stroke-dasharray="2 2"/>
-            <circle id="trend-cursor-dot" r="3.5" fill="${lineColor}" stroke="${document.documentElement.classList.contains('dark') ? '#292524' : '#fff'}" stroke-width="1.5"/>
+            <circle id="trend-cursor-dot" r="3.5" fill="${lineColor}" stroke="${document.documentElement.classList.contains('dark') ? 'var(--gray-3)' : '#fff'}" stroke-width="1.5"/>
           </g>
         </svg>
         <div id="trend-tooltip" class="absolute pointer-events-none hidden bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg px-3 py-2 shadow-md text-xs whitespace-nowrap" style="transition:opacity .12s; min-width:160px;"></div>

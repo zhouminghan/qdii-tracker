@@ -193,7 +193,7 @@
     }[c]));
   }
 
-  function render() {
+  function render(animate) {
     if (!ROOT || !data) return;
     const band = data.band || 'yellow';
     const positives = bulletList('利好因子', data.positives, 't-good');
@@ -225,6 +225,13 @@
       UPDATED.textContent = `更新于 ${fmtTime(data.generated_at)}`;
     }
     applyLive();
+    if (animate) {
+      const val = document.getElementById('temp-gauge-value');
+      const target = val ? Number(val.textContent) : NaN;
+      if (val && isFinite(target)) {
+        animateCount(val, target, { fmt: (v) => String(Math.round(v)) });
+      }
+    }
   }
 
   async function load() {
@@ -389,7 +396,7 @@
     liveTimer = setInterval(applyLive, 15 * 1000);
   }
 
-  window.renderTemperature = render;
+  window.renderTemperature = function () { render(true); };
   load();
   startLive();
 })();

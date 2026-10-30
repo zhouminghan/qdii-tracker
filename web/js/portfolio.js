@@ -119,27 +119,27 @@
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 mb-4">
         <div class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-4 py-3">
           <div class="text-[11px] text-stone-500 dark:text-stone-400">总金额（含现金）</div>
-          <div class="text-lg sm:text-xl font-bold num mt-0.5">¥${money(value)}</div>
+          <div class="text-lg sm:text-xl font-bold num mt-0.5" data-count="${value}" data-count-fmt="money">¥${money(value)}</div>
         </div>
         <div class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-4 py-3">
           <div class="text-[11px] text-stone-500 dark:text-stone-400">本金</div>
-          <div class="text-lg sm:text-xl font-bold num mt-0.5">¥${money(cost)}</div>
+          <div class="text-lg sm:text-xl font-bold num mt-0.5" data-count="${cost}" data-count-fmt="money">¥${money(cost)}</div>
         </div>
         <div class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-4 py-3">
           <div class="text-[11px] text-stone-500 dark:text-stone-400">持有收益</div>
-          <div class="text-lg sm:text-xl font-bold num mt-0.5 ${cls(pnl)}">${money(pnl)}</div>
+          <div class="text-lg sm:text-xl font-bold num mt-0.5 ${cls(pnl)}" data-count="${pnl}" data-count-fmt="money">${money(pnl)}</div>
         </div>
         <div class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-4 py-3">
           <div class="text-[11px] text-stone-500 dark:text-stone-400">已实现盈亏</div>
-          <div class="text-lg sm:text-xl font-bold num mt-0.5 ${cls(realized)}">${money(realized)}</div>
+          <div class="text-lg sm:text-xl font-bold num mt-0.5 ${cls(realized)}" data-count="${realized}" data-count-fmt="money">${money(realized)}</div>
         </div>
         <div class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-4 py-3">
           <div class="text-[11px] text-stone-500 dark:text-stone-400">累计盈亏</div>
-          <div class="text-lg sm:text-xl font-bold num mt-0.5 ${cls(totalPnl)}">${money(totalPnl)}</div>
+          <div class="text-lg sm:text-xl font-bold num mt-0.5 ${cls(totalPnl)}" data-count="${totalPnl}" data-count-fmt="money">${money(totalPnl)}</div>
         </div>
         <div class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-4 py-3">
           <div class="text-[11px] text-stone-500 dark:text-stone-400">收益率</div>
-          <div class="text-lg sm:text-xl font-bold num mt-0.5 ${cls(pnlPct)}">${pct(pnlPct)}</div>
+          <div class="text-lg sm:text-xl font-bold num mt-0.5 ${cls(pnlPct)}" data-count="${pnlPct}" data-count-fmt="pct">${pct(pnlPct)}</div>
         </div>
       </div>`;
   }
@@ -319,7 +319,7 @@
       </div>`;
   }
 
-  function render() {
+  function render(animate) {
     const root = document.getElementById('portfolio-root');
     const countEl = document.getElementById('count-portfolio');
     if (!root) return;
@@ -339,6 +339,17 @@
       ${renderActions(p)}
       ${renderRows(p, filteredRows)}
       ${renderActivity(p)}`;
+
+    if (animate) {
+      root.querySelectorAll('[data-count]').forEach((el) => {
+        const to = Number(el.dataset.count);
+        if (!isFinite(to)) return;
+        const fmt = el.dataset.countFmt === 'pct'
+          ? function (v) { return pct(v); }
+          : function (v) { return money(v); };
+        animateCount(el, to, { fmt });
+      });
+    }
 
     if (countEl) countEl.textContent = `${filteredRows.length} 只持仓`;
     bindEvents(p);
@@ -522,7 +533,7 @@
     render();
   }
 
-  window.renderPortfolio = render;
+  window.renderPortfolio = function () { render(true); };
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

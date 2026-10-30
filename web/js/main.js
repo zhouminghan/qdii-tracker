@@ -21,6 +21,7 @@
     // 当前激活 Tab + 站内搜索词（renderCategory 与搜索框共用）
     let ACTIVE_TAB = 'offshore';
     let SEARCH_QUERY = '';
+    const ROW_STAGGERED = {};
 
     // 以下工具函数已抽到 web/js/utils.js（普通 script，全局作用域）：
     //   shareSort / buyStatusRank / getOffshoreDisplayValues / getSeriesDisplayNavDate / getSortValue / sortSeries
@@ -399,6 +400,15 @@
           </tbody>
         </table>
       `;
+
+      if (!ROW_STAGGERED[tab]) {
+        ROW_STAGGERED[tab] = true;
+        container.querySelectorAll('tbody > tr').forEach((row, i) => {
+          if (i >= 10) return;
+          row.classList.add('row-in');
+          row.style.animationDelay = `${i * 22}ms`;
+        });
+      }
 
       // 绑定排序点击（th 整体或 th 内嵌的 ↓/↑ span 都触发）
       container.querySelectorAll('[data-sort-key]').forEach(el => {
@@ -1108,10 +1118,23 @@
         const isCurrent = sec.dataset.category === tab;
         sec.style.display = isCurrent ? '' : 'none';
         sec.setAttribute('aria-hidden', isCurrent ? 'false' : 'true');
+        if (isCurrent) {
+          sec.classList.remove('panel-enter');
+          void sec.offsetWidth;
+          sec.classList.add('panel-enter');
+        }
       });
       // 市场参照系：投资知识/市场温度页不展示，场外/场内展示
       const market = document.getElementById('market-overview');
-      if (market) market.style.display = (tab === 'knowledge' || tab === 'temperature') ? 'none' : '';
+      if (market) {
+        const showMarket = tab !== 'knowledge' && tab !== 'temperature';
+        market.style.display = showMarket ? '' : 'none';
+        if (showMarket) {
+          market.classList.remove('panel-enter');
+          void market.offsetWidth;
+          market.classList.add('panel-enter');
+        }
+      }
       document.querySelectorAll('.tab-btn').forEach(btn => {
         const isCurrent = btn.dataset.tab === tab;
         btn.setAttribute('aria-selected', isCurrent ? 'true' : 'false');
