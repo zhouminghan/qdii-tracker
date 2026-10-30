@@ -27,7 +27,7 @@
 
 | 属性 | 内容 |
 |------|------|
-| **职责** | Pass 1: lsjz+pzd 双源补净值/收益（4 线程并行）；Pass 2: F10 补规模/经理/成立/费率；Pass 2b: 补 buy_rules/sell_rules；Pass 3: 补 chg_ytd；Pass 4: 补 chg_since_inception；最后刷新申购状态（美元份额同样追踪 buy_status_history）。`_fill_etf_prices` 每日刷新 ETF 场内价/涨跌/规模并重算 series_scale/total_scale。支持 `--scope otc|etf`（场外/场内拆分）与 `--codes`（单基金） |
+| **职责** | 两阶段：Pass 1 用 lsjz+pzd 双源并行补净值/收益（4 线程），并由 `_compute_period_returns` 在无 equityReturn 时用单位净值兜底 YTD/成立来；Pass 1 后若无缺失字段则跳过第二批。第二批按需运行 Pass 2（F10 基础信息）、Pass 2b（OTC 申赎规则）、Pass 3（chg_ytd）、Pass 4（chg_since_inception）。最后刷新申购状态（美元份额同样追踪 buy_status_history）。`_fill_etf_prices` 每日刷新 ETF 场内价/涨跌/规模并重算 series_scale/total_scale。支持 `--scope otc|etf`（场外/场内拆分）与 `--codes`（单基金） |
 | **输入文件** | `web/data/{cat}.json`（6 个分类） |
 | **输出文件** | 同文件覆写 + `web/data/meta.json`（bump_generated_at） |
 | **依赖** | `core.constants`、`core.utils`、`sources.eastmoney_source`、`sources.akshare_source`、`sources.ths_source` |

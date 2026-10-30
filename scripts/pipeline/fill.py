@@ -175,16 +175,36 @@ def main():
 
     loaded_data = _load_categories(data_dir, categories)
     s1 = _fill_nav_and_returns(loaded_data, only_codes)
-    s2 = _fill_basic_info(loaded_data, only_codes)
-    s3, f3 = _fill_ytd(loaded_data, only_codes)
-    s4, f4 = _fill_inception(loaded_data, only_codes)
+    flags = _missing_flags(loaded_data, only_codes)
+    s2 = s2b = 0
+    s3 = f3 = 0
+    s4 = f4 = 0
+    if any(flags.values()):
+        if flags["basic"]:
+            s2 = _fill_basic_info(loaded_data, only_codes)
+        else:
+            print("\n⏭  Pass 2 跳过（基础信息已完整）")
+        if flags["rules"]:
+            s2b = _fill_fee_rules(loaded_data, only_codes)
+        else:
+            print("⏭  Pass 2b 跳过（申赎规则已完整）")
+        if flags["ytd"]:
+            s3, f3 = _fill_ytd(loaded_data, only_codes)
+        else:
+            print("⏭  Pass 3 跳过（chg_ytd 已完整）")
+        if flags["inception"]:
+            s4, f4 = _fill_inception(loaded_data, only_codes)
+        else:
+            print("⏭  Pass 4 跳过（chg_since_inception 已完整）")
+    else:
+        print("\n✅ 第一批全部成功且无缺失字段，跳过第二批兜底")
     _write_back(data_dir, loaded_data)
     if scope in ("all", "etf"):
         _fill_etf_prices(data_dir, only_codes)
     _refresh_purchase_status(data_dir, only_codes, categories)
 
     print()
-    print(f"📊 总结：Pass1(净值) {s1[0]} / {s1[1]} / {s1[2]} | Pass2(基础) {s2} | Pass3(YTD) {s3}/{f3} | Pass4(成立来) {s4}/{f4}")
+    print(f"📊 总结：Pass1(净值) {s1[0]} / {s1[1]} / {s1[2]} | Pass2(基础) {s2} | Pass2b(规则) {s2b} | Pass3(YTD) {s3}/{f3} | Pass4(成立来) {s4}/{f4}")
 
 
 def _load_categories(data_dir, categories=None):
@@ -256,14 +276,51 @@ def _fill_nav_and_returns(loaded_data, only_codes):
     return success, fail, total
 
 
+def _basic_info_missing(sh: dict, is_etf: bool = False) -> list:
+    """F10 可补的基础字段。场内 ETF 不适用申购费率字段，避免每晚空跑。"""
+    missing = []
+    if sh.get("scale") in (None, "", 0):
+        missing.append("scale")
+    if sh.get("established") in (None, ""):
+        missing.append("established")
+    if sh.get("manager") in (None, ""):
+        missing.append("manager")
+    if not is_etf:
+        if sh.get("sale_service_fee") is None:
+            missing.append("sale_service_fee")
+        if sh.get("mgmt_fee") is None:
+            missing.append("mgmt_fee")
+        if sh.get("first_buy_rate") is None:
+            missing.append("first_buy_rate")
+    return missing
+
+
+def _missing_flags(loaded_data, only_codes) -> dict:
+    """扫描 Pass1 之后仍缺的字段，决定是否需要跑第二批兜底。"""
+    flags = {"basic": False, "rules": False, "ytd": False, "inception": False}
+    for cat, d in loaded_data.items():
+        is_etf = cat == "etf"
+        for s in d["series"]:
+            for sh in s["shares"]:
+                if only_codes and sh["code"] not in only_codes:
+                    continue
+                if _basic_info_missing(sh, is_etf=is_etf):
+                    flags["basic"] = True
+                if not is_etf and not sh.get("buy_rules") and not sh.get("sell_rules"):
+                    flags["rules"] = True
+                if sh.get("chg_ytd") in (None, "", 0):
+                    flags["ytd"] = True
+                if not is_etf and sh.get("chg_since_inception") is None:
+                    flags["inception"] = True
+    return flags
+
+
 def _fill_basic_info(loaded_data, only_codes):
     print("\n" + "=" * 50 + "\nPass 2: F10 补充规模/成立日期/基金经理/费率\n" + "=" * 50)
     f10_targets = [(cat, sh["code"], sh) for cat, d in loaded_data.items()
                    for s in d["series"] for sh in s["shares"]
                    if (not only_codes or sh["code"] in only_codes)
-                   and (sh.get("scale") in (None, "", 0) or sh.get("established") in (None, "")
-                        or sh.get("manager") in (None, "") or sh.get("sale_service_fee") is None
-                        or sh.get("mgmt_fee") is None or sh.get("first_buy_rate") is None)]
+                   and _basic_info_missing(sh, is_etf=(cat == "etf"))]
     total2 = len(f10_targets)
     print(f"🎯 目标：{total2} 只")
     success2 = 0
@@ -282,14 +339,21 @@ def _fill_basic_info(loaded_data, only_codes):
                         sh[key] = info[key]; changed.append(key)
                 if changed: success2 += 1; _safe_print(f"  [{i}/{total2}] ✅ {code} 补上 {changed}")
             else: _safe_print(f"  [{i}/{total2}] ❌ {code} F10 失败")
+    return success2
 
+
+def _fill_fee_rules(loaded_data, only_codes):
     # Pass 2b
     print("\n" + "=" * 50 + "\nPass 2b: 补充 buy_rules / sell_rules\n" + "=" * 50)
     fee_targets = [(cat, sh["code"], sh) for cat, d in loaded_data.items()
                    for s in d["series"] for sh in s["shares"]
                    if (not only_codes or sh["code"] in only_codes)
+                   and cat != "etf"
                    and not sh.get("buy_rules") and not sh.get("sell_rules")]
     total2b = len(fee_targets)
+    if not total2b:
+        print("  无缺失，跳过")
+        return 0
     print(f"🎯 目标：{total2b} 只")
     success2b = 0
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
@@ -315,7 +379,7 @@ def _fill_basic_info(loaded_data, only_codes):
             if (i) % 20 == 0:
                 print(f"  进度: {i}/{total2b}")
     print(f"  ✅ 补上 {success2b}/{total2b} 只")
-    return success2
+    return success2b
 
 
 def _fill_ytd(loaded_data, only_codes):

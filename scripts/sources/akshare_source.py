@@ -2,6 +2,7 @@
 AKShare 数据源：全量批量接口 + 逐只接口。
 从 enrich_data.py / fill_missing.py / refresh_purchase.py / scan_funds.py / fetch_holdings.py 提取。
 """
+import random
 import time
 
 import akshare as ak
@@ -15,7 +16,7 @@ _call_ak = make_timeout_caller(AKSHARE_TIMEOUT)
 # 全量批量接口从 GitHub Actions 美区 IP 访问 eastmoney 偶发 502/超时，
 # 统一做指数退避重试，重试耗尽后仍失败则由各 fetch 函数决定如何降级。
 _BATCH_RETRIES = 3
-_BATCH_BACKOFF = 3.0
+_BATCH_BACKOFF = 2.0
 
 
 def _call_ak_batch(func, *args, **kwargs):
@@ -27,7 +28,7 @@ def _call_ak_batch(func, *args, **kwargs):
         except Exception as e:  # noqa: BLE001
             last = e
             if attempt < _BATCH_RETRIES - 1:
-                time.sleep(_BATCH_BACKOFF * (attempt + 1))
+                time.sleep(_BATCH_BACKOFF * (2 ** attempt) + random.uniform(0, 0.5))
     raise last
 
 

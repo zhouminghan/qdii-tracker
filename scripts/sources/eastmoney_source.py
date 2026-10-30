@@ -118,21 +118,46 @@ def _compute_period_returns(arr: list) -> dict:
     非排名份额（D/F/I/美元/联接）不在 fund_open_fund_rank_em 里，靠这里保持
     chg_ytd / chg_since_inception 每日刷新；与 akshare「累计收益率走势」存在
     分红口径的轻微差异，可接受。
+
+    当 equityReturn 缺失时（如美元份额），退回用单位净值 y 计算：
+    - 成立来 = (最新净值 - 首条净值) / 首条净值
+    - 今年来 = (最新净值 - 上年末净值) / 上年末净值；若无上年数据，用首条净值。
     """
     now = datetime.now(BEIJING_TZ)
     year_start_ms = int(datetime(now.year, 1, 1, tzinfo=BEIJING_TZ).timestamp() * 1000)
     cum = 1.0
     ytd = None
+    has_er = False
+    nav_first = None
+    nav_last = None
+    nav_year_base = None  # 上一个交易日的单位净值（< year_start_ms）
     for item in arr:
         er = to_float(item.get("equityReturn"))
-        if er is None:
+        if er is not None:
+            has_er = True
+            cum *= (1 + er / 100)
+            if item.get("x", 0) >= year_start_ms:
+                ytd = (ytd if ytd is not None else 1.0) * (1 + er / 100)
+        nav = to_float(item.get("y"))
+        if nav is None:
             continue
-        cum *= (1 + er / 100)
-        if item.get("x", 0) >= year_start_ms:
-            ytd = (ytd if ytd is not None else 1.0) * (1 + er / 100)
-    out = {"chg_since_inception": round((cum - 1) * 100, 2)}
+        if nav_first is None:
+            nav_first = nav
+        nav_last = nav
+        if item.get("x", 0) < year_start_ms:
+            nav_year_base = nav
+
+    out = {}
+    if has_er:
+        out["chg_since_inception"] = round((cum - 1) * 100, 2)
+    elif nav_first is not None and nav_last is not None and nav_first:
+        out["chg_since_inception"] = round((nav_last - nav_first) / nav_first * 100, 2)
     if ytd is not None:
         out["chg_ytd"] = round((ytd - 1) * 100, 2)
+    else:
+        base = nav_year_base if nav_year_base is not None else nav_first
+        if base is not None and nav_last is not None and base:
+            out["chg_ytd"] = round((nav_last - base) / base * 100, 2)
     return out
 
 
