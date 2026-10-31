@@ -108,8 +108,8 @@ jobs:
           echo "=== [4/4] pipeline.holdings（主动基金持仓）==="
           python -m pipeline.holdings
 
-      # 历史净值 / sparkline / 溢价历史：完整模式重建，增量模式只补最新点
-      - name: 🗂️ 历史净值 / sparkline / 溢价历史
+      # 历史净值 / 溢价历史：完整模式重建，增量模式只补最新点
+      - name: 🗂️ 历史净值 / 溢价历史
         run: |
           cd scripts
           if [ "${{ steps.mode.outputs.mode }}" = "full" ]; then
@@ -119,8 +119,6 @@ jobs:
             echo "=== pipeline.nav_history（增量历史净值）==="
             python -m pipeline.nav_history --incremental
           fi
-          echo "=== pipeline.sparklines ==="
-          python -m pipeline.sparklines
           echo "=== pipeline.premium_history ==="
           python -m pipeline.premium_history
 

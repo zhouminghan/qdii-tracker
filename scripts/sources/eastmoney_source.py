@@ -162,7 +162,7 @@ def _compute_period_returns(arr: list) -> dict:
 
 
 def fetch_pzd_history(code: str):
-    """抓 pingzhongdata 的完整历史净值序列（供 sparkline 使用）。
+    """抓 pingzhongdata 的完整历史净值序列（供 nav_history 使用）。
 
     返回 [{"date": "YYYY-MM-DD", "nav": float}, ...]（按日期升序）。
     数据源不可用 / 解析失败返回 None（调用方跳过该基金）。

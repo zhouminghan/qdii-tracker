@@ -218,12 +218,16 @@ function fetchGlobalQuotes() {
     return { price, changePct: Number.isFinite(changePct) ? changePct : 0 };
   };
   const fetchOne = async (secid) => {
-    for (const host of hosts) {
-      const r = await window.jsonpFetch(
-        (cb) => `https://${host}/api/qt/stock/get?secid=${secid}&fields=f43,f170&cb=${cb}&ut=${ut}`,
-        { usesCallback: true, timeoutMs: 5000, failValue: null, onData: parse }
-      );
-      if (r) return r;
+    // 偶发空回（限流/断连）时稍等重试一轮，避免首屏卡片空白
+    for (let attempt = 0; attempt < 2; attempt++) {
+      for (const host of hosts) {
+        const r = await window.jsonpFetch(
+          (cb) => `https://${host}/api/qt/stock/get?secid=${secid}&fields=f43,f170&cb=${cb}&ut=${ut}`,
+          { usesCallback: true, timeoutMs: 5000, failValue: null, onData: parse }
+        );
+        if (r) return r;
+      }
+      if (attempt === 0) await new Promise((res) => setTimeout(res, 1200));
     }
     return null;
   };

@@ -1288,17 +1288,6 @@
       line-height: 1;
     }
 
-    /* ===== 行内 sparkline ===== */
-    .sparkline {
-      width: 72px;
-      height: 20px;
-      margin-top: 0.25rem;
-      display: block;
-      overflow: visible;
-    }
-    .spark-up { color: var(--green-9); }
-    .spark-down { color: var(--red-9); }
-
     .premium-hist-btn {
       border: none;
       background: transparent;
@@ -1517,11 +1506,6 @@
     .down, .ss-mkt-chg.down { color: var(--green-11) !important; }
     html.dark .up, html.dark .ss-mkt-chg.up { color: var(--red-11) !important; }
     html.dark .down, html.dark .ss-mkt-chg.down { color: var(--green-11) !important; }
-    .spark-up { color: var(--green-11) !important; }
-    .spark-down { color: var(--red-11) !important; }
-    html.dark .spark-up { color: var(--green-11) !important; }
-    html.dark .spark-down { color: var(--red-11) !important; }
-
     .badge-open, .ss-badge-open, .buy-hist-tip .tip-badge-open {
       background: var(--green-3) !important; color: var(--green-11) !important;
     }

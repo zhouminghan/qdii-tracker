@@ -242,28 +242,6 @@ window.navAgeDays = navAgeDays;
 window.buildCsv = buildCsv;
 window.matchFundQuery = matchFundQuery;
 
-/**
- * 把一维数值序列转成 SVG polyline 的 points 字符串（用于行内 sparkline）。
- * 返回 { points, min, max, trend }；数据点不足 2 个返回 null。
- * w/h 为视口尺寸，留 1px 内边距。
- */
-function sparklinePath(values, w = 72, h = 20) {
-  if (!Array.isArray(values) || values.length < 2) return null;
-  const nums = values.map(Number).filter(Number.isFinite);
-  if (nums.length < 2) return null;
-  let min = nums[0], max = nums[0];
-  for (const v of nums) { if (v < min) min = v; if (v > max) max = v; }
-  const range = max - min || 1;
-  const pad = 1;
-  const pts = nums.map((v, i) => {
-    const x = pad + (i / (nums.length - 1)) * (w - 2 * pad);
-    const y = pad + (1 - (v - min) / range) * (h - 2 * pad);
-    return `${x.toFixed(1)},${y.toFixed(1)}`;
-  }).join(' ');
-  return { points: pts, min, max, trend: nums[nums.length - 1] >= nums[0] ? 1 : -1 };
-}
-window.sparklinePath = sparklinePath;
-
 // ==================== 排序：份额 / 系列 ====================
 
 function shareSort(shares) {

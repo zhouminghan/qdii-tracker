@@ -154,12 +154,6 @@
         const failed = settled.find(r => r.status === 'rejected');
         if (failed) throw failed.reason;
 
-        try {
-          const sl = await (await fetch(`./data/sparklines.json?v=${ver}`)).json();
-          STATE.sparklines = sl.sparklines || {};
-        } catch (_) {
-          STATE.sparklines = {};
-        }
         RENDER_TABS.forEach(renderCategory);
         if (typeof renderPortfolio === 'function') renderPortfolio();
         // 纯静态模式：首屏数据全部来自 data/*.json（GitHub Actions 离线生成）
@@ -726,10 +720,6 @@
         ? `<span class="nav-age-badge" title="净值更新于 ${rowNavDate}，距今 ${navAge} 天">更新于 T-${navAge}</span>`
         : '';
       const fav = (typeof isFav === 'function') ? isFav(defCode) : false;
-      const spark = (STATE.sparklines && STATE.sparklines[defCode]) ? sparklinePath(STATE.sparklines[defCode]) : null;
-      const sparkHtml = spark
-        ? `<svg class="sparkline ${spark.trend >= 0 ? 'spark-up' : 'spark-down'}" viewBox="0 0 72 20" preserveAspectRatio="none" aria-hidden="true" focusable="false"><polyline points="${spark.points}" fill="none" stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>`
-        : '';
 
       return `
         <tr class="series-row border-b border-stone-100 dark:border-stone-700/50 ${isEtf ? '' : 'hover:bg-stone-50 dark:hover:bg-stone-700/30 cursor-pointer'} transition" data-series-id="${series.series_id}" data-is-etf="${isEtf ? '1' : '0'}"${grpAttr}>
@@ -749,7 +739,6 @@
                   <span class="badge ${isEtf ? 'badge-qdii' : 'badge-qdii'} ml-1">${isEtf ? 'ETF' : 'QDII'}</span>
                   ${navAgeBadge}
                 </div>
-                ${sparkHtml}
                 ${isActive && def.manager ? `<div class="text-[11px] text-stone-400 dark:text-stone-500 mt-0.5 truncate">👤 ${def.manager}</div>` : ''}
               </div>
             </div>

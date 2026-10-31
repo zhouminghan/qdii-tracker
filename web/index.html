@@ -95,6 +95,9 @@
       <button type="button" class="chip" data-kb-filter="lof" aria-pressed="false">LOF 套利</button>
       <button type="button" class="chip" data-kb-filter="pick" aria-pressed="false">选基</button>
       <button type="button" class="chip" data-kb-filter="premium" aria-pressed="false">溢价</button>
+      <button type="button" class="chip" data-kb-filter="fx" aria-pressed="false">汇率</button>
+      <button type="button" class="chip" data-kb-filter="quota" aria-pressed="false">限购</button>
+      <button type="button" class="chip" data-kb-filter="index" aria-pressed="false">指数</button>
     </div>
       <!-- 卡片 1：场内 vs 场外 -->
       <details class="bg-sky-50 dark:bg-stone-900/50 border border-sky-200 dark:border-stone-700 rounded-xl overflow-hidden" id="card-onshore-offshore" data-kb-filter="onshore" open>
@@ -358,6 +361,83 @@
             ② <b>QDII 额度卡死套利</b>：套利通道被堵住，场内外价差无法被「搬砖」抹平，溢价越憋越高。
           </div>
           <p class="text-[11px] text-stone-500 dark:text-stone-400 mt-3">⚠️ 场外「开门 3000 元/日」只是场外透气口，<b>不是</b>场内溢价的泄压阀。看到高溢价要警惕：等你搬进去卖时，溢价可能已缩水甚至变折价。</p>
+        </div>
+      </details>
+
+      <!-- 卡片 6：汇率与 QDII 净值 -->
+      <details class="bg-teal-50 dark:bg-stone-900/50 border border-teal-200 dark:border-stone-700 rounded-xl overflow-hidden mt-3" id="card-fx" data-kb-filter="fx">
+        <summary class="cursor-pointer px-5 py-3 text-sm font-medium text-teal-900 dark:text-stone-300 hover:bg-teal-100 dark:hover:bg-stone-700 transition flex items-center gap-2 select-none">
+          <span>💱</span>
+          <span>美元 / 人民币 怎么影响 QDII 净值？</span>
+        </summary>
+        <div class="px-5 pb-4 pt-2 bg-white dark:bg-stone-800">
+          <p class="text-xs text-stone-500 dark:text-stone-400 mb-3">QDII 底层是美元资产，净值约等于 <b>美股涨跌 × 汇率变动</b>。同一只基金还分「人民币份额」和「美元份额」。</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+            <div class="bg-teal-50 dark:bg-stone-900/50 border border-teal-100 dark:border-stone-700 rounded-lg px-3 py-2 text-teal-800 dark:text-stone-300">
+              💵 <b>美元升值 / 人民币贬值</b>：换回人民币更多 → <b>净值受益</b>（看板里美元/人民币数值 ↑）。
+            </div>
+            <div class="bg-amber-50 dark:bg-stone-900/50 border border-amber-100 dark:border-stone-700 rounded-lg px-3 py-2 text-amber-800 dark:text-stone-300">
+              ⚠️ <b>美元贬值 / 人民币升值</b>：换回人民币变少 → 净值被汇率吃掉一块。
+            </div>
+          </div>
+          <table class="w-full text-xs border border-stone-200 dark:border-stone-700 rounded-lg overflow-hidden mt-3">
+            <thead class="bg-stone-50 dark:bg-stone-900 text-stone-600 dark:text-stone-400">
+              <tr class="border-b border-stone-200 dark:border-stone-700">
+                <th class="text-left px-3 py-2 font-medium w-32">份额</th>
+                <th class="text-left px-3 py-2 font-medium">汇率敞口</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-stone-100">
+              <tr><td class="px-3 py-2 text-stone-700 dark:text-stone-300">人民币份额</td><td class="px-3 py-2 text-stone-700 dark:text-stone-300">用人民币买卖，<b>汇率波动直接计入每日净值</b>。</td></tr>
+              <tr><td class="px-3 py-2 text-stone-700 dark:text-stone-300">美元份额</td><td class="px-3 py-2 text-stone-700 dark:text-stone-300">用美元计价，不体现美元/人民币波动；最终换回人民币时才受汇率影响。</td></tr>
+            </tbody>
+          </table>
+          <p class="text-[11px] text-stone-500 dark:text-stone-400 mt-3">普通人买<b>人民币份额</b>即可，净值已经把汇率算进去了，不必自己再叠加计算。</p>
+        </div>
+      </details>
+
+      <!-- 卡片 7：QDII 限购与额度 -->
+      <details class="bg-orange-50 dark:bg-stone-900/50 border border-orange-200 dark:border-stone-700 rounded-xl overflow-hidden mt-3" id="card-quota" data-kb-filter="quota">
+        <summary class="cursor-pointer px-5 py-3 text-sm font-medium text-orange-900 dark:text-stone-300 hover:bg-orange-100 dark:hover:bg-stone-700 transition flex items-center gap-2 select-none">
+          <span>🚧</span>
+          <span>QDII 为什么老限购？—— 外汇额度那点事</span>
+        </summary>
+        <div class="px-5 pb-4 pt-2 bg-white dark:bg-stone-800">
+          <p class="text-xs text-stone-500 dark:text-stone-400 mb-3">QDII 限购的本质是<b>外汇额度</b>：每家基金公司能用于海外投资的美元有上限，额度用完就只能<b>暂停申购</b>或<b>限大额</b>。</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+            <div class="bg-orange-50 dark:bg-stone-900/50 border border-orange-100 dark:border-stone-700 rounded-lg px-3 py-2 text-orange-800 dark:text-stone-300">
+              🔎 <b>怎么看</b>：本看板每只基金的「申购」列直接标了 开放 / 限大额 / 暂停申购；展开系列还能看到限购历史。
+            </div>
+            <div class="bg-emerald-50 dark:bg-stone-900/50 border border-emerald-100 dark:border-stone-700 rounded-lg px-3 py-2 text-emerald-800 dark:text-stone-300">
+              🧭 <b>怎么应对</b>：换额度更足的基金公司；用场内 ETF（但注意溢价）；或小额定投慢慢攒。
+            </div>
+          </div>
+          <p class="text-[11px] text-stone-500 dark:text-stone-400 mt-3">⚠️ 限购一般不是「基金要不行了」，而是「太火买不到」；反过来，额度放开常是值得关注的信号。</p>
+        </div>
+      </details>
+
+      <!-- 卡片 8：美股指数怎么选 -->
+      <details class="bg-indigo-50 dark:bg-stone-900/50 border border-indigo-200 dark:border-stone-700 rounded-xl overflow-hidden mt-3" id="card-index" data-kb-filter="index">
+        <summary class="cursor-pointer px-5 py-3 text-sm font-medium text-indigo-900 dark:text-stone-300 hover:bg-indigo-100 dark:hover:bg-stone-700 transition flex items-center gap-2 select-none">
+          <span>🧭</span>
+          <span>美股指数怎么选？—— 纳指 / 标普 / 道指 / 费半</span>
+        </summary>
+        <div class="px-5 pb-4 pt-2 bg-white dark:bg-stone-800">
+          <table class="w-full text-xs border border-stone-200 dark:border-stone-700 rounded-lg overflow-hidden">
+            <thead class="bg-stone-50 dark:bg-stone-900 text-stone-600 dark:text-stone-400">
+              <tr class="border-b border-stone-200 dark:border-stone-700">
+                <th class="text-left px-3 py-2 font-medium w-24">指数</th>
+                <th class="text-left px-3 py-2 font-medium">特点</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-stone-100">
+              <tr><td class="px-3 py-2 text-stone-700 dark:text-stone-300">纳指 100</td><td class="px-3 py-2 text-stone-700 dark:text-stone-300">科技成长，AI / 半导体权重高，<b>波动大</b>。</td></tr>
+              <tr><td class="px-3 py-2 text-stone-700 dark:text-stone-300">标普 500</td><td class="px-3 py-2 text-stone-700 dark:text-stone-300">行业均衡，美股整体代表，<b>长期定投首选</b>。</td></tr>
+              <tr><td class="px-3 py-2 text-stone-700 dark:text-stone-300">道指</td><td class="px-3 py-2 text-stone-700 dark:text-stone-300">30 只蓝筹，价格加权，代表性偏弱。</td></tr>
+              <tr><td class="px-3 py-2 text-stone-700 dark:text-stone-300">费城半导体</td><td class="px-3 py-2 text-stone-700 dark:text-stone-300">纯半导体行业，<b>弹性最大、回撤也最大</b>，只适合当卫星仓。</td></tr>
+            </tbody>
+          </table>
+          <p class="text-[11px] text-stone-500 dark:text-stone-400 mt-3">求稳以标普 500 打底；能承受高波动再配纳指 100 或费半，注意行业集中度。</p>
         </div>
       </details>
 
