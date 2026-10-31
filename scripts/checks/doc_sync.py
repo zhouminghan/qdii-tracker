@@ -80,7 +80,7 @@ def fundctl_commands():
     """从 fundctl.py --help 解析子命令名 + 帮助文本。"""
     try:
         out = subprocess.run(
-            ["python3", "fundctl.py", "--help"],
+            [sys.executable, "fundctl.py", "--help"],
             capture_output=True, text=True, cwd=SCRIPTS_DIR, timeout=15,
         )
     except (OSError, subprocess.SubprocessError):

@@ -6,6 +6,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent.parent
@@ -84,7 +85,7 @@ def _check_agent_commands():
     valid = set()
     try:
         result = subprocess.run(
-            ["python3", str(ROOT / "scripts" / "fundctl.py"), "--help"],
+            [sys.executable, str(ROOT / "scripts" / "fundctl.py"), "--help"],
             capture_output=True, text=True, timeout=5
         )
         valid = set(re.findall(r'\s+(\w+)\s+', result.stdout))

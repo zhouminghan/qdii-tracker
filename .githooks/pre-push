@@ -5,18 +5,24 @@ set -e
 
 ROOT="$(git rev-parse --show-toplevel)"
 cd "$ROOT"
+# 优先用项目 venv 的 Python（避免系统 python3 缺依赖）；无 venv 时退回 python3。
+if [ -x "$ROOT/.venv/bin/python" ]; then
+  PY="$ROOT/.venv/bin/python"
+else
+  PY="python3"
+fi
 
 echo "🔄 pre-push: 本地门禁（pytest + fundctl check --offline --agent-rules）..."
 
 # 1) 单元测试（未安装 pytest 时提示跳过，避免本地无测试依赖被卡死；CI 仍会强制跑）
-if python3 -c "import pytest" >/dev/null 2>&1; then
-  python3 -m pytest test/ -q
+if "$PY" -c "import pytest" >/dev/null 2>&1; then
+  "$PY" -m pytest test/ -q
 else
   echo "⚠️  未检测到 pytest，跳过单元测试（安装见 scripts/requirements-dev.txt）"
 fi
 
 # 2) 数据 + Agent 规则 + 文档同步门禁（离线，跳过跨源联网验证）
 cd "$ROOT/scripts"
-python3 fundctl.py check --offline --agent-rules
+"$PY" fundctl.py check --offline --agent-rules
 
 echo "✅ pre-push: 本地门禁通过"
