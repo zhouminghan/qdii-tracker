@@ -46,6 +46,7 @@ const SYMBOLS = [
 // 全球指数卡：东财 push2 实时行情（腾讯不提供日经/斯托克50，恒生腾讯有但统一走东财更一致）
 const GLOBAL_SYMBOLS = [
   { em: '100.N225', name: '日经 225',      emoji: '🇯🇵', digits: 2 },
+  { em: '100.HSI',  name: '恒生指数',      emoji: '🇭🇰', digits: 2 },
   { em: '251.SOX',  name: '费城半导体',    emoji: '⚡', digits: 2 },
 ];
 
