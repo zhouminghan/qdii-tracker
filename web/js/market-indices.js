@@ -1,5 +1,5 @@
 // ============================================================================
-// market-indices.js  —  顶部「市场参照系」指标卡（4 个美股指数 + 美元/人民币汇率）
+// market-indices.js  —  顶部「市场参照系」指标卡（美股指数 + 沪深300 + 美元/人民币汇率）
 // ============================================================================
 // 数据源：腾讯行情 https://qt.gtimg.cn/q={symbol1,symbol2,...}
 //  ，通过 <script> 标签加载（JSONP）→ 天然绕过 CORS
@@ -39,14 +39,13 @@ const SYMBOLS = [
   { qq: 'usINX',    name: '标普 500',       emoji: '🇺🇸', digits: 2, kind: 'stock' },
   { qq: 'usIXIC',   name: '纳斯达克综合',   emoji: '💻', digits: 2, kind: 'stock' },
   { qq: 'usNDX',    name: '纳斯达克 100',   emoji: '🚀', digits: 2, kind: 'stock' },
+  { qq: 'sh000300', name: '沪深 300',       emoji: '🇨🇳', digits: 2, kind: 'stock' },
   { qq: 'fxUSDCNY', name: '美元/人民币',    emoji: '💵', digits: 4, kind: 'fx'    },
 ];
 
 // 全球指数卡：东财 push2 实时行情（腾讯不提供日经/斯托克50，恒生腾讯有但统一走东财更一致）
 const GLOBAL_SYMBOLS = [
   { em: '100.N225', name: '日经 225',      emoji: '🇯🇵', digits: 2 },
-  { em: '100.HSI',  name: '恒生指数',      emoji: '🇭🇰', digits: 2 },
-  { em: '100.SX5E', name: '欧洲斯托克 50', emoji: '🇪🇺', digits: 2 },
   { em: '251.SOX',  name: '费城半导体',    emoji: '⚡', digits: 2 },
 ];
 
@@ -56,6 +55,7 @@ const DATA_SYMBOL_MAP = {
   'usINX':    '100.SPX',
   'usIXIC':   '100.NDX',     // 纳斯达克综合 → 复用旧 NDX 卡位
   'usNDX':    '100.NDX100',  // 纳斯达克 100 → 复用旧 NDX100 卡位
+  'sh000300': 'sh000300',    // 沪深 300（腾讯 A 股指数）
   'fxUSDCNY': '133.USDCNH',  // 汇率卡位（旧 USDCNH 卡位）
 };
 
