@@ -21,7 +21,7 @@ from core.constants import CATEGORIES, DATA_DIR, DATA_SCHEMA_VERSION, HOLDINGS_C
 from core.config_loader import get_config, save_config, validate_config
 
 # 直接 import pipeline 模块（替代 subprocess 调用）
-from pipeline import scan, enrich, fill, holdings, reclassify, codegen, sparklines, premium_history, market_temperature
+from pipeline import scan, enrich, fill, holdings, reclassify, codegen, sparklines, premium_history, nav_history, market_temperature
 
 from checks.verify_data import run_verification
 from checks.verify_purchase import run_verification as run_purchase_verification
@@ -144,6 +144,12 @@ def cmd_refresh(args):
     else:
         _run(fill.main, *fill_args)
     _run(market_temperature.main)
+    nav_args = []
+    if args.scope and args.scope != "all":
+        nav_args += ["--scope", args.scope]
+    if args.codes:
+        nav_args += ["--codes", args.codes]
+    _run(nav_history.main, "--incremental", *nav_args)
 
 
 def cmd_sync(_args):
@@ -153,6 +159,7 @@ def cmd_sync(_args):
     _run(holdings.main)
     _run(sparklines.main)
     _run(premium_history.main)
+    _run(nav_history.main)
     _run(market_temperature.main)
     _run(codegen.main)
 

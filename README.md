@@ -82,6 +82,7 @@ qdii-tracker/
 │   ├── test_akshare_source.py
 │   ├── test_classify.py
 │   ├── test_market_temperature.py
+│   ├── test_nav_history.py
 │   ├── test_premium_history.py
 │   ├── test_purchase_history.py
 │   ├── test_sparklines.py
@@ -120,14 +121,7 @@ cd ../web && python3 -m http.server 8765      # 本地开发
 
 <!-- DOCSYNC START: commands -->
 ```bash
-python3 fundctl.py add          # 新增/强制纳入一只基金
-python3 fundctl.py move         # 移动分类
-python3 fundctl.py remove       # 删除一只基金（从配置和数据中移除）
-python3 fundctl.py refresh      # 增量刷新
-python3 fundctl.py sync         # 全量同步
-python3 fundctl.py diagnose     # 诊断数据异常
-python3 fundctl.py check        # 一致性校验
-python3 fundctl.py probe        # 数据源适配层探针（导入级）
+
 ```
 <!-- DOCSYNC END: commands -->
 

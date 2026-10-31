@@ -47,9 +47,13 @@ def main():
         series = align_premium(closes, navs)
         if series:
             result[code] = series
-    out = {"generated_at": beijing_now_iso(), "premiums": result}
-    write_json(DATA_DIR / "etf-premium-history.json", out)
-    print(f"✅ etf-premium-history.json 已生成：{len(result)}/{len(codes)} 只")
+    fp = DATA_DIR / "etf-premium-history.json"
+    existing = read_json(fp).get("premiums", {}) if fp.exists() else {}
+    merged = dict(existing)
+    merged.update(result)
+    out = {"generated_at": beijing_now_iso(), "premiums": merged}
+    write_json(fp, out)
+    print(f"✅ etf-premium-history.json 已生成：本次 {len(result)}/{len(codes)} 只，累计 {len(merged)} 只")
 
 
 if __name__ == "__main__":

@@ -47,6 +47,7 @@ const GLOBAL_SYMBOLS = [
   { em: '100.N225', name: '日经 225',      emoji: '🇯🇵', digits: 2 },
   { em: '100.HSI',  name: '恒生指数',      emoji: '🇭🇰', digits: 2 },
   { em: '100.SX5E', name: '欧洲斯托克 50', emoji: '🇪🇺', digits: 2 },
+  { em: '251.SOX',  name: '费城半导体',    emoji: '⚡', digits: 2 },
 ];
 
 // data-symbol 与 HTML 模板里的旧 secid 对齐（避免必须改 HTML）

@@ -74,15 +74,22 @@ def build_sparkline_payload(codes):
 
 def main():
     codes = collect_default_codes()
-    print(f"🎯 sparkline: {len(codes)} 只基金需抓历史净值")
-    payload = build_sparkline_payload(codes)
+    fp = DATA_DIR / "sparklines.json"
+    existing = read_json(fp).get("sparklines", {}) if fp.exists() else {}
+    # 优先补缺失的基金，再刷新已有基金，保证限流下也能逐步收敛到全量
+    missing = [c for c in codes if c not in existing]
+    ordered = missing + [c for c in codes if c in existing]
+    print(f"🎯 sparkline: {len(codes)} 只基金（缺 {len(missing)}）")
+    payload = build_sparkline_payload(ordered)
+    merged = dict(existing)
+    merged.update(payload)
     out = {
         "generated_at": beijing_now_iso(),
         "points": SPARKLINE_POINTS,
-        "sparklines": payload,
+        "sparklines": merged,
     }
-    write_json(DATA_DIR / "sparklines.json", out)
-    print(f"✅ sparklines.json 已生成：{len(payload)}/{len(codes)} 只")
+    write_json(fp, out)
+    print(f"✅ sparklines.json 已生成：本次 {len(payload)}/{len(codes)} 只，累计 {len(merged)} 只")
 
 
 if __name__ == "__main__":

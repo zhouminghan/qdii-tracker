@@ -8,7 +8,56 @@
   let TREND_STATE = { code: null, fullSeries: null, range: '3m', expanded: false };
   let trendLastFocus = null;
 
-  async function fetchPzdHistory(code) {
+  // IndexedDB 缓存：按 code 存历史净值序列，24h 内复用；
+  // 过期/读取失败退回实时 JSONP；实时失败再用过期缓存兜底（断网仍可看）。
+  const TREND_CACHE_DB = 'qdii-trend-cache';
+  const TREND_CACHE_STORE = 'series';
+  const TREND_CACHE_TTL = 24 * 60 * 60 * 1000;
+
+  function openTrendCacheDb() {
+    return new Promise((resolve, reject) => {
+      if (!window.indexedDB) { reject(new Error('indexeddb unavailable')); return; }
+      const req = indexedDB.open(TREND_CACHE_DB, 1);
+      req.onupgradeneeded = () => {
+        if (!req.result.objectStoreNames.contains(TREND_CACHE_STORE)) {
+          req.result.createObjectStore(TREND_CACHE_STORE);
+        }
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error || new Error('indexeddb open failed'));
+    });
+  }
+
+  async function readTrendCache(code) {
+    try {
+      const db = await openTrendCacheDb();
+      const entry = await new Promise((resolve) => {
+        const tx = db.transaction(TREND_CACHE_STORE, 'readonly');
+        const req = tx.objectStore(TREND_CACHE_STORE).get(code);
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => resolve(null);
+        tx.oncomplete = () => db.close();
+      });
+      return entry && Array.isArray(entry.series) ? entry : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function writeTrendCache(code, series) {
+    try {
+      openTrendCacheDb().then((db) => {
+        const tx = db.transaction(TREND_CACHE_STORE, 'readwrite');
+        tx.objectStore(TREND_CACHE_STORE).put({ ts: Date.now(), series }, code);
+        tx.oncomplete = () => db.close();
+        tx.onerror = () => db.close();
+      }).catch(() => {});
+    } catch (_) {
+      // 缓存写入失败不影响主流程
+    }
+  }
+
+  async function fetchPzdHistoryLive(code) {
     return window.jsonpFetch(`https://fund.eastmoney.com/pingzhongdata/${code}.js?rt=${Date.now()}`, {
       timeoutMs: 8000,
       failValue: null,
@@ -28,6 +77,49 @@
         return out;
       },
     });
+  }
+
+  async function loadLocalHistory(code) {
+    try {
+      const res = await fetch(`./data/nav-history/${code}.json?t=${Date.now()}`);
+      if (!res.ok) return null;
+      const d = await res.json();
+      const dates = d && d.dates;
+      const navs = d && d.navs;
+      if (!Array.isArray(dates) || !Array.isArray(navs) || !dates.length || dates.length !== navs.length) return null;
+      const out = [];
+      for (let i = 0; i < dates.length; i++) {
+        const nav = parseFloat(navs[i]);
+        if (!Number.isFinite(nav)) continue;
+        const prev = i > 0 ? parseFloat(navs[i - 1]) : null;
+        out.push({
+          date: new Date(dates[i] + 'T00:00:00+08:00'),
+          nav,
+          change: (prev != null && Number.isFinite(prev) && prev > 0) ? (nav / prev - 1) * 100 : null,
+        });
+      }
+      return out.length ? out : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  async function fetchPzdHistory(code) {
+    const cached = await readTrendCache(code);
+    if (cached && cached.series.length && Date.now() - cached.ts < TREND_CACHE_TTL) {
+      return cached.series;
+    }
+    const local = await loadLocalHistory(code);
+    if (local && local.length) {
+      writeTrendCache(code, local);
+      return local;
+    }
+    const fresh = await fetchPzdHistoryLive(code);
+    if (fresh && fresh.length) {
+      writeTrendCache(code, fresh);
+      return fresh;
+    }
+    return (cached && cached.series.length) ? cached.series : null;
   }
 
   function filterTrendRange(series, rangeKey) {

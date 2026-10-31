@@ -15,7 +15,7 @@ scripts/architecture_lint.py — 目录纪律强制校验
         - .nojekyll（GitHub Pages 标记文件）
         - manifest.json / sw.js / icon.svg（PWA）
         - feed.rss（每日快照订阅）
-    web/data/  仅允许 *.json（+ holdings/ 子目录，同样仅 *.json）
+    web/data/  仅允许 *.json（+ holdings/、nav-history/ 子目录，同样仅 *.json）
     web/js/    仅允许 *.js
     web/css/   仅允许 *.css
 
@@ -64,7 +64,7 @@ def _check_top_level() -> list:
 
 
 def _check_subdir(name: str, allowed_ext: set) -> list:
-    """校验子目录内文件扩展名；data/ 允许 holdings/ 子目录（同样只能放 .json）。"""
+    """校验子目录内文件扩展名；data/ 允许 holdings/、nav-history/ 子目录（同样只能放 .json）。"""
     errors = []
     subdir = WEB_DIR / name
     if not subdir.exists():
@@ -72,12 +72,12 @@ def _check_subdir(name: str, allowed_ext: set) -> list:
 
     for entry in subdir.iterdir():
         if entry.is_dir():
-            # 仅 data/holdings/ 这种一层子目录豁免，其内容仍需是 .json
-            if name == "data" and entry.name == "holdings":
+            # 仅 data/holdings/、data/nav-history/ 这种一层子目录豁免，其内容仍需是 .json
+            if name == "data" and entry.name in ("holdings", "nav-history"):
                 for sub_entry in entry.iterdir():
                     if sub_entry.is_file() and sub_entry.suffix not in allowed_ext:
                         errors.append(
-                            f"web/{name}/holdings/{sub_entry.name} 扩展名不在允许列表 {allowed_ext}"
+                            f"web/{name}/{entry.name}/{sub_entry.name} 扩展名不在允许列表 {allowed_ext}"
                         )
                 continue
             errors.append(f"web/{name}/{entry.name}/ 出现未预期的子目录")
