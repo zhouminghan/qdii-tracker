@@ -29,18 +29,18 @@
 //   · push2his 失败后尝试 push2 兜底，提高可用性
 // ============================================================================
 
-// 5 个标的：与 market-indices.js 的 SYMBOLS / DATA_SYMBOL_MAP 一一对应
-//   key 为东财 secid（直接用作 push2his 请求参数），同时也是 HTML 卡片的 data-symbol
-// why 不沿用腾讯 qq code（usDJI 等）：本模块所有 IO 都走东财，统一用 secid 维度更清爽
+// 与 market-indices.js 的卡片 data-symbol 一一对应；K 线请求默认用东财 secid。
+// 上证指数的实时卡走腾讯（sh000001），但东财 K 线 secid 是 1.000001，故用 klineSecid 区分。
 const INDICES = [
   { secid: '100.DJIA',   name: '道琼斯',         emoji: '📈', digits: 2, kind: 'stock' },
   { secid: '100.SPX',    name: '标普 500',       emoji: '🇺🇸', digits: 2, kind: 'stock' },
   { secid: '100.NDX',    name: '纳斯达克综合',   emoji: '💻', digits: 2, kind: 'stock' },
   { secid: '100.NDX100', name: '纳斯达克 100',   emoji: '🚀', digits: 2, kind: 'stock' },
+  { secid: '251.SOX',    name: '费城半导体',     emoji: '⚡', digits: 2, kind: 'stock' },
   { secid: '133.USDCNH', name: '美元/人民币',    emoji: '💵', digits: 4, kind: 'fx'    },
+  { secid: 'sh000001',   name: '上证指数',       emoji: '🇨🇳', digits: 2, kind: 'stock', klineSecid: '1.000001' },
   { secid: '100.N225',   name: '日经 225',       emoji: '🇯🇵', digits: 2, kind: 'stock' },
   { secid: '100.HSI',    name: '恒生指数',       emoji: '🇭🇰', digits: 2, kind: 'stock' },
-  { secid: '100.SX5E',   name: '欧洲斯托克 50',  emoji: '🇪🇺', digits: 2, kind: 'stock' },
 ];
 const META_BY_SECID = Object.fromEntries(INDICES.map(it => [it.secid, it]));
 
@@ -168,7 +168,7 @@ async function openIndexTrend(secid, evt) {
   const trendDisplay = { yMode: 'value', digits: meta.digits, navLabel: meta.kind === 'fx' ? '汇率' : '点位' };
   window.renderTrendRanges(trendDisplay);
 
-  const result = await fetchDayKWithFallback(secid);
+  const result = await fetchDayKWithFallback(meta.klineSecid || secid);
   if (!result || !result.series || !result.series.length) {
     if (chartEl) {
       chartEl.innerHTML = `
