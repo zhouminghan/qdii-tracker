@@ -99,9 +99,10 @@ function writeIndexCache(key, series) {
 }
 
 // 本地日 K JSON → 走势图需要的 {date, nav, change}
-async function loadLocalKline(cardSecid) {
+async function loadLocalKline(cardSecid, kind) {
   try {
-    const res = await fetch(`./data/index-kline/${cardSecid}.json?t=${Date.now()}`);
+    const dir = kind === 'fx' ? 'fx-kline' : 'index-kline';
+    const res = await fetch(`./data/${dir}/${cardSecid}.json?t=${Date.now()}`);
     if (!res.ok) return null;
     const d = await res.json();
     const dates = d && d.dates;
@@ -158,7 +159,7 @@ function parseKlines(klines) {
 
 // 拉日 K（JSONP），自动 fallback 到备选 host
 //   返回 { series: [{date, nav, change}, ...], host: string } 或 null
-async function fetchDayKWithFallback(cardSecid, klineSecid) {
+async function fetchDayKWithFallback(cardSecid, klineSecid, kind) {
   const cached = HISTORY_CACHE.get(cardSecid);
   if (cached && Date.now() - cached.ts < CACHE_TTL_MS) {
     return { series: cached.series, host: 'memory' };
@@ -170,7 +171,7 @@ async function fetchDayKWithFallback(cardSecid, klineSecid) {
     return { series: idb.series, host: 'indexeddb' };
   }
 
-  const local = await loadLocalKline(cardSecid);
+  const local = await loadLocalKline(cardSecid, kind);
   if (local && local.length) {
     writeIndexCache(cardSecid, local);
     HISTORY_CACHE.set(cardSecid, { ts: Date.now(), series: local });
@@ -266,7 +267,7 @@ async function openIndexTrend(secid, evt) {
   const trendDisplay = { yMode: 'value', digits: meta.digits, navLabel: meta.kind === 'fx' ? '汇率' : '点位' };
   window.renderTrendRanges(trendDisplay);
 
-  const result = await fetchDayKWithFallback(secid, meta.klineSecid || secid);
+  const result = await fetchDayKWithFallback(secid, meta.klineSecid || secid, meta.kind);
   if (!result || !result.series || !result.series.length) {
     if (chartEl) {
       chartEl.innerHTML = `

@@ -89,6 +89,25 @@ function isUsMarketOpen() {
   return false;
 }
 
+// 北京时间 A 股 / 港股盘中判断（周一~周五，含午休）
+function isAShareMarketOpen() {
+  const now = new Date();
+  const dow = now.getDay();
+  if (dow === 0 || dow === 6) return false;
+  const m = now.getHours() * 60 + now.getMinutes();
+  return (m >= 9 * 60 + 30 && m <= 11 * 60 + 30) ||
+         (m >= 13 * 60 && m <= 15 * 60);
+}
+
+function isHkMarketOpen() {
+  const now = new Date();
+  const dow = now.getDay();
+  if (dow === 0 || dow === 6) return false;
+  const m = now.getHours() * 60 + now.getMinutes();
+  return (m >= 9 * 60 + 30 && m <= 12 * 60) ||
+         (m >= 13 * 60 && m <= 16 * 60);
+}
+
 // 是否处于美股「连续休市」状态（周末 + 周一白天）→ 调度器应放慢请求
 // why 单独抽出：与 isUsMarketOpen 互斥，但周末更适合 30min 间隔（行情完全不会变）
 function isWeekendOff() {
@@ -110,7 +129,9 @@ function isWeekendOff() {
 //   用户真正关心的是「现在能不能交易」，而不是「最后一笔报价的分钟数」
 //   每行的「净值日」已经精确到日，不需要在顶部再放时间
 function getMarketStatusLabel() {
-  if (isUsMarketOpen()) return '交易中';
+  if (isUsMarketOpen()) return '美股交易中';
+  if (isAShareMarketOpen()) return 'A股交易中';
+  if (isHkMarketOpen()) return '港股交易中';
   if (isWeekendOff()) return '周末休市';
   // 平日 04:00 ~ 21:30：美股盘前/盘后/未开盘
   // why 用「未开盘」覆盖盘前阶段：北京白天用户最常打开的时段，「未开盘」比「已收盘」更准确
@@ -316,13 +337,13 @@ import { schedule } from './idle-scheduler.js';
 
 export function start() {
   // 调度策略：
-  //  ，盘中  → 60s（紧跟实时）
+  //  ，美股 / A 股 / 港股盘中 → 60s（紧跟实时）
   //  ，平日收盘段（北京 04:00-21:30） → 5min（盘前盘后偶有微跳动，保留较快节奏）
   //  ，周末 → 30min（行情完全静止，但保留低频心跳以备数据源恢复或时间显示纠偏）
   schedule(
     refreshAll,
     () => {
-      if (isUsMarketOpen()) return 60 * 1000;
+      if (isUsMarketOpen() || isAShareMarketOpen() || isHkMarketOpen()) return 60 * 1000;
       if (isWeekendOff())   return 30 * 60 * 1000;
       return 5 * 60 * 1000;
     },

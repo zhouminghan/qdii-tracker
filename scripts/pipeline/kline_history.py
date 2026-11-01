@@ -20,6 +20,7 @@ from core.utils import beijing_now_iso, read_json, requests_get, write_json
 
 INDEX_DIR = DATA_DIR / "index-kline"
 ETF_DIR = DATA_DIR / "etf-kline"
+FX_DIR = DATA_DIR / "fx-kline"
 FULL_BEG = "19900101"
 KLINE_HOSTS = [
     "push2his.eastmoney.com",
@@ -48,6 +49,15 @@ SINA_INDEX = {
     "100.N225": ("日经225指数", "global"),
     "100.HSI": ("HSI", "hk"),
 }
+
+# (前端卡片 data-symbol, 东财 secid, 汇率对)
+FX_TARGETS = [
+    ("133.USDCNH", "133.USDCNH", "USDCNY"),   # 美元/人民币
+    ("fxCNYHKD", "133.CNYHKD", "CNYHKD"),     # 人民币/港元
+    ("fxUSDJPY", "119.USDJPY", "USDJPY"),     # 美元/日元
+]
+
+_BOC_CACHE = {}
 
 
 def etf_secid(code):
@@ -141,6 +151,69 @@ def fetch_kline_sina(key):
     return df_to_points(df)
 
 
+def fetch_kline_ashare_sina(symbol="sh000001"):
+    """A 股指数完整历史（Sina，覆盖 1990 年至今）。"""
+    try:
+        import akshare as ak
+        df = ak.stock_zh_index_daily(symbol=symbol)
+    except Exception:
+        return None
+    return df_to_points(df)
+
+
+def fetch_kline_etf_sina(sym):
+    """场内 ETF 完整历史（Sina）。"""
+    try:
+        import akshare as ak
+        df = ak.fund_etf_hist_sina(symbol=sym)
+    except Exception:
+        return None
+    return df_to_points(df)
+
+
+def boc_rates(symbol):
+    """BOC / Sina 外汇日频折算价（2010 起），带进程内缓存。"""
+    if symbol in _BOC_CACHE:
+        return _BOC_CACHE[symbol]
+    try:
+        import akshare as ak
+        df = ak.currency_boc_sina(symbol=symbol, start_date="20100101", end_date="20991231")
+    except Exception:
+        return {}
+    out = {}
+    for _, row in df.iterrows():
+        d = row.get("日期")
+        d = d.strftime("%Y-%m-%d") if hasattr(d, "strftime") else str(d)[:10]
+        mid = row.get("央行中间价")
+        conv = row.get("中行折算价")
+        v = mid if (mid is not None and mid == mid) else conv
+        if v is None or v != v:
+            continue
+        out[d] = float(v)
+    _BOC_CACHE[symbol] = out
+    return out
+
+
+def fetch_kline_fx_boc(pair):
+    """BOC 中间价推导汇率日线（无盘中 OHLC，开高低收同值）。"""
+    usd, hkd, jpy = boc_rates("美元"), boc_rates("港币"), boc_rates("日元")
+    out = []
+    for d in sorted(set(usd) | set(hkd) | set(jpy)):
+        try:
+            if pair == "USDCNY":
+                v = usd[d] / 100
+            elif pair == "CNYHKD":
+                v = 100 / hkd[d]
+            elif pair == "USDJPY":
+                v = (usd[d] / 100) / (jpy[d] / 100)
+            else:
+                continue
+        except (KeyError, ZeroDivisionError):
+            continue
+        out.append({"date": d, "open": v, "high": v, "low": v, "close": v, "volume": 0.0})
+    return out or None
+
+
 def fetch_kline_tencent(sym, limit=640):
     """腾讯日 K 回退（A 股指数 / 场内 ETF）。"""
     limit = min(int(limit), 640)  # 腾讯单次最多 640 根，超过会返回 param error
@@ -180,19 +253,21 @@ def fetch_kline_for_target(target, beg):
     points = fetch_kline_em(target["secid"], beg=beg)
     if points:
         return points
-    return fetch_kline_fallback(target)
+    return fetch_kline_fallback(target, beg)
 
 
-def fetch_kline_fallback(target):
+def fetch_kline_fallback(target, beg=FULL_BEG):
     """跳过东财，直接走 Sina / 腾讯回退（限流严重时用）。"""
     if target["kind"] == "index":
         if target["key"] == "sh000001":
-            return fetch_kline_tencent("sh000001")
+            return fetch_kline_ashare_sina("sh000001")
         return fetch_kline_sina(target["key"])
     if target["kind"] == "etf":
         code = target["key"]
         sym = ("sh" if code[:1] in ("5", "6") else "sz") + code
-        return fetch_kline_tencent(sym)
+        return fetch_kline_etf_sina(sym)
+    if target["kind"] == "fx":
+        return fetch_kline_fx_boc(target["pair"])
     return None
 
 
@@ -259,7 +334,7 @@ def _update(target, mode, fallback_only=False):
     beg = FULL_BEG
     if mode == "incremental" and existing and existing.get("dates"):
         beg = str(existing["dates"][-1]).replace("-", "")
-    fetched = fetch_kline_fallback(target) if fallback_only else fetch_kline_for_target(target, beg)
+    fetched = fetch_kline_fallback(target, beg) if fallback_only else fetch_kline_for_target(target, beg)
     if not fetched:
         return None
     if existing and existing.get("dates"):
@@ -281,6 +356,10 @@ def collect_targets():
     targets += [
         {"key": code, "secid": etf_secid(code), "dir": ETF_DIR, "kind": "etf"}
         for code in collect_etf_codes()
+    ]
+    targets += [
+        {"key": key, "secid": secid, "dir": FX_DIR, "kind": "fx", "pair": pair}
+        for key, secid, pair in FX_TARGETS
     ]
     return targets
 
