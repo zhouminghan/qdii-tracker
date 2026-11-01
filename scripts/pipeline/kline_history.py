@@ -171,13 +171,14 @@ def fetch_kline_etf_sina(sym):
     return df_to_points(df)
 
 
-def boc_rates(symbol):
-    """BOC / Sina 外汇日频折算价（2010 起），带进程内缓存。"""
-    if symbol in _BOC_CACHE:
-        return _BOC_CACHE[symbol]
+def boc_rates(symbol, start_date="20100101"):
+    """BOC / Sina 外汇日频折算价，带进程内缓存；增量时只拉最近区间。"""
+    key = (symbol, start_date)
+    if key in _BOC_CACHE:
+        return _BOC_CACHE[key]
     try:
         import akshare as ak
-        df = ak.currency_boc_sina(symbol=symbol, start_date="20100101", end_date="20991231")
+        df = ak.currency_boc_sina(symbol=symbol, start_date=start_date, end_date="20991231")
     except Exception:
         return {}
     out = {}
@@ -190,13 +191,14 @@ def boc_rates(symbol):
         if v is None or v != v:
             continue
         out[d] = float(v)
-    _BOC_CACHE[symbol] = out
+    _BOC_CACHE[key] = out
     return out
 
 
-def fetch_kline_fx_boc(pair):
+def fetch_kline_fx_boc(pair, beg=FULL_BEG):
     """BOC 中间价推导汇率日线（无盘中 OHLC，开高低收同值）。"""
-    usd, hkd, jpy = boc_rates("美元"), boc_rates("港币"), boc_rates("日元")
+    start = "20100101" if beg == FULL_BEG else beg
+    usd, hkd, jpy = boc_rates("美元", start), boc_rates("港币", start), boc_rates("日元", start)
     out = []
     for d in sorted(set(usd) | set(hkd) | set(jpy)):
         try:
@@ -267,7 +269,7 @@ def fetch_kline_fallback(target, beg=FULL_BEG):
         sym = ("sh" if code[:1] in ("5", "6") else "sz") + code
         return fetch_kline_etf_sina(sym)
     if target["kind"] == "fx":
-        return fetch_kline_fx_boc(target["pair"])
+        return fetch_kline_fx_boc(target["pair"], beg)
     return None
 
 
