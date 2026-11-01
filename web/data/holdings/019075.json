@@ -1,92 +1,174 @@
 {
   "code": "019075",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 33.02,
+  "total_weight": 36.33,
   "heavy_count": 0,
   "holdings": [
     {
       "rank": 1,
-      "stock_code": "688019",
-      "stock_name": "安集科技",
-      "weight": 4.35,
-      "shares": 0.45,
-      "market_value": 154.42
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 4.83,
+      "shares": 0.1,
+      "market_value": 154.28
     },
     {
       "rank": 2,
-      "stock_code": "MU",
-      "stock_name": "美光科技",
-      "weight": 4.0,
-      "shares": 0.02,
-      "market_value": 142.3
+      "stock_code": "MSFT",
+      "stock_name": "微软",
+      "weight": 4.64,
+      "shares": 0.04,
+      "market_value": 148.2
     },
     {
       "rank": 3,
       "stock_code": "TSM",
       "stock_name": "台积电",
-      "weight": 3.9,
-      "shares": 0.04,
-      "market_value": 138.56
+      "weight": 4.54,
+      "shares": 0.05,
+      "market_value": 145.02
     },
     {
       "rank": 4,
-      "stock_code": "KLAC",
-      "stock_name": "科磊",
-      "weight": 3.64,
-      "shares": 0.06,
-      "market_value": 129.46
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 4.13,
+      "shares": 0.02,
+      "market_value": 131.99
     },
     {
       "rank": 5,
-      "stock_code": "300308",
-      "stock_name": "中际旭创",
-      "weight": 3.57,
-      "shares": 0.1,
-      "market_value": 127.0
+      "stock_code": "AAPL",
+      "stock_name": "苹果",
+      "weight": 3.5,
+      "shares": 0.05,
+      "market_value": 111.7
     },
     {
       "rank": 6,
-      "stock_code": "00941",
-      "stock_name": "中国移动",
-      "weight": 3.26,
-      "shares": 1.75,
-      "market_value": 115.75
+      "stock_code": "ASML",
+      "stock_name": "阿斯麦",
+      "weight": 3.09,
+      "shares": 0.01,
+      "market_value": 98.83
     },
     {
       "rank": 7,
-      "stock_code": "688630",
-      "stock_name": "芯碁微装",
-      "weight": 2.96,
-      "shares": 0.19,
-      "market_value": 105.1
+      "stock_code": "GOOG",
+      "stock_name": "谷歌-C",
+      "weight": 3.07,
+      "shares": 0.04,
+      "market_value": 97.99
     },
     {
       "rank": 8,
-      "stock_code": "600176",
-      "stock_name": "中国巨石",
-      "weight": 2.46,
-      "shares": 1.2,
-      "market_value": 87.46
+      "stock_code": "AMZN",
+      "stock_name": "亚马逊",
+      "weight": 3.04,
+      "shares": 0.06,
+      "market_value": 97.16
     },
     {
       "rank": 9,
-      "stock_code": "300408",
-      "stock_name": "三环集团",
-      "weight": 2.44,
-      "shares": 0.52,
-      "market_value": 86.79
+      "stock_code": "688825",
+      "stock_name": "长鑫科技",
+      "weight": 2.78,
+      "shares": 1.62,
+      "market_value": 88.66
     },
     {
       "rank": 10,
-      "stock_code": "688498",
-      "stock_name": "源杰科技",
-      "weight": 2.44,
-      "shares": 0.05,
-      "market_value": 86.76
+      "stock_code": "AMD",
+      "stock_name": "超威半导体",
+      "weight": 2.71,
+      "shares": 0.02,
+      "market_value": 86.53
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 4.83,
+        "shares": 0.1,
+        "market_value": 154.28
+      },
+      {
+        "rank": 2,
+        "stock_code": "MSFT",
+        "stock_name": "微软",
+        "weight": 4.64,
+        "shares": 0.04,
+        "market_value": 148.2
+      },
+      {
+        "rank": 3,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 4.54,
+        "shares": 0.05,
+        "market_value": 145.02
+      },
+      {
+        "rank": 4,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 4.13,
+        "shares": 0.02,
+        "market_value": 131.99
+      },
+      {
+        "rank": 5,
+        "stock_code": "AAPL",
+        "stock_name": "苹果",
+        "weight": 3.5,
+        "shares": 0.05,
+        "market_value": 111.7
+      },
+      {
+        "rank": 6,
+        "stock_code": "ASML",
+        "stock_name": "阿斯麦",
+        "weight": 3.09,
+        "shares": 0.01,
+        "market_value": 98.83
+      },
+      {
+        "rank": 7,
+        "stock_code": "GOOG",
+        "stock_name": "谷歌-C",
+        "weight": 3.07,
+        "shares": 0.04,
+        "market_value": 97.99
+      },
+      {
+        "rank": 8,
+        "stock_code": "AMZN",
+        "stock_name": "亚马逊",
+        "weight": 3.04,
+        "shares": 0.06,
+        "market_value": 97.16
+      },
+      {
+        "rank": 9,
+        "stock_code": "688825",
+        "stock_name": "长鑫科技",
+        "weight": 2.78,
+        "shares": 1.62,
+        "market_value": 88.66
+      },
+      {
+        "rank": 10,
+        "stock_code": "AMD",
+        "stock_name": "超威半导体",
+        "weight": 2.71,
+        "shares": 0.02,
+        "market_value": 86.53
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-09-02T04:36:26.895132+08:00"
+  "fetched_at": "2026-11-02T05:47:36.794252+08:00"
 }

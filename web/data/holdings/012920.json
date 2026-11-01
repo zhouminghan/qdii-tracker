@@ -1,92 +1,174 @@
 {
   "code": "012920",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 47.48,
+  "total_weight": 44.8,
   "heavy_count": 3,
   "holdings": [
     {
       "rank": 1,
-      "stock_code": "LRCX",
-      "stock_name": "拉姆研究",
-      "weight": 6.41,
-      "shares": 42.23,
-      "market_value": 124622.37
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 8.28,
+      "shares": 26.0,
+      "market_value": 79889.84
     },
     {
       "rank": 2,
-      "stock_code": "285A",
-      "stock_name": "KIOXIA",
-      "weight": 5.89,
-      "shares": 30.37,
-      "market_value": 114512.99
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 7.05,
+      "shares": 44.23,
+      "market_value": 68030.3
     },
     {
       "rank": 3,
-      "stock_code": "TSM",
-      "stock_name": "台积电",
+      "stock_code": "INTC",
+      "stock_name": "英特尔",
       "weight": 5.54,
-      "shares": 33.16,
-      "market_value": 107845.91
+      "shares": 66.01,
+      "market_value": 53453.71
     },
     {
       "rank": 4,
-      "stock_code": "AMD",
-      "stock_name": "超威半导体",
-      "weight": 4.96,
-      "shares": 24.4,
-      "market_value": 96519.3
+      "stock_code": "300308",
+      "stock_name": "中际旭创",
+      "weight": 4.16,
+      "shares": 49.61,
+      "market_value": 40102.67
     },
     {
       "rank": 5,
-      "stock_code": "300502",
-      "stock_name": "新易盛",
-      "weight": 4.68,
-      "shares": 150.02,
-      "market_value": 91063.6
+      "stock_code": "BE",
+      "stock_name": "Bloom Energy Corp-A",
+      "weight": 4.03,
+      "shares": 20.82,
+      "market_value": 38844.68
     },
     {
       "rank": 6,
-      "stock_code": "300308",
-      "stock_name": "中际旭创",
-      "weight": 4.61,
-      "shares": 70.56,
-      "market_value": 89604.85
+      "stock_code": "AMD",
+      "stock_name": "超威半导体",
+      "weight": 3.94,
+      "shares": 9.22,
+      "market_value": 37969.06
     },
     {
       "rank": 7,
-      "stock_code": "SNDK",
-      "stock_name": "闪迪",
-      "weight": 4.46,
-      "shares": 5.61,
-      "market_value": 86855.61
+      "stock_code": "300502",
+      "stock_name": "新易盛",
+      "weight": 3.4,
+      "shares": 84.33,
+      "market_value": 32805.77
     },
     {
       "rank": 8,
-      "stock_code": "INTC",
-      "stock_name": "英特尔",
-      "weight": 4.26,
-      "shares": 87.16,
-      "market_value": 82892.34
+      "stock_code": "LITE",
+      "stock_name": "Lumentum Holdings Inc",
+      "weight": 3.23,
+      "shares": 4.75,
+      "market_value": 31102.37
     },
     {
       "rank": 9,
-      "stock_code": "688498",
-      "stock_name": "源杰科技",
-      "weight": 3.34,
-      "shares": 34.42,
-      "market_value": 64920.84
+      "stock_code": "ASML",
+      "stock_name": "阿斯麦",
+      "weight": 2.76,
+      "shares": 2.18,
+      "market_value": 26586.46
     },
     {
       "rank": 10,
-      "stock_code": "ASML",
-      "stock_name": "阿斯麦",
-      "weight": 3.33,
-      "shares": 4.78,
-      "market_value": 64739.96
+      "stock_code": "002463",
+      "stock_name": "沪电股份",
+      "weight": 2.41,
+      "shares": 200.7,
+      "market_value": 23266.65
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 8.28,
+        "shares": 26.0,
+        "market_value": 79889.84
+      },
+      {
+        "rank": 2,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 7.05,
+        "shares": 44.23,
+        "market_value": 68030.3
+      },
+      {
+        "rank": 3,
+        "stock_code": "INTC",
+        "stock_name": "英特尔",
+        "weight": 5.54,
+        "shares": 66.01,
+        "market_value": 53453.71
+      },
+      {
+        "rank": 4,
+        "stock_code": "300308",
+        "stock_name": "中际旭创",
+        "weight": 4.16,
+        "shares": 49.61,
+        "market_value": 40102.67
+      },
+      {
+        "rank": 5,
+        "stock_code": "BE",
+        "stock_name": "Bloom Energy Corp-A",
+        "weight": 4.03,
+        "shares": 20.82,
+        "market_value": 38844.68
+      },
+      {
+        "rank": 6,
+        "stock_code": "AMD",
+        "stock_name": "超威半导体",
+        "weight": 3.94,
+        "shares": 9.22,
+        "market_value": 37969.06
+      },
+      {
+        "rank": 7,
+        "stock_code": "300502",
+        "stock_name": "新易盛",
+        "weight": 3.4,
+        "shares": 84.33,
+        "market_value": 32805.77
+      },
+      {
+        "rank": 8,
+        "stock_code": "LITE",
+        "stock_name": "Lumentum Holdings Inc",
+        "weight": 3.23,
+        "shares": 4.75,
+        "market_value": 31102.37
+      },
+      {
+        "rank": 9,
+        "stock_code": "ASML",
+        "stock_name": "阿斯麦",
+        "weight": 2.76,
+        "shares": 2.18,
+        "market_value": 26586.46
+      },
+      {
+        "rank": 10,
+        "stock_code": "002463",
+        "stock_name": "沪电股份",
+        "weight": 2.41,
+        "shares": 200.7,
+        "market_value": 23266.65
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:27:01.714843+08:00"
+  "fetched_at": "2026-11-02T05:47:00.457344+08:00"
 }

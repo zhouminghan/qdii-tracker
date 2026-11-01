@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-01T21:52:28.929657+08:00",
+  "generated_at": "2026-11-02T05:45:37.334173+08:00",
   "sp500": {
     "series": 7,
     "funds": 25
@@ -11,7 +11,7 @@
   },
   "active": {
     "series": 24,
-    "funds": 70
+    "funds": 69
   },
   "global_index": {
     "series": 2,

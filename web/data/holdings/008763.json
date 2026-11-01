@@ -1,92 +1,174 @@
 {
   "code": "008763",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 61.8,
+  "total_weight": 60.95,
   "heavy_count": 8,
   "holdings": [
     {
       "rank": 1,
-      "stock_code": "VN000000HPG4",
-      "stock_name": "和发集团股份公司",
-      "weight": 8.65,
-      "shares": 5749.21,
-      "market_value": 34678.96
+      "stock_code": "VN000000VIC9",
+      "stock_name": "Vingroup合股公司",
+      "weight": 8.46,
+      "shares": 519.92,
+      "market_value": 30733.34
     },
     {
       "rank": 2,
-      "stock_code": "VN000000VIC9",
-      "stock_name": "Vingroup JSC",
-      "weight": 7.81,
-      "shares": 549.92,
-      "market_value": 31320.2
+      "stock_code": "VN000000HPG4",
+      "stock_name": "和发集团股份公司",
+      "weight": 7.98,
+      "shares": 5549.21,
+      "market_value": 29002.45
     },
     {
       "rank": 3,
-      "stock_code": "VN000000MWG0",
-      "stock_name": "移动世界投资公司",
-      "weight": 6.44,
-      "shares": 1277.5,
-      "market_value": 25829.4
+      "stock_code": "VN000000FPT1",
+      "stock_name": "FPT公司",
+      "weight": 6.98,
+      "shares": 1551.15,
+      "market_value": 25346.84
     },
     {
       "rank": 4,
-      "stock_code": "VN000000FPT1",
-      "stock_name": "FPT公司",
-      "weight": 6.39,
-      "shares": 1410.14,
-      "market_value": 25627.2
+      "stock_code": "VN000000MWG0",
+      "stock_name": "MobileWorld投资公司",
+      "weight": 6.16,
+      "shares": 1192.5,
+      "market_value": 22393.7
     },
     {
       "rank": 5,
-      "stock_code": "VN000000STB4",
-      "stock_name": "西贡财禄商业股份制银行",
-      "weight": 6.37,
-      "shares": 1336.63,
-      "market_value": 25537.0
+      "stock_code": "VN000000TCB8",
+      "stock_name": "Vietnam Technologicaland Commercial Joint Stock Bank",
+      "weight": 5.8,
+      "shares": 2497.2,
+      "market_value": 21083.04
     },
     {
       "rank": 6,
-      "stock_code": "VN000000MBB5",
-      "stock_name": "军队商业银行股份公司",
-      "weight": 5.99,
-      "shares": 3682.01,
-      "market_value": 24020.8
+      "stock_code": "VN000000STB4",
+      "stock_name": "西贡财禄商业股份制银行",
+      "weight": 5.79,
+      "shares": 1095.32,
+      "market_value": 21023.33
     },
     {
       "rank": 7,
-      "stock_code": "VN000000VHM0",
-      "stock_name": "Vinhomes JSC",
-      "weight": 5.55,
-      "shares": 566.06,
-      "market_value": 22245.22
+      "stock_code": "VN000000MBB5",
+      "stock_name": "军队商业银行股份公司",
+      "weight": 5.43,
+      "shares": 3872.51,
+      "market_value": 19737.12
     },
     {
       "rank": 8,
-      "stock_code": "VN000000TCB8",
-      "stock_name": "Vietnam Technological&Commercial Joint Stock Bank",
-      "weight": 5.51,
-      "shares": 2547.2,
-      "market_value": 22090.74
+      "stock_code": "VN000000VHM0",
+      "stock_name": "Vinhomes股份有限公司",
+      "weight": 5.39,
+      "shares": 1102.12,
+      "market_value": 19581.61
     },
     {
       "rank": 9,
-      "stock_code": "VN000000VPB6",
-      "stock_name": "Vietnam Prosperity JSC Bank",
-      "weight": 4.74,
-      "shares": 2720.45,
-      "market_value": 19015.49
+      "stock_code": "VN000000MSN4",
+      "stock_name": "Masan集团股份公司",
+      "weight": 4.6,
+      "shares": 934.0,
+      "market_value": 16715.71
     },
     {
       "rank": 10,
-      "stock_code": "VN000000MSN4",
-      "stock_name": "Masan Group Corp",
-      "weight": 4.35,
-      "shares": 934.0,
-      "market_value": 17433.5
+      "stock_code": "VN000000VPB6",
+      "stock_name": "Vietnam Prosperity Joint Stock Commercial Bank",
+      "weight": 4.36,
+      "shares": 2609.62,
+      "market_value": 15838.79
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "VN000000VIC9",
+        "stock_name": "Vingroup合股公司",
+        "weight": 8.46,
+        "shares": 519.92,
+        "market_value": 30733.34
+      },
+      {
+        "rank": 2,
+        "stock_code": "VN000000HPG4",
+        "stock_name": "和发集团股份公司",
+        "weight": 7.98,
+        "shares": 5549.21,
+        "market_value": 29002.45
+      },
+      {
+        "rank": 3,
+        "stock_code": "VN000000FPT1",
+        "stock_name": "FPT公司",
+        "weight": 6.98,
+        "shares": 1551.15,
+        "market_value": 25346.84
+      },
+      {
+        "rank": 4,
+        "stock_code": "VN000000MWG0",
+        "stock_name": "MobileWorld投资公司",
+        "weight": 6.16,
+        "shares": 1192.5,
+        "market_value": 22393.7
+      },
+      {
+        "rank": 5,
+        "stock_code": "VN000000TCB8",
+        "stock_name": "Vietnam Technologicaland Commercial Joint Stock Bank",
+        "weight": 5.8,
+        "shares": 2497.2,
+        "market_value": 21083.04
+      },
+      {
+        "rank": 6,
+        "stock_code": "VN000000STB4",
+        "stock_name": "西贡财禄商业股份制银行",
+        "weight": 5.79,
+        "shares": 1095.32,
+        "market_value": 21023.33
+      },
+      {
+        "rank": 7,
+        "stock_code": "VN000000MBB5",
+        "stock_name": "军队商业银行股份公司",
+        "weight": 5.43,
+        "shares": 3872.51,
+        "market_value": 19737.12
+      },
+      {
+        "rank": 8,
+        "stock_code": "VN000000VHM0",
+        "stock_name": "Vinhomes股份有限公司",
+        "weight": 5.39,
+        "shares": 1102.12,
+        "market_value": 19581.61
+      },
+      {
+        "rank": 9,
+        "stock_code": "VN000000MSN4",
+        "stock_name": "Masan集团股份公司",
+        "weight": 4.6,
+        "shares": 934.0,
+        "market_value": 16715.71
+      },
+      {
+        "rank": 10,
+        "stock_code": "VN000000VPB6",
+        "stock_name": "Vietnam Prosperity Joint Stock Commercial Bank",
+        "weight": 4.36,
+        "shares": 2609.62,
+        "market_value": 15838.79
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:28:27.814785+08:00"
+  "fetched_at": "2026-11-02T05:47:18.928574+08:00"
 }

@@ -1,8 +1,8 @@
 {
   "code": "096001",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 2.57,
+  "total_weight": 2.45,
   "heavy_count": 0,
   "holdings": [
     {
@@ -10,83 +10,165 @@
       "stock_code": "MRNA",
       "stock_name": "Moderna Inc",
       "weight": 0.28,
-      "shares": 0.55,
-      "market_value": 261.76
+      "shares": 0.25,
+      "market_value": 321.13
     },
     {
       "rank": 2,
-      "stock_code": "GLW",
-      "stock_name": "康宁",
-      "weight": 0.28,
-      "shares": 0.15,
-      "market_value": 261.13
+      "stock_code": "P",
+      "stock_name": "Everpure Inc-A",
+      "weight": 0.26,
+      "shares": 0.35,
+      "market_value": 304.76
     },
     {
       "rank": 3,
-      "stock_code": "AMAT",
-      "stock_name": "应用材料",
-      "weight": 0.27,
-      "shares": 0.05,
-      "market_value": 249.66
+      "stock_code": "ILMN",
+      "stock_name": "Illumina Inc",
+      "weight": 0.26,
+      "shares": 0.16,
+      "market_value": 301.93
     },
     {
       "rank": 4,
-      "stock_code": "KLAC",
-      "stock_name": "科磊",
-      "weight": 0.26,
-      "shares": 0.12,
-      "market_value": 242.69
+      "stock_code": "CRWD",
+      "stock_name": "CrowdStrike Holdings Inc-A",
+      "weight": 0.25,
+      "shares": 0.16,
+      "market_value": 288.15
     },
     {
       "rank": 5,
-      "stock_code": "TER",
-      "stock_name": "泰瑞达",
-      "weight": 0.25,
-      "shares": 0.07,
-      "market_value": 239.25
+      "stock_code": "RVTY",
+      "stock_name": "Revvity Inc",
+      "weight": 0.24,
+      "shares": 0.27,
+      "market_value": 279.16
     },
     {
       "rank": 6,
-      "stock_code": "SNDK",
-      "stock_name": "闪迪",
-      "weight": 0.25,
-      "shares": 0.02,
-      "market_value": 236.94
+      "stock_code": "DDOG",
+      "stock_name": "Datadog Inc-A",
+      "weight": 0.24,
+      "shares": 0.15,
+      "market_value": 274.82
     },
     {
       "rank": 7,
-      "stock_code": "LRCX",
-      "stock_name": "拉姆研究",
-      "weight": 0.25,
-      "shares": 0.08,
-      "market_value": 231.39
+      "stock_code": "PANW",
+      "stock_name": "派拓网络",
+      "weight": 0.23,
+      "shares": 0.1,
+      "market_value": 268.13
     },
     {
       "rank": 8,
-      "stock_code": "TECH",
-      "stock_name": "Bio-Techne Corp",
-      "weight": 0.25,
-      "shares": 0.48,
-      "market_value": 231.36
+      "stock_code": "AMD",
+      "stock_name": "超威半导体",
+      "weight": 0.23,
+      "shares": 0.06,
+      "market_value": 265.35
     },
     {
       "rank": 9,
-      "stock_code": "GEV",
-      "stock_name": "GE Vernova Inc",
-      "weight": 0.24,
+      "stock_code": "MTD",
+      "stock_name": "梅特勒-托利多",
+      "weight": 0.23,
       "shares": 0.03,
-      "market_value": 229.65
+      "market_value": 264.59
     },
     {
       "rank": 10,
-      "stock_code": "UAL",
-      "stock_name": "联合航空",
-      "weight": 0.24,
-      "shares": 0.25,
-      "market_value": 227.39
+      "stock_code": "CDNS",
+      "stock_name": "铿腾电子",
+      "weight": 0.23,
+      "shares": 0.12,
+      "market_value": 262.41
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "MRNA",
+        "stock_name": "Moderna Inc",
+        "weight": 0.28,
+        "shares": 0.25,
+        "market_value": 321.13
+      },
+      {
+        "rank": 2,
+        "stock_code": "P",
+        "stock_name": "Everpure Inc-A",
+        "weight": 0.26,
+        "shares": 0.35,
+        "market_value": 304.76
+      },
+      {
+        "rank": 3,
+        "stock_code": "ILMN",
+        "stock_name": "Illumina Inc",
+        "weight": 0.26,
+        "shares": 0.16,
+        "market_value": 301.93
+      },
+      {
+        "rank": 4,
+        "stock_code": "CRWD",
+        "stock_name": "CrowdStrike Holdings Inc-A",
+        "weight": 0.25,
+        "shares": 0.16,
+        "market_value": 288.15
+      },
+      {
+        "rank": 5,
+        "stock_code": "RVTY",
+        "stock_name": "Revvity Inc",
+        "weight": 0.24,
+        "shares": 0.27,
+        "market_value": 279.16
+      },
+      {
+        "rank": 6,
+        "stock_code": "DDOG",
+        "stock_name": "Datadog Inc-A",
+        "weight": 0.24,
+        "shares": 0.15,
+        "market_value": 274.82
+      },
+      {
+        "rank": 7,
+        "stock_code": "PANW",
+        "stock_name": "派拓网络",
+        "weight": 0.23,
+        "shares": 0.1,
+        "market_value": 268.13
+      },
+      {
+        "rank": 8,
+        "stock_code": "AMD",
+        "stock_name": "超威半导体",
+        "weight": 0.23,
+        "shares": 0.06,
+        "market_value": 265.35
+      },
+      {
+        "rank": 9,
+        "stock_code": "MTD",
+        "stock_name": "梅特勒-托利多",
+        "weight": 0.23,
+        "shares": 0.03,
+        "market_value": 264.59
+      },
+      {
+        "rank": 10,
+        "stock_code": "CDNS",
+        "stock_name": "铿腾电子",
+        "weight": 0.23,
+        "shares": 0.12,
+        "market_value": 262.41
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:29:50.312375+08:00"
+  "fetched_at": "2026-11-02T05:47:38.001946+08:00"
 }

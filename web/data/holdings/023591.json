@@ -1,44 +1,46 @@
 {
   "code": "023591",
-  "latest_quarter": "2026Q2",
-  "holdings_count": 4,
-  "total_weight": 3.49,
+  "latest_quarter": "2026Q3",
+  "holdings_count": 2,
+  "total_weight": 0.35,
   "heavy_count": 0,
   "holdings": [
     {
       "rank": 1,
-      "stock_code": "6082",
-      "stock_name": "壁仞科技",
-      "weight": 2.27,
-      "shares": 106.92,
-      "market_value": 5683.36
+      "stock_code": "3223",
+      "stock_name": "君正股份",
+      "weight": 0.19,
+      "shares": 5.04,
+      "market_value": 404.74
     },
     {
       "rank": 2,
-      "stock_code": "9888",
-      "stock_name": "百度集团-SW",
-      "weight": 1.17,
-      "shares": 30.62,
-      "market_value": 2914.34
-    },
-    {
-      "rank": 3,
-      "stock_code": "668",
-      "stock_name": "安克创新",
-      "weight": 0.04,
-      "shares": 1.25,
-      "market_value": 107.83
-    },
-    {
-      "rank": 4,
-      "stock_code": "9630",
-      "stock_name": "芯碁微装",
-      "weight": 0.01,
-      "shares": 0.08,
-      "market_value": 36.13
+      "stock_code": "3757",
+      "stock_name": "罗博特科",
+      "weight": 0.16,
+      "shares": 0.96,
+      "market_value": 336.06
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "3223",
+        "stock_name": "君正股份",
+        "weight": 0.19,
+        "shares": 5.04,
+        "market_value": 404.74
+      },
+      {
+        "rank": 2,
+        "stock_code": "3757",
+        "stock_name": "罗博特科",
+        "weight": 0.16,
+        "shares": 0.96,
+        "market_value": 336.06
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -100,5 +102,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:29:05.380335+08:00"
+  "fetched_at": "2026-11-02T05:47:29.682139+08:00"
 }

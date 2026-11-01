@@ -1,92 +1,174 @@
 {
   "code": "006105",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 39.83,
+  "total_weight": 36.84,
   "heavy_count": 1,
   "holdings": [
     {
       "rank": 1,
       "stock_code": "ICICIBC",
       "stock_name": "爱西爱西爱银行有限公司",
-      "weight": 8.11,
-      "shares": 143.36,
-      "market_value": 14184.63
+      "weight": 7.25,
+      "shares": 130.85,
+      "market_value": 12155.66
     },
     {
       "rank": 2,
       "stock_code": "HDFCB",
       "stock_name": "印度住房开发金融银行",
-      "weight": 4.72,
+      "weight": 4.27,
       "shares": 143.8,
-      "market_value": 8255.77
+      "market_value": 7162.91
     },
     {
       "rank": 3,
       "stock_code": "RELIANCE",
       "stock_name": "信实工业有限公司",
-      "weight": 4.5,
+      "weight": 4.2,
       "shares": 84.46,
-      "market_value": 7862.88
+      "market_value": 7046.55
     },
     {
       "rank": 4,
-      "stock_code": "BHARTI",
-      "stock_name": "巴帝电信有限公司",
-      "weight": 3.83,
-      "shares": 50.31,
-      "market_value": 6703.78
+      "stock_code": "MM",
+      "stock_name": "马亨德拉有限公司",
+      "weight": 3.74,
+      "shares": 30.2,
+      "market_value": 6262.54
     },
     {
       "rank": 5,
       "stock_code": "SBIN",
       "stock_name": "印度国家银行",
-      "weight": 3.62,
+      "weight": 3.44,
       "shares": 85.6,
-      "market_value": 6324.62
+      "market_value": 5772.93
     },
     {
       "rank": 6,
-      "stock_code": "MM",
-      "stock_name": "马亨德拉有限公司",
-      "weight": 3.61,
-      "shares": 28.61,
-      "market_value": 6317.03
+      "stock_code": "BHARTI",
+      "stock_name": "巴帝电信有限公司",
+      "weight": 3.26,
+      "shares": 44.2,
+      "market_value": 5458.46
     },
     {
       "rank": 7,
       "stock_code": "AXSB",
       "stock_name": "Axis银行有限公司",
-      "weight": 3.17,
+      "weight": 2.94,
       "shares": 57.27,
-      "market_value": 5545.52
+      "market_value": 4935.49
     },
     {
       "rank": 8,
-      "stock_code": "LT",
-      "stock_name": "Larsen&Toubro有限公司",
-      "weight": 2.85,
-      "shares": 16.72,
-      "market_value": 4985.8
+      "stock_code": "TTAN",
+      "stock_name": "泰坦公司",
+      "weight": 2.68,
+      "shares": 13.92,
+      "market_value": 4486.77
     },
     {
       "rank": 9,
-      "stock_code": "BHE",
-      "stock_name": "巴拉特电子有限公司",
-      "weight": 2.75,
-      "shares": 161.97,
-      "market_value": 4799.07
+      "stock_code": "APHS",
+      "stock_name": "阿波罗医院企业有限公司",
+      "weight": 2.56,
+      "shares": 7.48,
+      "market_value": 4294.51
     },
     {
       "rank": 10,
-      "stock_code": "APHS",
-      "stock_name": "阿波罗医院企业有限公司",
-      "weight": 2.67,
-      "shares": 7.48,
-      "market_value": 4674.18
+      "stock_code": "ETERNAL",
+      "stock_name": "Eternal有限公司",
+      "weight": 2.5,
+      "shares": 186.53,
+      "market_value": 4195.4
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "ICICIBC",
+        "stock_name": "爱西爱西爱银行有限公司",
+        "weight": 7.25,
+        "shares": 130.85,
+        "market_value": 12155.66
+      },
+      {
+        "rank": 2,
+        "stock_code": "HDFCB",
+        "stock_name": "印度住房开发金融银行",
+        "weight": 4.27,
+        "shares": 143.8,
+        "market_value": 7162.91
+      },
+      {
+        "rank": 3,
+        "stock_code": "RELIANCE",
+        "stock_name": "信实工业有限公司",
+        "weight": 4.2,
+        "shares": 84.46,
+        "market_value": 7046.55
+      },
+      {
+        "rank": 4,
+        "stock_code": "MM",
+        "stock_name": "马亨德拉有限公司",
+        "weight": 3.74,
+        "shares": 30.2,
+        "market_value": 6262.54
+      },
+      {
+        "rank": 5,
+        "stock_code": "SBIN",
+        "stock_name": "印度国家银行",
+        "weight": 3.44,
+        "shares": 85.6,
+        "market_value": 5772.93
+      },
+      {
+        "rank": 6,
+        "stock_code": "BHARTI",
+        "stock_name": "巴帝电信有限公司",
+        "weight": 3.26,
+        "shares": 44.2,
+        "market_value": 5458.46
+      },
+      {
+        "rank": 7,
+        "stock_code": "AXSB",
+        "stock_name": "Axis银行有限公司",
+        "weight": 2.94,
+        "shares": 57.27,
+        "market_value": 4935.49
+      },
+      {
+        "rank": 8,
+        "stock_code": "TTAN",
+        "stock_name": "泰坦公司",
+        "weight": 2.68,
+        "shares": 13.92,
+        "market_value": 4486.77
+      },
+      {
+        "rank": 9,
+        "stock_code": "APHS",
+        "stock_name": "阿波罗医院企业有限公司",
+        "weight": 2.56,
+        "shares": 7.48,
+        "market_value": 4294.51
+      },
+      {
+        "rank": 10,
+        "stock_code": "ETERNAL",
+        "stock_name": "Eternal有限公司",
+        "weight": 2.5,
+        "shares": 186.53,
+        "market_value": 4195.4
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:28:39.456586+08:00"
+  "fetched_at": "2026-11-02T05:47:19.773507+08:00"
 }

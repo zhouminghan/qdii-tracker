@@ -1,92 +1,174 @@
 {
   "code": "020957",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 11.49,
+  "total_weight": 3.63,
   "heavy_count": 0,
   "holdings": [
     {
       "rank": 1,
-      "stock_code": "MU",
-      "stock_name": "美光科技",
-      "weight": 2.37,
-      "shares": 0.3,
-      "market_value": 2358.53
+      "stock_code": "BRK_B",
+      "stock_name": "伯克希尔哈撒韦-B",
+      "weight": 1.38,
+      "shares": 0.4,
+      "market_value": 1341.5
     },
     {
       "rank": 2,
-      "stock_code": "SNDK",
-      "stock_name": "闪迪",
-      "weight": 2.33,
-      "shares": 0.15,
-      "market_value": 2322.92
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 0.37,
+      "shares": 0.05,
+      "market_value": 358.68
     },
     {
       "rank": 3,
-      "stock_code": "AMAT",
-      "stock_name": "应用材料",
-      "weight": 1.24,
-      "shares": 0.25,
-      "market_value": 1231.07
+      "stock_code": "INTC",
+      "stock_name": "英特尔",
+      "weight": 0.33,
+      "shares": 0.4,
+      "market_value": 323.9
     },
     {
       "rank": 4,
-      "stock_code": "INTC",
-      "stock_name": "英特尔",
-      "weight": 0.95,
-      "shares": 1.0,
-      "market_value": 951.01
+      "stock_code": "CAT",
+      "stock_name": "卡特彼勒",
+      "weight": 0.28,
+      "shares": 0.05,
+      "market_value": 273.04
     },
     {
       "rank": 5,
-      "stock_code": "GLW",
-      "stock_name": "康宁",
-      "weight": 0.87,
-      "shares": 0.5,
-      "market_value": 869.85
+      "stock_code": "SNDK",
+      "stock_name": "闪迪",
+      "weight": 0.24,
+      "shares": 0.02,
+      "market_value": 234.37
     },
     {
       "rank": 6,
-      "stock_code": "AMD",
-      "stock_name": "超威半导体",
-      "weight": 0.79,
-      "shares": 0.2,
-      "market_value": 791.3
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 0.24,
+      "shares": 0.15,
+      "market_value": 230.72
     },
     {
       "rank": 7,
-      "stock_code": "WDC",
-      "stock_name": "西部数据",
-      "weight": 0.79,
-      "shares": 0.18,
-      "market_value": 783.05
+      "stock_code": "AAPL",
+      "stock_name": "苹果",
+      "weight": 0.23,
+      "shares": 0.1,
+      "market_value": 224.29
     },
     {
       "rank": 8,
-      "stock_code": "LRCX",
-      "stock_name": "拉姆研究",
-      "weight": 0.74,
-      "shares": 0.25,
-      "market_value": 737.84
+      "stock_code": "AMD",
+      "stock_name": "超威半导体",
+      "weight": 0.21,
+      "shares": 0.05,
+      "market_value": 206.01
     },
     {
       "rank": 9,
-      "stock_code": "ARM",
-      "stock_name": "Arm Holdings plc ADR",
-      "weight": 0.73,
-      "shares": 0.3,
-      "market_value": 724.48
+      "stock_code": "MSFT",
+      "stock_name": "微软",
+      "weight": 0.18,
+      "shares": 0.05,
+      "market_value": 172.72
     },
     {
       "rank": 10,
-      "stock_code": "ASML",
-      "stock_name": "阿斯麦",
-      "weight": 0.68,
-      "shares": 0.05,
-      "market_value": 677.49
+      "stock_code": "AMZN",
+      "stock_name": "亚马逊",
+      "weight": 0.17,
+      "shares": 0.1,
+      "market_value": 167.81
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "BRK_B",
+        "stock_name": "伯克希尔哈撒韦-B",
+        "weight": 1.38,
+        "shares": 0.4,
+        "market_value": 1341.5
+      },
+      {
+        "rank": 2,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 0.37,
+        "shares": 0.05,
+        "market_value": 358.68
+      },
+      {
+        "rank": 3,
+        "stock_code": "INTC",
+        "stock_name": "英特尔",
+        "weight": 0.33,
+        "shares": 0.4,
+        "market_value": 323.9
+      },
+      {
+        "rank": 4,
+        "stock_code": "CAT",
+        "stock_name": "卡特彼勒",
+        "weight": 0.28,
+        "shares": 0.05,
+        "market_value": 273.04
+      },
+      {
+        "rank": 5,
+        "stock_code": "SNDK",
+        "stock_name": "闪迪",
+        "weight": 0.24,
+        "shares": 0.02,
+        "market_value": 234.37
+      },
+      {
+        "rank": 6,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 0.24,
+        "shares": 0.15,
+        "market_value": 230.72
+      },
+      {
+        "rank": 7,
+        "stock_code": "AAPL",
+        "stock_name": "苹果",
+        "weight": 0.23,
+        "shares": 0.1,
+        "market_value": 224.29
+      },
+      {
+        "rank": 8,
+        "stock_code": "AMD",
+        "stock_name": "超威半导体",
+        "weight": 0.21,
+        "shares": 0.05,
+        "market_value": 206.01
+      },
+      {
+        "rank": 9,
+        "stock_code": "MSFT",
+        "stock_name": "微软",
+        "weight": 0.18,
+        "shares": 0.05,
+        "market_value": 172.72
+      },
+      {
+        "rank": 10,
+        "stock_code": "AMZN",
+        "stock_name": "亚马逊",
+        "weight": 0.17,
+        "shares": 0.1,
+        "market_value": 167.81
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:29:03.594696+08:00"
+  "fetched_at": "2026-11-02T05:47:28.063624+08:00"
 }

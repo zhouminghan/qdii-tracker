@@ -1,92 +1,174 @@
 {
   "code": "539002",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 62.22,
+  "total_weight": 64.0,
   "heavy_count": 5,
   "holdings": [
     {
       "rank": 1,
       "stock_code": "TSM",
       "stock_name": "台积电",
-      "weight": 9.68,
-      "shares": 22.59,
-      "market_value": 73483.6
+      "weight": 9.77,
+      "shares": 37.64,
+      "market_value": 115660.94
     },
     {
       "rank": 2,
       "stock_code": "NVDA",
       "stock_name": "英伟达",
-      "weight": 9.38,
-      "shares": 52.24,
-      "market_value": 71190.26
+      "weight": 9.45,
+      "shares": 72.75,
+      "market_value": 111894.22
     },
     {
       "rank": 3,
       "stock_code": "000660",
       "stock_name": "SK海力士",
-      "weight": 8.94,
-      "shares": 5.82,
-      "market_value": 67843.61
+      "weight": 8.92,
+      "shares": 11.98,
+      "market_value": 105695.96
     },
     {
       "rank": 4,
       "stock_code": "005930",
       "stock_name": "三星电子",
-      "weight": 7.8,
-      "shares": 40.28,
-      "market_value": 59186.73
+      "weight": 8.49,
+      "shares": 75.41,
+      "market_value": 100612.77
     },
     {
       "rank": 5,
       "stock_code": "SNDK",
       "stock_name": "闪迪",
-      "weight": 7.16,
-      "shares": 3.51,
-      "market_value": 54326.95
+      "weight": 7.67,
+      "shares": 7.76,
+      "market_value": 90897.94
     },
     {
       "rank": 6,
-      "stock_code": "AVGO",
-      "stock_name": "博通",
-      "weight": 4.18,
-      "shares": 12.33,
-      "market_value": 31730.82
+      "stock_code": "LITE",
+      "stock_name": "Lumentum Holdings Inc",
+      "weight": 4.44,
+      "shares": 8.04,
+      "market_value": 52614.86
     },
     {
       "rank": 7,
-      "stock_code": "WDC",
-      "stock_name": "西部数据",
-      "weight": 4.18,
-      "shares": 7.29,
-      "market_value": 31699.46
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 4.21,
+      "shares": 6.95,
+      "market_value": 49862.41
     },
     {
       "rank": 8,
-      "stock_code": "MU",
-      "stock_name": "美光科技",
-      "weight": 3.99,
-      "shares": 3.85,
-      "market_value": 30275.61
+      "stock_code": "WDC",
+      "stock_name": "西部数据",
+      "weight": 4.11,
+      "shares": 15.91,
+      "market_value": 48699.39
     },
     {
       "rank": 9,
-      "stock_code": "LITE",
-      "stock_name": "Lumentum Holdings Inc",
-      "weight": 3.56,
-      "shares": 4.62,
-      "market_value": 26983.08
+      "stock_code": "ASML",
+      "stock_name": "阿斯麦",
+      "weight": 3.57,
+      "shares": 3.47,
+      "market_value": 42299.91
     },
     {
       "rank": 10,
-      "stock_code": "GLW",
-      "stock_name": "康宁",
-      "weight": 3.35,
-      "shares": 14.6,
-      "market_value": 25395.39
+      "stock_code": "ASX",
+      "stock_name": "日月光半导体",
+      "weight": 3.37,
+      "shares": 133.22,
+      "market_value": 39891.26
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 9.77,
+        "shares": 37.64,
+        "market_value": 115660.94
+      },
+      {
+        "rank": 2,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 9.45,
+        "shares": 72.75,
+        "market_value": 111894.22
+      },
+      {
+        "rank": 3,
+        "stock_code": "000660",
+        "stock_name": "SK海力士",
+        "weight": 8.92,
+        "shares": 11.98,
+        "market_value": 105695.96
+      },
+      {
+        "rank": 4,
+        "stock_code": "005930",
+        "stock_name": "三星电子",
+        "weight": 8.49,
+        "shares": 75.41,
+        "market_value": 100612.77
+      },
+      {
+        "rank": 5,
+        "stock_code": "SNDK",
+        "stock_name": "闪迪",
+        "weight": 7.67,
+        "shares": 7.76,
+        "market_value": 90897.94
+      },
+      {
+        "rank": 6,
+        "stock_code": "LITE",
+        "stock_name": "Lumentum Holdings Inc",
+        "weight": 4.44,
+        "shares": 8.04,
+        "market_value": 52614.86
+      },
+      {
+        "rank": 7,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 4.21,
+        "shares": 6.95,
+        "market_value": 49862.41
+      },
+      {
+        "rank": 8,
+        "stock_code": "WDC",
+        "stock_name": "西部数据",
+        "weight": 4.11,
+        "shares": 15.91,
+        "market_value": 48699.39
+      },
+      {
+        "rank": 9,
+        "stock_code": "ASML",
+        "stock_name": "阿斯麦",
+        "weight": 3.57,
+        "shares": 3.47,
+        "market_value": 42299.91
+      },
+      {
+        "rank": 10,
+        "stock_code": "ASX",
+        "stock_name": "日月光半导体",
+        "weight": 3.37,
+        "shares": 133.22,
+        "market_value": 39891.26
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:27:50.012426+08:00"
+  "fetched_at": "2026-11-02T05:47:01.378491+08:00"
 }

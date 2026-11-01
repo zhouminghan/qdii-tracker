@@ -1,92 +1,174 @@
 {
   "code": "007280",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 34.37,
+  "total_weight": 34.81,
   "heavy_count": 1,
   "holdings": [
     {
       "rank": 1,
-      "stock_code": "8035",
-      "stock_name": "东京电子",
-      "weight": 5.29,
-      "shares": 5.72,
-      "market_value": 18554.37
+      "stock_code": "6098",
+      "stock_name": "瑞可利控股",
+      "weight": 6.0,
+      "shares": 32.81,
+      "market_value": 23544.45
     },
     {
       "rank": 2,
-      "stock_code": "6981",
-      "stock_name": "村田制作所",
-      "weight": 4.17,
-      "shares": 30.52,
-      "market_value": 14622.22
+      "stock_code": "6758",
+      "stock_name": "索尼",
+      "weight": 4.39,
+      "shares": 107.2,
+      "market_value": 17217.48
     },
     {
       "rank": 3,
-      "stock_code": "285A",
-      "stock_name": "KIOXIA",
-      "weight": 3.91,
-      "shares": 3.64,
-      "market_value": 13724.97
+      "stock_code": "8306",
+      "stock_name": "三菱日联金融集团",
+      "weight": 3.43,
+      "shares": 85.17,
+      "market_value": 13464.52
     },
     {
       "rank": 4,
-      "stock_code": "6098",
-      "stock_name": "瑞可利控股",
-      "weight": 3.85,
-      "shares": 28.33,
-      "market_value": 13495.56
+      "stock_code": "6861",
+      "stock_name": "基恩士",
+      "weight": 3.37,
+      "shares": 3.84,
+      "market_value": 13204.49
     },
     {
       "rank": 5,
-      "stock_code": "8306",
-      "stock_name": "三菱日联金融集团",
-      "weight": 3.1,
-      "shares": 80.61,
-      "market_value": 10869.32
+      "stock_code": "8411",
+      "stock_name": "瑞穗金融集团",
+      "weight": 3.18,
+      "shares": 32.98,
+      "market_value": 12477.9
     },
     {
       "rank": 6,
-      "stock_code": "6758",
-      "stock_name": "索尼",
-      "weight": 3.0,
-      "shares": 76.4,
-      "market_value": 10536.14
+      "stock_code": "8035",
+      "stock_name": "东京电子",
+      "weight": 3.13,
+      "shares": 24.35,
+      "market_value": 12292.35
     },
     {
       "rank": 7,
       "stock_code": "8316",
       "stock_name": "三井住友金融集团",
-      "weight": 2.98,
-      "shares": 39.19,
-      "market_value": 10456.58
+      "weight": 2.99,
+      "shares": 79.11,
+      "market_value": 11732.44
     },
     {
       "rank": 8,
-      "stock_code": "8411",
-      "stock_name": "瑞穗金融集团",
-      "weight": 2.94,
-      "shares": 31.71,
-      "market_value": 10323.33
+      "stock_code": "6501",
+      "stock_name": "日立公司",
+      "weight": 2.95,
+      "shares": 49.39,
+      "market_value": 11583.36
     },
     {
       "rank": 9,
-      "stock_code": "6503",
-      "stock_name": "三菱电机",
-      "weight": 2.75,
-      "shares": 39.01,
-      "market_value": 9637.67
+      "stock_code": "8591",
+      "stock_name": "欧力士",
+      "weight": 2.7,
+      "shares": 41.57,
+      "market_value": 10605.46
     },
     {
       "rank": 10,
-      "stock_code": "6501",
-      "stock_name": "日立公司",
-      "weight": 2.38,
-      "shares": 44.49,
-      "market_value": 8363.37
+      "stock_code": "8766",
+      "stock_name": "东京海上控股",
+      "weight": 2.67,
+      "shares": 455.26,
+      "market_value": 10455.39
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "6098",
+        "stock_name": "瑞可利控股",
+        "weight": 6.0,
+        "shares": 32.81,
+        "market_value": 23544.45
+      },
+      {
+        "rank": 2,
+        "stock_code": "6758",
+        "stock_name": "索尼",
+        "weight": 4.39,
+        "shares": 107.2,
+        "market_value": 17217.48
+      },
+      {
+        "rank": 3,
+        "stock_code": "8306",
+        "stock_name": "三菱日联金融集团",
+        "weight": 3.43,
+        "shares": 85.17,
+        "market_value": 13464.52
+      },
+      {
+        "rank": 4,
+        "stock_code": "6861",
+        "stock_name": "基恩士",
+        "weight": 3.37,
+        "shares": 3.84,
+        "market_value": 13204.49
+      },
+      {
+        "rank": 5,
+        "stock_code": "8411",
+        "stock_name": "瑞穗金融集团",
+        "weight": 3.18,
+        "shares": 32.98,
+        "market_value": 12477.9
+      },
+      {
+        "rank": 6,
+        "stock_code": "8035",
+        "stock_name": "东京电子",
+        "weight": 3.13,
+        "shares": 24.35,
+        "market_value": 12292.35
+      },
+      {
+        "rank": 7,
+        "stock_code": "8316",
+        "stock_name": "三井住友金融集团",
+        "weight": 2.99,
+        "shares": 79.11,
+        "market_value": 11732.44
+      },
+      {
+        "rank": 8,
+        "stock_code": "6501",
+        "stock_name": "日立公司",
+        "weight": 2.95,
+        "shares": 49.39,
+        "market_value": 11583.36
+      },
+      {
+        "rank": 9,
+        "stock_code": "8591",
+        "stock_name": "欧力士",
+        "weight": 2.7,
+        "shares": 41.57,
+        "market_value": 10605.46
+      },
+      {
+        "rank": 10,
+        "stock_code": "8766",
+        "stock_name": "东京海上控股",
+        "weight": 2.67,
+        "shares": 455.26,
+        "market_value": 10455.39
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:28:28.733595+08:00"
+  "fetched_at": "2026-11-02T05:47:18.120714+08:00"
 }

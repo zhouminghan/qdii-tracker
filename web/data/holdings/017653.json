@@ -1,92 +1,174 @@
 {
   "code": "017653",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 24.85,
+  "total_weight": 23.86,
   "heavy_count": 0,
   "holdings": [
     {
       "rank": 1,
       "stock_code": "MU",
       "stock_name": "美光科技",
-      "weight": 4.81,
-      "shares": 1.09,
-      "market_value": 8555.16
+      "weight": 4.43,
+      "shares": 1.1,
+      "market_value": 7878.07
     },
     {
       "rank": 2,
       "stock_code": "AMD",
       "stock_name": "超威半导体",
-      "weight": 3.14,
+      "weight": 3.28,
       "shares": 1.41,
-      "market_value": 5588.58
+      "market_value": 5819.87
     },
     {
       "rank": 3,
-      "stock_code": "AMAT",
-      "stock_name": "应用材料",
-      "weight": 2.85,
-      "shares": 1.03,
-      "market_value": 5072.01
+      "stock_code": "MRVL",
+      "stock_name": "迈威尔科技",
+      "weight": 2.65,
+      "shares": 2.64,
+      "market_value": 4706.19
     },
     {
       "rank": 4,
-      "stock_code": "MRVL",
-      "stock_name": "迈威尔科技",
-      "weight": 2.68,
-      "shares": 2.35,
-      "market_value": 4768.32
+      "stock_code": "AMAT",
+      "stock_name": "应用材料",
+      "weight": 2.4,
+      "shares": 1.24,
+      "market_value": 4257.37
     },
     {
       "rank": 5,
       "stock_code": "AVGO",
       "stock_name": "博通",
-      "weight": 2.52,
+      "weight": 2.32,
       "shares": 1.75,
-      "market_value": 4491.37
+      "market_value": 4129.1
     },
     {
       "rank": 6,
       "stock_code": "LRCX",
       "stock_name": "拉姆研究",
       "weight": 2.08,
-      "shares": 1.26,
-      "market_value": 3708.39
+      "shares": 1.67,
+      "market_value": 3704.25
     },
     {
       "rank": 7,
-      "stock_code": "INTC",
-      "stock_name": "英特尔",
-      "weight": 1.9,
-      "shares": 3.56,
-      "market_value": 3382.25
+      "stock_code": "KLAC",
+      "stock_name": "科磊",
+      "weight": 1.98,
+      "shares": 2.68,
+      "market_value": 3512.99
     },
     {
       "rank": 8,
-      "stock_code": "KLAC",
-      "stock_name": "科磊",
-      "weight": 1.81,
-      "shares": 1.57,
-      "market_value": 3218.0
+      "stock_code": "NVMI",
+      "stock_name": "Nova Ltd",
+      "weight": 1.62,
+      "shares": 1.11,
+      "market_value": 2870.14
     },
     {
       "rank": 9,
-      "stock_code": "ASML",
-      "stock_name": "阿斯麦",
-      "weight": 1.61,
-      "shares": 0.21,
-      "market_value": 2872.57
+      "stock_code": "MPWR",
+      "stock_name": "Monolithic Power Systems Inc",
+      "weight": 1.58,
+      "shares": 0.31,
+      "market_value": 2806.48
     },
     {
       "rank": 10,
-      "stock_code": "TER",
-      "stock_name": "泰瑞达",
-      "weight": 1.45,
-      "shares": 0.78,
-      "market_value": 2579.63
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 1.52,
+      "shares": 0.88,
+      "market_value": 2708.4
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 4.43,
+        "shares": 1.1,
+        "market_value": 7878.07
+      },
+      {
+        "rank": 2,
+        "stock_code": "AMD",
+        "stock_name": "超威半导体",
+        "weight": 3.28,
+        "shares": 1.41,
+        "market_value": 5819.87
+      },
+      {
+        "rank": 3,
+        "stock_code": "MRVL",
+        "stock_name": "迈威尔科技",
+        "weight": 2.65,
+        "shares": 2.64,
+        "market_value": 4706.19
+      },
+      {
+        "rank": 4,
+        "stock_code": "AMAT",
+        "stock_name": "应用材料",
+        "weight": 2.4,
+        "shares": 1.24,
+        "market_value": 4257.37
+      },
+      {
+        "rank": 5,
+        "stock_code": "AVGO",
+        "stock_name": "博通",
+        "weight": 2.32,
+        "shares": 1.75,
+        "market_value": 4129.1
+      },
+      {
+        "rank": 6,
+        "stock_code": "LRCX",
+        "stock_name": "拉姆研究",
+        "weight": 2.08,
+        "shares": 1.67,
+        "market_value": 3704.25
+      },
+      {
+        "rank": 7,
+        "stock_code": "KLAC",
+        "stock_name": "科磊",
+        "weight": 1.98,
+        "shares": 2.68,
+        "market_value": 3512.99
+      },
+      {
+        "rank": 8,
+        "stock_code": "NVMI",
+        "stock_name": "Nova Ltd",
+        "weight": 1.62,
+        "shares": 1.11,
+        "market_value": 2870.14
+      },
+      {
+        "rank": 9,
+        "stock_code": "MPWR",
+        "stock_name": "Monolithic Power Systems Inc",
+        "weight": 1.58,
+        "shares": 0.31,
+        "market_value": 2806.48
+      },
+      {
+        "rank": 10,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 1.52,
+        "shares": 0.88,
+        "market_value": 2708.4
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:29:07.279584+08:00"
+  "fetched_at": "2026-11-02T05:47:30.512111+08:00"
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-01T21:52:28.929657+08:00",
+  "generated_at": "2026-11-02T05:45:37.334173+08:00",
   "schema_version": 1,
   "count": 91,
   "funds": [
@@ -14,7 +14,7 @@
       "buy_status": "暂停申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 64.67
+      "scale": 63.48
     },
     {
       "code": "017641",
@@ -27,7 +27,7 @@
       "buy_status": "限大额",
       "daily_limit": 10.0,
       "etf_premium": null,
-      "scale": 53.03
+      "scale": 59.31
     },
     {
       "code": "007721",
@@ -40,7 +40,7 @@
       "buy_status": "暂停申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 25.25
+      "scale": 26.83
     },
     {
       "code": "161125",
@@ -53,7 +53,7 @@
       "buy_status": "暂停申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 15.43
+      "scale": 15.26
     },
     {
       "code": "096001",
@@ -66,7 +66,7 @@
       "buy_status": "限大额",
       "daily_limit": 50.0,
       "etf_premium": null,
-      "scale": 7.3
+      "scale": 8.83
     },
     {
       "code": "018064",
@@ -79,7 +79,7 @@
       "buy_status": "暂停申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 3.19
+      "scale": 3.27
     },
     {
       "code": "017028",
@@ -92,7 +92,7 @@
       "buy_status": "暂停申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 1.32
+      "scale": 1.27
     },
     {
       "code": "270042",
@@ -105,7 +105,7 @@
       "buy_status": "暂停申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 122.23
+      "scale": 122.81
     },
     {
       "code": "016452",
@@ -118,7 +118,7 @@
       "buy_status": "限大额",
       "daily_limit": 10.0,
       "etf_premium": null,
-      "scale": 62.1
+      "scale": 67.32
     },
     {
       "code": "040046",
@@ -131,7 +131,7 @@
       "buy_status": "暂停申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 58.1
+      "scale": 63.39
     },
     {
       "code": "000834",
@@ -144,59 +144,7 @@
       "buy_status": "限大额",
       "daily_limit": 10.0,
       "etf_premium": null,
-      "scale": 48.87
-    },
-    {
-      "code": "018043",
-      "name": "天弘纳斯达克100指数",
-      "category": "nasdaq_passive",
-      "company": "天弘",
-      "nav": 2.0094,
-      "daily_change": -1.34,
-      "nav_date": "2026-10-29",
-      "buy_status": "暂停申购",
-      "daily_limit": null,
-      "etf_premium": null,
-      "scale": 30.75
-    },
-    {
-      "code": "019172",
-      "name": "摩根纳斯达克100指数",
-      "category": "nasdaq_passive",
-      "company": "摩根",
-      "nav": 1.7311,
-      "daily_change": -1.32,
-      "nav_date": "2026-10-29",
-      "buy_status": "限大额",
-      "daily_limit": 10.0,
-      "etf_premium": null,
-      "scale": 29.69
-    },
-    {
-      "code": "019547",
-      "name": "招商纳斯达克100ETF联接",
-      "category": "nasdaq_passive",
-      "company": "招商",
-      "nav": 1.5561,
-      "daily_change": -1.28,
-      "nav_date": "2026-10-29",
-      "buy_status": "暂停申购",
-      "daily_limit": null,
-      "etf_premium": null,
-      "scale": 21.78
-    },
-    {
-      "code": "160213",
-      "name": "国泰纳斯达克100指数",
-      "category": "nasdaq_passive",
-      "company": "国泰",
-      "nav": 4.412,
-      "daily_change": -1.43,
-      "nav_date": "2026-10-29",
-      "buy_status": "暂停申购",
-      "daily_limit": null,
-      "etf_premium": null,
-      "scale": 21.77
+      "scale": 49.58
     },
     {
       "code": "539001",
@@ -209,33 +157,59 @@
       "buy_status": "限大额",
       "daily_limit": 10.0,
       "etf_premium": null,
-      "scale": 21.76
+      "scale": 43.74
     },
     {
-      "code": "016532",
-      "name": "嘉实纳斯达克100ETF联接",
+      "code": "018043",
+      "name": "天弘纳斯达克100指数",
       "category": "nasdaq_passive",
-      "company": "嘉实",
-      "nav": 2.1511,
-      "daily_change": -1.33,
+      "company": "天弘",
+      "nav": 2.0094,
+      "daily_change": -1.34,
       "nav_date": "2026-10-29",
       "buy_status": "暂停申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 20.77
+      "scale": 32.44
     },
     {
-      "code": "161130",
-      "name": "易方达纳斯达克100ETF联接",
+      "code": "019172",
+      "name": "摩根纳斯达克100指数",
       "category": "nasdaq_passive",
-      "company": "易方达",
-      "nav": 4.3963,
+      "company": "摩根",
+      "nav": 1.7311,
       "daily_change": -1.32,
       "nav_date": "2026-10-29",
+      "buy_status": "限大额",
+      "daily_limit": 10.0,
+      "etf_premium": null,
+      "scale": 32.03
+    },
+    {
+      "code": "160213",
+      "name": "国泰纳斯达克100指数",
+      "category": "nasdaq_passive",
+      "company": "国泰",
+      "nav": 4.412,
+      "daily_change": -1.43,
+      "nav_date": "2026-10-29",
       "buy_status": "暂停申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 17.83
+      "scale": 28.82
+    },
+    {
+      "code": "019547",
+      "name": "招商纳斯达克100ETF联接",
+      "category": "nasdaq_passive",
+      "company": "招商",
+      "nav": 1.5561,
+      "daily_change": -1.28,
+      "nav_date": "2026-10-29",
+      "buy_status": "暂停申购",
+      "daily_limit": null,
+      "etf_premium": null,
+      "scale": 23.23
     },
     {
       "code": "018966",
@@ -248,33 +222,33 @@
       "buy_status": "暂停申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 16.33
+      "scale": 20.35
     },
     {
-      "code": "016055",
-      "name": "博时纳斯达克100ETF联接",
+      "code": "016532",
+      "name": "嘉实纳斯达克100ETF联接",
       "category": "nasdaq_passive",
-      "company": "博时",
-      "nav": 2.0971,
-      "daily_change": -1.34,
+      "company": "嘉实",
+      "nav": 2.1511,
+      "daily_change": -1.33,
       "nav_date": "2026-10-29",
       "buy_status": "暂停申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 15.04
+      "scale": 19.89
     },
     {
-      "code": "019736",
-      "name": "宝盈纳斯达克100指数",
+      "code": "161130",
+      "name": "易方达纳斯达克100ETF联接",
       "category": "nasdaq_passive",
-      "company": "宝盈",
-      "nav": 1.4721,
+      "company": "易方达",
+      "nav": 4.3963,
       "daily_change": -1.32,
       "nav_date": "2026-10-29",
-      "buy_status": "限大额",
-      "daily_limit": 10.0,
+      "buy_status": "暂停申购",
+      "daily_limit": null,
       "etf_premium": null,
-      "scale": 10.63
+      "scale": 17.41
     },
     {
       "code": "019441",
@@ -287,7 +261,33 @@
       "buy_status": "限大额",
       "daily_limit": 5.0,
       "etf_premium": null,
-      "scale": 9.68
+      "scale": 14.86
+    },
+    {
+      "code": "016055",
+      "name": "博时纳斯达克100ETF联接",
+      "category": "nasdaq_passive",
+      "company": "博时",
+      "nav": 2.0971,
+      "daily_change": -1.34,
+      "nav_date": "2026-10-29",
+      "buy_status": "暂停申购",
+      "daily_limit": null,
+      "etf_premium": null,
+      "scale": 14.57
+    },
+    {
+      "code": "019736",
+      "name": "宝盈纳斯达克100指数",
+      "category": "nasdaq_passive",
+      "company": "宝盈",
+      "nav": 1.4721,
+      "daily_change": -1.32,
+      "nav_date": "2026-10-29",
+      "buy_status": "限大额",
+      "daily_limit": 10.0,
+      "etf_premium": null,
+      "scale": 14.46
     },
     {
       "code": "019524",
@@ -300,7 +300,7 @@
       "buy_status": "限大额",
       "daily_limit": 5.0,
       "etf_premium": null,
-      "scale": 8.16
+      "scale": 8.12
     },
     {
       "code": "015299",
@@ -313,7 +313,7 @@
       "buy_status": "暂停申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 3.23
+      "scale": 3.26
     },
     {
       "code": "270023",
@@ -326,72 +326,7 @@
       "buy_status": "限大额",
       "daily_limit": 2000.0,
       "etf_premium": null,
-      "scale": 183.54
-    },
-    {
-      "code": "005698",
-      "name": "华夏全球科技先锋混合",
-      "category": "active",
-      "company": "华夏",
-      "nav": 2.106,
-      "daily_change": -4.75,
-      "nav_date": "2026-10-29",
-      "buy_status": "限大额",
-      "daily_limit": 5000.0,
-      "etf_premium": null,
-      "scale": 97.51
-    },
-    {
-      "code": "012920",
-      "name": "易方达全球成长精选混合",
-      "category": "active",
-      "company": "易方达",
-      "nav": 3.329,
-      "daily_change": -1.66,
-      "nav_date": "2026-10-29",
-      "buy_status": "限大额",
-      "daily_limit": 10000.0,
-      "etf_premium": null,
-      "scale": 74.92
-    },
-    {
-      "code": "100055",
-      "name": "富国全球科技互联网股票",
-      "category": "active",
-      "company": "富国",
-      "nav": 4.2737,
-      "daily_change": -1.38,
-      "nav_date": "2026-10-29",
-      "buy_status": "限大额",
-      "daily_limit": 10000.0,
-      "etf_premium": null,
-      "scale": 66.94
-    },
-    {
-      "code": "006373",
-      "name": "国富全球科技互联混合",
-      "category": "active",
-      "company": "国海富兰克林",
-      "nav": 6.3765,
-      "daily_change": -2.16,
-      "nav_date": "2026-10-29",
-      "buy_status": "限大额",
-      "daily_limit": 100.0,
-      "etf_premium": null,
-      "scale": 58.83
-    },
-    {
-      "code": "000043",
-      "name": "嘉实美国成长股票",
-      "category": "active",
-      "company": "嘉实",
-      "nav": 6.047,
-      "daily_change": -1.27,
-      "nav_date": "2026-10-29",
-      "buy_status": "限大额",
-      "daily_limit": 100.0,
-      "etf_premium": null,
-      "scale": 49.88
+      "scale": 159.07
     },
     {
       "code": "017436",
@@ -404,20 +339,59 @@
       "buy_status": "限大额",
       "daily_limit": 2000.0,
       "etf_premium": null,
-      "scale": 47.06
+      "scale": 58.17
     },
     {
-      "code": "018229",
-      "name": "易方达全球优质企业混合",
+      "code": "006373",
+      "name": "国富全球科技互联混合",
       "category": "active",
-      "company": "易方达",
-      "nav": 1.7785,
-      "daily_change": -0.99,
+      "company": "国海富兰克林",
+      "nav": 6.3765,
+      "daily_change": -2.16,
       "nav_date": "2026-10-29",
       "buy_status": "限大额",
-      "daily_limit": 50000.0,
+      "daily_limit": 100.0,
       "etf_premium": null,
-      "scale": 44.2
+      "scale": 55.31
+    },
+    {
+      "code": "000043",
+      "name": "嘉实美国成长股票",
+      "category": "active",
+      "company": "嘉实",
+      "nav": 6.047,
+      "daily_change": -1.27,
+      "nav_date": "2026-10-29",
+      "buy_status": "限大额",
+      "daily_limit": 100.0,
+      "etf_premium": null,
+      "scale": 54.39
+    },
+    {
+      "code": "005698",
+      "name": "华夏全球科技先锋混合",
+      "category": "active",
+      "company": "华夏",
+      "nav": 2.106,
+      "daily_change": -4.75,
+      "nav_date": "2026-10-29",
+      "buy_status": "限大额",
+      "daily_limit": 5000.0,
+      "etf_premium": null,
+      "scale": 53.85
+    },
+    {
+      "code": "100055",
+      "name": "富国全球科技互联网股票",
+      "category": "active",
+      "company": "富国",
+      "nav": 4.2737,
+      "daily_change": -1.38,
+      "nav_date": "2026-10-29",
+      "buy_status": "限大额",
+      "daily_limit": 10000.0,
+      "etf_premium": null,
+      "scale": 45.47
     },
     {
       "code": "161128",
@@ -430,59 +404,20 @@
       "buy_status": "暂停申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 41.46
+      "scale": 43.32
     },
     {
-      "code": "002891",
-      "name": "华夏移动互联混合",
+      "code": "012920",
+      "name": "易方达全球成长精选混合",
       "category": "active",
-      "company": "华夏",
-      "nav": 2.424,
-      "daily_change": -2.65,
+      "company": "易方达",
+      "nav": 3.329,
+      "daily_change": -1.66,
       "nav_date": "2026-10-29",
       "buy_status": "限大额",
-      "daily_limit": 100.0,
+      "daily_limit": 10000.0,
       "etf_premium": null,
-      "scale": 40.69
-    },
-    {
-      "code": "017730",
-      "name": "嘉实全球产业升级股票",
-      "category": "active",
-      "company": "嘉实",
-      "nav": 3.3799,
-      "daily_change": -3.94,
-      "nav_date": "2026-10-29",
-      "buy_status": "限大额",
-      "daily_limit": 1000.0,
-      "etf_premium": null,
-      "scale": 31.48
-    },
-    {
-      "code": "017091",
-      "name": "景顺长城纳斯达克科技ETF联接",
-      "category": "active",
-      "company": "景顺长城",
-      "nav": 2.7425,
-      "daily_change": -2.05,
-      "nav_date": "2026-10-29",
-      "buy_status": "暂停申购",
-      "daily_limit": null,
-      "etf_premium": null,
-      "scale": 27.7
-    },
-    {
-      "code": "016701",
-      "name": "银华海外数字经济量化选股混合",
-      "category": "active",
-      "company": "银华",
-      "nav": 2.0492,
-      "daily_change": -2.62,
-      "nav_date": "2026-10-29",
-      "buy_status": "限大额",
-      "daily_limit": 500.0,
-      "etf_premium": null,
-      "scale": 25.85
+      "scale": 40.19
     },
     {
       "code": "539002",
@@ -495,7 +430,72 @@
       "buy_status": "限大额",
       "daily_limit": 100.0,
       "etf_premium": null,
-      "scale": 20.57
+      "scale": 35.06
+    },
+    {
+      "code": "002891",
+      "name": "华夏移动互联混合",
+      "category": "active",
+      "company": "华夏",
+      "nav": 2.424,
+      "daily_change": -2.65,
+      "nav_date": "2026-10-29",
+      "buy_status": "限大额",
+      "daily_limit": 100.0,
+      "etf_premium": null,
+      "scale": 33.18
+    },
+    {
+      "code": "017730",
+      "name": "嘉实全球产业升级股票",
+      "category": "active",
+      "company": "嘉实",
+      "nav": 3.3799,
+      "daily_change": -3.94,
+      "nav_date": "2026-10-29",
+      "buy_status": "限大额",
+      "daily_limit": 1000.0,
+      "etf_premium": null,
+      "scale": 33.14
+    },
+    {
+      "code": "016701",
+      "name": "银华海外数字经济量化选股混合",
+      "category": "active",
+      "company": "银华",
+      "nav": 2.0492,
+      "daily_change": -2.62,
+      "nav_date": "2026-10-29",
+      "buy_status": "限大额",
+      "daily_limit": 500.0,
+      "etf_premium": null,
+      "scale": 32.55
+    },
+    {
+      "code": "017091",
+      "name": "景顺长城纳斯达克科技ETF联接",
+      "category": "active",
+      "company": "景顺长城",
+      "nav": 2.7425,
+      "daily_change": -2.05,
+      "nav_date": "2026-10-29",
+      "buy_status": "暂停申购",
+      "daily_limit": null,
+      "etf_premium": null,
+      "scale": 31.25
+    },
+    {
+      "code": "018229",
+      "name": "易方达全球优质企业混合",
+      "category": "active",
+      "company": "易方达",
+      "nav": 1.7785,
+      "daily_change": -0.99,
+      "nav_date": "2026-10-29",
+      "buy_status": "限大额",
+      "daily_limit": 50000.0,
+      "etf_premium": null,
+      "scale": 30.34
     },
     {
       "code": "001668",
@@ -508,33 +508,7 @@
       "buy_status": "暂停申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 19.62
-    },
-    {
-      "code": "501312",
-      "name": "华宝海外科技股票",
-      "category": "active",
-      "company": "华宝",
-      "nav": 2.4073,
-      "daily_change": -0.66,
-      "nav_date": "2026-10-29",
-      "buy_status": "限大额",
-      "daily_limit": 20.0,
-      "etf_premium": null,
-      "scale": 18.62
-    },
-    {
-      "code": "016664",
-      "name": "天弘全球高端制造混合",
-      "category": "active",
-      "company": "天弘",
-      "nav": 2.1891,
-      "daily_change": -3.76,
-      "nav_date": "2026-10-29",
-      "buy_status": "限大额",
-      "daily_limit": 1000.0,
-      "etf_premium": null,
-      "scale": 16.82
+      "scale": 19.3
     },
     {
       "code": "501226",
@@ -547,7 +521,33 @@
       "buy_status": "限大额",
       "daily_limit": 500000.0,
       "etf_premium": null,
-      "scale": 12.68
+      "scale": 16.99
+    },
+    {
+      "code": "501312",
+      "name": "华宝海外科技股票",
+      "category": "active",
+      "company": "华宝",
+      "nav": 2.4073,
+      "daily_change": -0.66,
+      "nav_date": "2026-10-29",
+      "buy_status": "限大额",
+      "daily_limit": 20.0,
+      "etf_premium": null,
+      "scale": 13.46
+    },
+    {
+      "code": "016664",
+      "name": "天弘全球高端制造混合",
+      "category": "active",
+      "company": "天弘",
+      "nav": 2.1891,
+      "daily_change": -3.76,
+      "nav_date": "2026-10-29",
+      "buy_status": "限大额",
+      "daily_limit": 1000.0,
+      "etf_premium": null,
+      "scale": 12.73
     },
     {
       "code": "457001",
@@ -560,7 +560,7 @@
       "buy_status": "限大额",
       "daily_limit": 1000.0,
       "etf_premium": null,
-      "scale": 11.58
+      "scale": 12.16
     },
     {
       "code": "008253",
@@ -573,7 +573,7 @@
       "buy_status": "限大额",
       "daily_limit": 2000.0,
       "etf_premium": null,
-      "scale": 11.01
+      "scale": 8.94
     },
     {
       "code": "501225",
@@ -586,20 +586,7 @@
       "buy_status": "暂停申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 9.03
-    },
-    {
-      "code": "164212",
-      "name": "天弘全球新能源汽车股票",
-      "category": "active",
-      "company": "天弘",
-      "nav": 1.5544,
-      "daily_change": -3.26,
-      "nav_date": "2026-10-29",
-      "buy_status": "限大额",
-      "daily_limit": 1000.0,
-      "etf_premium": null,
-      "scale": 4.34
+      "scale": 7.24
     },
     {
       "code": "019155",
@@ -612,7 +599,20 @@
       "buy_status": "限大额",
       "daily_limit": 10000.0,
       "etf_premium": null,
-      "scale": 4.27
+      "scale": 3.33
+    },
+    {
+      "code": "164212",
+      "name": "天弘全球新能源汽车股票",
+      "category": "active",
+      "company": "天弘",
+      "nav": 1.5544,
+      "daily_change": -3.26,
+      "nav_date": "2026-10-29",
+      "buy_status": "限大额",
+      "daily_limit": 1000.0,
+      "etf_premium": null,
+      "scale": 2.13
     },
     {
       "code": "017144",
@@ -625,7 +625,7 @@
       "buy_status": "限大额",
       "daily_limit": 10000.0,
       "etf_premium": null,
-      "scale": 0.988608
+      "scale": 0.9038139999999999
     },
     {
       "code": "020712",
@@ -638,7 +638,7 @@
       "buy_status": "限大额",
       "daily_limit": 10.0,
       "etf_premium": null,
-      "scale": 2.87
+      "scale": 3.04
     },
     {
       "code": "019454",
@@ -651,7 +651,7 @@
       "buy_status": "限大额",
       "daily_limit": 5.0,
       "etf_premium": null,
-      "scale": 1.42
+      "scale": 1.07
     },
     {
       "code": "000041",
@@ -664,20 +664,7 @@
       "buy_status": "限大额",
       "daily_limit": 10000.0,
       "etf_premium": null,
-      "scale": 30.27
-    },
-    {
-      "code": "008763",
-      "name": "天弘越南市场股票",
-      "category": "global_other",
-      "company": "天弘",
-      "nav": 1.5529,
-      "daily_change": -0.51,
-      "nav_date": "2026-10-29",
-      "buy_status": "限大额",
-      "daily_limit": 1000.0,
-      "etf_premium": null,
-      "scale": 24.88
+      "scale": 28.66
     },
     {
       "code": "007280",
@@ -690,33 +677,20 @@
       "buy_status": "限大额",
       "daily_limit": 2000.0,
       "etf_premium": null,
-      "scale": 23.94
+      "scale": 26.6
     },
     {
-      "code": "160644",
-      "name": "鹏华港美互联股票",
+      "code": "008763",
+      "name": "天弘越南市场股票",
       "category": "global_other",
-      "company": "鹏华",
-      "nav": 1.6753,
-      "daily_change": -3.52,
-      "nav_date": "2026-10-29",
-      "buy_status": "暂停申购",
-      "daily_limit": null,
-      "etf_premium": null,
-      "scale": 23.43
-    },
-    {
-      "code": "006555",
-      "name": "浦银全球智能科技",
-      "category": "global_other",
-      "company": "浦银安盛",
-      "nav": 3.3702,
-      "daily_change": -2.13,
+      "company": "天弘",
+      "nav": 1.5529,
+      "daily_change": -0.51,
       "nav_date": "2026-10-29",
       "buy_status": "限大额",
       "daily_limit": 1000.0,
       "etf_premium": null,
-      "scale": 18.5
+      "scale": 22.7
     },
     {
       "code": "006105",
@@ -729,7 +703,33 @@
       "buy_status": "开放申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 17.44
+      "scale": 16.7
+    },
+    {
+      "code": "006555",
+      "name": "浦银全球智能科技",
+      "category": "global_other",
+      "company": "浦银安盛",
+      "nav": 3.3702,
+      "daily_change": -2.13,
+      "nav_date": "2026-10-29",
+      "buy_status": "限大额",
+      "daily_limit": 1000.0,
+      "etf_premium": null,
+      "scale": 15.59
+    },
+    {
+      "code": "160644",
+      "name": "鹏华港美互联股票",
+      "category": "global_other",
+      "company": "鹏华",
+      "nav": 1.6753,
+      "daily_change": -3.52,
+      "nav_date": "2026-10-29",
+      "buy_status": "暂停申购",
+      "daily_limit": null,
+      "etf_premium": null,
+      "scale": 11.36
     },
     {
       "code": "017970",
@@ -742,7 +742,7 @@
       "buy_status": "限大额",
       "daily_limit": 100000.0,
       "etf_premium": null,
-      "scale": 12.3
+      "scale": 10.08
     },
     {
       "code": "019230",
@@ -755,7 +755,7 @@
       "buy_status": "限大额",
       "daily_limit": 600000.0,
       "etf_premium": null,
-      "scale": 8.3
+      "scale": 8.72
     },
     {
       "code": "003629",
@@ -768,7 +768,7 @@
       "buy_status": "限大额",
       "daily_limit": 100000.0,
       "etf_premium": null,
-      "scale": 6.69
+      "scale": 6.74
     },
     {
       "code": "011420",
@@ -781,20 +781,7 @@
       "buy_status": "暂停申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 6.23
-    },
-    {
-      "code": "007729",
-      "name": "招商普盛全球配置",
-      "category": "global_other",
-      "company": "招商",
-      "nav": 1.2725,
-      "daily_change": -0.64,
-      "nav_date": "2026-10-29",
-      "buy_status": "开放申购",
-      "daily_limit": null,
-      "etf_premium": null,
-      "scale": 4.88
+      "scale": 5.36
     },
     {
       "code": "020957",
@@ -807,7 +794,7 @@
       "buy_status": "限大额",
       "daily_limit": 5000000.0,
       "etf_premium": null,
-      "scale": 4.23
+      "scale": 4.25
     },
     {
       "code": "000988",
@@ -820,7 +807,7 @@
       "buy_status": "限大额",
       "daily_limit": 100.0,
       "etf_premium": null,
-      "scale": 4.08
+      "scale": 4.1
     },
     {
       "code": "023591",
@@ -833,20 +820,7 @@
       "buy_status": "限大额",
       "daily_limit": 1000000.0,
       "etf_premium": null,
-      "scale": 3.76
-    },
-    {
-      "code": "378546",
-      "name": "摩根全球天然资源混合",
-      "category": "global_other",
-      "company": "摩根",
-      "nav": 1.5642,
-      "daily_change": -0.17,
-      "nav_date": "2026-10-29",
-      "buy_status": "限大额",
-      "daily_limit": 10000.0,
-      "etf_premium": null,
-      "scale": 2.87
+      "scale": 3.99
     },
     {
       "code": "017653",
@@ -859,7 +833,33 @@
       "buy_status": "限大额",
       "daily_limit": 100000.0,
       "etf_premium": null,
-      "scale": 2.67
+      "scale": 3.68
+    },
+    {
+      "code": "007729",
+      "name": "招商普盛全球配置",
+      "category": "global_other",
+      "company": "招商",
+      "nav": 1.2725,
+      "daily_change": -0.64,
+      "nav_date": "2026-10-29",
+      "buy_status": "开放申购",
+      "daily_limit": null,
+      "etf_premium": null,
+      "scale": 3.49
+    },
+    {
+      "code": "378546",
+      "name": "摩根全球天然资源混合",
+      "category": "global_other",
+      "company": "摩根",
+      "nav": 1.5642,
+      "daily_change": -0.17,
+      "nav_date": "2026-10-29",
+      "buy_status": "限大额",
+      "daily_limit": 10000.0,
+      "etf_premium": null,
+      "scale": 3.15
     },
     {
       "code": "013328",
@@ -872,7 +872,7 @@
       "buy_status": "限大额",
       "daily_limit": 100.0,
       "etf_premium": null,
-      "scale": 2.16
+      "scale": 2.23
     },
     {
       "code": "006445",
@@ -885,7 +885,7 @@
       "buy_status": "限大额",
       "daily_limit": 100000.0,
       "etf_premium": null,
-      "scale": 1.74
+      "scale": 1.53
     },
     {
       "code": "017429",
@@ -898,7 +898,7 @@
       "buy_status": "开放申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 0.548804
+      "scale": 0.48904
     },
     {
       "code": "019075",
@@ -911,7 +911,7 @@
       "buy_status": "开放申购",
       "daily_limit": null,
       "etf_premium": null,
-      "scale": 0.35532199999999997
+      "scale": 0.319359
     },
     {
       "code": "159941",
@@ -924,7 +924,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 346.82
+      "scale": 350.53
     },
     {
       "code": "513500",
@@ -937,7 +937,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 239.99
+      "scale": 251.81
     },
     {
       "code": "513100",
@@ -947,10 +947,10 @@
       "nav": 2.375,
       "daily_change": -1.04,
       "nav_date": "2026-10-29",
-      "buy_status": "场内交易",
-      "daily_limit": 0.0,
+      "buy_status": "暂停申购",
+      "daily_limit": null,
       "etf_premium": null,
-      "scale": 194.68
+      "scale": 197.66
     },
     {
       "code": "159509",
@@ -963,7 +963,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 151.28
+      "scale": 160.83
     },
     {
       "code": "513300",
@@ -976,7 +976,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 132.88
+      "scale": 139.14
     },
     {
       "code": "159501",
@@ -989,7 +989,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 124.11
+      "scale": 133.68
     },
     {
       "code": "159632",
@@ -1002,7 +1002,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 113.0
+      "scale": 118.08
     },
     {
       "code": "159659",
@@ -1015,7 +1015,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 99.36
+      "scale": 102.74
     },
     {
       "code": "513650",
@@ -1028,7 +1028,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 76.94
+      "scale": 87.11
     },
     {
       "code": "159513",
@@ -1041,7 +1041,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 73.84
+      "scale": 82.47
     },
     {
       "code": "513110",
@@ -1054,7 +1054,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 50.98
+      "scale": 52.06
     },
     {
       "code": "159696",
@@ -1067,7 +1067,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 50.11
+      "scale": 57.05
     },
     {
       "code": "159660",
@@ -1080,7 +1080,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 49.1
+      "scale": 57.74
     },
     {
       "code": "513390",
@@ -1093,7 +1093,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 42.5
+      "scale": 50.48
     },
     {
       "code": "159655",
@@ -1106,7 +1106,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 39.37
+      "scale": 41.71
     },
     {
       "code": "513880",
@@ -1119,7 +1119,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 27.3
+      "scale": 27.77
     },
     {
       "code": "513870",
@@ -1132,7 +1132,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 24.71
+      "scale": 28.9
     },
     {
       "code": "513850",
@@ -1145,7 +1145,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 20.56
+      "scale": 23.44
     },
     {
       "code": "159577",
@@ -1158,7 +1158,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 11.26
+      "scale": 13.2
     },
     {
       "code": "159612",
@@ -1168,10 +1168,10 @@
       "nav": 2.105,
       "daily_change": -0.14,
       "nav_date": "2026-10-29",
-      "buy_status": "场内交易",
-      "daily_limit": 0.0,
+      "buy_status": "暂停申购",
+      "daily_limit": null,
       "etf_premium": null,
-      "scale": 8.44
+      "scale": 9.78
     },
     {
       "code": "513290",
@@ -1184,7 +1184,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 15.28
+      "scale": 18.38
     }
   ]
 }

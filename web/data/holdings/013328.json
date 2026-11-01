@@ -1,92 +1,174 @@
 {
   "code": "013328",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 24.85,
+  "total_weight": 27.17,
   "heavy_count": 1,
   "holdings": [
     {
       "rank": 1,
       "stock_code": "TSM",
       "stock_name": "台积电",
-      "weight": 5.48,
-      "shares": 0.37,
-      "market_value": 1188.2
+      "weight": 5.81,
+      "shares": 0.43,
+      "market_value": 1307.34
     },
     {
       "rank": 2,
       "stock_code": "NVDA",
       "stock_name": "英伟达",
-      "weight": 3.99,
-      "shares": 0.63,
-      "market_value": 864.83
+      "weight": 4.48,
+      "shares": 0.65,
+      "market_value": 1006.88
     },
     {
       "rank": 3,
-      "stock_code": "GOOGL",
-      "stock_name": "谷歌-A",
-      "weight": 2.92,
-      "shares": 0.26,
-      "market_value": 632.6
+      "stock_code": "AAPL",
+      "stock_name": "苹果",
+      "weight": 2.85,
+      "shares": 0.29,
+      "market_value": 640.58
     },
     {
       "rank": 4,
-      "stock_code": "AAPL",
-      "stock_name": "苹果",
-      "weight": 2.6,
-      "shares": 0.29,
-      "market_value": 562.86
+      "stock_code": "GOOGL",
+      "stock_name": "谷歌-A",
+      "weight": 2.82,
+      "shares": 0.27,
+      "market_value": 633.81
     },
     {
       "rank": 5,
-      "stock_code": "MU",
-      "stock_name": "美光科技",
-      "weight": 2.41,
-      "shares": 0.07,
-      "market_value": 523.59
+      "stock_code": "MSFT",
+      "stock_name": "微软",
+      "weight": 2.53,
+      "shares": 0.17,
+      "market_value": 569.98
     },
     {
       "rank": 6,
       "stock_code": "HY9HGF",
       "stock_name": "SK海力士株式会社",
-      "weight": 1.96,
-      "shares": 0.03,
-      "market_value": 425.58
+      "weight": 2.36,
+      "shares": 0.06,
+      "market_value": 530.58
     },
     {
       "rank": 7,
-      "stock_code": "WDC",
-      "stock_name": "西部数据",
-      "weight": 1.61,
-      "shares": 0.08,
-      "market_value": 348.46
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 2.12,
+      "shares": 0.07,
+      "market_value": 477.76
     },
     {
       "rank": 8,
       "stock_code": "600941",
       "stock_name": "中国移动",
-      "weight": 1.4,
-      "shares": 3.52,
-      "market_value": 303.18
+      "weight": 1.76,
+      "shares": 4.14,
+      "market_value": 396.61
     },
     {
       "rank": 9,
-      "stock_code": "SMSN",
-      "stock_name": "SAMSUNG ELECTRONICS CO LTD (ATT) GDR (EACH REP 25 COM STK KRW100)(REG S)",
-      "weight": 1.29,
-      "shares": 0.01,
-      "market_value": 279.0
+      "stock_code": "AMZN",
+      "stock_name": "亚马逊",
+      "weight": 1.3,
+      "shares": 0.17,
+      "market_value": 291.65
     },
     {
       "rank": 10,
-      "stock_code": "MRVL",
-      "stock_name": "迈威尔科技",
-      "weight": 1.19,
-      "shares": 0.13,
-      "market_value": 257.87
+      "stock_code": "601088",
+      "stock_name": "中国神华",
+      "weight": 1.14,
+      "shares": 5.38,
+      "market_value": 257.16
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 5.81,
+        "shares": 0.43,
+        "market_value": 1307.34
+      },
+      {
+        "rank": 2,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 4.48,
+        "shares": 0.65,
+        "market_value": 1006.88
+      },
+      {
+        "rank": 3,
+        "stock_code": "AAPL",
+        "stock_name": "苹果",
+        "weight": 2.85,
+        "shares": 0.29,
+        "market_value": 640.58
+      },
+      {
+        "rank": 4,
+        "stock_code": "GOOGL",
+        "stock_name": "谷歌-A",
+        "weight": 2.82,
+        "shares": 0.27,
+        "market_value": 633.81
+      },
+      {
+        "rank": 5,
+        "stock_code": "MSFT",
+        "stock_name": "微软",
+        "weight": 2.53,
+        "shares": 0.17,
+        "market_value": 569.98
+      },
+      {
+        "rank": 6,
+        "stock_code": "HY9HGF",
+        "stock_name": "SK海力士株式会社",
+        "weight": 2.36,
+        "shares": 0.06,
+        "market_value": 530.58
+      },
+      {
+        "rank": 7,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 2.12,
+        "shares": 0.07,
+        "market_value": 477.76
+      },
+      {
+        "rank": 8,
+        "stock_code": "600941",
+        "stock_name": "中国移动",
+        "weight": 1.76,
+        "shares": 4.14,
+        "market_value": 396.61
+      },
+      {
+        "rank": 9,
+        "stock_code": "AMZN",
+        "stock_name": "亚马逊",
+        "weight": 1.3,
+        "shares": 0.17,
+        "market_value": 291.65
+      },
+      {
+        "rank": 10,
+        "stock_code": "601088",
+        "stock_name": "中国神华",
+        "weight": 1.14,
+        "shares": 5.38,
+        "market_value": 257.16
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:29:08.249037+08:00"
+  "fetched_at": "2026-11-02T05:47:33.303460+08:00"
 }

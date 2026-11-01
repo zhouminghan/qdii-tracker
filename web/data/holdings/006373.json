@@ -1,92 +1,174 @@
 {
   "code": "006373",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 52.58,
+  "total_weight": 53.12,
   "heavy_count": 5,
   "holdings": [
     {
       "rank": 1,
       "stock_code": "MU",
       "stock_name": "美光科技",
-      "weight": 8.42,
+      "weight": 7.62,
       "shares": 9.6,
-      "market_value": 75433.53
+      "market_value": 68830.91
     },
     {
       "rank": 2,
-      "stock_code": "MKSI",
-      "stock_name": "MKS Inc",
-      "weight": 7.47,
-      "shares": 22.11,
-      "market_value": 66978.35
+      "stock_code": "INTC",
+      "stock_name": "英特尔",
+      "weight": 7.09,
+      "shares": 79.18,
+      "market_value": 64112.83
     },
     {
       "rank": 3,
       "stock_code": "TSM",
       "stock_name": "台积电",
-      "weight": 7.47,
+      "weight": 7.0,
       "shares": 20.59,
-      "market_value": 66959.7
+      "market_value": 63250.18
     },
     {
       "rank": 4,
-      "stock_code": "INTC",
-      "stock_name": "英特尔",
-      "weight": 7.17,
-      "shares": 67.58,
-      "market_value": 64269.74
+      "stock_code": "GOOG",
+      "stock_name": "谷歌-C",
+      "weight": 5.26,
+      "shares": 20.7,
+      "market_value": 47499.52
     },
     {
       "rank": 5,
-      "stock_code": "GLW",
-      "stock_name": "康宁",
-      "weight": 5.37,
-      "shares": 27.65,
-      "market_value": 48101.19
+      "stock_code": "MSFT",
+      "stock_name": "微软",
+      "weight": 5.05,
+      "shares": 13.2,
+      "market_value": 45610.6
     },
     {
       "rank": 6,
-      "stock_code": "SNDK",
-      "stock_name": "闪迪",
-      "weight": 4.38,
-      "shares": 2.54,
-      "market_value": 39265.13
+      "stock_code": "MKSI",
+      "stock_name": "MKS Inc",
+      "weight": 4.43,
+      "shares": 22.4,
+      "market_value": 40030.29
     },
     {
       "rank": 7,
-      "stock_code": "LRCX",
-      "stock_name": "拉姆研究",
-      "weight": 3.68,
-      "shares": 11.19,
-      "market_value": 33021.67
+      "stock_code": "GLW",
+      "stock_name": "康宁",
+      "weight": 4.38,
+      "shares": 38.23,
+      "market_value": 39587.67
     },
     {
       "rank": 8,
-      "stock_code": "GOOG",
-      "stock_name": "谷歌-C",
-      "weight": 3.21,
-      "shares": 11.97,
-      "market_value": 28803.58
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 4.18,
+      "shares": 24.57,
+      "market_value": 37794.64
     },
     {
       "rank": 9,
-      "stock_code": "6857",
-      "stock_name": "爱德万测试",
-      "weight": 2.75,
-      "shares": 18.11,
-      "market_value": 24624.81
+      "stock_code": "LRCX",
+      "stock_name": "拉姆研究",
+      "weight": 4.14,
+      "shares": 16.9,
+      "market_value": 37401.57
     },
     {
       "rank": 10,
-      "stock_code": "NOK",
-      "stock_name": "诺基亚",
-      "weight": 2.66,
-      "shares": 263.15,
-      "market_value": 23801.59
+      "stock_code": "LITE",
+      "stock_name": "Lumentum Holdings Inc",
+      "weight": 3.97,
+      "shares": 5.48,
+      "market_value": 35871.15
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 7.62,
+        "shares": 9.6,
+        "market_value": 68830.91
+      },
+      {
+        "rank": 2,
+        "stock_code": "INTC",
+        "stock_name": "英特尔",
+        "weight": 7.09,
+        "shares": 79.18,
+        "market_value": 64112.83
+      },
+      {
+        "rank": 3,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 7.0,
+        "shares": 20.59,
+        "market_value": 63250.18
+      },
+      {
+        "rank": 4,
+        "stock_code": "GOOG",
+        "stock_name": "谷歌-C",
+        "weight": 5.26,
+        "shares": 20.7,
+        "market_value": 47499.52
+      },
+      {
+        "rank": 5,
+        "stock_code": "MSFT",
+        "stock_name": "微软",
+        "weight": 5.05,
+        "shares": 13.2,
+        "market_value": 45610.6
+      },
+      {
+        "rank": 6,
+        "stock_code": "MKSI",
+        "stock_name": "MKS Inc",
+        "weight": 4.43,
+        "shares": 22.4,
+        "market_value": 40030.29
+      },
+      {
+        "rank": 7,
+        "stock_code": "GLW",
+        "stock_name": "康宁",
+        "weight": 4.38,
+        "shares": 38.23,
+        "market_value": 39587.67
+      },
+      {
+        "rank": 8,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 4.18,
+        "shares": 24.57,
+        "market_value": 37794.64
+      },
+      {
+        "rank": 9,
+        "stock_code": "LRCX",
+        "stock_name": "拉姆研究",
+        "weight": 4.14,
+        "shares": 16.9,
+        "market_value": 37401.57
+      },
+      {
+        "rank": 10,
+        "stock_code": "LITE",
+        "stock_name": "Lumentum Holdings Inc",
+        "weight": 3.97,
+        "shares": 5.48,
+        "market_value": 35871.15
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:27:03.564078+08:00"
+  "fetched_at": "2026-11-02T05:46:55.911154+08:00"
 }

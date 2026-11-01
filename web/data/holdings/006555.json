@@ -1,92 +1,174 @@
 {
   "code": "006555",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 65.26,
-  "heavy_count": 6,
+  "total_weight": 48.03,
+  "heavy_count": 3,
   "holdings": [
     {
       "rank": 1,
-      "stock_code": "SNDK",
-      "stock_name": "闪迪",
-      "weight": 9.52,
-      "shares": 3.06,
-      "market_value": 47325.67
+      "stock_code": "AMD",
+      "stock_name": "超威半导体",
+      "weight": 5.95,
+      "shares": 6.81,
+      "market_value": 28042.11
     },
     {
       "rank": 2,
-      "stock_code": "285A",
-      "stock_name": "KIOXIA",
-      "weight": 8.81,
-      "shares": 11.61,
-      "market_value": 43776.61
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 5.55,
+      "shares": 3.65,
+      "market_value": 26147.85
     },
     {
       "rank": 3,
-      "stock_code": "MU",
-      "stock_name": "美光科技",
-      "weight": 8.5,
-      "shares": 5.38,
-      "market_value": 42256.93
+      "stock_code": "GOOG",
+      "stock_name": "谷歌-C",
+      "weight": 5.35,
+      "shares": 11.0,
+      "market_value": 25244.1
     },
     {
       "rank": 4,
-      "stock_code": "INTC",
-      "stock_name": "英特尔",
-      "weight": 7.82,
-      "shares": 40.85,
-      "market_value": 38848.59
+      "stock_code": "285A",
+      "stock_name": "KIOXIA",
+      "weight": 4.93,
+      "shares": 30.09,
+      "market_value": 23263.94
     },
     {
       "rank": 5,
-      "stock_code": "WDC",
-      "stock_name": "西部数据",
-      "weight": 7.58,
-      "shares": 8.66,
-      "market_value": 37673.23
+      "stock_code": "INTC",
+      "stock_name": "英特尔",
+      "weight": 4.88,
+      "shares": 28.44,
+      "market_value": 23029.6
     },
     {
       "rank": 6,
-      "stock_code": "AMD",
-      "stock_name": "超威半导体",
-      "weight": 7.53,
-      "shares": 9.46,
-      "market_value": 37412.46
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 4.85,
+      "shares": 7.45,
+      "market_value": 22874.65
     },
     {
       "rank": 7,
-      "stock_code": "COHR",
-      "stock_name": "Coherent Corp",
-      "weight": 3.95,
-      "shares": 7.3,
-      "market_value": 19612.88
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 4.56,
+      "shares": 13.99,
+      "market_value": 21518.89
     },
     {
       "rank": 8,
-      "stock_code": "TER",
-      "stock_name": "泰瑞达",
-      "weight": 3.95,
-      "shares": 5.95,
-      "market_value": 19607.55
+      "stock_code": "005930",
+      "stock_name": "三星电子",
+      "weight": 4.11,
+      "shares": 14.57,
+      "market_value": 19395.36
     },
     {
       "rank": 9,
-      "stock_code": "005930",
-      "stock_name": "三星电子",
-      "weight": 3.83,
-      "shares": 12.97,
-      "market_value": 19016.42
+      "stock_code": "MSFT",
+      "stock_name": "微软",
+      "weight": 4.01,
+      "shares": 5.48,
+      "market_value": 18930.29
     },
     {
       "rank": 10,
-      "stock_code": "000660",
-      "stock_name": "SK海力士",
-      "weight": 3.77,
-      "shares": 1.61,
-      "market_value": 18714.34
+      "stock_code": "AAPL",
+      "stock_name": "苹果",
+      "weight": 3.84,
+      "shares": 8.07,
+      "market_value": 18100.39
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "AMD",
+        "stock_name": "超威半导体",
+        "weight": 5.95,
+        "shares": 6.81,
+        "market_value": 28042.11
+      },
+      {
+        "rank": 2,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 5.55,
+        "shares": 3.65,
+        "market_value": 26147.85
+      },
+      {
+        "rank": 3,
+        "stock_code": "GOOG",
+        "stock_name": "谷歌-C",
+        "weight": 5.35,
+        "shares": 11.0,
+        "market_value": 25244.1
+      },
+      {
+        "rank": 4,
+        "stock_code": "285A",
+        "stock_name": "KIOXIA",
+        "weight": 4.93,
+        "shares": 30.09,
+        "market_value": 23263.94
+      },
+      {
+        "rank": 5,
+        "stock_code": "INTC",
+        "stock_name": "英特尔",
+        "weight": 4.88,
+        "shares": 28.44,
+        "market_value": 23029.6
+      },
+      {
+        "rank": 6,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 4.85,
+        "shares": 7.45,
+        "market_value": 22874.65
+      },
+      {
+        "rank": 7,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 4.56,
+        "shares": 13.99,
+        "market_value": 21518.89
+      },
+      {
+        "rank": 8,
+        "stock_code": "005930",
+        "stock_name": "三星电子",
+        "weight": 4.11,
+        "shares": 14.57,
+        "market_value": 19395.36
+      },
+      {
+        "rank": 9,
+        "stock_code": "MSFT",
+        "stock_name": "微软",
+        "weight": 4.01,
+        "shares": 5.48,
+        "market_value": 18930.29
+      },
+      {
+        "rank": 10,
+        "stock_code": "AAPL",
+        "stock_name": "苹果",
+        "weight": 3.84,
+        "shares": 8.07,
+        "market_value": 18100.39
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:28:38.574784+08:00"
+  "fetched_at": "2026-11-02T05:47:20.867183+08:00"
 }

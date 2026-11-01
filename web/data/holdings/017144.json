@@ -1,92 +1,174 @@
 {
   "code": "017144",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 76.14,
-  "heavy_count": 9,
+  "total_weight": 74.02,
+  "heavy_count": 10,
   "holdings": [
     {
       "rank": 1,
       "stock_code": "MRVL",
       "stock_name": "迈威尔科技",
-      "weight": 9.83,
-      "shares": 1.58,
-      "market_value": 3205.25
+      "weight": 9.03,
+      "shares": 1.55,
+      "market_value": 2759.08
     },
     {
       "rank": 2,
-      "stock_code": "TSLA",
-      "stock_name": "特斯拉",
-      "weight": 9.61,
-      "shares": 1.09,
-      "market_value": 3132.22
+      "stock_code": "RACE",
+      "stock_name": "法拉利",
+      "weight": 8.75,
+      "shares": 1.01,
+      "market_value": 2672.61
     },
     {
       "rank": 3,
-      "stock_code": "NIO",
-      "stock_name": "蔚来",
-      "weight": 9.17,
-      "shares": 86.76,
-      "market_value": 2990.03
+      "stock_code": "TSLA",
+      "stock_name": "特斯拉",
+      "weight": 8.24,
+      "shares": 1.05,
+      "market_value": 2518.25
     },
     {
       "rank": 4,
       "stock_code": "RIVN",
       "stock_name": "Rivian Automotive Inc-A",
-      "weight": 8.94,
-      "shares": 24.67,
-      "market_value": 2914.77
+      "weight": 7.55,
+      "shares": 22.93,
+      "market_value": 2307.67
     },
     {
       "rank": 5,
-      "stock_code": "RACE",
-      "stock_name": "法拉利",
-      "weight": 8.44,
-      "shares": 1.09,
-      "market_value": 2752.43
+      "stock_code": "NIO",
+      "stock_name": "蔚来",
+      "weight": 7.54,
+      "shares": 99.7,
+      "market_value": 2303.25
     },
     {
       "rank": 6,
       "stock_code": "PONY",
       "stock_name": "小马智行",
-      "weight": 7.34,
+      "weight": 7.28,
       "shares": 50.52,
-      "market_value": 2391.35
+      "market_value": 2225.23
     },
     {
       "rank": 7,
       "stock_code": "AMD",
       "stock_name": "超威半导体",
-      "weight": 6.3,
+      "weight": 7.0,
       "shares": 0.52,
-      "market_value": 2052.25
+      "market_value": 2137.18
     },
     {
       "rank": 8,
-      "stock_code": "MU",
-      "stock_name": "美光科技",
-      "weight": 5.99,
-      "shares": 0.25,
-      "market_value": 1951.29
+      "stock_code": "SNDK",
+      "stock_name": "闪迪",
+      "weight": 6.79,
+      "shares": 0.18,
+      "market_value": 2072.97
     },
     {
       "rank": 9,
-      "stock_code": "03750",
-      "stock_name": "宁德时代",
-      "weight": 5.61,
-      "shares": 3.0,
-      "market_value": 1829.17
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 6.64,
+      "shares": 0.28,
+      "market_value": 2029.42
     },
     {
       "rank": 10,
       "stock_code": "AVGO",
       "stock_name": "博通",
-      "weight": 4.91,
-      "shares": 0.62,
-      "market_value": 1598.75
+      "weight": 5.2,
+      "shares": 0.67,
+      "market_value": 1588.3
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "MRVL",
+        "stock_name": "迈威尔科技",
+        "weight": 9.03,
+        "shares": 1.55,
+        "market_value": 2759.08
+      },
+      {
+        "rank": 2,
+        "stock_code": "RACE",
+        "stock_name": "法拉利",
+        "weight": 8.75,
+        "shares": 1.01,
+        "market_value": 2672.61
+      },
+      {
+        "rank": 3,
+        "stock_code": "TSLA",
+        "stock_name": "特斯拉",
+        "weight": 8.24,
+        "shares": 1.05,
+        "market_value": 2518.25
+      },
+      {
+        "rank": 4,
+        "stock_code": "RIVN",
+        "stock_name": "Rivian Automotive Inc-A",
+        "weight": 7.55,
+        "shares": 22.93,
+        "market_value": 2307.67
+      },
+      {
+        "rank": 5,
+        "stock_code": "NIO",
+        "stock_name": "蔚来",
+        "weight": 7.54,
+        "shares": 99.7,
+        "market_value": 2303.25
+      },
+      {
+        "rank": 6,
+        "stock_code": "PONY",
+        "stock_name": "小马智行",
+        "weight": 7.28,
+        "shares": 50.52,
+        "market_value": 2225.23
+      },
+      {
+        "rank": 7,
+        "stock_code": "AMD",
+        "stock_name": "超威半导体",
+        "weight": 7.0,
+        "shares": 0.52,
+        "market_value": 2137.18
+      },
+      {
+        "rank": 8,
+        "stock_code": "SNDK",
+        "stock_name": "闪迪",
+        "weight": 6.79,
+        "shares": 0.18,
+        "market_value": 2072.97
+      },
+      {
+        "rank": 9,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 6.64,
+        "shares": 0.28,
+        "market_value": 2029.42
+      },
+      {
+        "rank": 10,
+        "stock_code": "AVGO",
+        "stock_name": "博通",
+        "weight": 5.2,
+        "shares": 0.67,
+        "market_value": 1588.3
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:28:25.833815+08:00"
+  "fetched_at": "2026-11-02T05:47:16.228375+08:00"
 }

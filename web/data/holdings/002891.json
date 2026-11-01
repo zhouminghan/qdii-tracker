@@ -1,92 +1,174 @@
 {
   "code": "002891",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 51.55,
-  "heavy_count": 4,
+  "total_weight": 58.14,
+  "heavy_count": 6,
   "holdings": [
     {
       "rank": 1,
-      "stock_code": "MU",
-      "stock_name": "美光科技",
-      "weight": 8.16,
-      "shares": 4.23,
-      "market_value": 33223.77
+      "stock_code": "INTC",
+      "stock_name": "英特尔",
+      "weight": 8.42,
+      "shares": 34.5,
+      "market_value": 27940.32
     },
     {
       "rank": 2,
-      "stock_code": "SNDK",
-      "stock_name": "闪迪",
-      "weight": 6.53,
-      "shares": 1.72,
-      "market_value": 26578.88
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 7.88,
+      "shares": 3.64,
+      "market_value": 26132.79
     },
     {
       "rank": 3,
-      "stock_code": "ONTO",
-      "stock_name": "Onto Innovation Inc",
-      "weight": 5.55,
-      "shares": 8.77,
-      "market_value": 22596.14
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 7.44,
+      "shares": 16.05,
+      "market_value": 24693.96
     },
     {
       "rank": 4,
-      "stock_code": "AMD",
-      "stock_name": "超威半导体",
-      "weight": 5.3,
-      "shares": 5.46,
-      "market_value": 21584.0
+      "stock_code": "SKHY",
+      "stock_name": "SK海力士",
+      "weight": 7.2,
+      "shares": 19.26,
+      "market_value": 23889.81
     },
     {
       "rank": 5,
-      "stock_code": "INTC",
-      "stock_name": "英特尔",
-      "weight": 4.94,
-      "shares": 21.12,
-      "market_value": 20085.53
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 5.91,
+      "shares": 6.39,
+      "market_value": 19621.51
     },
     {
       "rank": 6,
-      "stock_code": "285A",
-      "stock_name": "KIOXIA",
-      "weight": 4.59,
-      "shares": 4.95,
-      "market_value": 18664.45
+      "stock_code": "ONTO",
+      "stock_name": "Onto Innovation Inc",
+      "weight": 5.81,
+      "shares": 9.3,
+      "market_value": 19281.58
     },
     {
       "rank": 7,
-      "stock_code": "LITE",
-      "stock_name": "Lumentum Holdings Inc",
-      "weight": 4.43,
-      "shares": 3.09,
-      "market_value": 18042.09
+      "stock_code": "MRVL",
+      "stock_name": "迈威尔科技",
+      "weight": 4.39,
+      "shares": 8.18,
+      "market_value": 14562.56
     },
     {
       "rank": 8,
-      "stock_code": "TSM",
-      "stock_name": "台积电",
-      "weight": 4.3,
-      "shares": 5.38,
-      "market_value": 17507.88
+      "stock_code": "AMD",
+      "stock_name": "超威半导体",
+      "weight": 4.37,
+      "shares": 3.52,
+      "market_value": 14494.68
     },
     {
       "rank": 9,
-      "stock_code": "STM",
-      "stock_name": "意法半导体",
-      "weight": 4.28,
-      "shares": 34.13,
-      "market_value": 17408.89
+      "stock_code": "COHR",
+      "stock_name": "Coherent Corp",
+      "weight": 3.62,
+      "shares": 6.2,
+      "market_value": 12026.98
     },
     {
       "rank": 10,
-      "stock_code": "ALAB",
-      "stock_name": "Astera Labs Inc",
-      "weight": 3.47,
-      "shares": 4.29,
-      "market_value": 14115.22
+      "stock_code": "STX",
+      "stock_name": "希捷科技",
+      "weight": 3.1,
+      "shares": 1.66,
+      "market_value": 10288.4
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "INTC",
+        "stock_name": "英特尔",
+        "weight": 8.42,
+        "shares": 34.5,
+        "market_value": 27940.32
+      },
+      {
+        "rank": 2,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 7.88,
+        "shares": 3.64,
+        "market_value": 26132.79
+      },
+      {
+        "rank": 3,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 7.44,
+        "shares": 16.05,
+        "market_value": 24693.96
+      },
+      {
+        "rank": 4,
+        "stock_code": "SKHY",
+        "stock_name": "SK海力士",
+        "weight": 7.2,
+        "shares": 19.26,
+        "market_value": 23889.81
+      },
+      {
+        "rank": 5,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 5.91,
+        "shares": 6.39,
+        "market_value": 19621.51
+      },
+      {
+        "rank": 6,
+        "stock_code": "ONTO",
+        "stock_name": "Onto Innovation Inc",
+        "weight": 5.81,
+        "shares": 9.3,
+        "market_value": 19281.58
+      },
+      {
+        "rank": 7,
+        "stock_code": "MRVL",
+        "stock_name": "迈威尔科技",
+        "weight": 4.39,
+        "shares": 8.18,
+        "market_value": 14562.56
+      },
+      {
+        "rank": 8,
+        "stock_code": "AMD",
+        "stock_name": "超威半导体",
+        "weight": 4.37,
+        "shares": 3.52,
+        "market_value": 14494.68
+      },
+      {
+        "rank": 9,
+        "stock_code": "COHR",
+        "stock_name": "Coherent Corp",
+        "weight": 3.62,
+        "shares": 6.2,
+        "market_value": 12026.98
+      },
+      {
+        "rank": 10,
+        "stock_code": "STX",
+        "stock_name": "希捷科技",
+        "weight": 3.1,
+        "shares": 1.66,
+        "market_value": 10288.4
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-09-02T04:35:53.880314+08:00"
+  "fetched_at": "2026-11-02T05:47:02.241503+08:00"
 }

@@ -1,92 +1,174 @@
 {
   "code": "016664",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 23.2,
+  "total_weight": 25.77,
   "heavy_count": 0,
   "holdings": [
     {
       "rank": 1,
       "stock_code": "JP3236330001",
       "stock_name": "铠侠控股株式会社",
-      "weight": 3.88,
-      "shares": 6.0,
-      "market_value": 22623.57
+      "weight": 3.92,
+      "shares": 19.5,
+      "market_value": 15076.33
     },
     {
       "rank": 2,
       "stock_code": "02476",
       "stock_name": "胜宏科技",
-      "weight": 3.33,
-      "shares": 69.08,
-      "market_value": 19374.42
+      "weight": 3.61,
+      "shares": 84.08,
+      "market_value": 13875.83
     },
     {
       "rank": 3,
-      "stock_code": "300308",
-      "stock_name": "中际旭创",
-      "weight": 2.18,
-      "shares": 10.0,
-      "market_value": 12700.0
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 2.6,
+      "shares": 6.5,
+      "market_value": 9998.05
     },
     {
       "rank": 4,
-      "stock_code": "NVDA",
-      "stock_name": "英伟达",
-      "weight": 2.16,
-      "shares": 9.25,
-      "market_value": 12605.84
+      "stock_code": "MRVL",
+      "stock_name": "迈威尔科技",
+      "weight": 2.54,
+      "shares": 5.5,
+      "market_value": 9787.14
     },
     {
       "rank": 5,
-      "stock_code": "TSM",
-      "stock_name": "台积电",
-      "weight": 2.09,
-      "shares": 3.75,
-      "market_value": 12197.56
+      "stock_code": "COHR",
+      "stock_name": "Coherent Corp",
+      "weight": 2.52,
+      "shares": 5.0,
+      "market_value": 9692.15
     },
     {
       "rank": 6,
-      "stock_code": "01347",
-      "stock_name": "华虹宏力",
-      "weight": 2.09,
-      "shares": 65.0,
-      "market_value": 12149.28
+      "stock_code": "SNDK",
+      "stock_name": "闪迪",
+      "weight": 2.28,
+      "shares": 0.75,
+      "market_value": 8788.75
     },
     {
       "rank": 7,
-      "stock_code": "GLW",
-      "stock_name": "康宁",
-      "weight": 2.02,
-      "shares": 6.75,
-      "market_value": 11743.03
+      "stock_code": "002384",
+      "stock_name": "东山精密",
+      "weight": 2.17,
+      "shares": 50.0,
+      "market_value": 8370.0
     },
     {
       "rank": 8,
-      "stock_code": "JP3684400009",
-      "stock_name": "日东纺织",
-      "weight": 1.87,
-      "shares": 60.0,
-      "market_value": 10885.45
+      "stock_code": "688498",
+      "stock_name": "源杰科技",
+      "weight": 2.1,
+      "shares": 5.0,
+      "market_value": 8065.0
     },
     {
       "rank": 9,
-      "stock_code": "002384",
-      "stock_name": "东山精密",
-      "weight": 1.8,
-      "shares": 40.0,
-      "market_value": 10494.0
+      "stock_code": "GLW",
+      "stock_name": "康宁",
+      "weight": 2.02,
+      "shares": 7.5,
+      "market_value": 7766.92
     },
     {
       "rank": 10,
-      "stock_code": "688498",
-      "stock_name": "源杰科技",
-      "weight": 1.78,
-      "shares": 5.5,
-      "market_value": 10373.0
+      "stock_code": "AMAT",
+      "stock_name": "应用材料",
+      "weight": 2.01,
+      "shares": 2.25,
+      "market_value": 7749.44
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "JP3236330001",
+        "stock_name": "铠侠控股株式会社",
+        "weight": 3.92,
+        "shares": 19.5,
+        "market_value": 15076.33
+      },
+      {
+        "rank": 2,
+        "stock_code": "02476",
+        "stock_name": "胜宏科技",
+        "weight": 3.61,
+        "shares": 84.08,
+        "market_value": 13875.83
+      },
+      {
+        "rank": 3,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 2.6,
+        "shares": 6.5,
+        "market_value": 9998.05
+      },
+      {
+        "rank": 4,
+        "stock_code": "MRVL",
+        "stock_name": "迈威尔科技",
+        "weight": 2.54,
+        "shares": 5.5,
+        "market_value": 9787.14
+      },
+      {
+        "rank": 5,
+        "stock_code": "COHR",
+        "stock_name": "Coherent Corp",
+        "weight": 2.52,
+        "shares": 5.0,
+        "market_value": 9692.15
+      },
+      {
+        "rank": 6,
+        "stock_code": "SNDK",
+        "stock_name": "闪迪",
+        "weight": 2.28,
+        "shares": 0.75,
+        "market_value": 8788.75
+      },
+      {
+        "rank": 7,
+        "stock_code": "002384",
+        "stock_name": "东山精密",
+        "weight": 2.17,
+        "shares": 50.0,
+        "market_value": 8370.0
+      },
+      {
+        "rank": 8,
+        "stock_code": "688498",
+        "stock_name": "源杰科技",
+        "weight": 2.1,
+        "shares": 5.0,
+        "market_value": 8065.0
+      },
+      {
+        "rank": 9,
+        "stock_code": "GLW",
+        "stock_name": "康宁",
+        "weight": 2.02,
+        "shares": 7.5,
+        "market_value": 7766.92
+      },
+      {
+        "rank": 10,
+        "stock_code": "AMAT",
+        "stock_name": "应用材料",
+        "weight": 2.01,
+        "shares": 2.25,
+        "market_value": 7749.44
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:28:02.309321+08:00"
+  "fetched_at": "2026-11-02T05:47:10.098139+08:00"
 }

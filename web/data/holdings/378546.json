@@ -1,92 +1,174 @@
 {
   "code": "378546",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 35.97,
-  "heavy_count": 0,
+  "total_weight": 35.33,
+  "heavy_count": 1,
   "holdings": [
     {
       "rank": 1,
-      "stock_code": "XOM",
-      "stock_name": "埃克森美孚",
-      "weight": 4.98,
-      "shares": 2.91,
-      "market_value": 2709.94
+      "stock_code": "NEM",
+      "stock_name": "纽蒙特",
+      "weight": 5.25,
+      "shares": 3.77,
+      "market_value": 2929.65
     },
     {
       "rank": 2,
-      "stock_code": "NEM",
-      "stock_name": "纽蒙特",
-      "weight": 4.35,
-      "shares": 3.72,
-      "market_value": 2367.64
+      "stock_code": "XOM",
+      "stock_name": "埃克森美孚",
+      "weight": 4.33,
+      "shares": 2.2,
+      "market_value": 2414.57
     },
     {
       "rank": 3,
       "stock_code": "SHEL",
       "stock_name": "壳牌",
-      "weight": 4.17,
-      "shares": 8.57,
-      "market_value": 2266.9
+      "weight": 3.78,
+      "shares": 6.65,
+      "market_value": 2110.19
     },
     {
       "rank": 4,
-      "stock_code": "RIO",
-      "stock_name": "力拓(UK)",
-      "weight": 3.56,
-      "shares": 3.01,
-      "market_value": 1934.96
+      "stock_code": "BHP",
+      "stock_name": "BHP GROUP LTD",
+      "weight": 3.64,
+      "shares": 7.13,
+      "market_value": 2031.73
     },
     {
       "rank": 5,
       "stock_code": "VLO",
       "stock_name": "瓦莱罗能源",
-      "weight": 3.52,
-      "shares": 1.08,
-      "market_value": 1912.54
+      "weight": 3.5,
+      "shares": 0.75,
+      "market_value": 1952.2
     },
     {
       "rank": 6,
-      "stock_code": "FCX",
-      "stock_name": "自由港麦克莫兰",
-      "weight": 3.4,
-      "shares": 4.32,
-      "market_value": 1848.45
+      "stock_code": "MPC",
+      "stock_name": "马拉松原油",
+      "weight": 3.49,
+      "shares": 0.73,
+      "market_value": 1947.59
     },
     {
       "rank": 7,
-      "stock_code": "BHP",
-      "stock_name": "BHP GROUP LTD",
-      "weight": 3.38,
-      "shares": 6.56,
-      "market_value": 1839.31
+      "stock_code": "FCX",
+      "stock_name": "自由港麦克莫兰",
+      "weight": 3.11,
+      "shares": 3.68,
+      "market_value": 1735.1
     },
     {
       "rank": 8,
-      "stock_code": "MPC",
-      "stock_name": "马拉松原油",
-      "weight": 3.03,
-      "shares": 0.95,
-      "market_value": 1646.96
+      "stock_code": "RIO",
+      "stock_name": "力拓(UK)",
+      "weight": 3.08,
+      "shares": 2.72,
+      "market_value": 1719.21
     },
     {
       "rank": 9,
-      "stock_code": "CNQ",
-      "stock_name": "CANADIAN NATURAL RESOURCES",
-      "weight": 2.95,
-      "shares": 5.97,
-      "market_value": 1607.63
+      "stock_code": "SCCO",
+      "stock_name": "南方铜业",
+      "weight": 2.58,
+      "shares": 1.06,
+      "market_value": 1441.23
     },
     {
       "rank": 10,
-      "stock_code": "TTE",
-      "stock_name": "TotalEnergies SE",
-      "weight": 2.63,
-      "shares": 2.7,
-      "market_value": 1432.29
+      "stock_code": "KGC",
+      "stock_name": "金罗斯黄金",
+      "weight": 2.57,
+      "shares": 8.84,
+      "market_value": 1434.1
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "NEM",
+        "stock_name": "纽蒙特",
+        "weight": 5.25,
+        "shares": 3.77,
+        "market_value": 2929.65
+      },
+      {
+        "rank": 2,
+        "stock_code": "XOM",
+        "stock_name": "埃克森美孚",
+        "weight": 4.33,
+        "shares": 2.2,
+        "market_value": 2414.57
+      },
+      {
+        "rank": 3,
+        "stock_code": "SHEL",
+        "stock_name": "壳牌",
+        "weight": 3.78,
+        "shares": 6.65,
+        "market_value": 2110.19
+      },
+      {
+        "rank": 4,
+        "stock_code": "BHP",
+        "stock_name": "BHP GROUP LTD",
+        "weight": 3.64,
+        "shares": 7.13,
+        "market_value": 2031.73
+      },
+      {
+        "rank": 5,
+        "stock_code": "VLO",
+        "stock_name": "瓦莱罗能源",
+        "weight": 3.5,
+        "shares": 0.75,
+        "market_value": 1952.2
+      },
+      {
+        "rank": 6,
+        "stock_code": "MPC",
+        "stock_name": "马拉松原油",
+        "weight": 3.49,
+        "shares": 0.73,
+        "market_value": 1947.59
+      },
+      {
+        "rank": 7,
+        "stock_code": "FCX",
+        "stock_name": "自由港麦克莫兰",
+        "weight": 3.11,
+        "shares": 3.68,
+        "market_value": 1735.1
+      },
+      {
+        "rank": 8,
+        "stock_code": "RIO",
+        "stock_name": "力拓(UK)",
+        "weight": 3.08,
+        "shares": 2.72,
+        "market_value": 1719.21
+      },
+      {
+        "rank": 9,
+        "stock_code": "SCCO",
+        "stock_name": "南方铜业",
+        "weight": 2.58,
+        "shares": 1.06,
+        "market_value": 1441.23
+      },
+      {
+        "rank": 10,
+        "stock_code": "KGC",
+        "stock_name": "金罗斯黄金",
+        "weight": 2.57,
+        "shares": 8.84,
+        "market_value": 1434.1
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:29:06.342755+08:00"
+  "fetched_at": "2026-11-02T05:47:32.260178+08:00"
 }

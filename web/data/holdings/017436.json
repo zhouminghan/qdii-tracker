@@ -1,92 +1,174 @@
 {
   "code": "017436",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 62.62,
-  "heavy_count": 9,
+  "total_weight": 67.33,
+  "heavy_count": 8,
   "holdings": [
     {
       "rank": 1,
-      "stock_code": "NVDA",
-      "stock_name": "英伟达",
-      "weight": 8.14,
-      "shares": 61.7,
-      "market_value": 84085.28
+      "stock_code": "META",
+      "stock_name": "Meta Platforms Inc-A",
+      "weight": 9.06,
+      "shares": 23.22,
+      "market_value": 113402.38
     },
     {
       "rank": 2,
-      "stock_code": "MRVL",
-      "stock_name": "迈威尔科技",
-      "weight": 7.98,
-      "shares": 40.61,
-      "market_value": 82385.07
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 8.45,
+      "shares": 68.73,
+      "market_value": 105712.35
     },
     {
       "rank": 3,
-      "stock_code": "AAPL",
-      "stock_name": "苹果",
-      "weight": 6.73,
-      "shares": 35.24,
-      "market_value": 69442.59
+      "stock_code": "MSFT",
+      "stock_name": "微软",
+      "weight": 8.13,
+      "shares": 29.46,
+      "market_value": 101780.03
     },
     {
       "rank": 4,
-      "stock_code": "MSFT",
-      "stock_name": "微软",
-      "weight": 6.35,
-      "shares": 25.8,
-      "market_value": 65535.84
+      "stock_code": "AAPL",
+      "stock_name": "苹果",
+      "weight": 7.95,
+      "shares": 44.36,
+      "market_value": 99505.26
     },
     {
       "rank": 5,
-      "stock_code": "NFLX",
-      "stock_name": "奈飞",
-      "weight": 6.12,
-      "shares": 129.99,
-      "market_value": 63213.33
+      "stock_code": "SMCI",
+      "stock_name": "超微电脑",
+      "weight": 6.85,
+      "shares": 310.07,
+      "market_value": 85767.97
     },
     {
       "rank": 6,
-      "stock_code": "AVGO",
-      "stock_name": "博通",
-      "weight": 5.89,
-      "shares": 23.64,
-      "market_value": 60816.26
+      "stock_code": "MRVL",
+      "stock_name": "迈威尔科技",
+      "weight": 6.5,
+      "shares": 45.75,
+      "market_value": 81412.67
     },
     {
       "rank": 7,
-      "stock_code": "TSLA",
-      "stock_name": "特斯拉",
-      "weight": 5.63,
-      "shares": 20.28,
-      "market_value": 58083.65
+      "stock_code": "AMZN",
+      "stock_name": "亚马逊",
+      "weight": 5.81,
+      "shares": 43.36,
+      "market_value": 72765.79
     },
     {
       "rank": 8,
-      "stock_code": "META",
-      "stock_name": "Meta Platforms Inc-A",
-      "weight": 5.55,
-      "shares": 14.95,
-      "market_value": 57344.34
+      "stock_code": "AVGO",
+      "stock_name": "博通",
+      "weight": 5.62,
+      "shares": 29.72,
+      "market_value": 70291.51
     },
     {
       "rank": 9,
-      "stock_code": "AMZN",
-      "stock_name": "亚马逊",
-      "weight": 5.29,
-      "shares": 33.62,
-      "market_value": 54578.6
+      "stock_code": "SNDK",
+      "stock_name": "闪迪",
+      "weight": 4.55,
+      "shares": 4.86,
+      "market_value": 56907.74
     },
     {
       "rank": 10,
-      "stock_code": "SMCI",
-      "stock_name": "超微电脑",
-      "weight": 4.94,
-      "shares": 255.59,
-      "market_value": 51057.18
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 4.41,
+      "shares": 7.7,
+      "market_value": 55223.26
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "META",
+        "stock_name": "Meta Platforms Inc-A",
+        "weight": 9.06,
+        "shares": 23.22,
+        "market_value": 113402.38
+      },
+      {
+        "rank": 2,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 8.45,
+        "shares": 68.73,
+        "market_value": 105712.35
+      },
+      {
+        "rank": 3,
+        "stock_code": "MSFT",
+        "stock_name": "微软",
+        "weight": 8.13,
+        "shares": 29.46,
+        "market_value": 101780.03
+      },
+      {
+        "rank": 4,
+        "stock_code": "AAPL",
+        "stock_name": "苹果",
+        "weight": 7.95,
+        "shares": 44.36,
+        "market_value": 99505.26
+      },
+      {
+        "rank": 5,
+        "stock_code": "SMCI",
+        "stock_name": "超微电脑",
+        "weight": 6.85,
+        "shares": 310.07,
+        "market_value": 85767.97
+      },
+      {
+        "rank": 6,
+        "stock_code": "MRVL",
+        "stock_name": "迈威尔科技",
+        "weight": 6.5,
+        "shares": 45.75,
+        "market_value": 81412.67
+      },
+      {
+        "rank": 7,
+        "stock_code": "AMZN",
+        "stock_name": "亚马逊",
+        "weight": 5.81,
+        "shares": 43.36,
+        "market_value": 72765.79
+      },
+      {
+        "rank": 8,
+        "stock_code": "AVGO",
+        "stock_name": "博通",
+        "weight": 5.62,
+        "shares": 29.72,
+        "market_value": 70291.51
+      },
+      {
+        "rank": 9,
+        "stock_code": "SNDK",
+        "stock_name": "闪迪",
+        "weight": 4.55,
+        "shares": 4.86,
+        "market_value": 56907.74
+      },
+      {
+        "rank": 10,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 4.41,
+        "shares": 7.7,
+        "market_value": 55223.26
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:27:05.579250+08:00"
+  "fetched_at": "2026-11-02T05:46:55.083249+08:00"
 }

@@ -1,92 +1,174 @@
 {
   "code": "164212",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 29.02,
-  "heavy_count": 0,
+  "total_weight": 43.26,
+  "heavy_count": 1,
   "holdings": [
     {
       "rank": 1,
-      "stock_code": "GLW",
-      "stock_name": "康宁",
-      "weight": 5.0,
-      "shares": 5.5,
-      "market_value": 9568.4
+      "stock_code": "MRVL",
+      "stock_name": "迈威尔科技",
+      "weight": 7.2,
+      "shares": 2.85,
+      "market_value": 5071.52
     },
     {
       "rank": 2,
-      "stock_code": "MRVL",
-      "stock_name": "迈威尔科技",
-      "weight": 4.15,
-      "shares": 3.92,
-      "market_value": 7953.28
+      "stock_code": "AMD",
+      "stock_name": "超威半导体",
+      "weight": 4.97,
+      "shares": 0.85,
+      "market_value": 3502.23
     },
     {
       "rank": 3,
-      "stock_code": "MU",
-      "stock_name": "美光科技",
-      "weight": 3.98,
-      "shares": 0.97,
-      "market_value": 7625.9
+      "stock_code": "GLW",
+      "stock_name": "康宁",
+      "weight": 4.85,
+      "shares": 3.3,
+      "market_value": 3417.44
     },
     {
       "rank": 4,
-      "stock_code": "AMD",
-      "stock_name": "超威半导体",
-      "weight": 3.31,
-      "shares": 1.6,
-      "market_value": 6330.43
+      "stock_code": "COHR",
+      "stock_name": "Coherent Corp",
+      "weight": 4.68,
+      "shares": 1.7,
+      "market_value": 3295.33
     },
     {
       "rank": 5,
-      "stock_code": "TER",
-      "stock_name": "泰瑞达",
-      "weight": 2.24,
-      "shares": 1.3,
-      "market_value": 4284.0
+      "stock_code": "SKHY",
+      "stock_name": "SK海力士",
+      "weight": 4.58,
+      "shares": 2.6,
+      "market_value": 3224.7
     },
     {
       "rank": 6,
       "stock_code": "LITE",
       "stock_name": "Lumentum Holdings Inc",
-      "weight": 2.2,
-      "shares": 0.72,
-      "market_value": 4207.8
+      "weight": 3.72,
+      "shares": 0.4,
+      "market_value": 2616.61
     },
     {
       "rank": 7,
-      "stock_code": "AMAT",
-      "stock_name": "应用材料",
-      "weight": 2.19,
-      "shares": 0.85,
-      "market_value": 4185.64
+      "stock_code": "TSEM",
+      "stock_name": "Tower半导体",
+      "weight": 3.48,
+      "shares": 1.6,
+      "market_value": 2450.82
     },
     {
       "rank": 8,
-      "stock_code": "COHR",
-      "stock_name": "Coherent Corp",
-      "weight": 2.03,
-      "shares": 1.45,
-      "market_value": 3895.71
+      "stock_code": "TER",
+      "stock_name": "泰瑞达",
+      "weight": 3.45,
+      "shares": 0.9,
+      "market_value": 2430.15
     },
     {
       "rank": 9,
-      "stock_code": "STM",
-      "stock_name": "意法半导体",
-      "weight": 1.97,
-      "shares": 7.4,
-      "market_value": 3774.51
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 3.28,
+      "shares": 1.5,
+      "market_value": 2307.24
     },
     {
       "rank": 10,
-      "stock_code": "01347",
-      "stock_name": "华虹宏力",
-      "weight": 1.95,
-      "shares": 20.0,
-      "market_value": 3738.24
+      "stock_code": "TSLA",
+      "stock_name": "特斯拉",
+      "weight": 3.05,
+      "shares": 0.9,
+      "market_value": 2150.71
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "MRVL",
+        "stock_name": "迈威尔科技",
+        "weight": 7.2,
+        "shares": 2.85,
+        "market_value": 5071.52
+      },
+      {
+        "rank": 2,
+        "stock_code": "AMD",
+        "stock_name": "超威半导体",
+        "weight": 4.97,
+        "shares": 0.85,
+        "market_value": 3502.23
+      },
+      {
+        "rank": 3,
+        "stock_code": "GLW",
+        "stock_name": "康宁",
+        "weight": 4.85,
+        "shares": 3.3,
+        "market_value": 3417.44
+      },
+      {
+        "rank": 4,
+        "stock_code": "COHR",
+        "stock_name": "Coherent Corp",
+        "weight": 4.68,
+        "shares": 1.7,
+        "market_value": 3295.33
+      },
+      {
+        "rank": 5,
+        "stock_code": "SKHY",
+        "stock_name": "SK海力士",
+        "weight": 4.58,
+        "shares": 2.6,
+        "market_value": 3224.7
+      },
+      {
+        "rank": 6,
+        "stock_code": "LITE",
+        "stock_name": "Lumentum Holdings Inc",
+        "weight": 3.72,
+        "shares": 0.4,
+        "market_value": 2616.61
+      },
+      {
+        "rank": 7,
+        "stock_code": "TSEM",
+        "stock_name": "Tower半导体",
+        "weight": 3.48,
+        "shares": 1.6,
+        "market_value": 2450.82
+      },
+      {
+        "rank": 8,
+        "stock_code": "TER",
+        "stock_name": "泰瑞达",
+        "weight": 3.45,
+        "shares": 0.9,
+        "market_value": 2430.15
+      },
+      {
+        "rank": 9,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 3.28,
+        "shares": 1.5,
+        "market_value": 2307.24
+      },
+      {
+        "rank": 10,
+        "stock_code": "TSLA",
+        "stock_name": "特斯拉",
+        "weight": 3.05,
+        "shares": 0.9,
+        "market_value": 2150.71
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-09-02T04:36:05.830326+08:00"
+  "fetched_at": "2026-11-02T05:47:15.384926+08:00"
 }

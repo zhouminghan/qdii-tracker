@@ -1,92 +1,174 @@
 {
   "code": "005698",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 17.85,
+  "total_weight": 22.74,
   "heavy_count": 0,
   "holdings": [
     {
       "rank": 1,
-      "stock_code": "SNDK",
-      "stock_name": "闪迪",
-      "weight": 3.11,
-      "shares": 4.08,
-      "market_value": 63211.36
+      "stock_code": "INTC",
+      "stock_name": "英特尔",
+      "weight": 2.44,
+      "shares": 29.44,
+      "market_value": 23835.32
     },
     {
       "rank": 2,
-      "stock_code": "MU",
-      "stock_name": "美光科技",
-      "weight": 2.85,
-      "shares": 7.36,
-      "market_value": 57858.58
+      "stock_code": "AMD",
+      "stock_name": "超威半导体",
+      "weight": 2.37,
+      "shares": 5.6,
+      "market_value": 23071.01
     },
     {
       "rank": 3,
-      "stock_code": "MRVL",
-      "stock_name": "迈威尔科技",
-      "weight": 1.6,
-      "shares": 16.06,
-      "market_value": 32580.47
+      "stock_code": "ASX",
+      "stock_name": "日月光半导体",
+      "weight": 2.37,
+      "shares": 77.03,
+      "market_value": 23064.89
     },
     {
       "rank": 4,
-      "stock_code": "TSM",
-      "stock_name": "台积电",
-      "weight": 1.57,
-      "shares": 9.8,
-      "market_value": 31867.82
+      "stock_code": "MRVL",
+      "stock_name": "迈威尔科技",
+      "weight": 2.35,
+      "shares": 12.89,
+      "market_value": 22944.27
     },
     {
       "rank": 5,
-      "stock_code": "UMC",
-      "stock_name": "联华电子",
-      "weight": 1.51,
-      "shares": 166.03,
-      "market_value": 30769.65
+      "stock_code": "LITE",
+      "stock_name": "Lumentum Holdings Inc",
+      "weight": 2.29,
+      "shares": 3.41,
+      "market_value": 22291.58
     },
     {
       "rank": 6,
-      "stock_code": "LITE",
-      "stock_name": "Lumentum Holdings Inc",
-      "weight": 1.51,
-      "shares": 5.24,
-      "market_value": 30600.03
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 2.27,
+      "shares": 3.08,
+      "market_value": 22117.0
     },
     {
       "rank": 7,
-      "stock_code": "STX",
-      "stock_name": "希捷科技",
-      "weight": 1.49,
-      "shares": 4.6,
-      "market_value": 30265.79
+      "stock_code": "SNDK",
+      "stock_name": "闪迪",
+      "weight": 2.24,
+      "shares": 1.87,
+      "market_value": 21882.82
     },
     {
       "rank": 8,
-      "stock_code": "WDC",
-      "stock_name": "西部数据",
-      "weight": 1.46,
-      "shares": 6.84,
-      "market_value": 29757.51
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 2.18,
+      "shares": 6.91,
+      "market_value": 21219.81
     },
     {
       "rank": 9,
-      "stock_code": "01888",
-      "stock_name": "建滔积层板",
-      "weight": 1.38,
-      "shares": 326.15,
-      "market_value": 28086.97
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 2.13,
+      "shares": 13.47,
+      "market_value": 20726.58
     },
     {
       "rank": 10,
-      "stock_code": "00522",
-      "stock_name": "ASMPT",
-      "weight": 1.37,
-      "shares": 133.76,
-      "market_value": 27743.13
+      "stock_code": "COHR",
+      "stock_name": "Coherent Corp",
+      "weight": 2.1,
+      "shares": 10.54,
+      "market_value": 20433.18
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "INTC",
+        "stock_name": "英特尔",
+        "weight": 2.44,
+        "shares": 29.44,
+        "market_value": 23835.32
+      },
+      {
+        "rank": 2,
+        "stock_code": "AMD",
+        "stock_name": "超威半导体",
+        "weight": 2.37,
+        "shares": 5.6,
+        "market_value": 23071.01
+      },
+      {
+        "rank": 3,
+        "stock_code": "ASX",
+        "stock_name": "日月光半导体",
+        "weight": 2.37,
+        "shares": 77.03,
+        "market_value": 23064.89
+      },
+      {
+        "rank": 4,
+        "stock_code": "MRVL",
+        "stock_name": "迈威尔科技",
+        "weight": 2.35,
+        "shares": 12.89,
+        "market_value": 22944.27
+      },
+      {
+        "rank": 5,
+        "stock_code": "LITE",
+        "stock_name": "Lumentum Holdings Inc",
+        "weight": 2.29,
+        "shares": 3.41,
+        "market_value": 22291.58
+      },
+      {
+        "rank": 6,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 2.27,
+        "shares": 3.08,
+        "market_value": 22117.0
+      },
+      {
+        "rank": 7,
+        "stock_code": "SNDK",
+        "stock_name": "闪迪",
+        "weight": 2.24,
+        "shares": 1.87,
+        "market_value": 21882.82
+      },
+      {
+        "rank": 8,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 2.18,
+        "shares": 6.91,
+        "market_value": 21219.81
+      },
+      {
+        "rank": 9,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 2.13,
+        "shares": 13.47,
+        "market_value": 20726.58
+      },
+      {
+        "rank": 10,
+        "stock_code": "COHR",
+        "stock_name": "Coherent Corp",
+        "weight": 2.1,
+        "shares": 10.54,
+        "market_value": 20433.18
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-09-02T04:35:47.180229+08:00"
+  "fetched_at": "2026-11-02T05:46:57.847785+08:00"
 }

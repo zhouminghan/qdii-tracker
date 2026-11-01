@@ -1,92 +1,174 @@
 {
   "code": "007729",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 7.71,
+  "total_weight": 6.74,
   "heavy_count": 0,
   "holdings": [
     {
       "rank": 1,
       "stock_code": "SNDK",
       "stock_name": "闪迪",
-      "weight": 1.69,
-      "shares": 0.07,
-      "market_value": 1048.98
+      "weight": 1.27,
+      "shares": 0.05,
+      "market_value": 612.41
     },
     {
       "rank": 2,
-      "stock_code": "01888",
-      "stock_name": "建滔积层板",
-      "weight": 1.13,
-      "shares": 8.2,
-      "market_value": 703.34
+      "stock_code": "INTC",
+      "stock_name": "英特尔",
+      "weight": 0.81,
+      "shares": 0.49,
+      "market_value": 391.75
     },
     {
       "rank": 3,
-      "stock_code": "MU",
-      "stock_name": "美光科技",
-      "weight": 0.93,
-      "shares": 0.07,
-      "market_value": 579.51
+      "stock_code": "MRVL",
+      "stock_name": "迈威尔科技",
+      "weight": 0.68,
+      "shares": 0.19,
+      "market_value": 327.7
     },
     {
       "rank": 4,
-      "stock_code": "INTC",
-      "stock_name": "英特尔",
-      "weight": 0.75,
-      "shares": 0.49,
-      "market_value": 464.19
+      "stock_code": "BE",
+      "stock_name": "Bloom Energy Corp-A",
+      "weight": 0.65,
+      "shares": 0.17,
+      "market_value": 315.69
     },
     {
       "rank": 5,
-      "stock_code": "MRVL",
-      "stock_name": "迈威尔科技",
-      "weight": 0.72,
-      "shares": 0.22,
-      "market_value": 444.63
+      "stock_code": "06809",
+      "stock_name": "澜起科技",
+      "weight": 0.61,
+      "shares": 1.2,
+      "market_value": 294.76
     },
     {
       "rank": 6,
-      "stock_code": "01347",
-      "stock_name": "华虹宏力",
-      "weight": 0.71,
-      "shares": 2.36,
-      "market_value": 439.35
+      "stock_code": "01888",
+      "stock_name": "建滔积层板",
+      "weight": 0.6,
+      "shares": 6.95,
+      "market_value": 288.33
     },
     {
       "rank": 7,
       "stock_code": "AMD",
       "stock_name": "超威半导体",
-      "weight": 0.63,
-      "shares": 0.1,
-      "market_value": 394.12
+      "weight": 0.56,
+      "shares": 0.07,
+      "market_value": 272.34
     },
     {
       "rank": 8,
-      "stock_code": "LRCX",
-      "stock_name": "拉姆研究",
-      "weight": 0.4,
-      "shares": 0.09,
-      "market_value": 249.89
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 0.54,
+      "shares": 0.04,
+      "market_value": 262.79
     },
     {
       "rank": 9,
-      "stock_code": "6976",
-      "stock_name": "太阳诱电",
-      "weight": 0.38,
-      "shares": 0.28,
-      "market_value": 235.9
+      "stock_code": "CRWD",
+      "stock_name": "CrowdStrike Holdings Inc-A",
+      "weight": 0.53,
+      "shares": 0.14,
+      "market_value": 255.6
     },
     {
       "rank": 10,
-      "stock_code": "06809",
-      "stock_name": "澜起科技",
-      "weight": 0.37,
-      "shares": 0.58,
-      "market_value": 233.11
+      "stock_code": "01548",
+      "stock_name": "金斯瑞生物-一千",
+      "weight": 0.49,
+      "shares": 6.2,
+      "market_value": 237.71
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "SNDK",
+        "stock_name": "闪迪",
+        "weight": 1.27,
+        "shares": 0.05,
+        "market_value": 612.41
+      },
+      {
+        "rank": 2,
+        "stock_code": "INTC",
+        "stock_name": "英特尔",
+        "weight": 0.81,
+        "shares": 0.49,
+        "market_value": 391.75
+      },
+      {
+        "rank": 3,
+        "stock_code": "MRVL",
+        "stock_name": "迈威尔科技",
+        "weight": 0.68,
+        "shares": 0.19,
+        "market_value": 327.7
+      },
+      {
+        "rank": 4,
+        "stock_code": "BE",
+        "stock_name": "Bloom Energy Corp-A",
+        "weight": 0.65,
+        "shares": 0.17,
+        "market_value": 315.69
+      },
+      {
+        "rank": 5,
+        "stock_code": "06809",
+        "stock_name": "澜起科技",
+        "weight": 0.61,
+        "shares": 1.2,
+        "market_value": 294.76
+      },
+      {
+        "rank": 6,
+        "stock_code": "01888",
+        "stock_name": "建滔积层板",
+        "weight": 0.6,
+        "shares": 6.95,
+        "market_value": 288.33
+      },
+      {
+        "rank": 7,
+        "stock_code": "AMD",
+        "stock_name": "超威半导体",
+        "weight": 0.56,
+        "shares": 0.07,
+        "market_value": 272.34
+      },
+      {
+        "rank": 8,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 0.54,
+        "shares": 0.04,
+        "market_value": 262.79
+      },
+      {
+        "rank": 9,
+        "stock_code": "CRWD",
+        "stock_name": "CrowdStrike Holdings Inc-A",
+        "weight": 0.53,
+        "shares": 0.14,
+        "market_value": 255.6
+      },
+      {
+        "rank": 10,
+        "stock_code": "01548",
+        "stock_name": "金斯瑞生物-一千",
+        "weight": 0.49,
+        "shares": 6.2,
+        "market_value": 237.71
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-09-02T04:36:17.779374+08:00"
+  "fetched_at": "2026-11-02T05:47:31.408755+08:00"
 }

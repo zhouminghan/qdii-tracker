@@ -1,92 +1,174 @@
 {
   "code": "008253",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 42.72,
-  "heavy_count": 2,
+  "total_weight": 50.74,
+  "heavy_count": 4,
   "holdings": [
     {
       "rank": 1,
-      "stock_code": "SNDK",
-      "stock_name": "闪迪",
-      "weight": 9.12,
-      "shares": 2.3,
-      "market_value": 35618.14
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 8.14,
+      "shares": 13.94,
+      "market_value": 21441.98
     },
     {
       "rank": 2,
       "stock_code": "MU",
       "stock_name": "美光科技",
-      "weight": 8.46,
-      "shares": 4.2,
-      "market_value": 33019.37
+      "weight": 7.35,
+      "shares": 2.7,
+      "market_value": 19368.78
     },
     {
       "rank": 3,
-      "stock_code": "LRCX",
-      "stock_name": "拉姆研究",
-      "weight": 3.67,
-      "shares": 4.85,
-      "market_value": 14314.13
+      "stock_code": "SNDK",
+      "stock_name": "闪迪",
+      "weight": 6.67,
+      "shares": 1.5,
+      "market_value": 17577.5
     },
     {
       "rank": 4,
       "stock_code": "TSM",
       "stock_name": "台积电",
-      "weight": 3.65,
-      "shares": 4.38,
-      "market_value": 14246.75
+      "weight": 6.53,
+      "shares": 5.6,
+      "market_value": 17205.92
     },
     {
       "rank": 5,
-      "stock_code": "MKSI",
-      "stock_name": "MKS Inc",
-      "weight": 3.61,
-      "shares": 4.65,
-      "market_value": 14087.12
+      "stock_code": "AMD",
+      "stock_name": "超威半导体",
+      "weight": 4.38,
+      "shares": 2.8,
+      "market_value": 11536.74
     },
     {
       "rank": 6,
-      "stock_code": "AMAT",
-      "stock_name": "应用材料",
-      "weight": 3.53,
-      "shares": 2.8,
-      "market_value": 13787.99
+      "stock_code": "INTC",
+      "stock_name": "英特尔",
+      "weight": 4.3,
+      "shares": 14.0,
+      "market_value": 11336.66
     },
     {
       "rank": 7,
-      "stock_code": "ASML",
-      "stock_name": "阿斯麦",
-      "weight": 3.47,
-      "shares": 1.0,
-      "market_value": 13549.88
+      "stock_code": "META",
+      "stock_name": "Meta Platforms Inc-A",
+      "weight": 4.27,
+      "shares": 2.3,
+      "market_value": 11233.57
     },
     {
       "rank": 8,
-      "stock_code": "AMD",
-      "stock_name": "超威半导体",
-      "weight": 2.43,
-      "shares": 2.4,
-      "market_value": 9495.65
+      "stock_code": "ASML",
+      "stock_name": "阿斯麦",
+      "weight": 3.85,
+      "shares": 0.83,
+      "market_value": 10127.48
     },
     {
       "rank": 9,
-      "stock_code": "NBIS",
-      "stock_name": "Nebius Group NV-A",
-      "weight": 2.41,
-      "shares": 5.0,
-      "market_value": 9404.83
+      "stock_code": "MSFT",
+      "stock_name": "微软",
+      "weight": 2.75,
+      "shares": 2.1,
+      "market_value": 7254.31
     },
     {
       "rank": 10,
-      "stock_code": "NVDA",
-      "stock_name": "英伟达",
-      "weight": 2.37,
-      "shares": 6.8,
-      "market_value": 9266.99
+      "stock_code": "MRVL",
+      "stock_name": "迈威尔科技",
+      "weight": 2.5,
+      "shares": 3.7,
+      "market_value": 6584.08
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 8.14,
+        "shares": 13.94,
+        "market_value": 21441.98
+      },
+      {
+        "rank": 2,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 7.35,
+        "shares": 2.7,
+        "market_value": 19368.78
+      },
+      {
+        "rank": 3,
+        "stock_code": "SNDK",
+        "stock_name": "闪迪",
+        "weight": 6.67,
+        "shares": 1.5,
+        "market_value": 17577.5
+      },
+      {
+        "rank": 4,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 6.53,
+        "shares": 5.6,
+        "market_value": 17205.92
+      },
+      {
+        "rank": 5,
+        "stock_code": "AMD",
+        "stock_name": "超威半导体",
+        "weight": 4.38,
+        "shares": 2.8,
+        "market_value": 11536.74
+      },
+      {
+        "rank": 6,
+        "stock_code": "INTC",
+        "stock_name": "英特尔",
+        "weight": 4.3,
+        "shares": 14.0,
+        "market_value": 11336.66
+      },
+      {
+        "rank": 7,
+        "stock_code": "META",
+        "stock_name": "Meta Platforms Inc-A",
+        "weight": 4.27,
+        "shares": 2.3,
+        "market_value": 11233.57
+      },
+      {
+        "rank": 8,
+        "stock_code": "ASML",
+        "stock_name": "阿斯麦",
+        "weight": 3.85,
+        "shares": 0.83,
+        "market_value": 10127.48
+      },
+      {
+        "rank": 9,
+        "stock_code": "MSFT",
+        "stock_name": "微软",
+        "weight": 2.75,
+        "shares": 2.1,
+        "market_value": 7254.31
+      },
+      {
+        "rank": 10,
+        "stock_code": "MRVL",
+        "stock_name": "迈威尔科技",
+        "weight": 2.5,
+        "shares": 3.7,
+        "market_value": 6584.08
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:28:05.066831+08:00"
+  "fetched_at": "2026-11-02T05:47:11.852865+08:00"
 }

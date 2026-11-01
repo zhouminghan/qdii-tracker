@@ -1,92 +1,174 @@
 {
   "code": "000988",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 57.41,
-  "heavy_count": 5,
+  "total_weight": 54.39,
+  "heavy_count": 4,
   "holdings": [
     {
       "rank": 1,
       "stock_code": "TAL",
       "stock_name": "好未来",
-      "weight": 8.45,
-      "shares": 85.0,
-      "market_value": 5540.33
+      "weight": 9.46,
+      "shares": 76.8,
+      "market_value": 6243.28
     },
     {
       "rank": 2,
-      "stock_code": "INTC",
-      "stock_name": "英特尔",
-      "weight": 7.83,
-      "shares": 5.4,
-      "market_value": 5135.43
+      "stock_code": "00700",
+      "stock_name": "腾讯控股",
+      "weight": 6.87,
+      "shares": 12.25,
+      "market_value": 4532.24
     },
     {
       "rank": 3,
-      "stock_code": "00700",
-      "stock_name": "腾讯控股",
-      "weight": 6.98,
-      "shares": 12.25,
-      "market_value": 4572.96
+      "stock_code": "EDU",
+      "stock_name": "新东方",
+      "weight": 6.52,
+      "shares": 11.5,
+      "market_value": 4297.9
     },
     {
       "rank": 4,
-      "stock_code": "AMD",
-      "stock_name": "超威半导体",
-      "weight": 6.94,
-      "shares": 1.15,
-      "market_value": 4550.0
+      "stock_code": "MSFT",
+      "stock_name": "微软",
+      "weight": 5.45,
+      "shares": 1.04,
+      "market_value": 3592.61
     },
     {
       "rank": 5,
-      "stock_code": "EDU",
-      "stock_name": "新东方",
-      "weight": 5.49,
-      "shares": 11.5,
-      "market_value": 3595.92
+      "stock_code": "GOOGL",
+      "stock_name": "谷歌-A",
+      "weight": 4.57,
+      "shares": 1.3,
+      "market_value": 3012.64
     },
     {
       "rank": 6,
-      "stock_code": "09999",
-      "stock_name": "网易",
-      "weight": 4.83,
-      "shares": 18.0,
-      "market_value": 3164.3
+      "stock_code": "AMZN",
+      "stock_name": "亚马逊",
+      "weight": 4.53,
+      "shares": 1.78,
+      "market_value": 2986.93
     },
     {
       "rank": 7,
-      "stock_code": "GOOGL",
-      "stock_name": "谷歌-A",
-      "weight": 4.83,
-      "shares": 1.3,
-      "market_value": 3164.21
+      "stock_code": "09999",
+      "stock_name": "网易",
+      "weight": 4.51,
+      "shares": 18.0,
+      "market_value": 2975.97
     },
     {
       "rank": 8,
       "stock_code": "GOOG",
       "stock_name": "谷歌-C",
-      "weight": 4.53,
+      "weight": 4.29,
       "shares": 1.23,
-      "market_value": 2969.62
+      "market_value": 2831.93
     },
     {
       "rank": 9,
-      "stock_code": "PDD",
-      "stock_name": "拼多多",
-      "weight": 3.96,
-      "shares": 5.0,
-      "market_value": 2597.68
+      "stock_code": "INTC",
+      "stock_name": "英特尔",
+      "weight": 4.17,
+      "shares": 3.4,
+      "market_value": 2753.19
     },
     {
       "rank": 10,
       "stock_code": "09988",
       "stock_name": "阿里巴巴-W",
-      "weight": 3.57,
+      "weight": 4.02,
       "shares": 29.0,
-      "market_value": 2338.7
+      "market_value": 2653.72
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "TAL",
+        "stock_name": "好未来",
+        "weight": 9.46,
+        "shares": 76.8,
+        "market_value": 6243.28
+      },
+      {
+        "rank": 2,
+        "stock_code": "00700",
+        "stock_name": "腾讯控股",
+        "weight": 6.87,
+        "shares": 12.25,
+        "market_value": 4532.24
+      },
+      {
+        "rank": 3,
+        "stock_code": "EDU",
+        "stock_name": "新东方",
+        "weight": 6.52,
+        "shares": 11.5,
+        "market_value": 4297.9
+      },
+      {
+        "rank": 4,
+        "stock_code": "MSFT",
+        "stock_name": "微软",
+        "weight": 5.45,
+        "shares": 1.04,
+        "market_value": 3592.61
+      },
+      {
+        "rank": 5,
+        "stock_code": "GOOGL",
+        "stock_name": "谷歌-A",
+        "weight": 4.57,
+        "shares": 1.3,
+        "market_value": 3012.64
+      },
+      {
+        "rank": 6,
+        "stock_code": "AMZN",
+        "stock_name": "亚马逊",
+        "weight": 4.53,
+        "shares": 1.78,
+        "market_value": 2986.93
+      },
+      {
+        "rank": 7,
+        "stock_code": "09999",
+        "stock_name": "网易",
+        "weight": 4.51,
+        "shares": 18.0,
+        "market_value": 2975.97
+      },
+      {
+        "rank": 8,
+        "stock_code": "GOOG",
+        "stock_name": "谷歌-C",
+        "weight": 4.29,
+        "shares": 1.23,
+        "market_value": 2831.93
+      },
+      {
+        "rank": 9,
+        "stock_code": "INTC",
+        "stock_name": "英特尔",
+        "weight": 4.17,
+        "shares": 3.4,
+        "market_value": 2753.19
+      },
+      {
+        "rank": 10,
+        "stock_code": "09988",
+        "stock_name": "阿里巴巴-W",
+        "weight": 4.02,
+        "shares": 29.0,
+        "market_value": 2653.72
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:29:04.476611+08:00"
+  "fetched_at": "2026-11-02T05:47:28.897990+08:00"
 }

@@ -1,92 +1,174 @@
 {
   "code": "501226",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 57.2,
-  "heavy_count": 7,
+  "total_weight": 52.83,
+  "heavy_count": 4,
   "holdings": [
     {
       "rank": 1,
       "stock_code": "TSM",
       "stock_name": "台积电",
-      "weight": 8.71,
-      "shares": 12.0,
-      "market_value": 39032.18
+      "weight": 9.33,
+      "shares": 14.8,
+      "market_value": 45472.78
     },
     {
       "rank": 2,
-      "stock_code": "MU",
-      "stock_name": "美光科技",
-      "weight": 7.55,
-      "shares": 4.3,
-      "market_value": 33805.54
+      "stock_code": "GOOGL",
+      "stock_name": "谷歌-A",
+      "weight": 6.66,
+      "shares": 14.0,
+      "market_value": 32443.78
     },
     {
       "rank": 3,
-      "stock_code": "AVGO",
-      "stock_name": "博通",
-      "weight": 6.03,
-      "shares": 10.5,
-      "market_value": 27014.58
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 5.68,
+      "shares": 18.0,
+      "market_value": 27686.92
     },
     {
       "rank": 4,
-      "stock_code": "KLAC",
-      "stock_name": "科磊",
-      "weight": 5.96,
-      "shares": 13.0,
-      "market_value": 26713.92
+      "stock_code": "AVGO",
+      "stock_name": "博通",
+      "weight": 5.58,
+      "shares": 11.5,
+      "market_value": 27200.95
     },
     {
       "rank": 5,
-      "stock_code": "LRCX",
-      "stock_name": "拉姆研究",
-      "weight": 5.27,
-      "shares": 8.0,
-      "market_value": 23610.94
+      "stock_code": "AMZN",
+      "stock_name": "亚马逊",
+      "weight": 4.82,
+      "shares": 14.0,
+      "market_value": 23492.7
     },
     {
       "rank": 6,
-      "stock_code": "SNDK",
-      "stock_name": "闪迪",
-      "weight": 5.19,
-      "shares": 1.5,
-      "market_value": 23229.22
+      "stock_code": "MU",
+      "stock_name": "美光科技",
+      "weight": 4.71,
+      "shares": 3.2,
+      "market_value": 22955.59
     },
     {
       "rank": 7,
-      "stock_code": "ASML",
-      "stock_name": "阿斯麦",
-      "weight": 5.14,
-      "shares": 1.7,
-      "market_value": 23034.79
+      "stock_code": "KLAC",
+      "stock_name": "科磊",
+      "weight": 4.31,
+      "shares": 16.0,
+      "market_value": 21005.97
     },
     {
       "rank": 8,
-      "stock_code": "GOOGL",
-      "stock_name": "谷歌-A",
-      "weight": 4.89,
-      "shares": 9.0,
-      "market_value": 21906.1
+      "stock_code": "ASML",
+      "stock_name": "阿斯麦",
+      "weight": 4.26,
+      "shares": 1.7,
+      "market_value": 20743.02
     },
     {
       "rank": 9,
-      "stock_code": "AMZN",
-      "stock_name": "亚马逊",
-      "weight": 4.35,
-      "shares": 12.0,
-      "market_value": 19479.72
+      "stock_code": "SNDK",
+      "stock_name": "闪迪",
+      "weight": 3.85,
+      "shares": 1.6,
+      "market_value": 18749.33
     },
     {
       "rank": 10,
-      "stock_code": "NVDA",
-      "stock_name": "英伟达",
-      "weight": 4.11,
-      "shares": 13.5,
-      "market_value": 18397.71
+      "stock_code": "LRCX",
+      "stock_name": "拉姆研究",
+      "weight": 3.63,
+      "shares": 8.0,
+      "market_value": 17700.38
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 9.33,
+        "shares": 14.8,
+        "market_value": 45472.78
+      },
+      {
+        "rank": 2,
+        "stock_code": "GOOGL",
+        "stock_name": "谷歌-A",
+        "weight": 6.66,
+        "shares": 14.0,
+        "market_value": 32443.78
+      },
+      {
+        "rank": 3,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 5.68,
+        "shares": 18.0,
+        "market_value": 27686.92
+      },
+      {
+        "rank": 4,
+        "stock_code": "AVGO",
+        "stock_name": "博通",
+        "weight": 5.58,
+        "shares": 11.5,
+        "market_value": 27200.95
+      },
+      {
+        "rank": 5,
+        "stock_code": "AMZN",
+        "stock_name": "亚马逊",
+        "weight": 4.82,
+        "shares": 14.0,
+        "market_value": 23492.7
+      },
+      {
+        "rank": 6,
+        "stock_code": "MU",
+        "stock_name": "美光科技",
+        "weight": 4.71,
+        "shares": 3.2,
+        "market_value": 22955.59
+      },
+      {
+        "rank": 7,
+        "stock_code": "KLAC",
+        "stock_name": "科磊",
+        "weight": 4.31,
+        "shares": 16.0,
+        "market_value": 21005.97
+      },
+      {
+        "rank": 8,
+        "stock_code": "ASML",
+        "stock_name": "阿斯麦",
+        "weight": 4.26,
+        "shares": 1.7,
+        "market_value": 20743.02
+      },
+      {
+        "rank": 9,
+        "stock_code": "SNDK",
+        "stock_name": "闪迪",
+        "weight": 3.85,
+        "shares": 1.6,
+        "market_value": 18749.33
+      },
+      {
+        "rank": 10,
+        "stock_code": "LRCX",
+        "stock_name": "拉姆研究",
+        "weight": 3.63,
+        "shares": 8.0,
+        "market_value": 17700.38
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:28:03.204882+08:00"
+  "fetched_at": "2026-11-02T05:47:07.473565+08:00"
 }

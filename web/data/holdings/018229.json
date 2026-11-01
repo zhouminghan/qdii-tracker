@@ -1,92 +1,174 @@
 {
   "code": "018229",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 27.15,
+  "total_weight": 28.39,
   "heavy_count": 0,
   "holdings": [
     {
       "rank": 1,
-      "stock_code": "285A",
-      "stock_name": "KIOXIA",
-      "weight": 3.12,
-      "shares": 7.96,
-      "market_value": 30013.94
+      "stock_code": "BE",
+      "stock_name": "Bloom Energy Corp-A",
+      "weight": 4.3,
+      "shares": 13.72,
+      "market_value": 25588.15
     },
     {
       "rank": 2,
-      "stock_code": "688361",
-      "stock_name": "中科飞测",
-      "weight": 3.07,
-      "shares": 68.7,
-      "market_value": 29540.74
+      "stock_code": "688519",
+      "stock_name": "南亚新材",
+      "weight": 3.8,
+      "shares": 83.01,
+      "market_value": 22632.79
     },
     {
       "rank": 3,
-      "stock_code": "AMAT",
-      "stock_name": "应用材料",
-      "weight": 2.9,
-      "shares": 5.67,
-      "market_value": 27914.27
+      "stock_code": "INTC",
+      "stock_name": "英特尔",
+      "weight": 3.59,
+      "shares": 26.4,
+      "market_value": 21381.66
     },
     {
       "rank": 4,
-      "stock_code": "LRCX",
-      "stock_name": "拉姆研究",
-      "weight": 2.85,
-      "shares": 9.3,
-      "market_value": 27450.67
+      "stock_code": "TSEM",
+      "stock_name": "Tower半导体",
+      "weight": 3.0,
+      "shares": 11.68,
+      "market_value": 17884.26
     },
     {
       "rank": 5,
-      "stock_code": "000660",
-      "stock_name": "SK海力士",
-      "weight": 2.72,
-      "shares": 2.24,
-      "market_value": 26173.3
+      "stock_code": "AAPL",
+      "stock_name": "苹果",
+      "weight": 2.6,
+      "shares": 6.9,
+      "market_value": 15483.35
     },
     {
       "rank": 6,
-      "stock_code": "INTC",
-      "stock_name": "英特尔",
-      "weight": 2.61,
-      "shares": 26.36,
-      "market_value": 25066.81
+      "stock_code": "LITE",
+      "stock_name": "Lumentum Holdings Inc",
+      "weight": 2.46,
+      "shares": 2.24,
+      "market_value": 14632.76
     },
     {
       "rank": 7,
-      "stock_code": "AMD",
-      "stock_name": "超威半导体",
-      "weight": 2.56,
-      "shares": 6.22,
-      "market_value": 24590.96
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 2.22,
+      "shares": 8.61,
+      "market_value": 13238.81
     },
     {
       "rank": 8,
-      "stock_code": "005930",
-      "stock_name": "三星电子",
-      "weight": 2.49,
-      "shares": 16.29,
-      "market_value": 23954.26
+      "stock_code": "ALAB",
+      "stock_name": "Astera Labs Inc",
+      "weight": 2.16,
+      "shares": 5.37,
+      "market_value": 12885.81
     },
     {
       "rank": 9,
-      "stock_code": "GLW",
-      "stock_name": "康宁",
-      "weight": 2.49,
-      "shares": 13.76,
-      "market_value": 23942.39
+      "stock_code": "PANW",
+      "stock_name": "派拓网络",
+      "weight": 2.14,
+      "shares": 4.75,
+      "market_value": 12721.07
     },
     {
       "rank": 10,
-      "stock_code": "ASML",
-      "stock_name": "阿斯麦",
-      "weight": 2.34,
-      "shares": 1.66,
-      "market_value": 22509.06
+      "stock_code": "CRWD",
+      "stock_name": "CrowdStrike Holdings Inc-A",
+      "weight": 2.12,
+      "shares": 7.09,
+      "market_value": 12643.91
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "BE",
+        "stock_name": "Bloom Energy Corp-A",
+        "weight": 4.3,
+        "shares": 13.72,
+        "market_value": 25588.15
+      },
+      {
+        "rank": 2,
+        "stock_code": "688519",
+        "stock_name": "南亚新材",
+        "weight": 3.8,
+        "shares": 83.01,
+        "market_value": 22632.79
+      },
+      {
+        "rank": 3,
+        "stock_code": "INTC",
+        "stock_name": "英特尔",
+        "weight": 3.59,
+        "shares": 26.4,
+        "market_value": 21381.66
+      },
+      {
+        "rank": 4,
+        "stock_code": "TSEM",
+        "stock_name": "Tower半导体",
+        "weight": 3.0,
+        "shares": 11.68,
+        "market_value": 17884.26
+      },
+      {
+        "rank": 5,
+        "stock_code": "AAPL",
+        "stock_name": "苹果",
+        "weight": 2.6,
+        "shares": 6.9,
+        "market_value": 15483.35
+      },
+      {
+        "rank": 6,
+        "stock_code": "LITE",
+        "stock_name": "Lumentum Holdings Inc",
+        "weight": 2.46,
+        "shares": 2.24,
+        "market_value": 14632.76
+      },
+      {
+        "rank": 7,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 2.22,
+        "shares": 8.61,
+        "market_value": 13238.81
+      },
+      {
+        "rank": 8,
+        "stock_code": "ALAB",
+        "stock_name": "Astera Labs Inc",
+        "weight": 2.16,
+        "shares": 5.37,
+        "market_value": 12885.81
+      },
+      {
+        "rank": 9,
+        "stock_code": "PANW",
+        "stock_name": "派拓网络",
+        "weight": 2.14,
+        "shares": 4.75,
+        "market_value": 12721.07
+      },
+      {
+        "rank": 10,
+        "stock_code": "CRWD",
+        "stock_name": "CrowdStrike Holdings Inc-A",
+        "weight": 2.12,
+        "shares": 7.09,
+        "market_value": 12643.91
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:27:06.470548+08:00"
+  "fetched_at": "2026-11-02T05:47:05.645886+08:00"
 }

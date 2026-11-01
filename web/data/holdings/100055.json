@@ -1,92 +1,174 @@
 {
   "code": "100055",
-  "latest_quarter": "2026Q2",
+  "latest_quarter": "2026Q3",
   "holdings_count": 10,
-  "total_weight": 47.46,
-  "heavy_count": 3,
+  "total_weight": 66.2,
+  "heavy_count": 10,
   "holdings": [
     {
       "rank": 1,
       "stock_code": "00522",
       "stock_name": "ASMPT",
-      "weight": 5.62,
-      "shares": 500.0,
-      "market_value": 103704.87
+      "weight": 9.31,
+      "shares": 700.0,
+      "market_value": 96143.04
     },
     {
       "rank": 2,
-      "stock_code": "603986",
-      "stock_name": "兆易创新",
-      "weight": 5.51,
-      "shares": 124.62,
-      "market_value": 101565.3
+      "stock_code": "005930",
+      "stock_name": "三星电子",
+      "weight": 8.4,
+      "shares": 65.0,
+      "market_value": 86720.42
     },
     {
       "rank": 3,
-      "stock_code": "SNDK",
-      "stock_name": "闪迪",
-      "weight": 5.04,
-      "shares": 6.0,
-      "market_value": 92916.89
+      "stock_code": "000660",
+      "stock_name": "SK海力士",
+      "weight": 7.69,
+      "shares": 9.0,
+      "market_value": 79423.54
     },
     {
       "rank": 4,
-      "stock_code": "600183",
-      "stock_name": "生益科技",
-      "weight": 4.7,
-      "shares": 500.07,
-      "market_value": 86712.88
+      "stock_code": "TSM",
+      "stock_name": "台积电",
+      "weight": 7.14,
+      "shares": 24.0,
+      "market_value": 73739.65
     },
     {
       "rank": 5,
-      "stock_code": "000660",
-      "stock_name": "SK海力士",
-      "weight": 4.62,
-      "shares": 7.3,
-      "market_value": 85098.86
+      "stock_code": "688825",
+      "stock_name": "长鑫科技",
+      "weight": 6.85,
+      "shares": 1300.0,
+      "market_value": 70750.47
     },
     {
       "rank": 6,
-      "stock_code": "005930",
-      "stock_name": "三星电子",
-      "weight": 4.58,
-      "shares": 57.5,
-      "market_value": 84483.0
+      "stock_code": "NVDA",
+      "stock_name": "英伟达",
+      "weight": 5.96,
+      "shares": 40.0,
+      "market_value": 61526.49
     },
     {
       "rank": 7,
-      "stock_code": "285A",
-      "stock_name": "KIOXIA",
-      "weight": 4.58,
-      "shares": 22.4,
-      "market_value": 84461.34
+      "stock_code": "GOOGL",
+      "stock_name": "谷歌-A",
+      "weight": 5.47,
+      "shares": 24.4,
+      "market_value": 56544.88
     },
     {
       "rank": 8,
-      "stock_code": "MU",
-      "stock_name": "美光科技",
-      "weight": 4.31,
-      "shares": 10.1,
-      "market_value": 79403.71
+      "stock_code": "STX",
+      "stock_name": "希捷科技",
+      "weight": 5.23,
+      "shares": 8.7,
+      "market_value": 54044.85
     },
     {
       "rank": 9,
-      "stock_code": "STX",
-      "stock_name": "希捷科技",
-      "weight": 4.28,
-      "shares": 12.0,
-      "market_value": 78870.22
+      "stock_code": "WDC",
+      "stock_name": "西部数据",
+      "weight": 5.1,
+      "shares": 17.2,
+      "market_value": 52646.34
     },
     {
       "rank": 10,
-      "stock_code": "WDC",
-      "stock_name": "西部数据",
-      "weight": 4.22,
-      "shares": 17.9,
-      "market_value": 77869.62
+      "stock_code": "COHR",
+      "stock_name": "Coherent Corp",
+      "weight": 5.05,
+      "shares": 26.9,
+      "market_value": 52143.74
     }
   ],
   "all_quarters": {
+    "2026Q3": [
+      {
+        "rank": 1,
+        "stock_code": "00522",
+        "stock_name": "ASMPT",
+        "weight": 9.31,
+        "shares": 700.0,
+        "market_value": 96143.04
+      },
+      {
+        "rank": 2,
+        "stock_code": "005930",
+        "stock_name": "三星电子",
+        "weight": 8.4,
+        "shares": 65.0,
+        "market_value": 86720.42
+      },
+      {
+        "rank": 3,
+        "stock_code": "000660",
+        "stock_name": "SK海力士",
+        "weight": 7.69,
+        "shares": 9.0,
+        "market_value": 79423.54
+      },
+      {
+        "rank": 4,
+        "stock_code": "TSM",
+        "stock_name": "台积电",
+        "weight": 7.14,
+        "shares": 24.0,
+        "market_value": 73739.65
+      },
+      {
+        "rank": 5,
+        "stock_code": "688825",
+        "stock_name": "长鑫科技",
+        "weight": 6.85,
+        "shares": 1300.0,
+        "market_value": 70750.47
+      },
+      {
+        "rank": 6,
+        "stock_code": "NVDA",
+        "stock_name": "英伟达",
+        "weight": 5.96,
+        "shares": 40.0,
+        "market_value": 61526.49
+      },
+      {
+        "rank": 7,
+        "stock_code": "GOOGL",
+        "stock_name": "谷歌-A",
+        "weight": 5.47,
+        "shares": 24.4,
+        "market_value": 56544.88
+      },
+      {
+        "rank": 8,
+        "stock_code": "STX",
+        "stock_name": "希捷科技",
+        "weight": 5.23,
+        "shares": 8.7,
+        "market_value": 54044.85
+      },
+      {
+        "rank": 9,
+        "stock_code": "WDC",
+        "stock_name": "西部数据",
+        "weight": 5.1,
+        "shares": 17.2,
+        "market_value": 52646.34
+      },
+      {
+        "rank": 10,
+        "stock_code": "COHR",
+        "stock_name": "Coherent Corp",
+        "weight": 5.05,
+        "shares": 26.9,
+        "market_value": 52143.74
+      }
+    ],
     "2026Q2": [
       {
         "rank": 1,
@@ -252,5 +334,5 @@
       }
     ]
   },
-  "fetched_at": "2026-10-02T06:27:02.630207+08:00"
+  "fetched_at": "2026-11-02T05:46:58.767161+08:00"
 }
