@@ -41,6 +41,8 @@ const SYMBOLS = [
   { qq: 'usNDX',    name: '纳斯达克 100',   emoji: '🚀', digits: 2, kind: 'stock' },
   { qq: 'sh000001', name: '上证指数',       emoji: '🇨🇳', digits: 2, kind: 'stock' },
   { qq: 'fxUSDCNY', name: '美元/人民币',    emoji: '💵', digits: 4, kind: 'fx'    },
+  { qq: 'fxCNYHKD', name: '人民币/港元',    emoji: '🇭🇰', digits: 4, kind: 'fx'    },
+  { qq: 'fxUSDJPY', name: '美元/日元',      emoji: '🇯🇵', digits: 4, kind: 'fx'    },
 ];
 
 // 全球指数卡：东财 push2 实时行情（腾讯不提供日经/斯托克50，恒生腾讯有但统一走东财更一致）
@@ -58,6 +60,8 @@ const DATA_SYMBOL_MAP = {
   'usNDX':    '100.NDX100',  // 纳斯达克 100 → 复用旧 NDX100 卡位
   'sh000001': 'sh000001',    // 上证指数（腾讯 A 股指数）
   'fxUSDCNY': '133.USDCNH',  // 汇率卡位（旧 USDCNH 卡位）
+  'fxCNYHKD': 'fxCNYHKD',    // 人民币/港元
+  'fxUSDJPY': 'fxUSDJPY',    // 美元/日元
 };
 
 // 北京时间美股盘中判断（21:30 - 次日 04:00），且必须是「美股交易日」窗口

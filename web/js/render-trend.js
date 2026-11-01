@@ -104,10 +104,43 @@
     }
   }
 
-  async function fetchPzdHistory(code) {
+  // 场内 ETF：优先用本地日 K 的收盘价，展示市场走势而不是单位净值
+  async function loadLocalEtfKline(code) {
+    try {
+      const res = await fetch(`./data/etf-kline/${code}.json?t=${Date.now()}`);
+      if (!res.ok) return null;
+      const d = await res.json();
+      const dates = d && d.dates;
+      const closes = d && d.close;
+      if (!Array.isArray(dates) || !Array.isArray(closes) || !dates.length || dates.length !== closes.length) return null;
+      const out = [];
+      for (let i = 0; i < dates.length; i++) {
+        const close = parseFloat(closes[i]);
+        if (!Number.isFinite(close)) continue;
+        const prev = i > 0 ? parseFloat(closes[i - 1]) : null;
+        out.push({
+          date: new Date(dates[i] + 'T00:00:00+08:00'),
+          nav: close,
+          change: (prev != null && Number.isFinite(prev) && prev > 0) ? (close / prev - 1) * 100 : null,
+        });
+      }
+      return out.length ? out : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  async function fetchPzdHistory(code, preferEtfKline = false) {
     const cached = await readTrendCache(code);
     if (cached && cached.series.length && Date.now() - cached.ts < TREND_CACHE_TTL) {
       return cached.series;
+    }
+    if (preferEtfKline) {
+      const etfLocal = await loadLocalEtfKline(code);
+      if (etfLocal && etfLocal.length) {
+        writeTrendCache(code, etfLocal);
+        return etfLocal;
+      }
     }
     const local = await loadLocalHistory(code);
     if (local && local.length) {
@@ -447,10 +480,13 @@
     TREND_STATE.fullSeries = null;
     TREND_STATE.range = '3m';
     TREND_STATE.expanded = false;
-    const trendDisplay = { yMode: 'pct', digits: 4, navLabel: '单位净值' };
+    const isEtf = series?.category === 'etf';
+    const trendDisplay = isEtf
+      ? { yMode: 'pct', digits: 3, navLabel: '收盘价' }
+      : { yMode: 'pct', digits: 4, navLabel: '单位净值' };
     renderTrendRanges(trendDisplay);
 
-    const data = await fetchPzdHistory(code);
+    const data = await fetchPzdHistory(code, isEtf);
     if (!data || !data.length) {
       document.getElementById('trend-chart').innerHTML = '<div class="text-center py-12 text-stone-400 dark:text-stone-500 text-sm">无法拉取历史净值（数据源临时不可用）</div>';
       return;

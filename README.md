@@ -81,6 +81,7 @@ qdii-tracker/
 │   ├── run_ui_scenarios.py
 │   ├── test_akshare_source.py
 │   ├── test_classify.py
+│   ├── test_kline_history.py
 │   ├── test_market_temperature.py
 │   ├── test_nav_history.py
 │   ├── test_premium_history.py

@@ -38,6 +38,8 @@ const INDICES = [
   { secid: '100.NDX100', name: '纳斯达克 100',   emoji: '🚀', digits: 2, kind: 'stock' },
   { secid: '251.SOX',    name: '费城半导体',     emoji: '⚡', digits: 2, kind: 'stock' },
   { secid: '133.USDCNH', name: '美元/人民币',    emoji: '💵', digits: 4, kind: 'fx'    },
+  { secid: 'fxCNYHKD',   name: '人民币/港元',    emoji: '🇭🇰', digits: 4, kind: 'fx', klineSecid: '133.CNYHKD' },
+  { secid: 'fxUSDJPY',   name: '美元/日元',      emoji: '🇯🇵', digits: 4, kind: 'fx', klineSecid: '119.USDJPY' },
   { secid: 'sh000001',   name: '上证指数',       emoji: '🇨🇳', digits: 2, kind: 'stock', klineSecid: '1.000001' },
   { secid: '100.N225',   name: '日经 225',       emoji: '🇯🇵', digits: 2, kind: 'stock' },
   { secid: '100.HSI',    name: '恒生指数',       emoji: '🇭🇰', digits: 2, kind: 'stock' },
@@ -47,6 +49,84 @@ const META_BY_SECID = Object.fromEntries(INDICES.map(it => [it.secid, it]));
 // 5 分钟内同一标的不重复请求（仅当前会话内）
 const HISTORY_CACHE = new Map(); // secid -> { ts, series }
 const CACHE_TTL_MS = 5 * 60 * 1000;
+
+// 指数 K 线的 IndexedDB 持久缓存：第二次打开秒出，本地 JSON 缺失时也能离线
+const INDEX_CACHE_DB = 'qdii-index-kline';
+const INDEX_CACHE_STORE = 'series';
+const INDEX_CACHE_TTL = 24 * 60 * 60 * 1000;
+
+function openIndexCacheDb() {
+  return new Promise((resolve, reject) => {
+    if (!window.indexedDB) { reject(new Error('indexeddb unavailable')); return; }
+    const req = indexedDB.open(INDEX_CACHE_DB, 1);
+    req.onupgradeneeded = () => {
+      if (!req.result.objectStoreNames.contains(INDEX_CACHE_STORE)) {
+        req.result.createObjectStore(INDEX_CACHE_STORE);
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error || new Error('indexeddb open failed'));
+  });
+}
+
+async function readIndexCache(key) {
+  try {
+    const db = await openIndexCacheDb();
+    const entry = await new Promise((resolve) => {
+      const tx = db.transaction(INDEX_CACHE_STORE, 'readonly');
+      const req = tx.objectStore(INDEX_CACHE_STORE).get(key);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => resolve(null);
+      tx.oncomplete = () => db.close();
+    });
+    return entry && Array.isArray(entry.series) ? entry : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+function writeIndexCache(key, series) {
+  try {
+    openIndexCacheDb().then((db) => {
+      const tx = db.transaction(INDEX_CACHE_STORE, 'readwrite');
+      tx.objectStore(INDEX_CACHE_STORE).put({ ts: Date.now(), series }, key);
+      tx.oncomplete = () => db.close();
+      tx.onerror = () => db.close();
+    }).catch(() => {});
+  } catch (_) {
+    // 缓存写入失败不影响主流程
+  }
+}
+
+// 本地日 K JSON → 走势图需要的 {date, nav, change}
+async function loadLocalKline(cardSecid) {
+  try {
+    const res = await fetch(`./data/index-kline/${cardSecid}.json?t=${Date.now()}`);
+    if (!res.ok) return null;
+    const d = await res.json();
+    const dates = d && d.dates;
+    if (!Array.isArray(dates) || !dates.length) return null;
+    const out = [];
+    let prev = null;
+    for (let i = 0; i < dates.length; i++) {
+      const close = parseFloat(d.close[i]);
+      if (!Number.isFinite(close) || close <= 0) continue;
+      out.push({
+        date: new Date(dates[i] + 'T00:00:00+08:00'),
+        nav: close,
+        open: parseFloat(d.open[i]),
+        high: parseFloat(d.high[i]),
+        low: parseFloat(d.low[i]),
+        volume: parseFloat(d.volume[i]),
+        change: prev != null && prev > 0 ? (close / prev - 1) * 100 : null,
+      });
+      prev = close;
+    }
+    return out.length ? out : null;
+  } catch (_) {
+    return null;
+  }
+}
 
 // 日 K 请求的两个 host：主选 push2his，失败后 push2 兜底
 const KLINE_HOSTS = [
@@ -78,18 +158,36 @@ function parseKlines(klines) {
 
 // 拉日 K（JSONP），自动 fallback 到备选 host
 //   返回 { series: [{date, nav, change}, ...], host: string } 或 null
-async function fetchDayKWithFallback(secid) {
-  const cached = HISTORY_CACHE.get(secid);
+async function fetchDayKWithFallback(cardSecid, klineSecid) {
+  const cached = HISTORY_CACHE.get(cardSecid);
   if (cached && Date.now() - cached.ts < CACHE_TTL_MS) {
-    return { series: cached.series, host: 'cache' };
+    return { series: cached.series, host: 'memory' };
+  }
+
+  const idb = await readIndexCache(cardSecid);
+  if (idb && Date.now() - idb.ts < INDEX_CACHE_TTL) {
+    HISTORY_CACHE.set(cardSecid, { ts: Date.now(), series: idb.series });
+    return { series: idb.series, host: 'indexeddb' };
+  }
+
+  const local = await loadLocalKline(cardSecid);
+  if (local && local.length) {
+    writeIndexCache(cardSecid, local);
+    HISTORY_CACHE.set(cardSecid, { ts: Date.now(), series: local });
+    return { series: local, host: 'local-json' };
   }
 
   for (const host of KLINE_HOSTS) {
-    const result = await fetchDayKFromHost(secid, host);
+    const result = await fetchDayKFromHost(klineSecid, host);
     if (result) {
-      HISTORY_CACHE.set(secid, { ts: Date.now(), series: result });
+      writeIndexCache(cardSecid, result);
+      HISTORY_CACHE.set(cardSecid, { ts: Date.now(), series: result });
       return { series: result, host };
     }
+  }
+
+  if (idb && idb.series && idb.series.length) {
+    return { series: idb.series, host: 'indexeddb-stale' };
   }
   return null;
 }
@@ -146,7 +244,7 @@ async function openIndexTrend(secid, evt) {
     subEl.innerHTML = `
       <span class="num">${secid}</span>
       ${lastPrice ? `，最新 <span class="font-medium num text-stone-700 dark:text-stone-300">${lastPrice}</span>` : ''}
-      <span class="text-stone-400 dark:text-stone-500 ml-1">日 K（东方财富）</span>
+      <span class="text-stone-400 dark:text-stone-500 ml-1">日 K（本地/东财）</span>
     `;
   }
 
@@ -168,7 +266,7 @@ async function openIndexTrend(secid, evt) {
   const trendDisplay = { yMode: 'value', digits: meta.digits, navLabel: meta.kind === 'fx' ? '汇率' : '点位' };
   window.renderTrendRanges(trendDisplay);
 
-  const result = await fetchDayKWithFallback(meta.klineSecid || secid);
+  const result = await fetchDayKWithFallback(secid, meta.klineSecid || secid);
   if (!result || !result.series || !result.series.length) {
     if (chartEl) {
       chartEl.innerHTML = `
@@ -185,28 +283,31 @@ async function openIndexTrend(secid, evt) {
 
 // 5 张指标卡挂点击 + 视觉提示
 function bindCardClicks() {
-  const grid = document.getElementById('market-cards');
-  if (!grid) return;
-  grid.querySelectorAll('.market-card').forEach(card => {
-    card.classList.add('cursor-pointer', 'transition', 'hover:border-stone-400', 'dark:hover:border-stone-500', 'hover:shadow-sm');
-    card.setAttribute('role', 'button');
-    card.setAttribute('tabindex', '0');
-    card.setAttribute('title', '点击查看历史走势');
-  });
-  grid.addEventListener('click', (e) => {
-    const card = e.target.closest('.market-card');
-    if (!card || !grid.contains(card)) return;
-    const secid = card.getAttribute('data-symbol');
-    if (META_BY_SECID[secid]) openIndexTrend(secid, e);
-  });
-  grid.addEventListener('keydown', (e) => {
-    if (e.key !== 'Enter' && e.key !== ' ') return;
-    const card = e.target.closest('.market-card');
-    if (!card || !grid.contains(card)) return;
-    e.preventDefault();
-    const secid = card.getAttribute('data-symbol');
-    if (META_BY_SECID[secid]) openIndexTrend(secid, e);
-  });
+  const grids = ['market-cards', 'market-fx-cards']
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+  for (const grid of grids) {
+    grid.querySelectorAll('.market-card').forEach(card => {
+      card.classList.add('cursor-pointer', 'transition', 'hover:border-stone-400', 'dark:hover:border-stone-500', 'hover:shadow-sm');
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('title', '点击查看历史走势');
+    });
+    grid.addEventListener('click', (e) => {
+      const card = e.target.closest('.market-card');
+      if (!card || !grid.contains(card)) return;
+      const secid = card.getAttribute('data-symbol');
+      if (META_BY_SECID[secid]) openIndexTrend(secid, e);
+    });
+    grid.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const card = e.target.closest('.market-card');
+      if (!card || !grid.contains(card)) return;
+      e.preventDefault();
+      const secid = card.getAttribute('data-symbol');
+      if (META_BY_SECID[secid]) openIndexTrend(secid, e);
+    });
+  }
 }
 
 export function start() {
