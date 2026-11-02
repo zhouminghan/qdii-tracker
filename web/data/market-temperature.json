@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-11-02T05:58:13.317189+08:00",
+  "generated_at": "2026-11-03T06:44:59.075648+08:00",
   "schema_version": 1,
-  "score": 56,
+  "score": 53,
   "band": "yellow",
   "verdict": "黄灯 · 中性区间",
   "summary": "市场处于合理区间，适合定投或谨慎操作。",
@@ -26,13 +26,13 @@
       "stale": false
     },
     "vix": {
-      "score": 65,
+      "score": 50,
       "label": "情绪偏紧",
       "raw": {
-        "value": 19.42,
-        "date": "2026-10-30"
+        "value": 21.15,
+        "date": "2026-11-02"
       },
-      "note": "VIX 19.4，恐慌情绪中性。",
+      "note": "VIX 21.1，恐慌情绪中性。",
       "source": "Yahoo Finance",
       "stale": false
     },
@@ -40,10 +40,10 @@
       "score": 45,
       "label": "利率中性",
       "raw": {
-        "value": 4.94,
-        "date": "2026-10-30"
+        "value": 4.91,
+        "date": "2026-11-02"
       },
-      "note": "10 年期美债收益率 4.94%。",
+      "note": "10 年期美债收益率 4.91%。",
       "source": "东方财富",
       "stale": false
     },
