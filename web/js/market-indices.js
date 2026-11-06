@@ -40,15 +40,16 @@ const SYMBOLS = [
   { qq: 'usIXIC',   name: '纳斯达克综合',   emoji: '💻', digits: 2, kind: 'stock' },
   { qq: 'usNDX',    name: '纳斯达克 100',   emoji: '🚀', digits: 2, kind: 'stock' },
   { qq: 'sh000001', name: '上证指数',       emoji: '🇨🇳', digits: 2, kind: 'stock' },
-  { qq: 'fxUSDCNY', name: '美元/人民币',    emoji: '💵', digits: 4, kind: 'fx'    },
-  { qq: 'fxCNYHKD', name: '人民币/港元',    emoji: '🇭🇰', digits: 4, kind: 'fx'    },
-  { qq: 'fxUSDJPY', name: '美元/日元',      emoji: '🇯🇵', digits: 4, kind: 'fx'    },
+  { qq: 'sh000300', name: '沪深 300',       emoji: '🇨🇳', digits: 2, kind: 'stock' },
+  { qq: 'sh000688', name: '科创 50',        emoji: '🔬', digits: 2, kind: 'stock' },
 ];
 
 // 全球指数卡：东财 push2 实时行情（腾讯不提供日经/斯托克50，恒生腾讯有但统一走东财更一致）
 const GLOBAL_SYMBOLS = [
   { em: '100.N225', name: '日经 225',      emoji: '🇯🇵', digits: 2 },
   { em: '100.HSI',  name: '恒生指数',      emoji: '🇭🇰', digits: 2 },
+  { em: '124.HSTECH', name: '恒生科技',    emoji: '🖥️', digits: 2 },
+  { em: '100.KS11', name: '韩国 KOSPI',    emoji: '🇰🇷', digits: 2 },
   { em: '251.SOX',  name: '费城半导体',    emoji: '⚡', digits: 2 },
 ];
 
@@ -59,9 +60,8 @@ const DATA_SYMBOL_MAP = {
   'usIXIC':   '100.NDX',     // 纳斯达克综合 → 复用旧 NDX 卡位
   'usNDX':    '100.NDX100',  // 纳斯达克 100 → 复用旧 NDX100 卡位
   'sh000001': 'sh000001',    // 上证指数（腾讯 A 股指数）
-  'fxUSDCNY': '133.USDCNH',  // 汇率卡位（旧 USDCNH 卡位）
-  'fxCNYHKD': 'fxCNYHKD',    // 人民币/港元
-  'fxUSDJPY': 'fxUSDJPY',    // 美元/日元
+  'sh000300': 'sh000300',    // 沪深 300
+  'sh000688': 'sh000688',    // 科创 50
 };
 
 // 北京时间美股盘中判断（21:30 - 次日 04:00），且必须是「美股交易日」窗口
@@ -218,7 +218,7 @@ function renderCard(item, parsed) {
   const { price, change, changePct } = parsed;
   const up = changePct > 0;
   const flat = Math.abs(changePct) < 0.005;
-  const colorCls = flat ? 'text-stone-500' : (up ? 'text-rose-600' : 'text-emerald-600');
+  const colorCls = flat ? 'text-stone-500' : (up ? 'up' : 'down');
   const arrow = flat ? '—' : (up ? '↑' : '↓');
   const sign = up ? '+' : '';
   const priceStr = price.toFixed(item.digits);
@@ -287,7 +287,7 @@ function renderGlobalCard(item, parsed) {
   const { price, changePct } = parsed;
   const up = changePct > 0;
   const flat = Math.abs(changePct) < 0.005;
-  const colorCls = flat ? 'text-stone-500' : (up ? 'text-rose-600' : 'text-emerald-600');
+  const colorCls = flat ? 'text-stone-500' : (up ? 'up' : 'down');
   const arrow = flat ? '—' : (up ? '↑' : '↓');
   const sign = up ? '+' : '';
   card.dataset.lastPrice = price.toFixed(item.digits);

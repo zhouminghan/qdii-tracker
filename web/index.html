@@ -32,7 +32,7 @@
   <link rel="icon" href="data:,">
   <link rel="manifest" href="./manifest.json" />
   <!-- 防闪烁：在首屏渲染前读取 sessionStorage / 系统偏好，立即应用 dark class（必须在 Tailwind CDN 之前） -->
-  <script>(function(){try{var t=sessionStorage.getItem('qdii-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}})();</script>
+  <script>(function(){try{var t=sessionStorage.getItem('qdii-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}try{var c=sessionStorage.getItem('qdii-color');if(c==='intl'){document.documentElement.classList.add('intl-color');}}catch(e){}})();</script>
   <link rel="stylesheet" href="./css/tailwind.css?v=dev" />
   <!-- 纯常量配置（COMPANY_BRAND/GROUP_META/ETF_GROUPS 等 ~150 行）抽出为 config.js；
        用普通 script 全局作用域加载（非 ES Module），原内联块 0 改动即可引用。
@@ -57,17 +57,13 @@
           <div class="text-[11px] sm:text-xs text-stone-500 dark:text-stone-400 mt-0.5 truncate">美股基金追踪看板</div>
         </div>
       </div>
-      <div class="flex items-center gap-1 sm:gap-2 text-sm" role="tablist" aria-label="基金类型切换">
-        <button type="button" id="tab-offshore" role="tab" aria-controls="panel-offshore" aria-selected="true" tabindex="0" class="tab-btn tab-active px-3 sm:px-4 py-2 rounded-lg transition text-xs sm:text-sm" data-tab="offshore">🏦 <span class="hidden sm:inline">场外基金</span><span class="sm:hidden">场外</span></button>
-        <button type="button" id="tab-etf" role="tab" aria-controls="panel-etf" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="etf">📈 <span class="hidden sm:inline">场内 ETF</span><span class="sm:hidden">ETF</span></button>
+      <div class="tab-scroll text-sm" role="tablist" aria-label="基金类型切换">
+        <button type="button" id="tab-global" role="tab" aria-controls="market-overview" aria-selected="true" tabindex="0" class="tab-btn tab-active px-3 sm:px-4 py-2 rounded-lg transition text-xs sm:text-sm" data-tab="global">🌐 <span class="hidden sm:inline">全球行情</span><span class="sm:hidden">行情</span></button>
+        <button type="button" id="tab-nasdaq" role="tab" aria-controls="panel-nasdaq" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="nasdaq">📊 <span class="hidden sm:inline">纳指图谱</span><span class="sm:hidden">图谱</span></button>
+        <button type="button" id="tab-qdii" role="tab" aria-controls="panel-qdii" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="qdii">🏦 <span class="hidden sm:inline">QDII 追踪</span><span class="sm:hidden">QDII</span></button>
         <button type="button" id="tab-knowledge" role="tab" aria-controls="panel-knowledge" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="knowledge">📚 <span class="hidden sm:inline">投资知识</span><span class="sm:hidden">知识</span></button>
-        <button type="button" id="tab-portfolio" role="tab" aria-controls="panel-portfolio" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="portfolio">📊 <span class="hidden sm:inline">我的组合</span><span class="sm:hidden">组合</span></button>
-        <button type="button" id="tab-temperature" role="tab" aria-controls="panel-temperature" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="temperature">🚦 <span class="hidden sm:inline">市场温度</span><span class="sm:hidden">温度</span></button>
+        <button type="button" id="tab-assets" role="tab" aria-controls="panel-portfolio" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="assets">💼 <span class="hidden sm:inline">我的资产</span><span class="sm:hidden">资产</span></button>
       </div>
-      <div class="header-spacer"></div>
-      <button type="button" id="holdings-perspective-btn" class="perspective-btn" title="跨基金重仓股透视">
-        🧺 重仓透视
-      </button>
       <label class="fund-search items-center gap-2 h-9 px-3 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-500 dark:text-stone-400" title="仅搜索本站收录的基金，不联网">
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 10.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"/></svg>
         <input id="fund-search" type="search" placeholder="搜索项目内基金 / 代码" aria-label="搜索项目内基金（仅本站，不联网）" autocomplete="off" spellcheck="false" class="w-36 lg:w-44 bg-transparent outline-none text-stone-800 dark:text-stone-100 placeholder:text-stone-400 dark:placeholder:text-stone-500 text-xs" />
@@ -77,6 +73,12 @@
         <span class="bj-clock-date">--</span>
         <span class="bj-clock-time">--:--:--</span>
       </div>
+      <button type="button" class="theme-toggle" id="colorToggle" title="切换涨跌配色" aria-label="切换涨跌配色">
+        <svg class="color-toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <polyline points="18 15 12 9 6 15"/><polyline points="6 9 12 15 18 9"/>
+        </svg>
+        <span class="color-toggle-label">红涨</span>
+      </button>
       <button type="button" class="theme-toggle" id="themeToggle" title="切换主题" aria-label="切换深色模式">
         <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
@@ -451,20 +453,13 @@
           <div class="flex items-baseline gap-2 flex-wrap">
             <h2 class="text-lg font-bold">📊 市场参照系</h2>
           </div>
-          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">美元/人民币 是 USD/CNY 口径（1 美元值多少元）：<b class="text-rose-600 dark:text-rose-400">数值↑ = 美元升值 / 人民币贬值 → QDII 净值受益 ↑</b>；反之拖累。</p>
+          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">全球主流大盘指数实时点位与涨跌幅。</p>
         </div>
         <span class="text-[11px] text-stone-400 dark:text-stone-500 flex-shrink-0 text-right" id="market-meta">
           <span id="market-update-time">📡 行情加载中…</span>
         </span>
       </div>
-      <!-- 指标卡：左侧汇率竖栏 + 右侧指数网格 -->
-      <div class="flex flex-col lg:flex-row gap-2 sm:gap-3">
-        <div id="market-fx-cards" class="grid grid-cols-3 lg:grid-cols-1 lg:w-36 gap-2 sm:gap-3 shrink-0">
-          <div data-symbol="133.USDCNH" class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
-          <div data-symbol="fxCNYHKD"   class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
-          <div data-symbol="fxUSDJPY"   class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
-        </div>
-        <div id="market-cards" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 flex-1">
+      <div id="market-cards" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
           <!-- 由 JS 动态填充。data-symbol 与 MarketIndices 模块的 secid 一一对应。 -->
           <div data-symbol="100.DJIA"   class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
           <div data-symbol="100.SPX"    class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
@@ -472,9 +467,22 @@
           <div data-symbol="100.NDX100" class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
           <div data-symbol="251.SOX"   class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
           <div data-symbol="sh000001" class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
-          <div data-symbol="100.N225"  class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
+          <div data-symbol="sh000300" class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
+          <div data-symbol="sh000688" class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
           <div data-symbol="100.HSI"   class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
-        </div>
+          <div data-symbol="124.HSTECH" class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
+          <div data-symbol="100.N225"  class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
+          <div data-symbol="100.KS11" class="market-card bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-3 py-2.5"></div>
+      </div>
+      <div id="big-tech" class="big-tech"></div>
+      <div id="fx-rates" class="fx-rates"></div>
+      <div id="gold-hub" class="gold-hub"></div>
+    </section>
+
+    <section id="panel-qdii-nav" role="tabpanel" aria-label="QDII 场内外切换">
+      <div class="qdii-sub-nav" role="group" aria-label="场外/场内切换">
+        <button type="button" class="qdii-sub-btn active" data-sub="offshore" aria-pressed="true">🏦 场外基金</button>
+        <button type="button" class="qdii-sub-btn" data-sub="etf" aria-pressed="false">📈 场内 ETF</button>
       </div>
     </section>
 
@@ -548,9 +556,9 @@
       <div class="flex items-end justify-between mb-3 gap-4">
         <div class="min-w-0">
           <div class="flex items-baseline gap-2 flex-wrap">
-            <h2 class="text-lg font-bold" id="temperature-title">🚦 市场温度</h2>
+            <h2 class="text-lg font-bold" id="temperature-title">🎭 情绪仪表盘</h2>
           </div>
-          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">四个指标加权打分，衡量当前美股 QDII 的持有环境，分数越高越友好。</p>
+          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">CNN 恐慌贪婪 + 市场温度 + VIX & PE 阶梯定投，一屏看懂当下情绪与实操。</p>
         </div>
         <div class="flex items-center gap-2 flex-shrink-0">
           <button type="button" id="temperature-save" class="temp-save-btn" title="保存市场温度海报">保存图片</button>
@@ -560,8 +568,97 @@
       <div id="temperature-root">
         <div class="skeleton" role="status" aria-label="加载中">加载中…</div>
       </div>
+      <div class="fg-card">
+        <div id="fear-greed">
+          <div class="skeleton" role="status" aria-label="加载中">加载中…</div>
+        </div>
+      </div>
+      <div class="dca-card">
+        <div class="dca-head">
+          <span class="dca-title">🧭 VIX & PE 阶梯定投</span>
+          <span class="dca-sub">恐慌贪婪 + 波动率 + 估值 → 实操动作</span>
+        </div>
+        <div id="dca-root">
+          <div class="skeleton" role="status" aria-label="加载中">加载中…</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-nasdaq" role="tabpanel" aria-labelledby="tab-nasdaq" data-category="nasdaq">
+      <div id="macro-rates" class="macro-rates"></div>
+      <div class="flex items-end justify-between mb-3 gap-4">
+        <div class="min-w-0">
+          <div class="flex items-baseline gap-2 flex-wrap">
+            <h2 class="text-lg font-bold" id="nasdaq-title">📅 纳指图谱</h2>
+          </div>
+          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">1986 至今的纳斯达克年度回撤、月度冷热与多周期月份排行，辅助判断定投节奏。</p>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <button type="button" id="nasdaq-save" class="temp-save-btn" title="保存纳指图谱长图">保存图片</button>
+          <span class="text-[11px] text-stone-400 dark:text-stone-500 text-right" id="nh-updated">--</span>
+        </div>
+      </div>
+
+      <div id="nh-summary" class="nh-summary-card">
+        <div class="skeleton" role="status" aria-label="加载中">加载中…</div>
+      </div>
+
+      <div class="nh-card" style="margin-bottom:0.75rem">
+        <div class="nh-card-title">📈 年度涨跌幅（%）</div>
+        <div id="nh-annual-returns"></div>
+      </div>
+
+      <div class="nh-grid">
+        <div class="nh-card">
+          <div class="nh-card-title">📉 年内最大回撤（%）</div>
+          <div id="nh-drawdown"></div>
+        </div>
+        <div class="nh-card">
+          <div class="nh-card-title">🏔 谷值月份分布</div>
+          <div id="nh-trough-hist" class="nh-hist"></div>
+        </div>
+      </div>
+
+      <div class="nh-card" style="margin-top:0.75rem">
+        <div class="nh-card-title nh-heat-title-row">
+          <span id="nh-heat-title">🔥 月度冷热热力图（1997 至今，%）</span>
+          <span class="nh-heat-actions">
+            <span class="nh-seg-row" id="nh-heat-toggle" role="group" aria-label="热力图视图切换" style="margin-bottom:0">
+              <button type="button" class="nh-seg active" data-heat="month" aria-pressed="true">月度</button>
+              <button type="button" class="nh-seg" data-heat="year" aria-pressed="false">年度</button>
+            </span>
+            <button type="button" id="nh-heat-save" class="temp-save-btn" title="保存热力图海报">保存图片</button>
+          </span>
+        </div>
+        <div id="nh-heatmap"></div>
+      </div>
+
+      <div class="nh-card" style="margin-top:0.75rem">
+        <div class="nh-card-title">🏆 多周期月份排行榜（%）</div>
+        <div id="nh-ranking"></div>
+      </div>
     </section>
   </main>
+
+  <!-- 图表海报预览 Modal -->
+  <div id="chart-poster-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4" style="background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); overflow:auto;" role="dialog" aria-modal="true" aria-label="图表海报预览">
+    <div class="chart-poster-dialog bg-stone-50 dark:bg-stone-900 rounded-2xl shadow-2xl overflow-hidden">
+      <div class="bg-white dark:bg-stone-800 border-b border-stone-200 dark:border-stone-700 px-4 py-3 flex items-center justify-between">
+        <span class="text-sm font-bold text-stone-800 dark:text-stone-100">📸 海报预览</span>
+        <button type="button" onclick="closeChartPoster()" class="w-8 h-8 rounded-full hover:bg-stone-100 dark:hover:bg-stone-700 flex items-center justify-center text-stone-500 dark:text-stone-300" aria-label="关闭预览">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="p-3 sm:p-4">
+        <div class="rounded-xl overflow-hidden border border-stone-200 dark:border-stone-700 chart-poster-preview">
+          <img id="chart-poster-img" alt="图表海报预览" class="w-full h-auto block" />
+        </div>
+        <button type="button" id="chart-poster-download" class="mt-3 w-full py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition">
+          下载 PNG
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- 基金详情 Modal -->
   <div id="detailModal" role="dialog" aria-modal="true" aria-labelledby="detail-title" class="hidden fixed inset-0 z-50 overflow-y-auto" style="background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);">
@@ -718,7 +815,6 @@
   <script defer src="./js/portfolio.js?v=dev"></script>
   <script defer src="./js/market-temperature.js?v=dev"></script>
   <script defer src="./js/bj-clock.js?v=dev"></script>
-  <script defer src="./js/holdings-perspective.js?v=dev"></script>
   <script defer src="./js/premium-history.js?v=dev"></script>
   <script defer src="./js/screenshot.js?v=dev"></script>
   <script>
@@ -738,6 +834,13 @@ import { start as startMarketIndices } from './js/market-indices.js?v=dev';
 import { start as startEtfPremium } from './js/etf-premium.js?v=dev';
 import { start as startMarketTrend } from './js/market-trend.js?v=dev';
 import { start as startOffshoreLiveNav } from './js/offshore-live-nav.js?v=dev';
+import { start as startNasdaqHistory } from './js/nasdaq-history.js?v=dev';
+import { start as startDcaStrategy } from './js/dca-strategy.js?v=dev';
+import { start as startGoldHub } from './js/gold-hub.js?v=dev';
+import { start as startBigTech } from './js/big-tech.js?v=dev';
+import { start as startFearGreed } from './js/fear-greed.js?v=dev';
+import { start as startMacroRates } from './js/macro-rates.js?v=dev';
+import { start as startFxRates } from './js/fx-rates.js?v=dev';
 import { start as startTheme } from './js/theme.js?v=dev';
 
     // 主题切换（深色/亮色 + 跟随系统）
@@ -773,6 +876,27 @@ import { start as startTheme } from './js/theme.js?v=dev';
         }
       },
     });
+
+    // 纳指 40 年历史图谱 —— 读取静态 JSON，不依赖主表数据
+    startNasdaqHistory();
+
+    // VIX & PE 阶梯定投实操矩阵 —— 读取市场温度里的实时 VIX
+    startDcaStrategy();
+
+    // 黄金多市场实时参考 —— 伦敦金 × 离岸人民币 → 国内折算价 vs 上海金
+    startGoldHub();
+
+    // 科技七姐妹实时行情 —— 美股七巨头
+    startBigTech();
+
+    // CNN 恐慌与贪婪仪表盘 —— 读取本地 JSON，并为阶梯定投提供情绪输入
+    startFearGreed();
+
+    // 宏观汇率与利率区 —— 美元/离岸人民币 + 美债 2/10/30 年 + VIX + PE
+    startMacroRates();
+
+    // 常用外汇汇率区 —— 美元/人民币、港元、日元等
+    startFxRates();
   </script>
 </body>
 </html>

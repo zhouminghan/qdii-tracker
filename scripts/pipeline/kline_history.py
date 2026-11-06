@@ -35,8 +35,12 @@ INDEX_TARGETS = [
     ("100.NDX100", "100.NDX100"), # 纳斯达克 100
     ("251.SOX", "251.SOX"),       # 费城半导体
     ("sh000001", "1.000001"),     # 上证指数（腾讯实时符号 vs 东财 K 线 secid）
+    ("sh000300", "1.000300"),     # 沪深 300
+    ("sh000688", "1.000688"),     # 科创 50
     ("100.N225", "100.N225"),     # 日经 225
     ("100.HSI", "100.HSI"),       # 恒生指数
+    ("124.HSTECH", "124.HSTECH"), # 恒生科技
+    ("100.KS11", "100.KS11"),     # 韩国 KOSPI
 ]
 
 # Sina / akshare 回退映射：key -> (symbol, kind)
@@ -52,9 +56,12 @@ SINA_INDEX = {
 
 # (前端卡片 data-symbol, 东财 secid, 汇率对)
 FX_TARGETS = [
-    ("133.USDCNH", "133.USDCNH", "USDCNY"),   # 美元/人民币
-    ("fxCNYHKD", "133.CNYHKD", "CNYHKD"),     # 人民币/港元
+    ("fxUSDCNY", "133.USDCNH", "USDCNY"),     # 美元/人民币
+    ("fxUSDHKD", "133.USDHKD", "USDHKD"),     # 美元/港元
     ("fxUSDJPY", "119.USDJPY", "USDJPY"),     # 美元/日元
+    ("fxHKDCNY", "133.HKDCNY", "HKDCNY"),     # 港元/人民币
+    ("fxEURUSD", "119.EURUSD", "EURUSD"),     # 欧元/美元
+    ("fxGBPUSD", "119.GBPUSD", "GBPUSD"),     # 英镑/美元
 ]
 
 _BOC_CACHE = {}
@@ -261,8 +268,8 @@ def fetch_kline_for_target(target, beg):
 def fetch_kline_fallback(target, beg=FULL_BEG):
     """跳过东财，直接走 Sina / 腾讯回退（限流严重时用）。"""
     if target["kind"] == "index":
-        if target["key"] == "sh000001":
-            return fetch_kline_ashare_sina("sh000001")
+        if target["key"] in ("sh000001", "sh000300", "sh000688"):
+            return fetch_kline_ashare_sina(target["key"])
         return fetch_kline_sina(target["key"])
     if target["kind"] == "etf":
         code = target["key"]

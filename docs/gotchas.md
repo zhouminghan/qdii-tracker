@@ -29,6 +29,8 @@
 | G023 | 「开放申购」份额 `daily_limit=0.0`（招商普盛全球 D 025339），语义应为 None（不限额） | 天天基金 `fund_purchase_em` 对部分开放份额返回 0 而非哨兵值 1e11，旧逻辑只归一 `>=1e11` | `scripts/sources/akshare_source.py:fetch_purchase_data` → 开放状态一律 `daily_limit=None`；`fill.py:_normalize_purchase_state` / `verify_purchase.py` 同步校验 | ✅已修复 | 2026-10-29 | 2026-10-29 |
 | G024 | D/F/I/美元/联接等非排名份额的收益字段长期冻结（近1年≈成立来旧值，118 只） | 这些份额不在 akshare `fund_open_fund_rank_em` 里，只能靠 pingzhongdata；`merge_share_data` 对历史收益「只填空白」从不覆盖，早期旧值永久留存 | `scripts/pipeline/fill.py:merge_share_data` → 非回退场景强制覆盖 `chg_1m/3m/6m/1y`；`scripts/sources/eastmoney_source.py:_compute_period_returns` 从净值序列复利算出 `chg_ytd/chg_since_inception` 并同样覆盖 | ✅已修复 | 2026-10-29 | 2026-10-29 |
 | G025 | 美元份额规模缺失：雪球 `fund_individual_basic_info_xq` 对美元份额无「最新规模」，`enrich` 每月会把已有值清空；真实来源是天天基金 F10「资产规模」，但美元份额披露单位是「亿美元」，旧解析只认「亿元」 | 雪球与 F10 两源覆盖范围不一致，且美元规模单位与人民币不同 | `scripts/sources/eastmoney_source.py:fetch_f10` → 同时解析 `亿元`/`亿美元`；美元份额由 `fill` Pass2（enrich 之后）用 F10 补回 | ✅已修复 | 2026-10-29 | 2026-10-29 |
+| G026 | 纳指实时 PE 无稳定免费源：PE(NDX) 无法自动入库，V2 白皮书模块 3.3/4.2 的 PE 维度只能前端手动输入 | multpl 无纳指100 PE 页面（404）、WSJ 401（付费墙）、stockanalysis/slickcharts 均为 JS 渲染 SPA 服务端无数据、Yahoo v7 quote 对指数无 PE 且当前 429、东财 `RPT_INDEX_PE` 报表不存在（9501） | ✅已接入（Siblis `pe-trailing` 月末快照 → `scripts/pipeline/ndx_pe.py`） | 2026-11-06 | 2026-11-06 |
+| G027 | 品牌实物金价（水贝/周大福/老凤祥/中国黄金 足金饰品与投资金条）无稳定 API：V2 白皮书模块 3.4 的品牌金价维度暂未接入 | cngold（金投网）页面为 JS 渲染，curl 拿不到数据；`api.jijinhao.com/sQuoteCenter/realTime.htm` 空返回；需浏览器级抓取或付费源 | ✅已接入（证券之星 `salegold.shtml` GBK 表格 → `scripts/pipeline/brand_gold.py`；水贝批发价该源未收录） | 2026-11-06 | 2026-11-06 |
 
 ## Gotchas 生命周期规则
 - 已修复 → 保留条目，标记 `✅已修复`（不删——后人要知道坑存在过）

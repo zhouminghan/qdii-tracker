@@ -21,7 +21,7 @@ from core.constants import CATEGORIES, DATA_DIR, DATA_SCHEMA_VERSION, HOLDINGS_C
 from core.config_loader import get_config, save_config, validate_config
 
 # 直接 import pipeline 模块（替代 subprocess 调用）
-from pipeline import scan, enrich, fill, holdings, reclassify, codegen, premium_history, nav_history, kline_history, market_temperature
+from pipeline import scan, enrich, fill, holdings, reclassify, codegen, premium_history, nav_history, kline_history, market_temperature, nasdaq_history, cnn_sentiment, brand_gold, ndx_pe, macro_rates
 
 from checks.verify_data import run_verification
 from checks.verify_purchase import run_verification as run_purchase_verification
@@ -144,6 +144,10 @@ def cmd_refresh(args):
     else:
         _run(fill.main, *fill_args)
     _run(market_temperature.main)
+    _run(cnn_sentiment.main)
+    _run(brand_gold.main)
+    _run(ndx_pe.main)
+    _run(macro_rates.main)
     nav_args = []
     if args.scope and args.scope != "all":
         nav_args += ["--scope", args.scope]
@@ -162,7 +166,20 @@ def cmd_sync(_args):
     _run(nav_history.main)
     _run(kline_history.main)
     _run(market_temperature.main)
+    _run(nasdaq_history.main)
+    _run(cnn_sentiment.main)
+    _run(brand_gold.main)
+    _run(ndx_pe.main)
+    _run(macro_rates.main)
     _run(codegen.main)
+
+
+def cmd_nasdaq(_args):
+    _run(nasdaq_history.main)
+
+
+def cmd_sentiment(_args):
+    _run(cnn_sentiment.main)
 
 
 def _all_share_codes() -> set:
@@ -446,6 +463,12 @@ def main():
 
     p_sync = sub.add_parser("sync", help="全量同步")
     p_sync.set_defaults(func=cmd_sync)
+
+    p_nasdaq = sub.add_parser("nasdaq", help="刷新纳指 40 年历史图谱数据")
+    p_nasdaq.set_defaults(func=cmd_nasdaq)
+
+    p_sentiment = sub.add_parser("sentiment", help="刷新 CNN 恐慌贪婪指数")
+    p_sentiment.set_defaults(func=cmd_sentiment)
 
     p_diagnose = sub.add_parser("diagnose", help="诊断数据异常")
     p_diagnose.add_argument("--cat", help="按分类筛选")

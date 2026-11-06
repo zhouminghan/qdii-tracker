@@ -66,7 +66,7 @@
 - nav_date 永不回退（lsjz 失败保留旧值）
 - scan 后必须接 enrich + fill
 - 禁止直接改 `config/funds.json`（通过 fund-ops Skill + fundctl.py）
-- **提交/推送需确认**：任何 `git commit` / `git push` / 部署触发前，必须先向用户说明改动范围（哪些文件、为什么）并取得明确确认；未确认前只停留在工作区改动，不 `git add` / `commit` / `push`
+- **推送前必须确认**：任何 `git push` / 部署触发前，必须先向用户说明本批次改动范围（哪些文件、为什么、验证结果）并取得明确确认；上一批次的推送确认不自动延续到新批次。多个改动先攒成一批，全部改完并验证后再统一确认，不要每改一处就 `git commit` / `git push`。未确认前只停留在工作区改动，不 `git add` / `commit` / `push`
 - **文档不滞后**：README 目录树 / 命令列表由 `doc_sync.py` 从真实状态自动生成；提交前 pre-commit 钩子自动 `--fix`，推送前 pre-push 钩子本地跑门禁，CI 用 `--check` 强制校验
 - 部署（确认后执行）：commit+push → `gh workflow run deploy-pages.yml --ref main`
 - 版本戳：本地 `?v=dev`（占位），部署时 `deploy-pages.yml` 自动 `stamp_asset_version.py --version ${GITHUB_SHA::12}` 替换为 commit SHA，无需手动改
@@ -95,6 +95,8 @@ cd scripts && python3 fundctl.py remove --code X               # 删除
 cd scripts && python3 fundctl.py move --keyword X --from A --to B  # 调分类
 cd scripts && python3 fundctl.py refresh --scope otc|etf [--codes X,Y]  # 增量刷新（可按场外/场内拆分 + 单基金）
 cd scripts && python3 fundctl.py sync                           # 全量同步
+cd scripts && python3 fundctl.py nasdaq                         # 刷新纳指 40 年历史图谱数据
+cd scripts && python3 fundctl.py sentiment                      # 刷新 CNN 恐慌贪婪指数
 cd scripts && python3 fundctl.py check                          # 门禁（7层）
 cd scripts && python3 fundctl.py check --offline                # 门禁（跳过 Layer 6 跨源验证，断网/CI 用）
 cd scripts && python3 fundctl.py diagnose --auto-fix            # 诊断修复
@@ -124,6 +126,8 @@ cd scripts && python3 fundctl.py check --offline --agent-rules  # 数据 + Agent
 
 与 CI 的 `ci.yml` 对齐，把「推到远端才发现」的问题前置到本地。
 
+> 门禁通过只代表「可以推送」，不代表已获得推送授权；`git push` 前仍需用户明确确认。
+
 ## 操作协议（原 fund-ops / code-change Skills，已内联）
 
 > CodeBuddy 时代的 `.codebuddy/skills/` 已移除，两个 Skill 的流程内联到本文件，
@@ -134,9 +138,9 @@ cd scripts && python3 fundctl.py check --offline --agent-rules  # 数据 + Agent
 ```
 scripts/
 ├── fundctl.py            ← 统一入口
-├── core/                 ← 基础设施（constants / utils / config_loader）
+├── core/                 ← 基础设施（constants / utils / config_loader / dca_strategy / gold）
 ├── sources/              ← 数据源适配（akshare / eastmoney / xueqiu / ths）
-├── pipeline/             ← 数据生产链路（scan / enrich / fill / holdings / reclassify / codegen / premium_history / nav_history / kline_history / market_temperature）
+├── pipeline/             ← 数据生产链路（scan / enrich / fill / holdings / reclassify / codegen / premium_history / nav_history / kline_history / market_temperature / nasdaq_history / cnn_sentiment / brand_gold / ndx_pe / macro_rates）
 └── checks/               ← 质量门禁（verify_data / verify_purchase / cross_validate / diagnose / architecture_lint / scan_scenarios / stamp_asset_version / check_agent_rules / doc_sync / build_snapshot）
 
 test/                     ← 测试与回归（test_utils.py 单测 + ui_scenarios/ 声明式 UI 回归，Playwright 执行）
@@ -159,7 +163,7 @@ scripts/checks/
 
 ```
 web/
-├── index.html            # 五 Tab（场外/场内/投资知识/我的组合/市场温度）+ 站内搜索 + 表头吸顶
+├── index.html            # 四大一级 Tab（全球行情/纳指图谱/QDII追踪/我的资产）+ 投资知识独立 Tab + 站内搜索 + 表头吸顶
 ├── css/
 │   ├── app.css           # 自定义样式 + 暗色 token（zinc 中性）+ 补齐 tailwind 缺失类
 │   └── tailwind.css      # Tailwind 构建产物（只含原应用用到的部分工具类）
@@ -167,9 +171,18 @@ web/
     ├── config.js         # 全局常量（AUTO-GENERATED 段由 codegen.py 维护）
     ├── utils.js          # 工具函数（JSONP / 格式化 / Modal）
     ├── render-trend.js   # 历史净值走势图（SVG + Crosshair + JSONP）
-    ├── main.js           # 主渲染 + Tab 切换 + 搜索 + 吸顶 + 投资知识筛选
+    ├── main.js           # 主渲染 + 一级 Tab/场内外切换 + 搜索 + 吸顶
     ├── portfolio.js      # 我的组合（持仓/盈亏/配比，localStorage + 本地种子文件）
-    ├── market-temperature.js # 市场温度（红绿灯 + 四指标打分，读 web/data/market-temperature.json）
+    ├── market-indices.js # 全球指数宫格（腾讯/东财实时行情）
+    ├── macro-rates.js    # 宏观利率区（美债 2/10/30 年 + VIX + 纳指 PE）
+    ├── fx-rates.js       # 外汇汇率区（按基础货币分组 + 互换对）
+    ├── big-tech.js       # 科技七姐妹行情
+    ├── gold-hub.js       # 黄金多市场（折算/溢价/品牌金价）
+    ├── nasdaq-history.js # 纳指图谱（年度涨跌/回撤/年-月热力图/排行）
+    ├── fear-greed.js     # CNN 恐慌贪婪仪表盘
+    ├── dca-strategy.js   # VIX & PE 阶梯定投
+    ├── market-temperature.js # 市场温度（红绿灯 + 四指标打分）
     ├── bj-clock.js       # 顶栏北京时间（精确到秒，tabular-nums 防跳动）
-    └── screenshot.js     # 截图分享
+    ├── save-image.js     # 长图/海报导出与预览
+    └── screenshot.js     # 场外/场内截图分享
 ```

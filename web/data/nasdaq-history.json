@@ -1,0 +1,1080 @@
+{
+  "generated_at": "2026-11-06T11:19:15.746290+08:00",
+  "schema_version": 1,
+  "index": {
+    "symbol": "^NDX",
+    "name": "纳斯达克 100 指数",
+    "currency": "USD"
+  },
+  "source": "Yahoo Finance",
+  "range": {
+    "first_year": 1986,
+    "last_year": 2026
+  },
+  "annual": [
+    {
+      "year": 1986,
+      "close": 141.4,
+      "return_pct": 6.89,
+      "max_drawdown_pct": -15.73,
+      "peak_month": 5,
+      "trough_month": 9
+    },
+    {
+      "year": 1987,
+      "close": 156.25,
+      "return_pct": 10.5,
+      "max_drawdown_pct": -34.57,
+      "peak_month": 8,
+      "trough_month": 11
+    },
+    {
+      "year": 1988,
+      "close": 177.41,
+      "return_pct": 13.54,
+      "max_drawdown_pct": -10.5,
+      "peak_month": 6,
+      "trough_month": 11
+    },
+    {
+      "year": 1989,
+      "close": 223.84,
+      "return_pct": 26.17,
+      "max_drawdown_pct": -4.64,
+      "peak_month": 5,
+      "trough_month": 6
+    },
+    {
+      "year": 1990,
+      "close": 200.53,
+      "return_pct": -10.41,
+      "max_drawdown_pct": -27.64,
+      "peak_month": 6,
+      "trough_month": 10
+    },
+    {
+      "year": 1991,
+      "close": 330.86,
+      "return_pct": 64.99,
+      "max_drawdown_pct": -8.89,
+      "peak_month": 5,
+      "trough_month": 6
+    },
+    {
+      "year": 1992,
+      "close": 360.18,
+      "return_pct": 8.86,
+      "max_drawdown_pct": -13.48,
+      "peak_month": 2,
+      "trough_month": 8
+    },
+    {
+      "year": 1993,
+      "close": 398.28,
+      "return_pct": 10.58,
+      "max_drawdown_pct": -8.26,
+      "peak_month": 1,
+      "trough_month": 4
+    },
+    {
+      "year": 1994,
+      "close": 404.27,
+      "return_pct": 1.5,
+      "max_drawdown_pct": -12.97,
+      "peak_month": 1,
+      "trough_month": 6
+    },
+    {
+      "year": 1995,
+      "close": 576.23,
+      "return_pct": 42.54,
+      "max_drawdown_pct": -3.77,
+      "peak_month": 10,
+      "trough_month": 12
+    },
+    {
+      "year": 1996,
+      "close": 821.36,
+      "return_pct": 42.54,
+      "max_drawdown_pct": -8.14,
+      "peak_month": 5,
+      "trough_month": 7
+    },
+    {
+      "year": 1997,
+      "close": 990.83,
+      "return_pct": 20.63,
+      "max_drawdown_pct": -13.51,
+      "peak_month": 1,
+      "trough_month": 3
+    },
+    {
+      "year": 1998,
+      "close": 1836.01,
+      "return_pct": 85.3,
+      "max_drawdown_pct": -17.2,
+      "peak_month": 7,
+      "trough_month": 8
+    },
+    {
+      "year": 1999,
+      "close": 3707.83,
+      "return_pct": 101.95,
+      "max_drawdown_pct": -9.49,
+      "peak_month": 1,
+      "trough_month": 2
+    },
+    {
+      "year": 2000,
+      "close": 2341.7,
+      "return_pct": -36.84,
+      "max_drawdown_pct": -46.75,
+      "peak_month": 3,
+      "trough_month": 12
+    },
+    {
+      "year": 2001,
+      "close": 1577.05,
+      "return_pct": -32.65,
+      "max_drawdown_pct": -54.94,
+      "peak_month": 1,
+      "trough_month": 9
+    },
+    {
+      "year": 2002,
+      "close": 984.37,
+      "return_pct": -37.58,
+      "max_drawdown_pct": -46.29,
+      "peak_month": 1,
+      "trough_month": 9
+    },
+    {
+      "year": 2003,
+      "close": 1467.92,
+      "return_pct": 49.12,
+      "max_drawdown_pct": -2.8,
+      "peak_month": 8,
+      "trough_month": 9
+    },
+    {
+      "year": 2004,
+      "close": 1621.12,
+      "return_pct": 10.44,
+      "max_drawdown_pct": -9.76,
+      "peak_month": 6,
+      "trough_month": 8
+    },
+    {
+      "year": 2005,
+      "close": 1645.2,
+      "return_pct": 1.49,
+      "max_drawdown_pct": -6.5,
+      "peak_month": 1,
+      "trough_month": 4
+    },
+    {
+      "year": 2006,
+      "close": 1756.9,
+      "return_pct": 6.79,
+      "max_drawdown_pct": -11.77,
+      "peak_month": 1,
+      "trough_month": 7
+    },
+    {
+      "year": 2007,
+      "close": 2084.93,
+      "return_pct": 18.67,
+      "max_drawdown_pct": -6.88,
+      "peak_month": 10,
+      "trough_month": 12
+    },
+    {
+      "year": 2008,
+      "close": 1211.65,
+      "return_pct": -41.89,
+      "max_drawdown_pct": -41.66,
+      "peak_month": 5,
+      "trough_month": 11
+    },
+    {
+      "year": 2009,
+      "close": 1860.31,
+      "return_pct": 53.54,
+      "max_drawdown_pct": -5.36,
+      "peak_month": 1,
+      "trough_month": 2
+    },
+    {
+      "year": 2010,
+      "close": 2217.86,
+      "return_pct": 19.22,
+      "max_drawdown_pct": -13.07,
+      "peak_month": 4,
+      "trough_month": 6
+    },
+    {
+      "year": 2011,
+      "close": 2277.83,
+      "return_pct": 2.7,
+      "max_drawdown_pct": -11.02,
+      "peak_month": 4,
+      "trough_month": 9
+    },
+    {
+      "year": 2012,
+      "close": 2660.93,
+      "return_pct": 16.82,
+      "max_drawdown_pct": -8.36,
+      "peak_month": 3,
+      "trough_month": 5
+    },
+    {
+      "year": 2013,
+      "close": 3592.0,
+      "return_pct": 34.99,
+      "max_drawdown_pct": -2.42,
+      "peak_month": 5,
+      "trough_month": 6
+    },
+    {
+      "year": 2014,
+      "close": 4236.28,
+      "return_pct": 17.94,
+      "max_drawdown_pct": -3.09,
+      "peak_month": 2,
+      "trough_month": 4
+    },
+    {
+      "year": 2015,
+      "close": 4593.27,
+      "return_pct": 8.43,
+      "max_drawdown_pct": -8.89,
+      "peak_month": 7,
+      "trough_month": 9
+    },
+    {
+      "year": 2016,
+      "close": 4863.62,
+      "return_pct": 5.89,
+      "max_drawdown_pct": -3.18,
+      "peak_month": 3,
+      "trough_month": 4
+    },
+    {
+      "year": 2017,
+      "close": 6396.42,
+      "return_pct": 31.52,
+      "max_drawdown_pct": -2.45,
+      "peak_month": 5,
+      "trough_month": 6
+    },
+    {
+      "year": 2018,
+      "close": 6329.97,
+      "return_pct": -1.04,
+      "max_drawdown_pct": -17.3,
+      "peak_month": 8,
+      "trough_month": 12
+    },
+    {
+      "year": 2019,
+      "close": 8733.07,
+      "return_pct": 37.96,
+      "max_drawdown_pct": -8.4,
+      "peak_month": 4,
+      "trough_month": 5
+    },
+    {
+      "year": 2020,
+      "close": 12888.28,
+      "return_pct": 47.58,
+      "max_drawdown_pct": -13.1,
+      "peak_month": 1,
+      "trough_month": 3
+    },
+    {
+      "year": 2021,
+      "close": 16320.08,
+      "return_pct": 26.63,
+      "max_drawdown_pct": -5.73,
+      "peak_month": 8,
+      "trough_month": 9
+    },
+    {
+      "year": 2022,
+      "close": 10939.76,
+      "return_pct": -32.97,
+      "max_drawdown_pct": -26.73,
+      "peak_month": 1,
+      "trough_month": 12
+    },
+    {
+      "year": 2023,
+      "close": 16825.93,
+      "return_pct": 53.81,
+      "max_drawdown_pct": -8.55,
+      "peak_month": 7,
+      "trough_month": 10
+    },
+    {
+      "year": 2024,
+      "close": 21012.17,
+      "return_pct": 24.88,
+      "max_drawdown_pct": -4.46,
+      "peak_month": 3,
+      "trough_month": 4
+    },
+    {
+      "year": 2025,
+      "close": 25249.85,
+      "return_pct": 20.17,
+      "max_drawdown_pct": -10.24,
+      "peak_month": 1,
+      "trough_month": 3
+    },
+    {
+      "year": 2026,
+      "close": 26629.81,
+      "return_pct": 5.47,
+      "max_drawdown_pct": -12.43,
+      "peak_month": 9,
+      "trough_month": 11
+    }
+  ],
+  "drawdown_histogram": [
+    {
+      "month": 1,
+      "count": 0
+    },
+    {
+      "month": 2,
+      "count": 2
+    },
+    {
+      "month": 3,
+      "count": 3
+    },
+    {
+      "month": 4,
+      "count": 5
+    },
+    {
+      "month": 5,
+      "count": 2
+    },
+    {
+      "month": 6,
+      "count": 6
+    },
+    {
+      "month": 7,
+      "count": 2
+    },
+    {
+      "month": 8,
+      "count": 3
+    },
+    {
+      "month": 9,
+      "count": 7
+    },
+    {
+      "month": 10,
+      "count": 2
+    },
+    {
+      "month": 11,
+      "count": 4
+    },
+    {
+      "month": 12,
+      "count": 5
+    }
+  ],
+  "heatmap": {
+    "years": [
+      1997,
+      1998,
+      1999,
+      2000,
+      2001,
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007,
+      2008,
+      2009,
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "rows": [
+      [
+        12.2,
+        -7.71,
+        -6.28,
+        9.75,
+        9.62,
+        -0.16,
+        15.64,
+        -2.98,
+        2.15,
+        -7.07,
+        3.03,
+        -5.68
+      ],
+      [
+        8.1,
+        11.48,
+        2.22,
+        2.25,
+        -4.49,
+        12.19,
+        2.99,
+        -17.2,
+        17.99,
+        4.09,
+        11.24,
+        17.85
+      ],
+      [
+        15.86,
+        -9.49,
+        9.41,
+        1.42,
+        -2.19,
+        9.91,
+        -1.13,
+        5.55,
+        0.46,
+        9.53,
+        12.48,
+        24.98
+      ],
+      [
+        -3.72,
+        19.52,
+        3.07,
+        -14.2,
+        -11.9,
+        13.23,
+        -4.1,
+        12.97,
+        -12.43,
+        -8.07,
+        -23.63,
+        -6.58
+      ],
+      [
+        10.73,
+        -26.4,
+        -17.56,
+        17.92,
+        -2.98,
+        1.68,
+        -8.01,
+        -12.71,
+        -20.5,
+        16.81,
+        16.95,
+        -1.19
+      ],
+      [
+        -1.7,
+        -12.32,
+        6.89,
+        -12.1,
+        -5.38,
+        -12.99,
+        -8.49,
+        -2.05,
+        -11.66,
+        18.86,
+        12.79,
+        -11.8
+      ],
+      [
+        -0.13,
+        2.72,
+        0.88,
+        8.58,
+        8.3,
+        0.32,
+        6.26,
+        5.03,
+        -2.8,
+        8.64,
+        0.55,
+        3.07
+      ],
+      [
+        1.71,
+        -1.52,
+        -2.17,
+        -2.58,
+        4.63,
+        3.44,
+        -7.66,
+        -2.26,
+        3.22,
+        5.24,
+        5.7,
+        3.16
+      ],
+      [
+        -6.26,
+        -0.57,
+        -1.89,
+        -4.16,
+        8.58,
+        -3.18,
+        7.47,
+        -1.46,
+        1.26,
+        -1.4,
+        5.91,
+        -1.64
+      ],
+      [
+        3.98,
+        -2.35,
+        1.98,
+        -0.17,
+        -7.12,
+        -0.28,
+        -4.18,
+        4.66,
+        4.71,
+        4.74,
+        3.39,
+        -1.92
+      ],
+      [
+        2.01,
+        -1.71,
+        0.61,
+        5.38,
+        3.24,
+        0.31,
+        -0.11,
+        2.93,
+        5.15,
+        7.07,
+        -6.69,
+        -0.2
+      ],
+      [
+        -11.68,
+        -5.22,
+        2.1,
+        7.62,
+        5.99,
+        -9.62,
+        0.66,
+        1.26,
+        -14.84,
+        -16.3,
+        -11.17,
+        2.18
+      ],
+      [
+        -2.59,
+        -5.36,
+        10.74,
+        12.72,
+        2.96,
+        2.9,
+        8.54,
+        1.36,
+        5.77,
+        -3.02,
+        6.02,
+        5.26
+      ],
+      [
+        -6.41,
+        4.46,
+        7.68,
+        2.16,
+        -7.41,
+        -6.11,
+        7.18,
+        -5.18,
+        13.05,
+        6.33,
+        -0.34,
+        4.75
+      ],
+      [
+        2.89,
+        3.03,
+        -0.51,
+        2.78,
+        -1.31,
+        -2.0,
+        1.62,
+        -5.15,
+        -4.54,
+        10.33,
+        -2.75,
+        -0.76
+      ],
+      [
+        8.35,
+        6.29,
+        5.04,
+        -1.15,
+        -7.3,
+        3.6,
+        1.02,
+        4.91,
+        0.97,
+        -5.4,
+        1.13,
+        -0.63
+      ],
+      [
+        2.65,
+        0.26,
+        2.93,
+        2.44,
+        3.27,
+        -2.42,
+        6.21,
+        -0.53,
+        4.7,
+        4.96,
+        3.26,
+        2.99
+      ],
+      [
+        -1.95,
+        4.95,
+        -2.72,
+        -0.38,
+        4.32,
+        3.01,
+        1.12,
+        4.88,
+        -0.81,
+        2.69,
+        4.32,
+        -2.34
+      ],
+      [
+        -2.07,
+        7.04,
+        -2.41,
+        1.86,
+        2.13,
+        -2.47,
+        4.37,
+        -6.85,
+        -2.19,
+        11.19,
+        0.34,
+        -1.53
+      ],
+      [
+        -6.84,
+        -1.82,
+        6.73,
+        -3.18,
+        4.21,
+        -2.35,
+        7.07,
+        0.86,
+        2.19,
+        -1.53,
+        0.2,
+        1.1
+      ],
+      [
+        5.2,
+        4.17,
+        1.99,
+        2.71,
+        3.68,
+        -2.45,
+        4.13,
+        1.84,
+        -0.16,
+        4.5,
+        1.87,
+        0.48
+      ],
+      [
+        8.65,
+        -1.38,
+        -3.99,
+        0.37,
+        5.48,
+        1.05,
+        2.72,
+        5.84,
+        -0.35,
+        -8.66,
+        -0.26,
+        -8.91
+      ],
+      [
+        9.11,
+        2.76,
+        3.96,
+        5.46,
+        -8.4,
+        7.62,
+        2.32,
+        -2.01,
+        0.76,
+        4.31,
+        3.96,
+        3.92
+      ],
+      [
+        2.96,
+        -5.89,
+        -7.66,
+        15.19,
+        6.17,
+        6.29,
+        7.37,
+        11.05,
+        -5.72,
+        -3.2,
+        11.0,
+        5.05
+      ],
+      [
+        0.29,
+        -0.12,
+        1.41,
+        5.88,
+        -1.26,
+        6.34,
+        2.78,
+        4.16,
+        -5.73,
+        7.9,
+        1.8,
+        1.14
+      ],
+      [
+        -8.52,
+        -4.64,
+        4.22,
+        -13.37,
+        -1.65,
+        -9.0,
+        12.55,
+        -5.22,
+        -10.6,
+        3.96,
+        5.48,
+        -9.06
+      ],
+      [
+        10.62,
+        -0.49,
+        9.46,
+        0.49,
+        7.61,
+        6.49,
+        3.81,
+        -1.62,
+        -5.07,
+        -2.08,
+        10.67,
+        5.51
+      ],
+      [
+        1.85,
+        5.29,
+        1.17,
+        -4.46,
+        6.28,
+        6.18,
+        -1.63,
+        1.1,
+        2.48,
+        -0.85,
+        5.23,
+        0.39
+      ],
+      [
+        2.22,
+        -2.76,
+        -7.69,
+        1.52,
+        9.04,
+        6.27,
+        2.38,
+        0.85,
+        5.4,
+        4.77,
+        -1.64,
+        -0.73
+      ],
+      [
+        1.2,
+        -2.32,
+        -4.89,
+        15.64,
+        10.49,
+        -0.19,
+        -6.61,
+        4.18,
+        3.23,
+        -6.65,
+        -6.18,
+        null
+      ]
+    ]
+  },
+  "ranking": {
+    "5y": [
+      {
+        "month": 5,
+        "avg_pct": 6.36,
+        "positive_ratio": 80.0,
+        "n": 5
+      },
+      {
+        "month": 11,
+        "avg_pct": 2.71,
+        "positive_ratio": 60.0,
+        "n": 5
+      },
+      {
+        "month": 7,
+        "avg_pct": 2.1,
+        "positive_ratio": 60.0,
+        "n": 5
+      },
+      {
+        "month": 6,
+        "avg_pct": 1.95,
+        "positive_ratio": 60.0,
+        "n": 5
+      },
+      {
+        "month": 1,
+        "avg_pct": 1.47,
+        "positive_ratio": 80.0,
+        "n": 5
+      },
+      {
+        "month": 3,
+        "avg_pct": 0.45,
+        "positive_ratio": 60.0,
+        "n": 5
+      },
+      {
+        "month": 4,
+        "avg_pct": -0.04,
+        "positive_ratio": 60.0,
+        "n": 5
+      },
+      {
+        "month": 8,
+        "avg_pct": -0.14,
+        "positive_ratio": 60.0,
+        "n": 5
+      },
+      {
+        "month": 10,
+        "avg_pct": -0.17,
+        "positive_ratio": 40.0,
+        "n": 5
+      },
+      {
+        "month": 9,
+        "avg_pct": -0.91,
+        "positive_ratio": 60.0,
+        "n": 5
+      },
+      {
+        "month": 12,
+        "avg_pct": -0.97,
+        "positive_ratio": 50.0,
+        "n": 4
+      },
+      {
+        "month": 2,
+        "avg_pct": -0.98,
+        "positive_ratio": 20.0,
+        "n": 5
+      }
+    ],
+    "10y": [
+      {
+        "month": 5,
+        "avg_pct": 3.74,
+        "positive_ratio": 70.0,
+        "n": 10
+      },
+      {
+        "month": 1,
+        "avg_pct": 3.36,
+        "positive_ratio": 90.0,
+        "n": 10
+      },
+      {
+        "month": 11,
+        "avg_pct": 3.19,
+        "positive_ratio": 70.0,
+        "n": 10
+      },
+      {
+        "month": 7,
+        "avg_pct": 2.98,
+        "positive_ratio": 80.0,
+        "n": 10
+      },
+      {
+        "month": 4,
+        "avg_pct": 2.94,
+        "positive_ratio": 80.0,
+        "n": 10
+      },
+      {
+        "month": 6,
+        "avg_pct": 2.86,
+        "positive_ratio": 70.0,
+        "n": 10
+      },
+      {
+        "month": 8,
+        "avg_pct": 2.02,
+        "positive_ratio": 70.0,
+        "n": 10
+      },
+      {
+        "month": 10,
+        "avg_pct": 0.4,
+        "positive_ratio": 50.0,
+        "n": 10
+      },
+      {
+        "month": 3,
+        "avg_pct": -0.2,
+        "positive_ratio": 60.0,
+        "n": 10
+      },
+      {
+        "month": 12,
+        "avg_pct": -0.24,
+        "positive_ratio": 66.7,
+        "n": 9
+      },
+      {
+        "month": 2,
+        "avg_pct": -0.54,
+        "positive_ratio": 30.0,
+        "n": 10
+      },
+      {
+        "month": 9,
+        "avg_pct": -1.58,
+        "positive_ratio": 40.0,
+        "n": 10
+      }
+    ],
+    "full": [
+      {
+        "month": 10,
+        "avg_pct": 2.82,
+        "positive_ratio": 61.5,
+        "n": 26
+      },
+      {
+        "month": 11,
+        "avg_pct": 2.75,
+        "positive_ratio": 73.1,
+        "n": 26
+      },
+      {
+        "month": 4,
+        "avg_pct": 2.58,
+        "positive_ratio": 65.4,
+        "n": 26
+      },
+      {
+        "month": 5,
+        "avg_pct": 2.06,
+        "positive_ratio": 65.4,
+        "n": 26
+      },
+      {
+        "month": 7,
+        "avg_pct": 2.03,
+        "positive_ratio": 73.1,
+        "n": 26
+      },
+      {
+        "month": 1,
+        "avg_pct": 1.01,
+        "positive_ratio": 61.5,
+        "n": 26
+      },
+      {
+        "month": 3,
+        "avg_pct": 0.63,
+        "positive_ratio": 61.5,
+        "n": 26
+      },
+      {
+        "month": 8,
+        "avg_pct": 0.38,
+        "positive_ratio": 57.7,
+        "n": 26
+      },
+      {
+        "month": 6,
+        "avg_pct": 0.09,
+        "positive_ratio": 53.8,
+        "n": 26
+      },
+      {
+        "month": 12,
+        "avg_pct": -0.07,
+        "positive_ratio": 52.0,
+        "n": 25
+      },
+      {
+        "month": 9,
+        "avg_pct": -1.23,
+        "positive_ratio": 50.0,
+        "n": 26
+      },
+      {
+        "month": 2,
+        "avg_pct": -1.3,
+        "positive_ratio": 38.5,
+        "n": 26
+      }
+    ]
+  },
+  "summary": {
+    "best_month": 5,
+    "worst_month": 2,
+    "text": "最强月份在三组口径中并不一致；垫底月份在三组口径中并不一致。"
+  },
+  "disclaimer": "历史数据与模型策略不代表未来收益，不构成具体买卖建议。"
+}

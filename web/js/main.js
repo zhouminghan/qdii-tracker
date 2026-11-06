@@ -20,6 +20,7 @@
 
     // 当前激活 Tab + 站内搜索词（renderCategory 与搜索框共用）
     let ACTIVE_TAB = 'offshore';
+    let QDII_SUB = 'offshore';
     let SEARCH_QUERY = '';
     const ROW_STAGGERED = {};
 
@@ -1100,11 +1101,41 @@
       }
     });
 
+    // 一级 Tab → 展示的 section 集合（全球行情单页流式；纳指图谱含情绪仪表盘；
+    // QDII 追踪含知识库 + 场外/场内；我的资产为持仓）
+    const TAB_SECTIONS = {
+      global: ['market-overview'],
+      nasdaq: ['panel-nasdaq', 'panel-temperature'],
+      qdii: ['panel-qdii-nav', 'panel-offshore', 'panel-etf'],
+      knowledge: ['panel-knowledge'],
+      assets: ['panel-portfolio'],
+    };
+
+    function applyQdiiSub() {
+      const off = document.getElementById('panel-offshore');
+      const etf = document.getElementById('panel-etf');
+      if (off) off.style.display = QDII_SUB === 'offshore' ? '' : 'none';
+      if (etf) etf.style.display = QDII_SUB === 'etf' ? '' : 'none';
+      document.querySelectorAll('#panel-qdii-nav .qdii-sub-btn').forEach((btn) => {
+        const active = btn.dataset.sub === QDII_SUB;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+    }
+
+    // 顶栏 Tab 内容区：首个可见 section 去掉 space-y-8 带来的顶部额外间距
+    function resetTabTopSpacing() {
+      const sections = [...document.querySelectorAll('main > section[id]')];
+      sections.forEach((sec) => { sec.style.marginTop = ''; });
+      const firstVisible = sections.find((sec) => sec.style.display !== 'none');
+      if (firstVisible) firstVisible.style.marginTop = '0';
+    }
+
     function switchTab(tab) {
       ACTIVE_TAB = tab;
-      // 只在带 data-category 的 section 之间切换（场外/场内/投资知识）；
-      document.querySelectorAll('section[data-category]').forEach(sec => {
-        const isCurrent = sec.dataset.category === tab;
+      const showIds = new Set(TAB_SECTIONS[tab] || []);
+      document.querySelectorAll('section[id]').forEach(sec => {
+        const isCurrent = showIds.has(sec.id);
         sec.style.display = isCurrent ? '' : 'none';
         sec.setAttribute('aria-hidden', isCurrent ? 'false' : 'true');
         if (isCurrent) {
@@ -1113,27 +1144,23 @@
           sec.classList.add('panel-enter');
         }
       });
-      // 市场参照系：投资知识/市场温度页不展示，场外/场内展示
-      const market = document.getElementById('market-overview');
-      if (market) {
-        const showMarket = tab !== 'knowledge' && tab !== 'temperature';
-        market.style.display = showMarket ? '' : 'none';
-        if (showMarket) {
-          market.classList.remove('panel-enter');
-          void market.offsetWidth;
-          market.classList.add('panel-enter');
-        }
-      }
+      if (tab === 'qdii') applyQdiiSub();
+      resetTabTopSpacing();
       document.querySelectorAll('.tab-btn').forEach(btn => {
         const isCurrent = btn.dataset.tab === tab;
         btn.setAttribute('aria-selected', isCurrent ? 'true' : 'false');
         btn.setAttribute('tabindex', isCurrent ? '0' : '-1');
       });
-      if (tab === 'portfolio' && typeof window.renderPortfolio === 'function') {
+      if (tab === 'assets' && typeof window.renderPortfolio === 'function') {
         window.renderPortfolio();
       }
-      if (tab === 'temperature' && typeof window.renderTemperature === 'function') {
-        window.renderTemperature();
+      if (tab === 'nasdaq') {
+        if (typeof window.renderNasdaqHistory === 'function') window.renderNasdaqHistory();
+        if (typeof window.renderTemperature === 'function') window.renderTemperature();
+      }
+      if (tab === 'qdii' && typeof window.renderCategory === 'function') {
+        window.renderCategory('offshore');
+        window.renderCategory('etf');
       }
     }
 
@@ -1145,8 +1172,18 @@
       });
     });
 
-    // 初始化：默认「场外」Tab
-    switchTab('offshore');
+    document.querySelectorAll('#panel-qdii-nav .qdii-sub-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        QDII_SUB = btn.dataset.sub;
+        applyQdiiSub();
+        if (typeof window.renderCategory === 'function') {
+          window.renderCategory(QDII_SUB);
+        }
+      });
+    });
+
+    // 初始化：默认「全球行情」Tab
+    switchTab('global');
 
     loadData();
 
@@ -1161,13 +1198,13 @@
     if (searchInput) {
       searchInput.addEventListener('input', () => {
         SEARCH_QUERY = searchInput.value || '';
-        if (ACTIVE_TAB === 'offshore' || ACTIVE_TAB === 'etf') renderCategory(ACTIVE_TAB);
+        if (ACTIVE_TAB !== 'qdii') { switchTab('qdii'); } else { renderCategory('offshore'); renderCategory('etf'); }
       });
       searchInput.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           searchInput.value = '';
           SEARCH_QUERY = '';
-          if (ACTIVE_TAB === 'offshore' || ACTIVE_TAB === 'etf') renderCategory(ACTIVE_TAB);
+          if (ACTIVE_TAB !== 'qdii') { switchTab('qdii'); } else { renderCategory('offshore'); renderCategory('etf'); }
         }
       });
     }

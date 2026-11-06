@@ -68,11 +68,56 @@
 | **输出文件** | `web/data/market-temperature.json` |
 | **依赖** | `core.constants`、`core.utils`、`akshare`、`requests` |
 
+### 8. nasdaq_history.py — 纳指 40 年历史图谱
+
+| 属性 | 内容 |
+|------|------|
+| **职责** | 抓取纳斯达克 100 指数（^NDX）日线并按月聚合，计算逐年收益/年内最大回撤/峰谷月份、月度收益热力矩阵、多周期月份排行榜与谷值月份分布 |
+| **输入文件** | Yahoo Finance `^NDX`（分段日线，429 退避重试）、新浪 `.IXIC`（多源降级；失败时复用旧快照） |
+| **输出文件** | `web/data/nasdaq-history.json` |
+| **依赖** | `core.constants`、`core.utils`、`requests`、`akshare`（兜底源） |
+
+### 9. cnn_sentiment.py — CNN 恐慌与贪婪
+
+| 属性 | 内容 |
+|------|------|
+| **职责** | 抓取 CNN 恐慌贪婪指数（0-100）与历史序列，分档为五级情绪并输出时间序列 |
+| **输入文件** | CNN dataviz 接口（需带 Origin/Referer 请求头；失败时复用旧快照） |
+| **输出文件** | `web/data/cnn-fear-greed.json` |
+| **依赖** | `core.constants`、`core.utils`、`requests` |
+
+### 10. brand_gold.py — 品牌实物金价
+
+| 属性 | 内容 |
+|------|------|
+| **职责** | 抓取证券之星金条金币报价页，解析周大福/老凤祥/中国黄金等品牌的足金饰品与投资金条挂牌价 |
+| **输入文件** | 证券之星 `quote.stockstar.com/gold/salegold.shtml`（GBK 服务端渲染；失败时复用旧快照） |
+| **输出文件** | `web/data/brand-gold.json` |
+| **依赖** | `core.constants`、`core.utils`、`requests` |
+
+### 11. ndx_pe.py — 纳指100 市盈率
+
+| 属性 | 内容 |
+|------|------|
+| **职责** | 抓取 Siblis Research 免费 API 的 NDX trailing PE 月末快照，取最新值 |
+| **输入文件** | Siblis `api/v1/NDX/pe-trailing`（免费档仅月末快照；失败时复用旧快照） |
+| **输出文件** | `web/data/ndx-pe.json` |
+| **依赖** | `core.constants`、`core.utils`、`requests` |
+
+### 12. macro_rates.py — 宏观利率
+
+| 属性 | 内容 |
+|------|------|
+| **职责** | 抓取美国国债 2/10/30 年收益率最新值，写入宏观利率数据 |
+| **输入文件** | 东方财富（akshare `bond_zh_us_rate`；失败时复用旧快照） |
+| **输出文件** | `web/data/macro-rates.json` |
+| **依赖** | `core.constants`、`core.utils`、`akshare` |
+
 ---
 
 ## checks/ — 质量门禁 + 诊断 + 辅助
 
-### 8. verify_data.py — 黄金样例校验
+### 13. verify_data.py — 黄金样例校验
 
 | 属性 | 内容 |
 |------|------|
@@ -81,7 +126,7 @@
 | **输出文件** | 无（返回错误列表） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 9. cross_validate.py — 跨源交叉验证
+### 14. cross_validate.py — 跨源交叉验证
 
 | 属性 | 内容 |
 |------|------|
@@ -90,7 +135,7 @@
 | **输出文件** | 无（返回异常列表） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 10. diagnose.py — 诊断引擎
+### 15. diagnose.py — 诊断引擎
 
 | 属性 | 内容 |
 |------|------|
@@ -99,7 +144,7 @@
 | **输出文件** | 无（只输出诊断报告；--auto-fix 时调 `fundctl.py refresh` 修复） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 11. architecture_lint.py — 目录纪律校验
+### 16. architecture_lint.py — 目录纪律校验
 
 | 属性 | 内容 |
 |------|------|
@@ -108,7 +153,7 @@
 | **输出文件** | 无（返回错误列表） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 12. scan_scenarios.py — 改动↔场景联动
+### 17. scan_scenarios.py — 改动↔场景联动
 
 | 属性 | 内容 |
 |------|------|
@@ -117,7 +162,7 @@
 | **输出文件** | 无（返回映射字典，non-blocking 提示） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 13. stamp_asset_version.py — 版本戳
+### 18. stamp_asset_version.py — 版本戳
 
 | 属性 | 内容 |
 |------|------|
@@ -126,7 +171,7 @@
 | **输出文件** | 同文件覆写 |
 | **依赖** | `core.constants` |
 
-### 14. verify_purchase.py — 申购状态/限额/历史一致性校验
+### 19. verify_purchase.py — 申购状态/限额/历史一致性校验
 
 | 属性 | 内容 |
 |------|------|
@@ -149,6 +194,11 @@ holdings.py ────► core.constants, core.utils, core.config_loader, sour
 reclassify.py ──► core.constants, core.utils, core.config_loader, sources.akshare_source
 codegen.py ─────► core.constants
 market_temperature.py ► core.constants, core.utils, akshare, requests
+nasdaq_history.py ► core.constants, core.utils, requests, akshare
+cnn_sentiment.py ► core.constants, core.utils, requests
+brand_gold.py ► core.constants, core.utils, requests
+ndx_pe.py ► core.constants, core.utils, requests
+macro_rates.py ► core.constants, core.utils, akshare
 ```
 
 ### checks/ （质量门禁）

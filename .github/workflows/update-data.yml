@@ -136,6 +136,36 @@ jobs:
           echo "=== pipeline.market_temperature（纳指趋势 + VIX + 美债 + 美元指数）==="
           python -m pipeline.market_temperature
 
+      - name: 📅 纳指 40 年历史图谱
+        run: |
+          cd scripts
+          echo "=== pipeline.nasdaq_history（年度回撤 / 月度热力图 / 月份排行）==="
+          python -m pipeline.nasdaq_history
+
+      - name: 🎭 CNN 恐慌与贪婪
+        run: |
+          cd scripts
+          echo "=== pipeline.cnn_sentiment（0-100 情绪读数 + 历史序列）==="
+          python -m pipeline.cnn_sentiment
+
+      - name: 🏬 品牌实物金价
+        run: |
+          cd scripts
+          echo "=== pipeline.brand_gold（周大福/老凤祥/中国黄金等挂牌价）==="
+          python -m pipeline.brand_gold
+
+      - name: 📐 纳指 100 PE
+        run: |
+          cd scripts
+          echo "=== pipeline.ndx_pe（Siblis 月末快照）==="
+          python -m pipeline.ndx_pe
+
+      - name: 📈 宏观利率
+        run: |
+          cd scripts
+          echo "=== pipeline.macro_rates（美债 2/10/30 年收益率）==="
+          python -m pipeline.macro_rates
+
       - name: ✅ 一致性校验
         run: |
           cd scripts

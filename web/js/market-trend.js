@@ -37,12 +37,35 @@ const INDICES = [
   { secid: '100.NDX',    name: '纳斯达克综合',   emoji: '💻', digits: 2, kind: 'stock' },
   { secid: '100.NDX100', name: '纳斯达克 100',   emoji: '🚀', digits: 2, kind: 'stock' },
   { secid: '251.SOX',    name: '费城半导体',     emoji: '⚡', digits: 2, kind: 'stock' },
-  { secid: '133.USDCNH', name: '美元/人民币',    emoji: '💵', digits: 4, kind: 'fx'    },
-  { secid: 'fxCNYHKD',   name: '人民币/港元',    emoji: '🇭🇰', digits: 4, kind: 'fx', klineSecid: '133.CNYHKD' },
-  { secid: 'fxUSDJPY',   name: '美元/日元',      emoji: '🇯🇵', digits: 4, kind: 'fx', klineSecid: '119.USDJPY' },
   { secid: 'sh000001',   name: '上证指数',       emoji: '🇨🇳', digits: 2, kind: 'stock', klineSecid: '1.000001' },
+  { secid: 'sh000300',   name: '沪深 300',       emoji: '🇨🇳', digits: 2, kind: 'stock', klineSecid: '1.000300' },
+  { secid: 'sh000688',   name: '科创 50',        emoji: '🔬', digits: 2, kind: 'stock', klineSecid: '1.000688' },
   { secid: '100.N225',   name: '日经 225',       emoji: '🇯🇵', digits: 2, kind: 'stock' },
   { secid: '100.HSI',    name: '恒生指数',       emoji: '🇭🇰', digits: 2, kind: 'stock' },
+  { secid: '124.HSTECH', name: '恒生科技',       emoji: '🖥️', digits: 2, kind: 'stock', klineSecid: '124.HSTECH' },
+  { secid: '100.KS11',   name: '韩国 KOSPI',     emoji: '🇰🇷', digits: 2, kind: 'stock', klineSecid: '100.KS11' },
+  // 外汇汇率（data-symbol 与 fx-rates.js 对齐）
+  { secid: 'fxUSDCNH', name: '美元/离岸人民币', emoji: '💵', digits: 4, kind: 'fx', klineSecid: '133.USDCNH' },
+  { secid: 'fxUSDCNY', name: '美元/人民币', emoji: '💵', digits: 4, kind: 'fx', klineSecid: '133.USDCNH' },
+  { secid: 'fxUSDHKD', name: '美元/港元',   emoji: '🇭🇰', digits: 4, kind: 'fx', klineSecid: '133.USDHKD' },
+  { secid: 'fxUSDJPY', name: '美元/日元',   emoji: '🇯🇵', digits: 2, kind: 'fx', klineSecid: '119.USDJPY' },
+  { secid: 'fxCNYHKD', name: '人民币/港元', emoji: '🇭🇰', digits: 4, kind: 'fx', klineSecid: '133.CNYHKD' },
+  { secid: 'fxCNYJPY', name: '人民币/日元', emoji: '🇯🇵', digits: 2, kind: 'fx', klineSecid: '119.CNYJPY' },
+  { secid: 'fxHKDCNY', name: '港元/人民币', emoji: '🇭🇰', digits: 4, kind: 'fx', klineSecid: '133.HKDCNY' },
+  { secid: 'fxEURUSD', name: '欧元/美元',   emoji: '🇪🇺', digits: 4, kind: 'fx', klineSecid: '119.EURUSD' },
+  { secid: 'fxGBPUSD', name: '英镑/美元',   emoji: '🇬🇧', digits: 4, kind: 'fx', klineSecid: '119.GBPUSD' },
+  // 黄金
+  { secid: 'au9999', name: '上海金 Au99.99', emoji: '🪙', digits: 2, kind: 'stock', klineSecid: '118.AU9999' },
+  { secid: 'comex', name: 'COMEX 纽约金', emoji: '🪙', digits: 2, kind: 'stock', klineSecid: '119.GC00Y' },
+  { secid: 'xau', name: '伦敦金 XAU/USD', emoji: '🥇', digits: 2, kind: 'stock', klineSecid: '119.XAU' },
+  // 美股七姐妹（腾讯实时符号 vs 东财 K 线 secid）
+  { secid: 'usAAPL', name: '苹果',   emoji: '🍎', digits: 2, kind: 'stock', klineSecid: '105.AAPL' },
+  { secid: 'usMSFT', name: '微软',   emoji: '🪟', digits: 2, kind: 'stock', klineSecid: '105.MSFT' },
+  { secid: 'usNVDA', name: '英伟达', emoji: '🎮', digits: 2, kind: 'stock', klineSecid: '105.NVDA' },
+  { secid: 'usGOOG', name: '谷歌',   emoji: '🔍', digits: 2, kind: 'stock', klineSecid: '105.GOOG' },
+  { secid: 'usAMZN', name: '亚马逊', emoji: '📦', digits: 2, kind: 'stock', klineSecid: '105.AMZN' },
+  { secid: 'usMETA', name: 'Meta',   emoji: '👥', digits: 2, kind: 'stock', klineSecid: '105.META' },
+  { secid: 'usTSLA', name: '特斯拉', emoji: '🚗', digits: 2, kind: 'stock', klineSecid: '105.TSLA' },
 ];
 const META_BY_SECID = Object.fromEntries(INDICES.map(it => [it.secid, it]));
 
@@ -51,7 +74,7 @@ const HISTORY_CACHE = new Map(); // secid -> { ts, series }
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
 // 指数 K 线的 IndexedDB 持久缓存：第二次打开秒出，本地 JSON 缺失时也能离线
-const INDEX_CACHE_DB = 'qdii-index-kline';
+const INDEX_CACHE_DB = 'qdii-index-kline-v3';
 const INDEX_CACHE_STORE = 'series';
 const INDEX_CACHE_TTL = 24 * 60 * 60 * 1000;
 
@@ -235,7 +258,7 @@ async function openIndexTrend(secid, evt) {
   window.openModal('trendModal');
 
   // 标题/副标题：从指标卡当前快照里读最新价（避免再发一次行情请求）
-  const card = document.querySelector(`.market-card[data-symbol="${secid}"]`);
+  const card = document.querySelector(`.market-card[data-symbol="${secid}"], .fx-card[data-symbol="${secid}"], .gold-card[data-symbol="${secid}"], .bt-card[data-symbol="${secid}"]`);
   const lastPrice = card ? card.dataset.lastPrice : null;
 
   const titleEl = document.getElementById('trend-title');
@@ -282,33 +305,31 @@ async function openIndexTrend(secid, evt) {
   window.renderTrendChart(trendDisplay);
 }
 
-// 5 张指标卡挂点击 + 视觉提示
+// 指标卡 / 外汇卡挂点击 + 视觉提示（事件委托，兼容外汇区动态重渲染）
 function bindCardClicks() {
-  const grids = ['market-cards', 'market-fx-cards']
-    .map(id => document.getElementById(id))
-    .filter(Boolean);
-  for (const grid of grids) {
-    grid.querySelectorAll('.market-card').forEach(card => {
-      card.classList.add('cursor-pointer', 'transition', 'hover:border-stone-400', 'dark:hover:border-stone-500', 'hover:shadow-sm');
-      card.setAttribute('role', 'button');
-      card.setAttribute('tabindex', '0');
-      card.setAttribute('title', '点击查看历史走势');
-    });
-    grid.addEventListener('click', (e) => {
-      const card = e.target.closest('.market-card');
-      if (!card || !grid.contains(card)) return;
-      const secid = card.getAttribute('data-symbol');
-      if (META_BY_SECID[secid]) openIndexTrend(secid, e);
-    });
-    grid.addEventListener('keydown', (e) => {
-      if (e.key !== 'Enter' && e.key !== ' ') return;
-      const card = e.target.closest('.market-card');
-      if (!card || !grid.contains(card)) return;
+  document.querySelectorAll('#market-cards .market-card').forEach(card => {
+    card.classList.add('cursor-pointer', 'transition', 'hover:border-stone-400', 'dark:hover:border-stone-500', 'hover:shadow-sm');
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('title', '点击查看历史走势');
+  });
+
+  document.addEventListener('click', (e) => {
+    const card = e.target.closest('.market-card, .fx-card, .gold-card, .bt-card');
+    if (!card) return;
+    const secid = card.getAttribute('data-symbol');
+    if (META_BY_SECID[secid]) openIndexTrend(secid, e);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const card = e.target.closest('.market-card, .fx-card, .gold-card, .bt-card');
+    if (!card) return;
+    const secid = card.getAttribute('data-symbol');
+    if (META_BY_SECID[secid]) {
       e.preventDefault();
-      const secid = card.getAttribute('data-symbol');
-      if (META_BY_SECID[secid]) openIndexTrend(secid, e);
-    });
-  }
+      openIndexTrend(secid, e);
+    }
+  });
 }
 
 export function start() {

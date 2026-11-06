@@ -10,16 +10,15 @@
 
 ## ✨ 核心功能
 
-- **五 Tab**：场外基金（标普500 / 纳指100 / 美股主动 / 全球指数 / 全球其他）· 场内 ETF · 投资知识 · 我的组合 · 市场温度
-- **🚦 市场温度**：纳指趋势 / VIX / 10 年期美债 / 美元指数四指标加权打分，红黄绿三灯信号 + 权重环图 + 市场解读
-- **📊 我的组合**：本地录入持仓与交易流水，自动估算市值、盈亏与配比（数据仅存浏览器）
-- **🔍 站内搜索**：按基金名/代码实时过滤当前表格（仅搜索本站收录的基金，不联网）
-- **📚 投资知识**：场内 vs 场外、A/C 类份额、LOF 套利、QDII 选基（跟踪误差 + 夏普）、纳指 ETF 溢价成因，按子分类筛选
-- **🌗 深浅双主题**：zinc 中性暗色 + 亮色，表头吸顶，主题偏好记忆
-- **📈 历史走势图**：弹窗 SVG 折线图，9 档区间，Crosshair 悬停交互
-- **📊 持仓详情 Modal**：业绩 8 维度 + 费率结构 + Top10 重仓股（实时行情）
-- **🏷️ 市场参照系**：道琼斯 / 标普500 / 纳指 / 美元汇率实时指标卡 + 历史日 K
-- **📸 截图分享**：卡片式设计，7 种风格 × 3 种布局，一键导出 PNG
+- **四大一级 Tab**：🌐 全球行情 · 📊 纳指图谱 · 🏦 QDII 追踪 · 💼 我的资产（另有 📚 投资知识独立 Tab）
+- **🌐 全球行情**：宏观利率（美元/离岸人民币 + 美债 2/10/30 年 + VIX + 纳指 PE）→ 全球指数宫格 → 科技七姐妹 → 外汇汇率（按基础货币分组）→ 黄金多市场（折算/溢价/品牌金价）
+- **📊 纳指图谱**：1986 至今年度涨跌幅 / 年内最大回撤 / 谷值分布、年度·月度热力图切换、多周期月份排行、CNN 恐慌贪婪 + VIX & PE 阶梯定投
+- **🏦 QDII 追踪**：场外/场内一键切换，申购状态/限额/费率列表，溢价警示与站内搜索
+- **💼 我的资产**：本地录入持仓与交易流水，自动估算市值、盈亏与配比（数据仅存浏览器）
+- **📚 投资知识**：场内 vs 场外、A/C 类份额、LOF 套利、QDII 选基、纳指 ETF 溢价成因，按子分类筛选
+- **🎨 主题与配色**：深浅双主题 + 红涨绿跌/绿涨红跌一键切换
+- **📸 分享与导出**：场外/场内截图分享（7 风格 × 3 布局）、纳指图谱长图与海报导出
+- **📈 历史走势图**：指数/外汇/黄金/个股可点击弹窗看日 K，9 档区间，Crosshair 悬停交互
 - **纯静态首屏**：本地 JSON 零外部请求，按需加载实时数据
 - **智能轮询**：5 档分时调度，Settled 自动停止，页面隐藏自动暂停
 
@@ -80,9 +79,14 @@ qdii-tracker/
 │   ├── ui_scenarios/
 │   ├── run_ui_scenarios.py
 │   ├── test_akshare_source.py
+│   ├── test_brand_gold.py
 │   ├── test_classify.py
+│   ├── test_cnn_sentiment.py
+│   ├── test_dca_strategy.py
+│   ├── test_gold.py
 │   ├── test_kline_history.py
 │   ├── test_market_temperature.py
+│   ├── test_nasdaq_history.py
 │   ├── test_nav_history.py
 │   ├── test_premium_history.py
 │   ├── test_purchase_history.py
@@ -126,6 +130,8 @@ python3 fundctl.py move         # 移动分类
 python3 fundctl.py remove       # 删除一只基金（从配置和数据中移除）
 python3 fundctl.py refresh      # 增量刷新
 python3 fundctl.py sync         # 全量同步
+python3 fundctl.py nasdaq       # 刷新纳指 40 年历史图谱数据
+python3 fundctl.py sentiment    # 刷新 CNN 恐慌贪婪指数
 python3 fundctl.py diagnose     # 诊断数据异常
 python3 fundctl.py check        # 一致性校验
 python3 fundctl.py probe        # 数据源适配层探针（导入级）

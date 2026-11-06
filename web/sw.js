@@ -1,5 +1,5 @@
 // Service Worker：静态资源缓存优先，数据 JSON 网络优先（保证看到最新净值）。
-const CACHE = 'qdii-tracker-v1';
+const CACHE = 'qdii-tracker-v2';
 const SHELL = [
   './',
   './index.html',
