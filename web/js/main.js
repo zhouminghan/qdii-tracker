@@ -19,7 +19,7 @@
     };
 
     // 当前激活 Tab + 站内搜索词（renderCategory 与搜索框共用）
-    let ACTIVE_TAB = 'offshore';
+    let ACTIVE_TAB = 'qdii';
     let QDII_SUB = 'offshore';
     let SEARCH_QUERY = '';
     const ROW_STAGGERED = {};
@@ -87,22 +87,39 @@
       if (expectedMinMs == null) return { stale: false };
       // 容忍 run 实际完成时间偏早（generated_at 可能略早于预期日凌晨）
       const lowerBound = expectedMinMs - 6 * 3600 * 1000;
-      if (gen.getTime() < lowerBound) {
-        const ageH = Math.round((nowMs - gen.getTime()) / 3600000);
-        return { stale: true, ageH };
-      }
+      if (gen.getTime() < lowerBound) return { stale: true };
       return { stale: false };
     }
 
-    function showStalenessToast(ageH, generatedAtStr) {
+    // generated_at 带时区偏移，统一换算成北京时间的 MM-DD HH:mm 展示。
+    function formatBeijingUpdateTime(generatedAtStr) {
+      const date = new Date(generatedAtStr);
+      if (isNaN(date.getTime())) return '';
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Shanghai',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hourCycle: 'h23',
+      }).formatToParts(date);
+      const value = (type) => parts.find(p => p.type === type)?.value || '';
+      return `${value('month')}-${value('day')} ${value('hour')}:${value('minute')}`;
+    }
+
+    function showStalenessToast(generatedAtStr) {
       const old = document.getElementById('staleness-toast');
       if (old) old.remove();
       const toast = document.createElement('div');
       toast.id = 'staleness-toast';
       toast.className = 'stale-toast';
-      toast.setAttribute('role', 'alert');
+      toast.setAttribute('role', 'status');
+      const updatedAt = formatBeijingUpdateTime(generatedAtStr);
+      const message = updatedAt
+        ? `数据更新于 ${updatedAt}（北京时间）· 工作日 22:00 自动更新`
+        : `数据更新时间未知 · 工作日 22:00 自动更新`;
       toast.innerHTML =
-        `<div class="stale-toast-msg">⚠️ 数据可能陈旧（约 ${ageH} 小时前更新）</div>` +
+        `<div class="stale-toast-msg">${message}</div>` +
         `<div class="stale-toast-actions">` +
         `<button type="button" class="stale-toast-btn" id="stale-retry">重试加载</button>` +
         `<a href="${location.pathname}" class="stale-toast-link">硬刷新</a>` +
@@ -116,7 +133,6 @@
         dismiss();
         if (typeof loadData === 'function') loadData(); else location.reload();
       });
-      window.setTimeout(dismiss, 8000);
     }
 
     function renderStalenessNotice(generatedAtStr) {
@@ -127,7 +143,7 @@
         if (sessionStorage.getItem(key) === generatedAtStr) return;  // 同一份数据只提醒一次
         sessionStorage.setItem(key, generatedAtStr);
       } catch (_) { /* sessionStorage 不可用时降级为每次提示 */ }
-      showStalenessToast(st.ageH, generatedAtStr);
+      showStalenessToast(generatedAtStr);
     }
 
     function renderLoadError(message) {
@@ -249,9 +265,8 @@
           return { ...g, items, sourceCat: g.key, isActive: (g.key === 'active' || g.key === 'global_other') };
         }).filter(g => g.items.length);
       } else if (isEtf) {
-        const src = STATE.data.etf;
         const byTarget = {};
-        for (const s of src.series) {
+        for (const s of (STATE.data.etf?.series || [])) {
           const t = (s.etf_target === 'sp500' || s.etf_target === 'nasdaq100') ? s.etf_target : 'global_other';
           (byTarget[t] = byTarget[t] || []).push({ ...s, starred: favOf(s.default_share_code) });
         }
@@ -1101,12 +1116,12 @@
       }
     });
 
-    // 一级 Tab → 展示的 section 集合（全球行情单页流式；纳指图谱含情绪仪表盘；
-    // QDII 追踪含知识库 + 场外/场内；我的资产为持仓）
+    // 一级 Tab → 展示的 section 集合（全球行情单页流式；纳指图谱在情绪仪表盘之前；
+    // QDII 追踪含标题区 + 场内外切换 + 场外/场内；我的资产为持仓）
     const TAB_SECTIONS = {
       global: ['market-overview'],
       nasdaq: ['panel-nasdaq', 'panel-temperature'],
-      qdii: ['panel-qdii-nav', 'panel-offshore', 'panel-etf'],
+      qdii: ['panel-qdii-intro', 'panel-qdii-nav', 'panel-offshore', 'panel-etf'],
       knowledge: ['panel-knowledge'],
       assets: ['panel-portfolio'],
     };
@@ -1114,8 +1129,13 @@
     function applyQdiiSub() {
       const off = document.getElementById('panel-offshore');
       const etf = document.getElementById('panel-etf');
-      if (off) off.style.display = QDII_SUB === 'offshore' ? '' : 'none';
-      if (etf) etf.style.display = QDII_SUB === 'etf' ? '' : 'none';
+      // switchTab 会先把两个 QDII panel 标为可见，这里再保证只有一个对辅助技术可见。
+      [['offshore', off], ['etf', etf]].forEach(([sub, panel]) => {
+        if (!panel) return;
+        const isVisible = QDII_SUB === sub;
+        panel.style.display = isVisible ? '' : 'none';
+        panel.setAttribute('aria-hidden', isVisible ? 'false' : 'true');
+      });
       document.querySelectorAll('#panel-qdii-nav .qdii-sub-btn').forEach((btn) => {
         const active = btn.dataset.sub === QDII_SUB;
         btn.classList.toggle('active', active);
@@ -1148,6 +1168,7 @@
       resetTabTopSpacing();
       document.querySelectorAll('.tab-btn').forEach(btn => {
         const isCurrent = btn.dataset.tab === tab;
+        btn.classList.toggle('tab-active', isCurrent);
         btn.setAttribute('aria-selected', isCurrent ? 'true' : 'false');
         btn.setAttribute('tabindex', isCurrent ? '0' : '-1');
       });
@@ -1155,6 +1176,7 @@
         window.renderPortfolio();
       }
       if (tab === 'nasdaq') {
+        // 两个模块在数据未到达时都会空值返回；各自的 load() 完成后会自行重绘。
         if (typeof window.renderNasdaqHistory === 'function') window.renderNasdaqHistory();
         if (typeof window.renderTemperature === 'function') window.renderTemperature();
       }
@@ -1165,12 +1187,36 @@
     }
 
     document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
-        btn.classList.add('tab-active');
-        switchTab(btn.dataset.tab);
-      });
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
     });
+
+    // 一级 Tab 键盘导航：左右循环移动，Home/End 跳首尾；输入框内不拦截方向键。
+    const tabList = document.querySelector('[role="tablist"]');
+    if (tabList) {
+      tabList.addEventListener('keydown', (e) => {
+        const target = e.target;
+        if (target instanceof Element && target.closest('input, textarea, select, [contenteditable]')) return;
+        if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+
+        const tabButtons = [...tabList.querySelectorAll('[role="tab"].tab-btn')];
+        if (!tabButtons.length) return;
+        const matchedIndex = tabButtons.findIndex(btn => btn.dataset.tab === ACTIVE_TAB);
+        const currentIndex = matchedIndex >= 0 ? matchedIndex : 0;
+        let nextIndex;
+        switch (e.key) {
+          case 'ArrowRight': nextIndex = (currentIndex + 1) % tabButtons.length; break;
+          case 'ArrowLeft': nextIndex = (currentIndex - 1 + tabButtons.length) % tabButtons.length; break;
+          case 'Home': nextIndex = 0; break;
+          case 'End': nextIndex = tabButtons.length - 1; break;
+          default: return;
+        }
+
+        e.preventDefault();
+        const nextTab = tabButtons[nextIndex];
+        switchTab(nextTab.dataset.tab);
+        nextTab.focus();
+      });
+    }
 
     document.querySelectorAll('#panel-qdii-nav .qdii-sub-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -1182,8 +1228,8 @@
       });
     });
 
-    // 初始化：默认「全球行情」Tab
-    switchTab('global');
+    // 初始化：默认「QDII 追踪」Tab（HTML 首屏也已隐藏其他 section，避免闪屏）
+    switchTab('qdii');
 
     loadData();
 

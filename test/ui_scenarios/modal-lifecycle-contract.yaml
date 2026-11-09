@@ -15,6 +15,8 @@ steps:
   - click: "button[onclick*=\"openTrend\"]"    # 基金走势按钮
   - wait_for: "1000ms"
   - assert_and_close: "closeTrend via click on .modal-overlay"
+  - click: ".tab-btn[data-tab=\"global\"]"      # 默认首屏已改为 QDII，指标卡需先切到全球行情
+  - wait_for: "300ms"
   - click: ".market-card"                       # 指标走势（market-trend.js openIndexTrend）
   - wait_for: "800ms"
   - assert_and_close: "closeTrend via Escape key"

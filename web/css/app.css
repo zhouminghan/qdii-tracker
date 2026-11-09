@@ -1222,7 +1222,7 @@
       #table-offshore thead th,
       #table-etf thead th {
         position: sticky;
-        top: var(--sticky-top, 64px);
+        top: calc(var(--sticky-top, 64px) + 1px);
         z-index: 20;
         background: var(--gray-1);
         box-shadow: inset 0 -1px 0 var(--gray-4);
@@ -1235,6 +1235,8 @@
     }
 
     /* ===== 顶栏布局（补齐预编译 tailwind 缺失的 utility） ===== */
+    html { scroll-padding-top: calc(var(--sticky-top, 64px) + 0.75rem); }
+    header.sticky { z-index: 30; }
     .topbar-inner {
       padding-left: 12px;
       padding-right: 8px;
@@ -1255,6 +1257,89 @@
     .fund-search { display: none; }
     @media (min-width: 768px) {
       .fund-search { display: flex; }
+    }
+
+    /* 窄屏顶栏：首行保留完整品牌名、QDII Tab、时钟与主题按钮；第二行放全宽搜索。 */
+    @media (max-width: 767px) {
+      header .topbar-inner {
+        display: grid;
+        grid-template-columns: max-content minmax(0, 1fr) max-content 32px 32px;
+        grid-template-areas:
+          "brand tabs clock color theme"
+          "search search search search search";
+        align-items: center;
+        column-gap: 0.35rem;
+        row-gap: 0.4rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+      }
+      header .topbar-inner > div:first-child { grid-area: brand; min-width: max-content; }
+      header .topbar-inner > .tab-scroll {
+        grid-area: tabs;
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+      }
+      header .topbar-inner > .fund-search {
+        grid-area: search;
+        display: flex;
+        width: 100%;
+        min-width: 0;
+        height: 2.25rem;
+        padding-inline: 0.65rem;
+      }
+      header .topbar-inner > .fund-search #fund-search {
+        flex: 1 1 auto;
+        width: 100%;
+        min-width: 0;
+      }
+      header .topbar-inner > .bj-clock { grid-area: clock; }
+      header .topbar-inner > #colorToggle { grid-area: color; }
+      header .topbar-inner > #themeToggle { grid-area: theme; }
+      header .topbar-inner > div:first-child > div:last-child > div:last-child { display: none; }
+      header .topbar-inner > div:first-child > div:last-child > div:first-child {
+        overflow: visible;
+        white-space: nowrap;
+        text-overflow: clip;
+        font-size: 0.875rem;
+        letter-spacing: 0;
+      }
+      header .topbar-inner .brand-mark { width: 28px; height: 28px; border-radius: 7px; }
+      header .topbar-inner .tab-scroll .tab-btn {
+        padding-inline: 0.5rem;
+        font-size: 0.6875rem;
+        line-height: 1.2;
+        white-space: nowrap;
+      }
+      header .topbar-inner #tab-qdii { order: -1; scroll-snap-align: start; }
+      header .topbar-inner .bj-clock { font-size: 0.6875rem; }
+      header .topbar-inner .bj-clock-label,
+      header .topbar-inner .bj-clock-date { display: none; }
+      header .topbar-inner .theme-toggle {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        border-radius: 8px;
+      }
+      header .topbar-inner .theme-toggle svg { width: 16px; height: 16px; }
+      header .topbar-inner #colorToggle { width: 32px; padding: 0; }
+      header .topbar-inner #colorToggle .color-toggle-label { display: none; }
+    }
+    @media (max-width: 639px) {
+      header .topbar-inner {
+        grid-template-columns: max-content minmax(0, 1fr) max-content 30px 30px;
+        column-gap: 0.25rem;
+        row-gap: 0.35rem;
+        padding-top: 0.4rem;
+        padding-bottom: 0.4rem;
+      }
+      header .topbar-inner > div:first-child { gap: 0.35rem; }
+      header .topbar-inner > div:first-child > div:last-child { min-width: max-content; }
+      header .topbar-inner > div:first-child > div:last-child > div:first-child { font-size: 0.75rem; }
+      header .topbar-inner .brand-mark { width: 24px; height: 24px; font-size: 0.75rem; }
+      header .topbar-inner .theme-toggle { width: 30px; height: 30px; min-width: 30px; }
+      header .topbar-inner .tab-scroll .tab-btn { padding-inline: 0.4rem; }
     }
 
     /* ===== 补齐预编译 tailwind.css 缺失的工具类（本页实际用到） ===== */
@@ -1562,51 +1647,79 @@
     /* ===== Stale data toast ===== */
     .stale-toast {
       position: fixed;
-      right: 1rem;
-      bottom: 1rem;
+      right: calc(0.75rem + env(safe-area-inset-right));
+      bottom: calc(0.75rem + env(safe-area-inset-bottom));
       z-index: 40;
-      max-width: min(92vw, 420px);
-      display: flex;
+      width: max-content;
+      max-width: min(92vw, 360px);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
+      gap: 0.35rem 0.55rem;
       background: var(--amber-1);
-      border: 1px solid var(--amber-8);
-      border-radius: 0.75rem;
-      padding: 0.75rem 1rem;
-      font-size: 12px;
+      border: 1px solid var(--amber-7);
+      border-radius: 8px;
+      padding: 0.4rem 0.55rem;
+      font-size: 11px;
+      line-height: 1.3;
       color: var(--amber-11);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10);
+      pointer-events: none;
       animation: stale-toast-in 0.25s ease;
     }
     html.dark .stale-toast {
       background: var(--gray-3);
       border-color: rgba(251, 191, 36, 0.35);
       color: var(--amber-8);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
     }
-    .stale-toast-msg { flex: 1; min-width: 0; line-height: 1.4; }
-    .stale-toast-actions { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
+    .stale-toast-msg { min-width: 0; line-height: 1.3; overflow-wrap: anywhere; }
+    .stale-toast-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.35rem;
+      min-width: 0;
+      max-width: 100%;
+      pointer-events: none;
+    }
     .stale-toast-btn {
       border: 1px solid rgba(146, 64, 14, 0.25);
       background: var(--gray-1);
       color: var(--amber-11);
-      font-size: 12px;
-      padding: 0.3rem 0.6rem;
-      border-radius: 0.5rem;
+      font-size: 11px;
+      padding: 0.2rem 0.4rem;
+      border-radius: 6px;
       cursor: pointer;
+      min-height: 24px;
       white-space: nowrap;
+      pointer-events: auto;
     }
     .stale-toast-btn:hover { background: var(--amber-3); }
-    html.dark .stale-toast-btn { background: var(--gray-4); border-color: rgba(251, 191, 36, 0.25); color: var(--amber-8); }
+    html.dark .stale-toast-btn { background: var(--gray-4); border-color: rgba(251, 191, 36, 0.25); color: var(--amber-11); }
     html.dark .stale-toast-btn:hover { background: var(--gray-5); }
-    .stale-toast-link { color: var(--amber-11); font-size: 12px; text-decoration: underline; white-space: nowrap; }
+    .stale-toast-link { color: var(--amber-11); font-size: 11px; text-decoration: underline; white-space: nowrap; pointer-events: auto; }
     html.dark .stale-toast-link { color: var(--amber-9); }
-    .stale-toast-close { border: none; background: transparent; color: inherit; font-size: 1rem; line-height: 1; cursor: pointer; opacity: 0.7; padding: 0 0.1rem; }
+    .stale-toast-close {
+      border: none; background: transparent; color: inherit; font-size: 0.9rem;
+      line-height: 1; cursor: pointer; opacity: 0.7;
+      min-width: 20px; min-height: 20px; padding: 0 0.1rem;
+      pointer-events: auto;
+    }
     .stale-toast-close:hover { opacity: 1; }
     @keyframes stale-toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    body:has(.stale-toast) { scroll-padding-bottom: calc(5rem + env(safe-area-inset-bottom)); }
+    body:has(.stale-toast) #main-content { padding-bottom: 0.75rem; }
+    body:has(.stale-toast) footer { padding-bottom: calc(5rem + env(safe-area-inset-bottom)); }
     @media (max-width: 639px) {
-      .stale-toast { left: 0.75rem; right: 0.75rem; bottom: 0.75rem; max-width: none; }
+      .stale-toast {
+        left: auto;
+        right: calc(0.75rem + env(safe-area-inset-right));
+        width: min(calc(100vw - 1.5rem), 340px);
+        max-width: none;
+      }
+      .stale-toast-actions { gap: 0.25rem 0.35rem; }
     }
 
     /* Radix 语义色收口：涨跌、徽章、温度信号、走势线 */
@@ -2129,15 +2242,169 @@
     }
 
     /* ===== QDII 场外/场内切换 ===== */
-    .qdii-sub-nav { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
-    .qdii-sub-btn {
-      flex: 1; padding: 0.6rem 1rem; border-radius: 10px;
-      border: 1px solid var(--gray-4); background: var(--gray-1); color: var(--gray-11);
-      font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s ease, color 0.15s ease;
+    .qdii-sub-nav {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      max-width: min(420px, 100%);
+      gap: 0;
+      margin-bottom: 1rem;
+      padding: 3px;
+      border: 1px solid var(--gray-4);
+      border-radius: 999px;
+      background: var(--gray-2);
+      box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
     }
-    .qdii-sub-btn:hover { background: var(--gray-2); }
-    .qdii-sub-btn.active { background: var(--indigo-9); border-color: var(--indigo-9); color: #fff; }
-    html.dark .qdii-sub-btn { background: var(--dk-bg-card); border-color: var(--dk-border-2); color: var(--dk-txt-2); }
-    html.dark .qdii-sub-btn:hover { background: var(--dk-bg-elevated); }
-    html.dark .qdii-sub-btn.active { background: var(--indigo-9); border-color: var(--indigo-9); color: #fff; }
+    .qdii-sub-btn {
+      flex: 0 0 auto;
+      min-width: 150px;
+      min-height: 44px;
+      padding: 0.4rem 1rem;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--gray-11);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .qdii-sub-btn:hover { background: rgba(255, 255, 255, 0.75); }
+    .qdii-sub-btn.active {
+      background: var(--indigo-9);
+      color: #fff;
+      box-shadow: 0 2px 7px rgba(37, 99, 235, 0.22);
+    }
+    html.dark .qdii-sub-nav {
+      background: var(--dk-bg-elevated);
+      border-color: var(--dk-border-2);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
+    }
+    html.dark .qdii-sub-btn { background: transparent; color: var(--dk-txt-2); }
+    html.dark .qdii-sub-btn:hover { background: rgba(255, 255, 255, 0.08); }
+    html.dark .qdii-sub-btn.active {
+      background: var(--indigo-9);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(124, 58, 237, 0.28);
+    }
+    @media (min-width: 768px) {
+      .qdii-sub-btn { min-height: 36px; }
+    }
+    @media (max-width: 767px) {
+      .qdii-sub-nav { width: 100%; max-width: 420px; }
+      .qdii-sub-btn { flex: 1 1 0; min-width: 0; padding-inline: 0.5rem; }
+    }
+
+    /* ===== 全球行情下半部分：统一分段间距与标题层级 ===== */
+    #big-tech,
+    #fx-rates,
+    #gold-hub {
+      margin-top: 1.5rem;
+      margin-bottom: 0;
+      padding-top: 1rem;
+      border-top: 1px solid var(--gray-4);
+    }
+    #big-tech .bt-title-row,
+    #fx-rates .fx-head,
+    #gold-hub .gold-title-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.2rem;
+      margin-bottom: 0.75rem;
+    }
+    #big-tech .bt-title,
+    #fx-rates .fx-title,
+    #gold-hub .gold-hub-title {
+      display: block;
+      padding-left: 0.55rem;
+      border-left: 3px solid var(--indigo-8);
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.35;
+      letter-spacing: 0;
+      color: var(--gray-12);
+    }
+    #big-tech .bt-sub,
+    #fx-rates .fx-sub,
+    #gold-hub .gold-hub-sub {
+      display: block;
+      padding-left: 0.7rem;
+      font-size: 11px;
+      line-height: 1.45;
+      color: var(--gray-9);
+    }
+    #fx-rates .fx-group-label {
+      margin-top: 0.85rem;
+      padding-left: 0.55rem;
+      border-left: 2px solid var(--gray-5);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gray-10);
+    }
+    #gold-hub .gold-brand {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px dashed var(--gray-4);
+    }
+    #gold-hub .gold-brand-title {
+      padding-left: 0.55rem;
+      border-left: 2px solid var(--gray-6);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gray-12);
+    }
+    html.dark #big-tech,
+    html.dark #fx-rates,
+    html.dark #gold-hub { border-top-color: var(--dk-border); }
+    html.dark #big-tech .bt-title,
+    html.dark #fx-rates .fx-title,
+    html.dark #gold-hub .gold-hub-title { color: var(--dk-txt-1); border-left-color: var(--indigo-8); }
+    html.dark #big-tech .bt-sub,
+    html.dark #fx-rates .fx-sub,
+    html.dark #gold-hub .gold-hub-sub { color: var(--dk-txt-3); }
+    html.dark #fx-rates .fx-group-label { color: var(--dk-txt-2); border-left-color: var(--dk-border-2); }
+    html.dark #gold-hub .gold-brand { border-top-color: var(--dk-border); }
+    html.dark #gold-hub .gold-brand-title { color: var(--dk-txt-1); border-left-color: var(--dk-border-2); }
+    @media (max-width: 639px) {
+      #big-tech,
+      #fx-rates,
+      #gold-hub { margin-top: 1.25rem; padding-top: 0.85rem; }
+      #big-tech .bt-title,
+      #fx-rates .fx-title,
+      #gold-hub .gold-hub-title { font-size: 14px; }
+    }
+
+    /* ===== 移动端 QDII 表格横向滚动提示 ===== */
+    @media (max-width: 767px) {
+      #table-offshore,
+      #table-etf { position: relative; }
+      #table-offshore::before,
+      #table-etf::before {
+        content: "↔ 横向滑动查看完整数据";
+        position: sticky;
+        left: 0;
+        z-index: 21;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0.35rem 0.75rem;
+        border-bottom: 1px solid var(--gray-4);
+        border-radius: 11px 11px 0 0;
+        background: var(--indigo-2);
+        color: var(--indigo-11);
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1.4;
+        letter-spacing: 0;
+        pointer-events: none;
+      }
+      html.dark #table-offshore::before,
+      html.dark #table-etf::before {
+        border-bottom-color: var(--dk-border-2);
+        background: var(--indigo-2);
+        color: var(--indigo-11);
+      }
+    }
 

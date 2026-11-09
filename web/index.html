@@ -6,21 +6,21 @@
   <meta name="color-scheme" content="light dark" />
   <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F0E17" media="(prefers-color-scheme: dark)" />
-  <title>US Fund Tracker，美股基金看板</title>
-  <meta name="description" content="QDII/ETF 美股基金实时净值看板，追踪标普500、纳斯达克100等跨境基金。" />
+  <title>QDII Tracker，QDII 基金追踪看板</title>
+  <meta name="description" content="QDII 基金追踪看板，覆盖场外基金、场内 ETF 与全球行情，追踪标普500、纳斯达克100等跨境基金。" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "US Fund Tracker，美股基金看板",
+    "name": "QDII Tracker，QDII 基金追踪看板",
     "url": "https://zhouminghan.github.io/qdii-tracker/",
-    "description": "美股 QDII 基金追踪看板，纯静态部署，自动更新。",
+    "description": "QDII 基金追踪看板，覆盖场外基金、场内 ETF 与全球行情，纯静态部署，自动更新。",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Web"
   }
   </script>
-  <meta property="og:title" content="US Fund Tracker，美股基金看板" />
-  <meta property="og:description" content="QDII/ETF 美股基金实时净值看板。" />
+  <meta property="og:title" content="QDII Tracker，QDII 基金追踪看板" />
+  <meta property="og:description" content="QDII 基金追踪看板，覆盖场外基金、场内 ETF 与全球行情。" />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:url" content="https://zhouminghan.github.io/qdii-tracker/" />
@@ -53,14 +53,14 @@
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
         <div class="brand-mark" aria-hidden="true">美</div>
         <div class="min-w-0">
-          <div class="font-bold text-base sm:text-lg tracking-tight leading-none truncate">US Fund Tracker</div>
-          <div class="text-[11px] sm:text-xs text-stone-500 dark:text-stone-400 mt-0.5 truncate">美股基金追踪看板</div>
+          <div class="font-bold text-base sm:text-lg tracking-tight leading-none truncate">QDII Tracker</div>
+          <div class="text-[11px] sm:text-xs text-stone-500 dark:text-stone-400 mt-0.5 truncate">QDII 基金追踪看板 · 场外 / 场内 / 全球行情</div>
         </div>
       </div>
       <div class="tab-scroll text-sm" role="tablist" aria-label="基金类型切换">
-        <button type="button" id="tab-global" role="tab" aria-controls="market-overview" aria-selected="true" tabindex="0" class="tab-btn tab-active px-3 sm:px-4 py-2 rounded-lg transition text-xs sm:text-sm" data-tab="global">🌐 <span class="hidden sm:inline">全球行情</span><span class="sm:hidden">行情</span></button>
-        <button type="button" id="tab-nasdaq" role="tab" aria-controls="panel-nasdaq" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="nasdaq">📊 <span class="hidden sm:inline">纳指图谱</span><span class="sm:hidden">图谱</span></button>
-        <button type="button" id="tab-qdii" role="tab" aria-controls="panel-qdii" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="qdii">🏦 <span class="hidden sm:inline">QDII 追踪</span><span class="sm:hidden">QDII</span></button>
+        <button type="button" id="tab-qdii" role="tab" aria-controls="panel-qdii-intro panel-qdii-nav panel-offshore panel-etf" aria-selected="true" tabindex="0" class="tab-btn tab-active px-3 sm:px-4 py-2 rounded-lg transition text-xs sm:text-sm" data-tab="qdii">🏦 <span class="hidden sm:inline">QDII 追踪</span><span class="sm:hidden">QDII</span></button>
+        <button type="button" id="tab-global" role="tab" aria-controls="market-overview" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="global">🌐 <span class="hidden sm:inline">全球行情</span><span class="sm:hidden">行情</span></button>
+        <button type="button" id="tab-nasdaq" role="tab" aria-controls="panel-nasdaq panel-temperature" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="nasdaq">📊 <span class="hidden sm:inline">纳指图谱</span><span class="sm:hidden">图谱</span></button>
         <button type="button" id="tab-knowledge" role="tab" aria-controls="panel-knowledge" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="knowledge">📚 <span class="hidden sm:inline">投资知识</span><span class="sm:hidden">知识</span></button>
         <button type="button" id="tab-assets" role="tab" aria-controls="panel-portfolio" aria-selected="false" tabindex="-1" class="tab-btn px-3 sm:px-4 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition text-xs sm:text-sm" data-tab="assets">💼 <span class="hidden sm:inline">我的资产</span><span class="sm:hidden">资产</span></button>
       </div>
@@ -87,7 +87,7 @@
   </header>
 
   <!-- 投资知识 Tab -->
-  <section id="panel-knowledge" role="tabpanel" aria-labelledby="tab-knowledge" data-category="knowledge" class="max-w-7xl mx-auto px-3 sm:px-6 pt-6 sm:pt-8">
+  <section id="panel-knowledge" role="tabpanel" aria-labelledby="tab-knowledge" aria-hidden="true" data-category="knowledge" class="max-w-7xl mx-auto px-3 sm:px-6 pt-6 sm:pt-8" style="display:none">
     <div class="flex items-baseline gap-2 mb-3">
       <h2 class="text-lg font-bold">📚 投资知识</h2>
     </div>
@@ -447,7 +447,7 @@
 
   <main id="main-content" class="max-w-7xl mx-auto px-3 sm:px-6 pt-6 sm:pt-8 space-y-8">
     <!-- ========== 市场参照系：美股指数 + 美元汇率 ========== -->
-    <section id="market-overview" aria-label="市场参照系">
+    <section id="market-overview" role="tabpanel" aria-labelledby="tab-global" aria-hidden="true" style="display:none">
       <div class="flex items-end justify-between mb-3 gap-4">
         <div class="min-w-0">
           <div class="flex items-baseline gap-2 flex-wrap">
@@ -479,14 +479,19 @@
       <div id="gold-hub" class="gold-hub"></div>
     </section>
 
-    <section id="panel-qdii-nav" role="tabpanel" aria-label="QDII 场内外切换">
+    <section id="panel-qdii-intro" role="tabpanel" aria-labelledby="tab-qdii" aria-hidden="false">
+      <h1 class="text-lg font-bold">🏦 QDII 追踪</h1>
+      <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">场外 QDII 与场内 ETF 的净值、溢价和申购状态，一屏追踪。</p>
+    </section>
+
+    <section id="panel-qdii-nav" role="tabpanel" aria-labelledby="tab-qdii" aria-hidden="false">
       <div class="qdii-sub-nav" role="group" aria-label="场外/场内切换">
         <button type="button" class="qdii-sub-btn active" data-sub="offshore" aria-pressed="true">🏦 场外基金</button>
         <button type="button" class="qdii-sub-btn" data-sub="etf" aria-pressed="false">📈 场内 ETF</button>
       </div>
     </section>
 
-    <section id="panel-offshore" role="tabpanel" aria-labelledby="tab-offshore" data-category="offshore">
+    <section id="panel-offshore" role="tabpanel" aria-labelledby="tab-qdii" aria-hidden="false" data-category="offshore">
       <div class="flex items-end justify-between mb-3 gap-4">
         <div class="min-w-0">
           <div class="flex items-baseline gap-2 flex-wrap">
@@ -505,7 +510,7 @@
       </div>
     </section>
 
-    <section id="panel-etf" role="tabpanel" aria-labelledby="tab-etf" data-category="etf">
+    <section id="panel-etf" role="tabpanel" aria-labelledby="tab-qdii" aria-hidden="true" data-category="etf" style="display:none">
       <div class="flex items-end justify-between mb-3 gap-4">
         <div class="min-w-0">
           <div class="flex items-baseline gap-2 flex-wrap">
@@ -537,7 +542,7 @@
       </div>
     </section>
 
-    <section id="panel-portfolio" role="tabpanel" aria-labelledby="tab-portfolio" data-category="portfolio">
+    <section id="panel-portfolio" role="tabpanel" aria-labelledby="tab-assets" aria-hidden="true" data-category="portfolio" style="display:none">
       <div class="flex items-end justify-between mb-3 gap-4">
         <div class="min-w-0">
           <div class="flex items-baseline gap-2 flex-wrap">
@@ -552,39 +557,7 @@
       </div>
     </section>
 
-    <section id="panel-temperature" role="tabpanel" aria-labelledby="tab-temperature" data-category="temperature">
-      <div class="flex items-end justify-between mb-3 gap-4">
-        <div class="min-w-0">
-          <div class="flex items-baseline gap-2 flex-wrap">
-            <h2 class="text-lg font-bold" id="temperature-title">🎭 情绪仪表盘</h2>
-          </div>
-          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">CNN 恐慌贪婪 + 市场温度 + VIX & PE 阶梯定投，一屏看懂当下情绪与实操。</p>
-        </div>
-        <div class="flex items-center gap-2 flex-shrink-0">
-          <button type="button" id="temperature-save" class="temp-save-btn" title="保存市场温度海报">保存图片</button>
-          <span class="text-[11px] text-stone-400 dark:text-stone-500 text-right" id="temperature-updated">--</span>
-        </div>
-      </div>
-      <div id="temperature-root">
-        <div class="skeleton" role="status" aria-label="加载中">加载中…</div>
-      </div>
-      <div class="fg-card">
-        <div id="fear-greed">
-          <div class="skeleton" role="status" aria-label="加载中">加载中…</div>
-        </div>
-      </div>
-      <div class="dca-card">
-        <div class="dca-head">
-          <span class="dca-title">🧭 VIX & PE 阶梯定投</span>
-          <span class="dca-sub">恐慌贪婪 + 波动率 + 估值 → 实操动作</span>
-        </div>
-        <div id="dca-root">
-          <div class="skeleton" role="status" aria-label="加载中">加载中…</div>
-        </div>
-      </div>
-    </section>
-
-    <section id="panel-nasdaq" role="tabpanel" aria-labelledby="tab-nasdaq" data-category="nasdaq">
+    <section id="panel-nasdaq" role="tabpanel" aria-labelledby="tab-nasdaq" aria-hidden="true" data-category="nasdaq" style="display:none">
       <div id="macro-rates" class="macro-rates"></div>
       <div class="flex items-end justify-between mb-3 gap-4">
         <div class="min-w-0">
@@ -636,6 +609,38 @@
       <div class="nh-card" style="margin-top:0.75rem">
         <div class="nh-card-title">🏆 多周期月份排行榜（%）</div>
         <div id="nh-ranking"></div>
+      </div>
+    </section>
+
+    <section id="panel-temperature" role="tabpanel" aria-labelledby="tab-nasdaq" aria-hidden="true" data-category="temperature" style="display:none">
+      <div class="flex items-end justify-between mb-3 gap-4">
+        <div class="min-w-0">
+          <div class="flex items-baseline gap-2 flex-wrap">
+            <h2 class="text-lg font-bold" id="temperature-title">🎭 情绪仪表盘</h2>
+          </div>
+          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">CNN 恐慌贪婪 + 市场温度 + VIX & PE 阶梯定投，一屏看懂当下情绪与实操。</p>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <button type="button" id="temperature-save" class="temp-save-btn" title="保存市场温度海报">保存图片</button>
+          <span class="text-[11px] text-stone-400 dark:text-stone-500 text-right" id="temperature-updated">--</span>
+        </div>
+      </div>
+      <div id="temperature-root">
+        <div class="skeleton" role="status" aria-label="加载中">加载中…</div>
+      </div>
+      <div class="fg-card">
+        <div id="fear-greed">
+          <div class="skeleton" role="status" aria-label="加载中">加载中…</div>
+        </div>
+      </div>
+      <div class="dca-card">
+        <div class="dca-head">
+          <span class="dca-title">🧭 VIX & PE 阶梯定投</span>
+          <span class="dca-sub">恐慌贪婪 + 波动率 + 估值 → 实操动作</span>
+        </div>
+        <div id="dca-root">
+          <div class="skeleton" role="status" aria-label="加载中">加载中…</div>
+        </div>
       </div>
     </section>
   </main>
