@@ -33,6 +33,12 @@
 // ============================================================================
 
 // 上交所 5 开头 → sh，深交所 1 开头 → sz
+const SNAPSHOT_URL = './data/market-snapshot.json';
+const BOOT_AT = Date.now();
+const EXTERNAL_MIN_DELAY_MS = 8 * 1000;
+const ETF_LIVE_INTERVAL_MS = 5 * 60 * 1000;
+const ETF_OUTSIDE_INTERVAL_MS = 30 * 60 * 1000;
+
 function prefixOf(code) {
   const c = String(code).trim();
   if (/^[56]/.test(c)) return 'sh';
@@ -95,27 +101,85 @@ function collectEtfCodes(state) {
 }
 
 // 把拉到的数据写回 STATE，供 renderCategory('etf') 使用
-function writeBack(state, dataMap, bjParts) {
+function writeBack(state, dataMap, bjParts, markLiveDate = true) {
   const series = state?.data?.etf?.series || [];
   for (const s of series) {
     for (const sh of (s.shares || [])) {
       const live = dataMap[sh.code];
       if (live) {
         // 实时值优先于静态值
-        if (isFinite(live.price)) {
+        if (live.price != null && Number.isFinite(live.price)) {
           sh.etf_price = live.price;
           // 仅在交易日（周一~五）更新实时日期，周末保留后端静态 nav_date
           // 用 bjParts.weekday 而非 new Date(date).getDay() — 避免 UTC-8 等时区误判
-          if (bjParts.weekday >= 1 && bjParts.weekday <= 5) {
+          if (markLiveDate && bjParts.weekday >= 1 && bjParts.weekday <= 5) {
             sh._live_etf_date = bjParts.date;
           }
         }
-        if (isFinite(live.changePct)) sh.etf_change_pct = live.changePct;
-        if (live.nav != null) sh.etf_iopv = live.nav;        // 单位净值（IOPV 近似）
-        if (live.premium != null) sh.etf_premium = live.premium;  // 溢价率 %
+        if (live.changePct != null && Number.isFinite(live.changePct)) sh.etf_change_pct = live.changePct;
+        if (live.nav != null && Number.isFinite(live.nav)) sh.etf_iopv = live.nav;        // 单位净值（IOPV 近似）
+        if (live.premium != null && Number.isFinite(live.premium)) sh.etf_premium = live.premium;  // 溢价率 %
       }
     }
   }
+}
+
+function finite(v) {
+  if (v === null || v === '' || v === undefined) return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+function loadLocalSnapshot() {
+  if (window.__marketSnapshot) return Promise.resolve(window.__marketSnapshot);
+  if (!window.__marketSnapshotPromise) {
+    window.__marketSnapshotPromise = fetch(SNAPSHOT_URL, { cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((snapshot) => {
+        window.__marketSnapshot = snapshot || null;
+        return snapshot || null;
+      })
+      .catch(() => null);
+  }
+  return window.__marketSnapshotPromise;
+}
+
+function applyLocalPremium(state, snapshot, onUpdate) {
+  const items = (snapshot && snapshot.etf_premium && snapshot.etf_premium.items) || {};
+  if (!state?.data?.etf?.series?.length) return false;
+  const dataMap = {};
+  for (const [code, item] of Object.entries(items)) {
+    dataMap[code] = {
+      price: finite(item.price),
+      changePct: finite(item.change_pct),
+      nav: finite(item.nav),
+      premium: finite(item.premium),
+    };
+  }
+  writeBack(state, dataMap, bjNowParts(), false);
+  try { onUpdate && onUpdate(); } catch (_) {}
+  return true;
+}
+
+function applyLocalPremiumWhenReady(state, snapshot, onUpdate, attempt = 0) {
+  if (applyLocalPremium(state, snapshot, onUpdate)) return;
+  // loadData() 是异步的：等 STATE.data.etf 就绪后再用本地溢价刷新一次主表。
+  if (attempt < 20) {
+    setTimeout(() => applyLocalPremiumWhenReady(state, snapshot, onUpdate, attempt + 1), 150);
+  }
+}
+
+function runOnIdle(task) {
+  return new Promise((resolve) => {
+    const run = async () => {
+      try { await task(); } finally { resolve(); }
+    };
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(run, { timeout: 1500 });
+    } else {
+      setTimeout(run, 0);
+    }
+  });
 }
 
 import { schedule } from './idle-scheduler.js';
@@ -129,18 +193,14 @@ import { bjNowParts } from './bj-time.js';
 
 export const ETF_BOOTSTRAP_RETRY_MS = 15 * 1000;
 
+function isEtfLiveWindow(parts) {
+  return parts.weekday >= 1 && parts.weekday <= 5 &&
+    parts.minutes >= 9.5 * 60 && parts.minutes <= 15 * 60;
+}
+
 function getEtfIntervalMs(parts, etfSettled, postCloseRetries) {
-  if (etfSettled) return 24 * 60 * 60 * 1000; // 已 settle，24h 后再检查（实际靠 maybeResetSettled 重置）
-  const m = parts.minutes;
-  if (m >= 15 * 60) {
-    // 15:00 后：退避重试 60s → 120s → 300s → 600s
-    const backoff = [60, 120, 300, 600];
-    return (backoff[Math.min(postCloseRetries, backoff.length - 1)] || 600) * 1000;
-  }
-  if (m >= 13 * 60) return 60 * 1000;         // 13:00-15:00 盘中
-  if (m >= 11.5 * 60) return 120 * 1000;       // 11:30-13:00 午休
-  if (m >= 9.5 * 60) return 60 * 1000;         // 09:30-11:30 盘中
-  return 5 * 60 * 1000;                        // 09:30 前：5min 等待开盘
+  if (etfSettled) return 24 * 60 * 60 * 1000;
+  return isEtfLiveWindow(parts) ? ETF_LIVE_INTERVAL_MS : ETF_OUTSIDE_INTERVAL_MS;
 }
 
 export function getEtfNextIntervalMs(parts, etfSettled, postCloseRetries, hasCodes = true) {
@@ -159,6 +219,10 @@ export function start({ state, onUpdate }) {
   let lastSettledDate = ''; // 记录 settle 时的日期，次日重置
   let nextIntervalOverrideMs = null;
 
+  loadLocalSnapshot().then((snapshot) => {
+    applyLocalPremiumWhenReady(state, snapshot, onUpdate);
+  });
+
   // 检查是否需要重置 settled 状态（新交易日 09:00）
   function maybeResetSettled(parts) {
     if (lastSettledDate && parts.date !== lastSettledDate && parts.minutes >= 9 * 60) {
@@ -172,7 +236,7 @@ export function start({ state, onUpdate }) {
     const parts = bjNowParts();
     maybeResetSettled(parts);
 
-    if (etfSettled) return;
+    if (etfSettled || !isEtfLiveWindow(parts) || Date.now() - BOOT_AT < EXTERNAL_MIN_DELAY_MS) return;
 
     const codes = collectEtfCodes(state);
     if (!codes.length) {
@@ -182,7 +246,7 @@ export function start({ state, onUpdate }) {
 
     const map = await fetchByJsonp(codes);
     if (Object.keys(map).length) {
-      writeBack(state, map, parts);
+      writeBack(state, map, parts, true);
       try { onUpdate && onUpdate(); } catch (e) {}
 
       // 15:00 后拉到数据 → settle
@@ -191,17 +255,12 @@ export function start({ state, onUpdate }) {
         lastSettledDate = parts.date;
       }
     }
-
-    // 15:00 后未拉到数据 → 退避计数
-    if (parts.minutes >= 15 * 60 && !etfSettled) {
-      postCloseRetries++;
-    }
   }
 
   // 由 idle-scheduler 接管：标签页隐藏 / 用户长时间无操作时自动暂停，避免空轮询
   // firstDelayMs=1500 —— 给主表 loadData() 留时间把 etf.json 装进 STATE
   schedule(
-    tick,
+    () => runOnIdle(tick),
     () => {
       if (nextIntervalOverrideMs != null) {
         const ms = nextIntervalOverrideMs;
@@ -210,6 +269,6 @@ export function start({ state, onUpdate }) {
       }
       return getEtfNextIntervalMs(bjNowParts(), etfSettled, postCloseRetries, true);
     },
-    { firstDelayMs: 1500 },
+    { firstDelayMs: EXTERNAL_MIN_DELAY_MS + 500 },
   );
 }

@@ -127,6 +127,7 @@ cd ../web && python3 -m http.server 8765      # 本地开发
 ```bash
 python3 fundctl.py add          # 新增/强制纳入一只基金
 python3 fundctl.py move         # 移动分类
+python3 fundctl.py brand        # 设置公司品牌 logo 文字
 python3 fundctl.py remove       # 删除一只基金（从配置和数据中移除）
 python3 fundctl.py refresh      # 增量刷新
 python3 fundctl.py sync         # 全量同步

@@ -140,7 +140,7 @@ scripts/
 ├── fundctl.py            ← 统一入口
 ├── core/                 ← 基础设施（constants / utils / config_loader / dca_strategy / gold）
 ├── sources/              ← 数据源适配（akshare / eastmoney / xueqiu / ths）
-├── pipeline/             ← 数据生产链路（scan / enrich / fill / holdings / reclassify / codegen / premium_history / nav_history / kline_history / market_temperature / nasdaq_history / cnn_sentiment / brand_gold / ndx_pe / macro_rates）
+├── pipeline/             ← 数据生产链路（scan / enrich / fill / holdings / reclassify / codegen / premium_history / nav_history / kline_history / market_temperature / nasdaq_history / cnn_sentiment / brand_gold / ndx_pe / macro_rates / market_snapshot）
 └── checks/               ← 质量门禁（verify_data / verify_purchase / cross_validate / diagnose / architecture_lint / scan_scenarios / stamp_asset_version / check_agent_rules / doc_sync / build_snapshot）
 
 test/                     ← 测试与回归（test_utils.py 单测 + ui_scenarios/ 声明式 UI 回归，Playwright 执行）
@@ -163,7 +163,7 @@ scripts/checks/
 
 ```
 web/
-├── index.html            # 四大一级 Tab（全球行情/纳指图谱/QDII追踪/我的资产）+ 投资知识独立 Tab + 站内搜索 + 表头吸顶
+├── index.html            # 五大一级 Tab（QDII追踪/全球行情/纳指图谱/投资知识/我的资产）+ 站内搜索 + 表头吸顶
 ├── css/
 │   ├── app.css           # 自定义样式 + 暗色 token（zinc 中性）+ 补齐 tailwind 缺失类
 │   └── tailwind.css      # Tailwind 构建产物（只含原应用用到的部分工具类）

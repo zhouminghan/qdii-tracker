@@ -24,13 +24,21 @@ def fetch_treasury():
     df = ak.bond_zh_us_rate(start_date="20250101")
     if df is None or len(df) == 0:
         return None
-    row = df.iloc[-1]
-    return {
-        "date": str(row["日期"])[:10],
-        "y2": _to_float(row.get("美国国债收益率2年")),
-        "y10": _to_float(row.get("美国国债收益率10年")),
-        "y30": _to_float(row.get("美国国债收益率30年")),
-    }
+    # 最新一行可能只有中国国债数据，美债列尚未披露（NaN）。
+    # 取最近一条 2/10/30 年都有效的记录，避免把 null 写成当日快照。
+    fields = ("美国国债收益率2年", "美国国债收益率10年", "美国国债收益率30年")
+    for idx in range(len(df) - 1, -1, -1):
+        row = df.iloc[idx]
+        y2, y10, y30 = (_to_float(row.get(f)) for f in fields)
+        if y2 is None or y10 is None or y30 is None:
+            continue
+        return {
+            "date": str(row["日期"])[:10],
+            "y2": y2,
+            "y10": y10,
+            "y30": y30,
+        }
+    return None
 
 
 def build():

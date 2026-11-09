@@ -113,11 +113,21 @@
 | **输出文件** | `web/data/macro-rates.json` |
 | **依赖** | `core.constants`、`core.utils`、`akshare` |
 
+### 13. market_snapshot.py — 首屏行情本地快照
+
+| 属性 | 内容 |
+|------|------|
+| **职责** | 纯离线汇总指数、科技股、外汇、黄金、宏观、温度、ETF 溢价与场外净值，生成首屏可直接渲染的本地快照；不联网、不伪造实时值，缺失字段写 `null` |
+| **输入文件** | `web/data/meta.json`、`web/data/*.json`、`web/data/index-kline/*.json`、`web/data/fx-kline/*.json`、`web/data/etf-premium-history.json` |
+| **输出文件** | `web/data/market-snapshot.json` |
+| **依赖** | `core.constants`、`core.utils`（间接） |
+| **调用方** | `scripts/checks/build_snapshot.py`；由 `update-data.yml` 每个工作日生成并随 `web/data/` 发布 |
+
 ---
 
 ## checks/ — 质量门禁 + 诊断 + 辅助
 
-### 13. verify_data.py — 黄金样例校验
+### 14. verify_data.py — 黄金样例校验
 
 | 属性 | 内容 |
 |------|------|
@@ -126,7 +136,7 @@
 | **输出文件** | 无（返回错误列表） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 14. cross_validate.py — 跨源交叉验证
+### 15. cross_validate.py — 跨源交叉验证
 
 | 属性 | 内容 |
 |------|------|
@@ -135,7 +145,7 @@
 | **输出文件** | 无（返回异常列表） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 15. diagnose.py — 诊断引擎
+### 16. diagnose.py — 诊断引擎
 
 | 属性 | 内容 |
 |------|------|
@@ -144,7 +154,7 @@
 | **输出文件** | 无（只输出诊断报告；--auto-fix 时调 `fundctl.py refresh` 修复） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 16. architecture_lint.py — 目录纪律校验
+### 17. architecture_lint.py — 目录纪律校验
 
 | 属性 | 内容 |
 |------|------|
@@ -153,7 +163,7 @@
 | **输出文件** | 无（返回错误列表） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 17. scan_scenarios.py — 改动↔场景联动
+### 18. scan_scenarios.py — 改动↔场景联动
 
 | 属性 | 内容 |
 |------|------|
@@ -162,7 +172,7 @@
 | **输出文件** | 无（返回映射字典，non-blocking 提示） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 18. stamp_asset_version.py — 版本戳
+### 19. stamp_asset_version.py — 版本戳
 
 | 属性 | 内容 |
 |------|------|
@@ -171,7 +181,7 @@
 | **输出文件** | 同文件覆写 |
 | **依赖** | `core.constants` |
 
-### 19. verify_purchase.py — 申购状态/限额/历史一致性校验
+### 20. verify_purchase.py — 申购状态/限额/历史一致性校验
 
 | 属性 | 内容 |
 |------|------|
@@ -199,6 +209,7 @@ cnn_sentiment.py ► core.constants, core.utils, requests
 brand_gold.py ► core.constants, core.utils, requests
 ndx_pe.py ► core.constants, core.utils, requests
 macro_rates.py ► core.constants, core.utils, akshare
+market_snapshot.py ► core.constants, core.utils
 ```
 
 ### checks/ （质量门禁）

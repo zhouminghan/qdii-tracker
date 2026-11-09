@@ -10,6 +10,9 @@
   const ROOT = document.getElementById('temperature-root');
   const UPDATED = document.getElementById('temperature-updated');
   const DATA_URL = './data/market-temperature.json';
+  const SNAPSHOT_URL = './data/market-snapshot.json';
+  const BOOT_AT = Date.now();
+  const LIVE_MIN_DELAY_MS = 3000;
 
   const INDICATORS = [
     { key: 'nasdaq_trend', name: '纳指趋势', icon: '📈', weight: 0.4, color: '#0ea5e9' },
@@ -25,6 +28,39 @@
   const NASDAQ_SLOPE = 5;
 
   let data = null;
+  let liveReady = false;
+  let liveTimer = null;
+
+  function loadLocalSnapshot() {
+    if (window.__marketSnapshot) return Promise.resolve(window.__marketSnapshot);
+    if (!window.__marketSnapshotPromise) {
+      window.__marketSnapshotPromise = fetch(SNAPSHOT_URL, { cache: 'no-store' })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((snapshot) => {
+          window.__marketSnapshot = snapshot || null;
+          return snapshot || null;
+        })
+        .catch(() => null);
+    }
+    return window.__marketSnapshotPromise;
+  }
+
+  function onIdleAfterBoot(task) {
+    const wait = Math.max(0, LIVE_MIN_DELAY_MS - (Date.now() - BOOT_AT));
+    setTimeout(() => {
+      const run = () => { if (!document.hidden) task(); };
+      if (typeof window.requestIdleCallback === 'function') {
+        window.requestIdleCallback(run, { timeout: 1000 });
+      } else {
+        setTimeout(run, 0);
+      }
+    }, wait);
+  }
+
+  function temperatureVisible() {
+    const panel = document.getElementById('panel-temperature');
+    return !!panel && panel.style.display !== 'none' && panel.getAttribute('aria-hidden') !== 'true';
+  }
 
   function scoreClass(score) {
     if (score == null) return 't-muted';
@@ -222,9 +258,10 @@
       </div>`;
 
     if (UPDATED) {
-      UPDATED.textContent = `更新于 ${fmtTime(data.generated_at)}`;
+      UPDATED.textContent = data._from_snapshot
+        ? `💾 本地快照 · 更新于 ${fmtTime(data.generated_at)}`
+        : `更新于 ${fmtTime(data.generated_at)}`;
     }
-    applyLive();
     if (animate) {
       const val = document.getElementById('temp-gauge-value');
       const target = val ? Number(val.textContent) : NaN;
@@ -236,9 +273,16 @@
 
   async function load() {
     try {
-      const res = await fetch(`${DATA_URL}?t=${Date.now()}`, { cache: 'no-store' });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      data = await res.json();
+      const snapshot = await loadLocalSnapshot();
+      const localTemperature = snapshot && snapshot.temperature;
+      if (localTemperature && localTemperature.indicators) {
+        data = { ...localTemperature, _from_snapshot: true };
+      } else {
+        const res = await fetch(`${DATA_URL}?t=${Date.now()}`, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        data = await res.json();
+        data._from_snapshot = false;
+      }
       render();
     } catch (_) {
       if (ROOT) {
@@ -315,8 +359,6 @@
   if (saveBtn) saveBtn.addEventListener('click', () => window.downloadTemperaturePNG());
 
   // ==================== 盘中实时重算（纳指项 + 综合分） ====================
-  let liveTimer = null;
-
   function nasdaqScoreFromPct(pct) {
     if (pct == null || !isFinite(pct)) return null;
     return Math.max(0, Math.min(100, Math.round(NASDAQ_BASE + pct * NASDAQ_SLOPE)));
@@ -391,12 +433,32 @@
     return true;
   }
 
-  function startLive() {
+  function applyLiveWhenVisible() {
+    if (!data || document.hidden || !temperatureVisible()) return;
     applyLive();
-    liveTimer = setInterval(applyLive, 15 * 1000);
   }
 
-  window.renderTemperature = function () { render(true); };
+  function startLive() {
+    onIdleAfterBoot(() => {
+      liveReady = true;
+      applyLiveWhenVisible();
+      if (!liveTimer) liveTimer = setInterval(applyLiveWhenVisible, 60 * 1000);
+    });
+    const onEnter = () => onIdleAfterBoot(applyLiveWhenVisible);
+    const nasdaqTab = document.getElementById('tab-nasdaq');
+    if (nasdaqTab) nasdaqTab.addEventListener('click', onEnter);
+    window.addEventListener('hashchange', () => {
+      if (temperatureVisible() || location.hash === '#nasdaq') onEnter();
+    });
+    window.addEventListener('popstate', () => {
+      if (temperatureVisible() || location.hash === '#nasdaq') onEnter();
+    });
+  }
+
+  window.renderTemperature = function () {
+    render(true);
+    if (liveReady) applyLiveWhenVisible();
+  };
   load();
   startLive();
 })();

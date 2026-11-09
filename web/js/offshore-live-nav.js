@@ -5,10 +5,15 @@ const OFFSHORE_CATEGORIES = ['sp500', 'nasdaq_passive', 'active', 'global_index'
 const LIVE_SOURCE_LSJZ = 'lsjz';
 const LIVE_SOURCE_PZD = 'pzd';
 const REQUEST_TIMEOUT_MS = 8000;
-const CONCURRENCY_LIMIT = 5;
+const CONCURRENCY_LIMIT = 2;
+const MAX_CODES_PER_TICK = 4;
+const EXTERNAL_MIN_DELAY_MS = 12 * 1000;
+const LIVE_REFRESH_INTERVAL_MS = 30 * 60 * 1000;
 const META_CHECK_INTERVAL_MS = 30 * 60 * 1000;
 const RECHECK_AFTER_NEWER_MS = 90 * 60 * 1000;
 const BOOTSTRAP_RETRY_MS = 15 * 1000;
+const SNAPSHOT_URL = './data/market-snapshot.json';
+const BOOT_AT = Date.now();
 
 // 失败退避基数（毫秒）：连续失败 → 15min / 30min / 60min
 const BACKOFF_BASE_MS = 15 * 60 * 1000;
@@ -22,19 +27,61 @@ function inLiveWindow(parts) {
 }
 
 function getIntervalMsByBjTime(parts) {
-  if (inLiveWindow(parts)) {
-    const m = parts.minutes;
-    // 15:00–17:30 低频待命（美股数据尚未处理，净值几无可能已出）
-    if (m < 17.5 * 60) return 15 * 60 * 1000;
-    // 17:30–22:00 高频窗口（净值披露核心时段）
-    if (m < 22 * 60) return 10 * 60 * 1000;
-    // 22:00–00:00 降频（大部分已出，少数延迟）
-    if (m < 24 * 60) return 20 * 60 * 1000;
-    // 00:00–06:00 极低频（深夜，仅防 Actions 延迟推送）
-    return 30 * 60 * 1000;
+  // 本地主表已展示净值；外部 overlay 只做小批量补充，统一 30 分钟低频。
+  return inLiveWindow(parts) ? LIVE_REFRESH_INTERVAL_MS : META_CHECK_INTERVAL_MS;
+}
+
+function loadLocalSnapshot() {
+  if (window.__marketSnapshot) return Promise.resolve(window.__marketSnapshot);
+  if (!window.__marketSnapshotPromise) {
+    window.__marketSnapshotPromise = fetch(SNAPSHOT_URL, { cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((snapshot) => {
+        window.__marketSnapshot = snapshot || null;
+        return snapshot || null;
+      })
+      .catch(() => null);
   }
-  // 06:00–15:00 非实时窗口：30 分钟（仅 meta.json 检查）
-  return 30 * 60 * 1000;
+  return window.__marketSnapshotPromise;
+}
+
+function beijingDate(iso) {
+  if (!iso) return '';
+  const date = new Date(iso);
+  if (isNaN(date.getTime())) return '';
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(date);
+  const get = (type) => parts.find((p) => p.type === type)?.value || '';
+  return `${get('year')}-${get('month')}-${get('day')}`;
+}
+
+function isSameTradingDay(iso, parts) {
+  const date = beijingDate(iso);
+  if (!date) return false;
+  if (date === parts.date) return true;
+  if (parts.minutes >= 6 * 60) return false;
+  const [year, month, day] = parts.date.split('-').map(Number);
+  const previous = new Date(Date.UTC(year, month - 1, day - 1)).toISOString().slice(0, 10);
+  return date === previous;
+}
+
+function qdiiPanelVisible() {
+  const panel = document.getElementById('panel-offshore');
+  return !!panel && panel.style.display !== 'none' && panel.getAttribute('aria-hidden') !== 'true';
+}
+
+function runOnIdle(task) {
+  return new Promise((resolve) => {
+    const run = async () => {
+      try { await task(); } finally { resolve(); }
+    };
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(run, { timeout: 1500 });
+    } else {
+      setTimeout(run, 0);
+    }
+  });
 }
 
 function compareDate(a, b) {
@@ -214,6 +261,13 @@ export function start({ state, onUpdate, reloadData }) {
   let lastMetaGeneratedAt = state?.metaGeneratedAt || '';
   let nextMetaCheckAt = 0;
   let nextIntervalOverrideMs = null;
+  let snapshotGeneratedAt = '';
+  let firstLiveRound = true;
+
+  loadLocalSnapshot().then((snapshot) => {
+    snapshotGeneratedAt = snapshot?.generated_at || '';
+    if (!lastMetaGeneratedAt) lastMetaGeneratedAt = snapshotGeneratedAt;
+  });
 
   // meta.json 检查：拆出 live window 限制，全天低频检查
   // why：GitHub Actions 在凌晨 03:31 更新静态 JSON，如果只在 15:00-24:00 检查，
@@ -254,12 +308,19 @@ export function start({ state, onUpdate, reloadData }) {
     if (reloaded) return;
 
     // 实时净值只在 live window 内拉取
-    if (!inLiveWindow(nowParts)) return;
+    if (!inLiveWindow(nowParts) || !qdiiPanelVisible()) return;
 
     const defaultShares = collectOffshoreDefaultShares(state);
     if (!defaultShares.size) {
       nextIntervalOverrideMs = BOOTSTRAP_RETRY_MS;
       return;
+    }
+
+    // meta 与当前交易日一致时，主表已是今日数据，首轮无需逐基金打外部接口。
+    if (firstLiveRound) {
+      firstLiveRound = false;
+      const metaGeneratedAt = state?.metaGeneratedAt || lastMetaGeneratedAt || snapshotGeneratedAt;
+      if (isSameTradingDay(metaGeneratedAt, nowParts)) return;
     }
 
     const targets = [];
@@ -268,11 +329,13 @@ export function start({ state, onUpdate, reloadData }) {
         targets.push({ code, share });
       }
     }
-    if (!targets.length) return;
+    // 每轮只补充少量尚未 settle 的代码，避免一次打开页面产生上百个请求。
+    const batch = targets.slice(0, MAX_CODES_PER_TICK);
+    if (!batch.length) return;
 
     let changed = false;
 
-    await runWithConcurrency(targets, CONCURRENCY_LIMIT, async ({ code, share }) => {
+    await runWithConcurrency(batch, CONCURRENCY_LIMIT, async ({ code, share }) => {
       const st = getCodeState(code);
       const live = await fetchLatestNav(code);
 
@@ -321,7 +384,7 @@ export function start({ state, onUpdate, reloadData }) {
   }
 
   schedule(
-    tick,
+    () => runOnIdle(tick),
     () => {
       if (nextIntervalOverrideMs != null) {
         const ms = nextIntervalOverrideMs;
@@ -330,6 +393,6 @@ export function start({ state, onUpdate, reloadData }) {
       }
       return getIntervalMsByBjTime(bjNowParts());
     },
-    { firstDelayMs: 2500 },
+    { firstDelayMs: Math.max(0, EXTERNAL_MIN_DELAY_MS - (Date.now() - BOOT_AT)) },
   );
 }

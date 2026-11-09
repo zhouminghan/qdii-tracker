@@ -6,7 +6,7 @@
 // 回撤图是「风险严重度」口径，颜色越深回撤越深，已在下文独立标注，避免混淆。
 // ============================================================================
 
-import { saveNodeAsPng, previewAndDownload, pngFilename } from './save-image.js?v=dev';
+import { saveNodeAsPng, previewAndDownload, pngFilename, saveImageErrorMessage } from './save-image.js?v=dev';
 
 const MONTH_CN = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
 const WINDOWS = [
@@ -14,10 +14,27 @@ const WINDOWS = [
   { key: '10y', label: '近 10 年' },
   { key: 'full', label: '全长 2001+' },
 ];
+const HEAT_META = {
+  year: {
+    label: '年度',
+    title: '年度涨跌热力图',
+    aria: '纳指年度涨跌热力图',
+    poster: '年度涨跌热力图',
+    filePrefix: 'qdii-nasdaq-heat-year',
+  },
+  month: {
+    label: '月度',
+    title: '月度冷热热力图',
+    aria: '纳指月度冷热热力图',
+    poster: '月度冷热热力图',
+    filePrefix: 'qdii-nasdaq-heat-month',
+  },
+};
 
 let DATA = null;
 let activeWindow = '5y';
-let heatView = 'month';
+let heatView = 'year';
+let heatSaveBusy = false;
 
 function clamp(v, lo, hi) {
   return Math.max(lo, Math.min(hi, v));
@@ -49,6 +66,95 @@ function heatStyle(v) {
     bg: `rgba(48,164,108,${alpha.toFixed(3)})`,
     fg: alpha > 0.5 ? '#fff' : 'var(--fall)',
   };
+}
+
+function currentHeatMeta() {
+  return HEAT_META[heatView] || HEAT_META.year;
+}
+
+function heatRangeText(d, view) {
+  const source = view === 'month'
+    ? d?.heatmap?.years
+    : d?.annual?.map((a) => a.year);
+  const years = (source || []).map(Number).filter(Number.isFinite);
+  if (years.length) return `${Math.min(...years)}-${Math.max(...years)}`;
+  return `${d?.range?.first_year ?? 1986}-${d?.range?.last_year ?? '至今'}`;
+}
+
+function syncHeatViewControls(d = DATA) {
+  const meta = currentHeatMeta();
+  const range = heatRangeText(d, heatView);
+  const title = document.getElementById('nh-heat-title');
+  if (title) title.textContent = `🔥 ${meta.title}（${range}，%）`;
+  const heatEl = document.getElementById('nh-heatmap');
+  if (heatEl) heatEl.setAttribute('aria-label', `${meta.aria}（${range}，红涨绿跌）`);
+  const toggle = document.getElementById('nh-heat-toggle');
+  if (toggle) toggle.setAttribute('aria-label', `热力图视图切换，当前${meta.label}`);
+  document.querySelectorAll('#nh-heat-toggle .nh-seg').forEach((btn) => {
+    const active = btn.dataset.heat === heatView;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', String(active));
+  });
+  const saveBtn = document.getElementById('nh-heat-save');
+  if (saveBtn) {
+    saveBtn.title = `保存${meta.label}热力图 PNG`;
+    saveBtn.setAttribute('aria-label', `保存${meta.label}热力图 PNG`);
+  }
+}
+
+function setHeatSaveStatus(text, state = '') {
+  const el = document.getElementById('nh-heat-save-status');
+  if (!el) return;
+  el.textContent = text;
+  el.dataset.state = state;
+  el.setAttribute('role', state === 'error' ? 'alert' : 'status');
+}
+
+function clearHeatSaveStatus() {
+  setHeatSaveStatus('');
+  const btn = document.getElementById('nh-heat-save');
+  if (btn && !btn.disabled) {
+    btn.textContent = '保存图片';
+    btn.removeAttribute('aria-busy');
+  }
+}
+
+function setHeatSaveBusy(meta) {
+  heatSaveBusy = true;
+  const btn = document.getElementById('nh-heat-save');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '生成中…';
+    btn.setAttribute('aria-busy', 'true');
+  }
+  setHeatSaveStatus(`正在生成${meta.label}热力图 PNG…`, 'busy');
+}
+
+function setHeatSaveSuccess(meta) {
+  heatSaveBusy = false;
+  setHeatSaveStatus(`已生成${meta.label}热力图预览，可滚动查看并下载 PNG。`, 'success');
+}
+
+function setHeatSaveError(err) {
+  heatSaveBusy = false;
+  const btn = document.getElementById('nh-heat-save');
+  if (btn) {
+    btn.disabled = false;
+    btn.textContent = '重试保存';
+    btn.removeAttribute('aria-busy');
+  }
+  setHeatSaveStatus(`生成失败：${saveImageErrorMessage(err)} 点击「重试保存」可再试。`, 'error');
+}
+
+function restoreHeatSaveButton() {
+  heatSaveBusy = false;
+  const btn = document.getElementById('nh-heat-save');
+  if (btn) {
+    btn.disabled = false;
+    btn.textContent = '保存图片';
+    btn.removeAttribute('aria-busy');
+  }
+  clearHeatSaveStatus();
 }
 
 function renderSummary(d) {
@@ -202,6 +308,7 @@ function renderTroughHistogram(d) {
 }
 
 function renderHeatmap(d) {
+  syncHeatViewControls(d);
   if (heatView === 'year') {
     renderYearlyHeatmap(d);
     return;
@@ -211,8 +318,6 @@ function renderHeatmap(d) {
   const rows = hm.rows || [];
   const el = document.getElementById('nh-heatmap');
   if (!el) return;
-  const title = document.getElementById('nh-heat-title');
-  if (title) title.textContent = '🔥 月度冷热热力图（1997 至今，%）';
   if (!years.length) {
     el.innerHTML = '<div class="nh-empty">暂无数据</div>';
     return;
@@ -236,26 +341,63 @@ function renderYearlyHeatmap(d) {
   const annual = d.annual || [];
   const el = document.getElementById('nh-heatmap');
   if (!el) return;
-  const title = document.getElementById('nh-heat-title');
-  if (title) title.textContent = '🔥 年度涨跌热力图（1986 至今，%）';
-  if (!annual.length) {
+  const valid = annual.filter((a) => Number.isFinite(a.return_pct));
+  if (!valid.length) {
     el.innerHTML = '<div class="nh-empty">暂无数据</div>';
     return;
   }
+  const upCount = valid.filter((a) => a.return_pct > 0).length;
+  const downCount = valid.filter((a) => a.return_pct < 0).length;
+  const avg = valid.reduce((sum, a) => sum + a.return_pct, 0) / valid.length;
+  const sorted = valid.map((a) => a.return_pct).sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  const median = sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+  const best = valid.reduce((a, b) => (b.return_pct > a.return_pct ? b : a));
+  const worst = valid.reduce((a, b) => (b.return_pct < a.return_pct ? b : a));
+  const ddRows = annual.filter((a) => Number.isFinite(a.max_drawdown_pct));
+  const deepestDd = ddRows.length
+    ? ddRows.reduce((a, b) => (b.max_drawdown_pct < a.max_drawdown_pct ? b : a))
+    : null;
+  const maxAbs = Math.max(...valid.map((a) => Math.abs(a.return_pct)), 1);
+  const summary = [
+    `<span class="nh-year-stat"><b>${valid.length}</b> 个年度</span>`,
+    `<span class="nh-year-stat nh-up">上涨 ${upCount} 年</span>`,
+    `<span class="nh-year-stat nh-down">下跌 ${downCount} 年</span>`,
+    `<span class="nh-year-stat">均值 ${pctText(avg)}</span>`,
+    `<span class="nh-year-stat">中位 ${pctText(median)}</span>`,
+    `<span class="nh-year-stat">最佳 ${best.year} ${pctText(best.return_pct)}</span>`,
+    `<span class="nh-year-stat">最差 ${worst.year} ${pctText(worst.return_pct)}</span>`,
+    deepestDd ? `<span class="nh-year-stat">最深回撤 ${deepestDd.year} ${pctText(deepestDd.max_drawdown_pct)}</span>` : '',
+    '<span class="nh-year-stat nh-year-legend"><i class="nh-legend-swatch nh-legend-up"></i>红涨 <i class="nh-legend-swatch nh-legend-down"></i>绿跌 · 小字为年内回撤</span>',
+  ].join('');
   const cells = annual.map((a) => {
-    const s = heatStyle(a.return_pct);
+    const v = a.return_pct;
+    const s = heatStyle(v);
+    const barWidth = clamp(100 * Math.abs(v || 0) / maxAbs, 4, 100).toFixed(1);
+    const peak = MONTH_CN[(a.peak_month || 1) - 1] || '--';
+    const trough = MONTH_CN[(a.trough_month || 1) - 1] || '--';
     return `
-      <div class="nh-year-cell" style="background:${s.bg};color:${s.fg}" title="${a.year} 年：${pctText(a.return_pct)}">
-        <span class="nh-year-cell-year">${a.year}</span>
-        <span class="nh-year-cell-val">${pctText(a.return_pct)}</span>
+      <div class="nh-year-cell" style="background:${s.bg};color:${s.fg}"
+           title="${a.year} 年：全年 ${pctText(v)}，年内最大回撤 ${pctText(a.max_drawdown_pct)}（${peak} → ${trough}）">
+        <span class="nh-year-cell-head">
+          <span class="nh-year-cell-year">${a.year}</span>
+          <span class="nh-year-cell-dd">${pctText(a.max_drawdown_pct)}</span>
+        </span>
+        <span class="nh-year-cell-val">${pctText(v)}</span>
+        <span class="nh-year-cell-bar" aria-hidden="true"><i style="width:${barWidth}%"></i></span>
       </div>`;
   }).join('');
-  el.innerHTML = `<div class="nh-year-heat">${cells}</div>`;
+  el.innerHTML = `<div class="nh-year-summary">${summary}</div><div class="nh-year-heat">${cells}</div>`;
 }
 
 async function saveHeatmap() {
   const heatEl = document.getElementById('nh-heatmap');
-  if (!heatEl || !DATA) return;
+  const btn = document.getElementById('nh-heat-save');
+  if (!heatEl || !DATA || !btn || btn.disabled || heatSaveBusy) return;
+  const view = heatView;
+  const meta = HEAT_META[view] || HEAT_META.year;
+  const range = heatRangeText(DATA, view);
+  const heatMarkup = heatEl.innerHTML;
   const poster = document.createElement('div');
   poster.className = 'nh-poster';
   // 必须放在视口内（top:0/left:0 + z-index:-1），离屏 -9999px 会让 html-to-image 渲染空白
@@ -263,18 +405,33 @@ async function saveHeatmap() {
   poster.style.top = '0';
   poster.style.left = '0';
   poster.style.zIndex = '-1';
-  const label = heatView === 'month' ? '月度冷热热力图' : '年度涨跌热力图';
+  poster.style.pointerEvents = 'none';
+  poster.setAttribute('aria-hidden', 'true');
+  const viewNote = view === 'year'
+    ? `${(DATA.annual || []).length} 个年度 · 每格含全年涨跌与年内最大回撤 · 红涨绿跌`
+    : `${(DATA.heatmap?.years || []).length} 年 × 12 月 · 单元格为当月涨跌 · 红涨绿跌`;
   poster.innerHTML = `
-    <div class="nh-poster-title">纳指图谱 · ${label}</div>
-    ${heatEl.innerHTML}
+    <div class="nh-poster-title">纳指图谱 · ${meta.poster}（${range}）</div>
+    <div class="nh-poster-meta">${viewNote}</div>
+    ${heatMarkup}
     <div class="nh-poster-foot">数据更新于 ${(DATA.generated_at || '').slice(0, 10)} · QDII Tracker</div>`;
   document.body.appendChild(poster);
+  setHeatSaveBusy(meta);
   try {
-    await previewAndDownload(poster, pngFilename('qdii-nasdaq-heat'));
+    const ok = await previewAndDownload(poster, pngFilename(meta.filePrefix), {
+      title: `📸 ${meta.label}热力图预览`,
+      ariaLabel: `${meta.label}热力图预览`,
+      triggerButton: btn,
+      restoreTrigger: restoreHeatSaveButton,
+      onClose: () => syncHeatViewControls(DATA),
+      onError: setHeatSaveError,
+    });
+    if (ok) setHeatSaveSuccess(meta);
   } catch (e) {
-    console.error('heatmap save error:', e);
+    setHeatSaveError(e);
   } finally {
     poster.remove();
+    heatSaveBusy = false;
   }
 }
 
@@ -362,15 +519,15 @@ async function load() {
 
 export function start() {
   window.renderNasdaqHistory = render;
+  syncHeatViewControls(null);
   document.querySelectorAll('#nh-heat-toggle .nh-seg').forEach((btn) => {
     btn.addEventListener('click', () => {
-      heatView = btn.dataset.heat;
-      document.querySelectorAll('#nh-heat-toggle .nh-seg').forEach((b) => {
-        const active = b === btn;
-        b.classList.toggle('active', active);
-        b.setAttribute('aria-pressed', active ? 'true' : 'false');
-      });
+      const next = btn.dataset.heat === 'month' ? 'month' : 'year';
+      if (next === heatView) return;
+      heatView = next;
+      if (!heatSaveBusy) clearHeatSaveStatus();
       if (DATA) renderHeatmap(DATA);
+      else syncHeatViewControls(null);
     });
   });
   const heatSave = document.getElementById('nh-heat-save');

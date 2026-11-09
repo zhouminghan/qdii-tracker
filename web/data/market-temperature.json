@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-11-07T04:27:03.043482+08:00",
+  "generated_at": "2026-11-09T18:31:54.253171+08:00",
   "schema_version": 1,
-  "score": 40,
+  "score": 43,
   "band": "yellow",
   "verdict": "黄灯 · 中性区间",
   "summary": "市场处于合理区间，适合定投或谨慎操作。",
@@ -13,15 +13,15 @@
   },
   "indicators": {
     "nasdaq_trend": {
-      "score": 26,
+      "score": 32,
       "label": "趋势偏弱",
       "raw": {
-        "price": 26629.81,
-        "ma200": 27976.53,
-        "pct_above_ma": -4.81,
-        "date": "2026-11-05"
+        "price": 26989.99,
+        "ma200": 27983.89,
+        "pct_above_ma": -3.55,
+        "date": "2026-11-06"
       },
-      "note": "纳指 100 位于 200 日线下方 4.8%。",
+      "note": "纳指 100 位于 200 日线下方 3.5%。",
       "source": "新浪",
       "stale": false
     },
@@ -29,10 +29,10 @@
       "score": 50,
       "label": "情绪偏紧",
       "raw": {
-        "value": 23.9,
-        "date": "2026-11-06"
+        "value": 23.79,
+        "date": "2026-11-09"
       },
-      "note": "VIX 23.9，恐慌情绪中性。",
+      "note": "VIX 23.8，恐慌情绪中性。",
       "source": "Yahoo Finance",
       "stale": false
     },
@@ -51,10 +51,10 @@
       "score": 55,
       "label": "美元中性",
       "raw": {
-        "value": 101.86,
-        "date": "2026-11-03"
+        "value": 101.82,
+        "date": "2026-11-09"
       },
-      "note": "美元指数 101.9。",
+      "note": "美元指数 101.8。",
       "source": "东方财富",
       "stale": false
     }

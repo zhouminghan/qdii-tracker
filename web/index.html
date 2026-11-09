@@ -565,7 +565,7 @@
           <div class="flex items-baseline gap-2 flex-wrap">
             <h2 class="text-lg font-bold" id="nasdaq-title">📅 纳指图谱</h2>
           </div>
-          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">1986 至今的纳斯达克年度回撤、月度冷热与多周期月份排行，辅助判断定投节奏。</p>
+          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">1986 至今的纳斯达克年度涨跌、年内回撤、月度冷热与多周期月份排行，辅助判断定投节奏。</p>
         </div>
         <div class="flex items-center gap-2 flex-shrink-0">
           <button type="button" id="nasdaq-save" class="temp-save-btn" title="保存纳指图谱长图">保存图片</button>
@@ -595,16 +595,17 @@
 
       <div class="nh-card" style="margin-top:0.75rem">
         <div class="nh-card-title nh-heat-title-row">
-          <span id="nh-heat-title">🔥 月度冷热热力图（1997 至今，%）</span>
+          <span id="nh-heat-title">🔥 年度涨跌热力图（1986-2026，%）</span>
           <span class="nh-heat-actions">
-            <span class="nh-seg-row" id="nh-heat-toggle" role="group" aria-label="热力图视图切换" style="margin-bottom:0">
-              <button type="button" class="nh-seg active" data-heat="month" aria-pressed="true">月度</button>
-              <button type="button" class="nh-seg" data-heat="year" aria-pressed="false">年度</button>
+            <span class="nh-seg-row" id="nh-heat-toggle" role="group" aria-label="热力图视图切换，当前年度" style="margin-bottom:0">
+              <button type="button" class="nh-seg active" data-heat="year" aria-pressed="true">年度</button>
+              <button type="button" class="nh-seg" data-heat="month" aria-pressed="false">月度</button>
             </span>
-            <button type="button" id="nh-heat-save" class="temp-save-btn" title="保存热力图海报">保存图片</button>
+            <button type="button" id="nh-heat-save" class="temp-save-btn" title="保存年度热力图 PNG" aria-label="保存年度热力图 PNG">保存图片</button>
           </span>
         </div>
-        <div id="nh-heatmap"></div>
+        <div id="nh-heat-save-status" class="nh-heat-save-status" role="status" aria-live="polite"></div>
+        <div id="nh-heatmap" role="group" aria-label="纳指年度涨跌热力图（1986-2026，红涨绿跌）"></div>
       </div>
 
       <div class="nh-card" style="margin-top:0.75rem">
@@ -647,21 +648,28 @@
   </main>
 
   <!-- 图表海报预览 Modal -->
-  <div id="chart-poster-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4" style="background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); overflow:auto;" role="dialog" aria-modal="true" aria-label="图表海报预览">
-    <div class="chart-poster-dialog bg-stone-50 dark:bg-stone-900 rounded-2xl shadow-2xl overflow-hidden">
-      <div class="bg-white dark:bg-stone-800 border-b border-stone-200 dark:border-stone-700 px-4 py-3 flex items-center justify-between">
-        <span class="text-sm font-bold text-stone-800 dark:text-stone-100">📸 海报预览</span>
-        <button type="button" onclick="closeChartPoster()" class="w-8 h-8 rounded-full hover:bg-stone-100 dark:hover:bg-stone-700 flex items-center justify-center text-stone-500 dark:text-stone-300" aria-label="关闭预览">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+  <div id="chart-poster-modal" class="hidden chart-poster-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-label="图表海报预览">
+    <div class="chart-poster-dialog">
+      <div class="chart-poster-header">
+        <span id="chart-poster-title" class="chart-poster-title">📸 海报预览</span>
+        <button type="button" id="chart-poster-close" onclick="closeChartPoster()" class="chart-poster-close" aria-label="关闭预览" title="关闭预览">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
-      <div class="p-3 sm:p-4">
-        <div class="rounded-xl overflow-hidden border border-stone-200 dark:border-stone-700 chart-poster-preview">
-          <img id="chart-poster-img" alt="图表海报预览" class="w-full h-auto block" />
+      <div class="chart-poster-body">
+        <div class="chart-poster-toolbar">
+          <div class="chart-poster-scale" role="group" aria-label="预览缩放">
+            <button type="button" id="chart-poster-fit" class="chart-poster-scale-btn" aria-pressed="false">适应宽度</button>
+            <button type="button" id="chart-poster-original" class="chart-poster-scale-btn active" aria-pressed="true">原图 1:1</button>
+          </div>
+          <span id="chart-poster-scale-note" class="chart-poster-scale-note" aria-live="polite">原图 1:1 · 可横向/纵向滚动</span>
         </div>
-        <button type="button" id="chart-poster-download" class="mt-3 w-full py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition">
-          下载 PNG
-        </button>
+        <div id="chart-poster-preview" class="chart-poster-preview">
+          <img id="chart-poster-img" class="chart-poster-img" alt="图表海报预览" />
+        </div>
+        <div class="chart-poster-actions">
+          <button type="button" id="chart-poster-download" class="chart-poster-download">下载 PNG</button>
+        </div>
       </div>
     </div>
   </div>

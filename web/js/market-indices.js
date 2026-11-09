@@ -64,6 +64,82 @@ const DATA_SYMBOL_MAP = {
   'sh000688': 'sh000688',    // 科创 50
 };
 
+const SNAPSHOT_URL = './data/market-snapshot.json';
+const BOOT_AT = Date.now();
+const EXTERNAL_MIN_DELAY_MS = 2500;
+let hasExternalData = false;
+let refreshing = false;
+
+function loadLocalSnapshot() {
+  if (window.__marketSnapshot) return Promise.resolve(window.__marketSnapshot);
+  if (!window.__marketSnapshotPromise) {
+    window.__marketSnapshotPromise = fetch(SNAPSHOT_URL, { cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((snapshot) => {
+        window.__marketSnapshot = snapshot || null;
+        return snapshot || null;
+      })
+      .catch(() => null);
+  }
+  return window.__marketSnapshotPromise;
+}
+
+function snapshotStamp(snapshot) {
+  const iso = snapshot && snapshot.generated_at;
+  if (!iso) return '时间未知';
+  const date = new Date(iso);
+  if (isNaN(date.getTime())) return String(iso).slice(0, 16).replace('T', ' ');
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Shanghai', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+  }).formatToParts(date);
+  const get = (type) => parts.find((p) => p.type === type)?.value || '';
+  return `${get('month')}-${get('day')} ${get('hour')}:${get('minute')}`;
+}
+
+function localStatus(snapshot) {
+  return snapshot
+    ? `💾 本地快照 · 更新于 ${snapshotStamp(snapshot)}`
+    : '💾 本地快照不可用 · 等待后台刷新';
+}
+
+function finite(v) {
+  const n = Number(v);
+  return v !== null && v !== '' && Number.isFinite(n) ? n : null;
+}
+
+function quoteFromSnapshot(raw) {
+  const price = finite(raw && raw.price);
+  if (price == null || price <= 0) return null;
+  return {
+    price,
+    change: finite(raw.change) ?? 0,
+    changePct: finite(raw.change_pct) ?? 0,
+    asOf: raw.as_of || null,
+  };
+}
+
+function marketPanelVisible() {
+  const panel = document.getElementById('market-overview');
+  return !!panel && panel.style.display !== 'none' && panel.getAttribute('aria-hidden') !== 'true';
+}
+
+function canUseExternal() {
+  return Date.now() - BOOT_AT >= EXTERNAL_MIN_DELAY_MS && !document.hidden && marketPanelVisible();
+}
+
+function onIdleAfterBoot(task) {
+  const wait = Math.max(0, EXTERNAL_MIN_DELAY_MS - (Date.now() - BOOT_AT));
+  setTimeout(() => {
+    const run = () => { if (canUseExternal()) task(); };
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(run, { timeout: 1000 });
+    } else {
+      setTimeout(run, 0);
+    }
+  }, wait);
+}
+
 // 北京时间美股盘中判断（21:30 - 次日 04:00），且必须是「美股交易日」窗口
 // why 加周末判断：原版只看时段，导致周六凌晨 03:00 也被判为「盘中」（其实美股已收盘 = 周五收盘）
 // 美股交易日的北京时间映射（夏令时口径，简化处理不细分冬夏令时——差 1h 影响极小）：
@@ -204,13 +280,13 @@ function renderCard(item, parsed) {
       card.innerHTML = `
         <div class="text-[11px] text-stone-400 dark:text-stone-500 mb-0.5">${item.emoji} ${item.name}</div>
         <div class="text-base sm:text-lg font-semibold tabular-nums text-stone-400 dark:text-stone-500">${cached}</div>
-        <div class="text-[11px] text-stone-300 dark:text-stone-600">📡 暂时无法刷新</div>
+        <div class="text-[11px] text-stone-300 dark:text-stone-600">💾 本地快照暂无数据</div>
       `;
     } else {
       card.innerHTML = `
         <div class="text-[11px] text-stone-400 dark:text-stone-500 mb-0.5">${item.emoji} ${item.name}</div>
         <div class="text-base font-semibold text-stone-300 dark:text-stone-600">-</div>
-        <div class="text-[11px] text-stone-300 dark:text-stone-600">数据源加载中…</div>
+        <div class="text-[11px] text-stone-300 dark:text-stone-600">💾 本地快照暂无数据</div>
       `;
     }
     return;
@@ -225,6 +301,8 @@ function renderCard(item, parsed) {
   const pctStr = `${sign}${changePct.toFixed(2)}%`;
   const changeStr = `${sign}${change.toFixed(item.digits === 4 ? 4 : 2)}`;
   card.dataset.lastPrice = priceStr;  // 缓存上次成功值，下次失败可降级展示
+  card.dataset.asOf = parsed.asOf || '';
+  if (parsed.asOf) card.title = `本地/最新收盘 ${parsed.asOf} · 点击查看历史走势`;
   card.innerHTML = `
     <div class="text-[11px] text-stone-500 dark:text-stone-400 mb-0.5">${item.emoji} ${item.name}</div>
     <div class="text-base sm:text-lg font-semibold tabular-nums">${priceStr}</div>
@@ -273,13 +351,13 @@ function renderGlobalCard(item, parsed) {
       card.innerHTML = `
         <div class="text-[11px] text-stone-400 dark:text-stone-500 mb-0.5">${item.emoji} ${item.name}</div>
         <div class="text-base sm:text-lg font-semibold tabular-nums text-stone-400 dark:text-stone-500">${cached}</div>
-        <div class="text-[11px] text-stone-300 dark:text-stone-600">📡 暂时无法刷新</div>
+        <div class="text-[11px] text-stone-300 dark:text-stone-600">💾 本地快照暂无数据</div>
       `;
     } else {
       card.innerHTML = `
         <div class="text-[11px] text-stone-400 dark:text-stone-500 mb-0.5">${item.emoji} ${item.name}</div>
         <div class="text-base font-semibold text-stone-300 dark:text-stone-600">-</div>
-        <div class="text-[11px] text-stone-300 dark:text-stone-600">数据源加载中…</div>
+        <div class="text-[11px] text-stone-300 dark:text-stone-600">💾 本地快照暂无数据</div>
       `;
     }
     return;
@@ -291,6 +369,8 @@ function renderGlobalCard(item, parsed) {
   const arrow = flat ? '—' : (up ? '↑' : '↓');
   const sign = up ? '+' : '';
   card.dataset.lastPrice = price.toFixed(item.digits);
+  card.dataset.asOf = parsed.asOf || '';
+  if (parsed.asOf) card.title = `本地/最新收盘 ${parsed.asOf} · 点击查看历史走势`;
   card.innerHTML = `
     <div class="text-[11px] text-stone-500 dark:text-stone-400 mb-0.5">${item.emoji} ${item.name}</div>
     <div class="text-base sm:text-lg font-semibold tabular-nums">${price.toFixed(item.digits)}</div>
@@ -298,54 +378,104 @@ function renderGlobalCard(item, parsed) {
   `;
 }
 
-async function refreshAll() {
-  const map = await fetchAll();
-  const globalMap = await fetchGlobalQuotes();
-  let okCount = 0;
+function renderLocalSnapshot(snapshot) {
+  if (hasExternalData) return;
+  const items = (snapshot && snapshot.market_indices && snapshot.market_indices.items) || {};
   window.__mktData = window.__mktData || {};
   for (const sym of SYMBOLS) {
-    const parsed = parsePayload(map[sym.qq], sym.kind);
+    const parsed = quoteFromSnapshot(items[DATA_SYMBOL_MAP[sym.qq]]);
     if (parsed) {
-      okCount++;
-      window.__mktData[sym.qq] = { name: sym.name, price: parsed.price, change: parsed.change, changePct: parsed.changePct };
+      window.__mktData[sym.qq] = {
+        name: sym.name, price: parsed.price, change: parsed.change,
+        changePct: parsed.changePct, asOf: parsed.asOf, source: 'local',
+      };
     }
     renderCard(sym, parsed);
   }
   for (const g of GLOBAL_SYMBOLS) {
-    const parsed = globalMap[g.em];
-    if (parsed) okCount++;
-    renderGlobalCard(g, parsed);
+    renderGlobalCard(g, quoteFromSnapshot(items[g.em]));
   }
   const el = document.getElementById('market-update-time');
-  if (el) {
-    if (okCount === 0) {
-      // 全失败：保持元素现有文本（如果是首屏失败则给个加载中提示）
-      // why 不直接覆盖：避免把上一次成功的状态冲掉，让用户误以为「刚刚」失败
-      if (!el.dataset.everOk) {
-        el.textContent = '📡 行情获取失败（稍后重试）';
-      }
-    } else {
-      el.dataset.everOk = '1';
-      // 状态标签：只反映「现在能不能交易」，不带时间戳
-      // why 不显示时间：见 getMarketStatusLabel 注释
-      el.textContent = `📡 行情 ${getMarketStatusLabel()}`;
+  if (el) el.textContent = localStatus(snapshot);
+}
+
+function renderLocalPlaceholders() {
+  for (const sym of SYMBOLS) renderCard(sym, null);
+  for (const g of GLOBAL_SYMBOLS) renderGlobalCard(g, null);
+  const el = document.getElementById('market-update-time');
+  if (el) el.textContent = '💾 本地快照 · 读取中';
+}
+
+function ensureRefreshButton() {
+  const meta = document.getElementById('market-meta');
+  if (!meta || meta.querySelector('[data-market-refresh]')) return;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.dataset.marketRefresh = '1';
+  btn.className = 'temp-save-btn';
+  btn.style.cssText = 'margin-left:8px;padding:2px 8px;font-size:11px';
+  btn.textContent = '刷新';
+  btn.title = '刷新实时行情';
+  meta.appendChild(btn);
+  applyMarketHeaderLayout();
+  return btn;
+}
+
+function applyMarketHeaderLayout() {
+  const meta = document.getElementById('market-meta');
+  const header = meta && meta.closest('#market-overview > .flex.items-end');
+  if (!meta || !header) return;
+  const left = header.firstElementChild;
+  const compact = window.innerWidth < 640;
+  header.style.flexWrap = compact ? 'wrap' : '';
+  if (left) left.style.flexBasis = compact ? '100%' : '';
+  meta.style.flexBasis = compact ? '100%' : '';
+  meta.style.textAlign = compact ? 'left' : '';
+}
+
+async function refreshAll() {
+  if (refreshing || !canUseExternal()) return;
+  refreshing = true;
+  try {
+    const map = await fetchAll();
+    const globalMap = await fetchGlobalQuotes();
+    let okCount = 0;
+    window.__mktData = window.__mktData || {};
+    for (const sym of SYMBOLS) {
+      const parsed = parsePayload(map[sym.qq], sym.kind);
+      if (!parsed) continue;
+      okCount++;
+      window.__mktData[sym.qq] = {
+        name: sym.name, price: parsed.price, change: parsed.change,
+        changePct: parsed.changePct, asOf: null, source: 'live',
+      };
+      renderCard(sym, parsed);
     }
+    for (const g of GLOBAL_SYMBOLS) {
+      const parsed = globalMap[g.em];
+      if (!parsed) continue;
+      okCount++;
+      renderGlobalCard(g, parsed);
+    }
+    if (okCount > 0) {
+      hasExternalData = true;
+      const el = document.getElementById('market-update-time');
+      if (el) {
+        el.dataset.everOk = '1';
+        el.textContent = `📡 行情 ${getMarketStatusLabel()}`;
+      }
+    }
+  } finally {
+    refreshing = false;
   }
 }
 
-import { schedule } from './idle-scheduler.js';
-
 export function start() {
-  // 调度策略：
-  //  ，美股 / A 股 / 港股盘中 → 60s（紧跟实时）
-  //  ，平日收盘段（北京 04:00-21:30） → 5min（盘前盘后偶有微跳动，保留较快节奏）
-  //  ，周末 → 30min（行情完全静止，但保留低频心跳以备数据源恢复或时间显示纠偏）
-  schedule(
-    refreshAll,
-    () => {
-      if (isUsMarketOpen() || isAShareMarketOpen() || isHkMarketOpen()) return 60 * 1000;
-      if (isWeekendOff())   return 30 * 60 * 1000;
-      return 5 * 60 * 1000;
-    },
-  );
+  renderLocalPlaceholders();
+  applyMarketHeaderLayout();
+  window.addEventListener('resize', applyMarketHeaderLayout);
+  const refreshBtn = ensureRefreshButton();
+  loadLocalSnapshot().then(renderLocalSnapshot);
+  if (refreshBtn) refreshBtn.addEventListener('click', () => onIdleAfterBoot(refreshAll));
+  // 首屏始终读本地快照；实时行情只在用户点击「刷新」后、idle 且满 2.5s 时拉取。
 }

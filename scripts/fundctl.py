@@ -4,6 +4,7 @@
 - add: 新增/强制纳入一只基金（配置 + 局部后处理）
 - remove: 移除一只基金（配置 + 数据清理）
 - move: 增量移动分类（复用 pipeline.reclassify）
+- brand: 设置公司品牌 logo 文字（配置 + 前端派生常量）
 - refresh: 日常增量（默认 fill）
 - sync: 全量流水线
 - check: 一致性校验
@@ -75,6 +76,29 @@ def cmd_move(args):
         extra.append("--no-whitelist")
     _run(reclassify.main, "--keyword", args.keyword,
          "--from", args.from_cat, "--to", args.to_cat, *extra)
+    _run(codegen.main)
+
+
+def cmd_brand(args):
+    """设置 company_brand 的 logo 文字，并刷新前端派生常量。"""
+    company = args.company.strip()
+    letter = args.letter.strip()
+    if not company or not letter:
+        raise SystemExit("❌ --company / --letter 不能为空")
+
+    cfg = get_config()
+    brands = cfg.get("company_brand", {})
+    if not isinstance(brands, dict) or not isinstance(brands.get(company), dict):
+        raise SystemExit(f"❌ company_brand 中未找到公司: {company}")
+
+    old_letter = brands[company].get("letter")
+    brands[company]["letter"] = letter
+    errors = validate_config(cfg)
+    if errors:
+        raise SystemExit("❌ 配置校验失败: " + "; ".join(errors))
+
+    save_config(cfg)
+    print(f"✅ company_brand[{company}].letter: {old_letter!r} -> {letter!r}")
     _run(codegen.main)
 
 
@@ -450,6 +474,11 @@ def main():
     p_move.add_argument("--no-holdings", action="store_true")
     p_move.add_argument("--no-whitelist", action="store_true")
     p_move.set_defaults(func=cmd_move)
+
+    p_brand = sub.add_parser("brand", help="设置公司品牌 logo 文字")
+    p_brand.add_argument("--company", required=True, help="company_brand 中的公司全称")
+    p_brand.add_argument("--letter", required=True, help="logo 显示的文字")
+    p_brand.set_defaults(func=cmd_brand)
 
     p_remove = sub.add_parser("remove", help="删除一只基金（从配置和数据中移除）")
     p_remove.add_argument("--code", required=True)

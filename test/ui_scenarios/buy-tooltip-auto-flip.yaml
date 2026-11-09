@@ -14,9 +14,11 @@ origin:
 
 steps:
   - open: "web/index.html"
+  - wait_for: "#offshore-chips .chip[data-filter=\"global_index\"]"
   # 切到「全球指数基金」分组（仅 2 行，第一行贴近 thead）
   - eval: |
-      const btn = Array.from(document.querySelectorAll('button.chip')).find(b => b.textContent.includes('全球指数'));
+      const btn = document.querySelector('#offshore-chips .chip[data-filter="global_index"]');
+      if (!btn) throw new Error('未找到全球指数基金分组 chip');
       btn.click();
   # 找第一行的 .buy-cell（'限 ¥10' 或 '暂停'），把它滚到视口中央
   - eval: |

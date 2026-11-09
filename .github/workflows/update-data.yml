@@ -171,7 +171,7 @@ jobs:
           cd scripts
           python fundctl.py check
 
-      - name: 📸 生成 JSON / RSS 快照
+      - name: 📸 生成 JSON / RSS / 首屏行情快照
         run: |
           cd scripts
           python -m checks.build_snapshot
@@ -190,6 +190,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
+          # market-snapshot.json 位于 web/data/，随同一条 git add 进入部署产物。
           git add web/data/ web/feed.rss
           if git diff --cached --quiet; then
             echo "⚠️  数据无变化，跳过提交"

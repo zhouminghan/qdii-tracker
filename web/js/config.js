@@ -188,7 +188,7 @@ const COMPANY_BRAND = {
   },
   "国海富兰克林": {
     "color": "#0066b3",
-    "letter": "国海"
+    "letter": "国富"
   },
   "宏利": {
     "color": "#007f5f",
