@@ -2408,3 +2408,54 @@
       }
     }
 
+    /* 我的资产：表单内联状态。固定高度，显示/隐藏都不改变按钮位置。 */
+    .pf-inline-status {
+      box-sizing: border-box;
+      height: 1.875rem;
+      margin: 0.375rem 0 0;
+      padding: 0 0.625rem;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      font-size: 12px;
+      line-height: calc(1.875rem - 2px);
+      letter-spacing: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+    }
+    .pf-inline-status.is-visible { visibility: visible; opacity: 1; }
+    .pf-inline-status--error {
+      background: var(--red-2);
+      border-color: var(--red-5);
+      color: var(--red-12);
+    }
+    .pf-inline-status--success {
+      background: var(--green-2);
+      border-color: var(--green-5);
+      color: var(--green-12);
+    }
+    html.dark .pf-inline-status--error {
+      background: rgba(225, 29, 72, .12);
+      border-color: rgba(251, 113, 133, .38);
+      color: var(--red-12);
+    }
+    html.dark .pf-inline-status--success {
+      background: rgba(16, 185, 129, .12);
+      border-color: rgba(52, 211, 153, .38);
+      color: var(--green-12);
+    }
+    #portfolio-form [aria-invalid="true"],
+    #trade-form [aria-invalid="true"] {
+      border-color: var(--red-9) !important;
+      box-shadow: 0 0 0 1px rgba(229, 72, 77, .18);
+    }
+    html.dark #portfolio-form [aria-invalid="true"],
+    html.dark #trade-form [aria-invalid="true"] {
+      border-color: var(--red-10) !important;
+      box-shadow: 0 0 0 1px rgba(244, 63, 94, .28);
+    }
+

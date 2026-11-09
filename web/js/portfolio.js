@@ -23,6 +23,76 @@
   let tradeVisible = false;
   let tradeSide = 'buy';
   let filterType = 'all';  // all | offshore | etf
+  const STATUS_IDS = {
+    portfolio: 'pf-form-error',
+    trade: 'trade-form-error',
+    action: 'pf-action-status',
+  };
+  const inlineStatus = {
+    portfolio: { type: '', message: '' },
+    trade: { type: '', message: '' },
+    action: { type: '', message: '' },
+  };
+
+  function paintInlineStatus(scope) {
+    const el = document.getElementById(STATUS_IDS[scope]);
+    if (!el) return;
+    const { type, message } = inlineStatus[scope];
+    el.textContent = message;
+    el.classList.remove('is-visible', 'pf-inline-status--error', 'pf-inline-status--success');
+    if (message && type) {
+      el.classList.add('is-visible', `pf-inline-status--${type}`);
+      el.setAttribute('aria-hidden', 'false');
+    } else {
+      el.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  function setInlineStatus(scope, type, message) {
+    inlineStatus[scope] = { type: type || '', message: message || '' };
+    paintInlineStatus(scope);
+  }
+
+  function clearFieldInvalid(scope) {
+    const formId = scope === 'trade' ? 'trade-form' : 'portfolio-form';
+    const form = document.getElementById(formId);
+    if (!form) return;
+    form.querySelectorAll('[aria-invalid="true"]').forEach((el) => {
+      el.removeAttribute('aria-invalid');
+      el.removeAttribute('aria-describedby');
+    });
+  }
+
+  function clearInlineStatus() {
+    Object.keys(inlineStatus).forEach((scope) => {
+      inlineStatus[scope] = { type: '', message: '' };
+      paintInlineStatus(scope);
+    });
+    clearFieldInvalid('portfolio');
+    clearFieldInvalid('trade');
+  }
+
+  function showFormError(scope, message, focusId) {
+    clearFieldInvalid(scope);
+    setInlineStatus(scope, 'error', message);
+    const input = document.getElementById(focusId);
+    if (!input) return;
+    input.setAttribute('aria-invalid', 'true');
+    input.setAttribute('aria-describedby', STATUS_IDS[scope]);
+    input.focus();
+  }
+
+  function firstEmptyInput(ids) {
+    return ids.find((id) => {
+      const el = document.getElementById(id);
+      return el && el.value.trim() === '';
+    }) || ids[0];
+  }
+
+  function finishWithSuccess(message) {
+    clearInlineStatus();
+    setInlineStatus('action', 'success', message);
+  }
 
   function emptyPortfolio() {
     return { version: 1, cash: 0, realizedPnl: 0, positions: [], activity: [] };
@@ -177,7 +247,8 @@
     if (!rows.length) {
       return `
         <div class="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 px-4 py-10 text-center text-stone-400 dark:text-stone-500 text-sm">
-          还没有持仓。点右上角「添加持仓」，录入基金和「本金 / 总金额 / 持有收益」中的两个即可开始追踪。
+          <div id="pf-empty-copy">还没有持仓。点击下方『添加持仓』，录入基金和「本金 / 总金额 / 持有收益」中的两个即可开始追踪。</div>
+          <button type="button" id="pf-add-btn" class="mt-3 px-3 py-1.5 rounded-md border border-stone-300 dark:border-stone-600 text-sm hover:bg-stone-100 dark:hover:bg-stone-700">＋ 添加持仓</button>
         </div>`;
     }
     const body = rows.map((r, i) => {
@@ -237,6 +308,7 @@
           <input id="pf-gain" type="number" step="any" placeholder="持有收益" value="${gain !== '' ? Number(gain).toFixed(2) : ''}" class="px-2 py-1.5 rounded-md border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-900 text-sm" />
           <select id="pf-platform" class="px-2 py-1.5 rounded-md border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-900 text-sm">${opts}</select>
         </div>
+        <div id="pf-form-error" class="pf-inline-status" role="alert" aria-atomic="true" aria-hidden="true"></div>
         <div class="flex items-center gap-2 mt-2">
           <button type="button" id="pf-save" class="px-6 py-2 rounded-md bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700">确认</button>
           <button type="button" id="pf-cancel" class="px-4 py-2 rounded-md border border-stone-300 dark:border-stone-600 text-sm hover:bg-stone-100 dark:hover:bg-stone-700">取消</button>
@@ -246,18 +318,19 @@
       </div>`;
   }
 
-  function renderActions(p) {
+  function renderActions(p, showAdd) {
     const cash = Number(p.cash) || 0;
     return `
       <div class="flex flex-wrap items-center gap-3">
-        <button type="button" id="pf-add-btn" class="px-3 py-1.5 rounded-md border border-stone-300 dark:border-stone-600 text-sm hover:bg-stone-100 dark:hover:bg-stone-700">＋ 添加持仓</button>
+        ${showAdd ? '<button type="button" id="pf-add-btn" class="px-3 py-1.5 rounded-md border border-stone-300 dark:border-stone-600 text-sm hover:bg-stone-100 dark:hover:bg-stone-700">＋ 添加持仓</button>' : ''}
         <button type="button" id="pf-trade-btn" class="px-3 py-1.5 rounded-md border border-stone-300 dark:border-stone-600 text-sm hover:bg-stone-100 dark:hover:bg-stone-700">⇄ 记录交易</button>
         <label class="flex items-center gap-2 text-sm text-stone-500 dark:text-stone-400">
           现金
           <input id="pf-cash" type="number" step="any" value="${cash}" class="w-32 px-2 py-1.5 rounded-md border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-900 text-sm num" />
           元
         </label>
-      </div>`;
+      </div>
+      <div id="pf-action-status" class="pf-inline-status" role="status" aria-live="polite" aria-atomic="true" aria-hidden="true"></div>`;
   }
 
   function renderTradeForm() {
@@ -275,6 +348,7 @@
           <input id="trd-fee" type="number" step="any" min="0" placeholder="手续费（可选）" class="px-2 py-1.5 rounded-md border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-900 text-sm" />
           <input id="trd-date" type="date" value="${todayStr()}" class="px-2 py-1.5 rounded-md border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-900 text-sm" />
         </div>
+        <div id="trade-form-error" class="pf-inline-status" role="alert" aria-atomic="true" aria-hidden="true"></div>
         <div class="flex items-center gap-2 mt-2">
           <button type="button" id="trd-save" class="px-6 py-2 rounded-md bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700">确认</button>
           <button type="button" id="trd-cancel" class="px-4 py-2 rounded-md border border-stone-300 dark:border-stone-600 text-sm hover:bg-stone-100 dark:hover:bg-stone-700">取消</button>
@@ -319,10 +393,15 @@
       </div>`;
   }
 
-  function render(animate) {
+  function render(animate, preserveStatus) {
     const root = document.getElementById('portfolio-root');
     const countEl = document.getElementById('count-portfolio');
     if (!root) return;
+    if (!preserveStatus) {
+      Object.keys(inlineStatus).forEach((scope) => {
+        inlineStatus[scope] = { type: '', message: '' };
+      });
+    }
     fundIndex = buildFundIndex();
     const p = state || emptyPortfolio();
     const rows = computeRows(p);
@@ -336,9 +415,11 @@
       ${renderAllocation(filteredRows)}
       ${renderForm(p)}
       ${tradeVisible ? renderTradeForm() : ''}
-      ${renderActions(p)}
+      ${renderActions(p, filteredRows.length > 0)}
       ${renderRows(p, filteredRows)}
       ${renderActivity(p)}`;
+
+    Object.keys(inlineStatus).forEach(paintInlineStatus);
 
     if (animate) {
       root.querySelectorAll('[data-count]').forEach((el) => {
@@ -369,6 +450,7 @@
     const saveBtn = document.getElementById('pf-save');
     const cancelBtn = document.getElementById('pf-cancel');
     const cashInput = document.getElementById('pf-cash');
+    const codeInput = document.getElementById('pf-code');
 
     if (addBtn) addBtn.onclick = () => { editingCode = null; formVisible = true; render(); };
     if (cancelBtn) cancelBtn.onclick = () => { editingCode = null; formVisible = false; render(); };
@@ -390,7 +472,7 @@
     if (trdSell) trdSell.onclick = () => { tradeSide = 'sell'; render(); };
     if (trdSave) trdSave.onclick = () => applyTrade(p);
     if (tradeForm) tradeForm.style.display = tradeVisible ? '' : 'none';
-    form.style.display = formVisible ? '' : 'none';
+    if (form) form.style.display = formVisible ? '' : 'none';
 
     // 本金 / 总金额 / 持有收益：填任意两个，第三个自动填充
     const principalInput = document.getElementById('pf-principal');
@@ -407,6 +489,22 @@
     if (principalInput) principalInput.oninput = autofill;
     if (totalInput) totalInput.oninput = autofill;
     if (gainInput) gainInput.oninput = autofill;
+
+    const clearPortfolioError = () => {
+      if (inlineStatus.portfolio.type === 'error') setInlineStatus('portfolio', '', '');
+      clearFieldInvalid('portfolio');
+    };
+    [codeInput, principalInput, totalInput, gainInput].forEach((el) => {
+      if (el) el.addEventListener('input', clearPortfolioError);
+    });
+    const tradeInputs = ['trd-code', 'trd-amount', 'trd-nav'].map((id) => document.getElementById(id));
+    const clearTradeError = () => {
+      if (inlineStatus.trade.type === 'error') setInlineStatus('trade', '', '');
+      clearFieldInvalid('trade');
+    };
+    tradeInputs.forEach((el) => {
+      if (el) el.addEventListener('input', clearTradeError);
+    });
 
     const root = document.getElementById('portfolio-root');
     root.querySelectorAll('[data-pf-filter]').forEach(btn => {
@@ -434,6 +532,10 @@
   }
 
   function savePosition(p) {
+    clearInlineStatus();
+    formVisible = true;
+    const formEl = document.getElementById('portfolio-form');
+    if (formEl) formEl.style.display = '';
     const codeInput = document.getElementById('pf-code');
     const principalInput = document.getElementById('pf-principal');
     const totalInput = document.getElementById('pf-total');
@@ -442,16 +544,29 @@
     const code = (codeInput.value || '').trim();
     const m = code.match(/(\d{6})/);
     const resolved = m ? m[1] : code;
-    if (!fundIndex[resolved]) { alert('未找到该基金代码，请输入 6 位基金代码'); return; }
+    if (!fundIndex[resolved]) {
+      showFormError('portfolio', '基金代码未收录，请输入已收录的 6 位代码', 'pf-code');
+      return;
+    }
     let principal = principalInput.value !== '' ? Number(principalInput.value) : null;
     let total = totalInput.value !== '' ? Number(totalInput.value) : null;
     const gain = gainInput.value !== '' ? Number(gainInput.value) : null;
     if (principal === null && total !== null && gain !== null) principal = total - gain;
     if (total === null && principal !== null && gain !== null) total = principal + gain;
-    if (principal === null || total === null) { alert('请至少填写 本金 / 总金额 / 持有收益 中的两个'); return; }
-    if (!(total > 0)) { alert('总金额需大于 0'); return; }
+    if (principal === null || total === null) {
+      showFormError('portfolio', '请至少填写本金、总金额、持有收益中的两项',
+        firstEmptyInput(['pf-principal', 'pf-total', 'pf-gain']));
+      return;
+    }
+    if (!(total > 0)) {
+      showFormError('portfolio', '总金额需大于 0，请重新填写', 'pf-total');
+      return;
+    }
     const curNav = priceOf(fundIndex[resolved]);
-    if (!(curNav > 0)) { alert('当前净值暂不可用'); return; }
+    if (!(curNav > 0)) {
+      showFormError('portfolio', '当前净值暂不可用，请换一只基金或稍后再试', 'pf-code');
+      return;
+    }
     const shares = total / curNav;
     const avgCost = principal / shares;
 
@@ -462,7 +577,8 @@
     writeLocal(p);
     editingCode = null;
     formVisible = false;
-    render();
+    finishWithSuccess('已保存持仓');
+    render(false, true);
   }
 
   function todayStr() {
@@ -473,6 +589,10 @@
   }
 
   function applyTrade(p) {
+    clearInlineStatus();
+    tradeVisible = true;
+    const tradeFormEl = document.getElementById('trade-form');
+    if (tradeFormEl) tradeFormEl.style.display = '';
     const codeInput = document.getElementById('trd-code');
     const amountInput = document.getElementById('trd-amount');
     const navInput = document.getElementById('trd-nav');
@@ -481,11 +601,20 @@
     const code = (codeInput.value || '').trim();
     const m = code.match(/(\d{6})/);
     const resolved = m ? m[1] : code;
-    if (!fundIndex[resolved]) { alert('未找到该基金代码，请输入 6 位基金代码'); return; }
+    if (!fundIndex[resolved]) {
+      showFormError('trade', '基金代码未收录，请输入已收录的 6 位代码', 'trd-code');
+      return;
+    }
     const amount = Number(amountInput.value);
-    if (!(amount > 0)) { alert('请填写金额'); return; }
+    if (!(amount > 0)) {
+      showFormError('trade', '请填写交易金额，且需大于 0', 'trd-amount');
+      return;
+    }
     const price = navInput.value ? Number(navInput.value) : priceOf(fundIndex[resolved]);
-    if (!(price > 0)) { alert('当前净值暂不可用，请填写净值'); return; }
+    if (!(price > 0)) {
+      showFormError('trade', '净值不可用，请填写大于 0 的净值', 'trd-nav');
+      return;
+    }
     const fee = feeInput.value ? Number(feeInput.value) : 0;
     const qty = amount / price;
 
@@ -503,7 +632,10 @@
         list.push({ code: resolved, shares: qty, avgCost: newCost / qty, platform: '' });
       }
     } else {
-      if (idx < 0) { alert('没有该基金的持仓可卖出'); return; }
+      if (idx < 0) {
+        showFormError('trade', '没有该基金持仓，请先买入或改选代码', 'trd-code');
+        return;
+      }
       const pos = list[idx];
       const sellQty = Math.min(qty, pos.shares);
       const realized = (price - pos.avgCost) * sellQty - fee;
@@ -517,7 +649,8 @@
     p.activity.push(rec);
     writeLocal(p);
     tradeVisible = false;
-    render();
+    finishWithSuccess('已记录交易');
+    render(false, true);
   }
 
   async function init() {

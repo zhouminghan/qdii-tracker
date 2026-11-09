@@ -1126,6 +1126,57 @@
       assets: ['panel-portfolio'],
     };
 
+    const DEFAULT_TAB = 'qdii';
+
+    function isRoutableTab(tab) {
+      return Object.prototype.hasOwnProperty.call(TAB_SECTIONS, tab);
+    }
+
+    function tabFromLocation() {
+      const hashValue = window.location.hash.slice(1);
+      return isRoutableTab(hashValue) ? hashValue : DEFAULT_TAB;
+    }
+
+    // 「跳到主内容」等页面内锚点不参与一级 Tab 路由。
+    function isInPageAnchorHash() {
+      const hashValue = window.location.hash.slice(1);
+      if (!hashValue || isRoutableTab(hashValue)) return false;
+      try {
+        return !!document.getElementById(decodeURIComponent(hashValue));
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function writeTabHash(tab, replace) {
+      const nextHash = `#${tab}`;
+      if (!replace && window.location.hash === nextHash) return;
+      const previousState = window.history.state;
+      const state = (previousState && typeof previousState === 'object')
+        ? { ...previousState, qdiiTab: tab }
+        : { qdiiTab: tab };
+      try {
+        window.history[replace ? 'replaceState' : 'pushState'](state, '', nextHash);
+      } catch (_) {
+        // file:// 等环境拒绝 history 写入时，hash 赋值仍会生成可前进/后退的历史记录。
+        if (window.location.hash !== nextHash) window.location.hash = tab;
+      }
+    }
+
+    function navigateToTab(tab) {
+      if (!isRoutableTab(tab)) return;
+      writeTabHash(tab, false);
+      if (ACTIVE_TAB !== tab) switchTab(tab);
+    }
+
+    // popstate 与 hashchange 可能同时到达；ACTIVE_TAB 比较保证只渲染一次。
+    function syncTabFromLocation() {
+      if (isInPageAnchorHash()) return;
+      const tab = tabFromLocation();
+      if (window.location.hash !== `#${tab}`) writeTabHash(tab, true);
+      if (ACTIVE_TAB !== tab) switchTab(tab);
+    }
+
     function applyQdiiSub() {
       const off = document.getElementById('panel-offshore');
       const etf = document.getElementById('panel-etf');
@@ -1186,8 +1237,11 @@
       }
     }
 
+    window.addEventListener('popstate', syncTabFromLocation);
+    window.addEventListener('hashchange', syncTabFromLocation);
+
     document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      btn.addEventListener('click', () => navigateToTab(btn.dataset.tab));
     });
 
     // 一级 Tab 键盘导航：左右循环移动，Home/End 跳首尾；输入框内不拦截方向键。
@@ -1213,7 +1267,7 @@
 
         e.preventDefault();
         const nextTab = tabButtons[nextIndex];
-        switchTab(nextTab.dataset.tab);
+        navigateToTab(nextTab.dataset.tab);
         nextTab.focus();
       });
     }
@@ -1228,8 +1282,10 @@
       });
     });
 
-    // 初始化：默认「QDII 追踪」Tab（HTML 首屏也已隐藏其他 section，避免闪屏）
-    switchTab('qdii');
+    // 初始化：无 hash / 未知 hash 归一到「QDII 追踪」；HTML 首屏也已隐藏其他 section，避免闪屏。
+    const initialTab = tabFromLocation();
+    if (!isInPageAnchorHash()) writeTabHash(initialTab, true);
+    switchTab(initialTab);
 
     loadData();
 
@@ -1242,15 +1298,24 @@
     // 站内搜索（仅筛当前 Tab 已加载的基金/代码，不联网）
     const searchInput = document.getElementById('fund-search');
     if (searchInput) {
+      function refreshSearchResults() {
+        if (ACTIVE_TAB !== 'qdii') {
+          navigateToTab('qdii');
+        } else {
+          writeTabHash('qdii', false);
+          renderCategory('offshore');
+          renderCategory('etf');
+        }
+      }
       searchInput.addEventListener('input', () => {
         SEARCH_QUERY = searchInput.value || '';
-        if (ACTIVE_TAB !== 'qdii') { switchTab('qdii'); } else { renderCategory('offshore'); renderCategory('etf'); }
+        refreshSearchResults();
       });
       searchInput.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           searchInput.value = '';
           SEARCH_QUERY = '';
-          if (ACTIVE_TAB !== 'qdii') { switchTab('qdii'); } else { renderCategory('offshore'); renderCategory('etf'); }
+          refreshSearchResults();
         }
       });
     }
@@ -1263,11 +1328,12 @@
     window.addEventListener('resize', updateStickyTop);
     updateStickyTop();
 
-    // 投资知识子分类筛选：一次只展示一个分类（默认「场内 vs 场外」）
+    // 投资知识子分类筛选：「全部」展示 8 类，其他值一次只展示一个分类（默认「场内 vs 场外」）
     const kbChips = document.querySelectorAll('#kb-chips .chip');
     const kbCards = document.querySelectorAll('#panel-knowledge details[data-kb-filter]');
     function applyKbFilter(f) {
-      kbCards.forEach(d => { d.style.display = (d.dataset.kbFilter === f) ? '' : 'none'; });
+      const showAll = f === 'all';
+      kbCards.forEach(d => { d.style.display = (showAll || d.dataset.kbFilter === f) ? '' : 'none'; });
       kbChips.forEach(c => {
         const active = c.dataset.kbFilter === f;
         c.classList.toggle('chip-active', active);
