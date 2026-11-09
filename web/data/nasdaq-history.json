@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-07T04:27:17.124716+08:00",
+  "generated_at": "2026-11-10T07:24:37.771551+08:00",
   "schema_version": 1,
   "index": {
     "symbol": "^NDX",
@@ -334,9 +334,9 @@
     },
     {
       "year": 2026,
-      "close": 27066.89,
-      "return_pct": 7.2,
-      "max_drawdown_pct": -10.99,
+      "close": 27907.62,
+      "return_pct": 10.53,
+      "max_drawdown_pct": -8.22,
       "peak_month": 9,
       "trough_month": 11
     }
@@ -842,7 +842,7 @@
         4.18,
         3.23,
         -6.65,
-        -4.64,
+        -1.68,
         null
       ]
     ]
@@ -857,7 +857,7 @@
       },
       {
         "month": 11,
-        "avg_pct": 3.02,
+        "avg_pct": 3.61,
         "positive_ratio": 60.0,
         "n": 5
       },
@@ -930,15 +930,15 @@
         "n": 10
       },
       {
-        "month": 1,
-        "avg_pct": 3.36,
-        "positive_ratio": 90.0,
+        "month": 11,
+        "avg_pct": 3.64,
+        "positive_ratio": 70.0,
         "n": 10
       },
       {
-        "month": 11,
-        "avg_pct": 3.35,
-        "positive_ratio": 70.0,
+        "month": 1,
+        "avg_pct": 3.36,
+        "positive_ratio": 90.0,
         "n": 10
       },
       {
@@ -998,15 +998,15 @@
     ],
     "full": [
       {
-        "month": 10,
-        "avg_pct": 2.82,
-        "positive_ratio": 61.5,
+        "month": 11,
+        "avg_pct": 2.92,
+        "positive_ratio": 73.1,
         "n": 26
       },
       {
-        "month": 11,
-        "avg_pct": 2.81,
-        "positive_ratio": 73.1,
+        "month": 10,
+        "avg_pct": 2.82,
+        "positive_ratio": 61.5,
         "n": 26
       },
       {
