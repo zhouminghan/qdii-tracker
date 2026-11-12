@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-11-12T05:13:06.226242+08:00",
+  "generated_at": "2026-11-13T05:24:54.680663+08:00",
   "schema_version": 1,
-  "score": 53,
+  "score": 55,
   "band": "yellow",
   "verdict": "黄灯 · 中性区间",
   "summary": "市场处于合理区间，适合定投或谨慎操作。",
@@ -13,26 +13,26 @@
   },
   "indicators": {
     "nasdaq_trend": {
-      "score": 45,
+      "score": 56,
       "label": "趋势中性",
       "raw": {
-        "price": 27740.79,
-        "ma200": 28005.54,
-        "pct_above_ma": -0.95,
-        "date": "2026-11-10"
+        "price": 28374.25,
+        "ma200": 28017.71,
+        "pct_above_ma": 1.27,
+        "date": "2026-11-11"
       },
-      "note": "纳指 100 位于 200 日线下方 0.9%。",
+      "note": "纳指 100 位于 200 日线上方 1.3%。",
       "source": "新浪",
       "stale": false
     },
     "vix": {
-      "score": 75,
-      "label": "情绪平稳",
+      "score": 65,
+      "label": "情绪偏紧",
       "raw": {
-        "value": 17.57,
-        "date": "2026-11-11"
+        "value": 18.71,
+        "date": "2026-11-12"
       },
-      "note": "VIX 17.6，恐慌情绪温和。",
+      "note": "VIX 18.7，恐慌情绪中性。",
       "source": "Yahoo Finance",
       "stale": false
     },
@@ -60,7 +60,7 @@
     }
   },
   "positives": [
-    "VIX 17.6，恐慌情绪温和。"
+    "暂无显著利好因子，指标整体中性。"
   ],
   "risks": [
     "暂无显著风险因子，保持关注仓位节奏。"
