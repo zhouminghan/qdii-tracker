@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-13T05:24:54.680663+08:00",
+  "generated_at": "2026-11-14T04:52:45.302993+08:00",
   "schema_version": 1,
   "score": 55,
   "band": "yellow",
@@ -13,15 +13,15 @@
   },
   "indicators": {
     "nasdaq_trend": {
-      "score": 56,
+      "score": 55,
       "label": "趋势中性",
       "raw": {
-        "price": 28374.25,
-        "ma200": 28017.71,
-        "pct_above_ma": 1.27,
-        "date": "2026-11-11"
+        "price": 28289.19,
+        "ma200": 28029.04,
+        "pct_above_ma": 0.93,
+        "date": "2026-11-12"
       },
-      "note": "纳指 100 位于 200 日线上方 1.3%。",
+      "note": "纳指 100 位于 200 日线上方 0.9%。",
       "source": "新浪",
       "stale": false
     },
@@ -29,10 +29,10 @@
       "score": 65,
       "label": "情绪偏紧",
       "raw": {
-        "value": 18.71,
-        "date": "2026-11-12"
+        "value": 19.21,
+        "date": "2026-11-13"
       },
-      "note": "VIX 18.7，恐慌情绪中性。",
+      "note": "VIX 19.2，恐慌情绪中性。",
       "source": "Yahoo Finance",
       "stale": false
     },
