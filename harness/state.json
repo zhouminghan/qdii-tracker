@@ -1,7 +1,8 @@
 {
   "goal_id": "qdii-architecture-upgrade-2026-11-14",
-  "current_phase": "final-verification",
-  "current_task": "firefox-engine",
+  "current_phase": "delivery",
+  "current_task": "user-authorization",
+  "last_commit": "a54faed",
   "tasks": [
     {
       "id": "sync-remote",
@@ -112,5 +113,5 @@
     "Firefox Playwright engine fails before page execution with profile folder error"
   ],
   "decisions": ["ADR-0001", "ADR-0002"],
-  "next_action": "User decision on commit/push; Firefox browser-process issue remains environmental."
+  "next_action": "Await explicit authorization before push/deploy; Firefox browser-process issue remains environmental."
 }
