@@ -18,7 +18,39 @@ test.describe('funds workflow', () => {
 
     const dialog = page.getByRole('dialog')
     await expect(dialog).toBeVisible()
-    await expect(dialog.getByText('限 ¥100', { exact: true })).toBeVisible()
+    const dShare = dialog.locator('.share-comparison-table tbody tr').filter({ hasText: '022525' })
+    await expect(dShare).toContainText('限大额')
+    await expect(dShare).toContainText('¥100')
+  })
+
+  test('shows all share performance, buy fees, and derived sell rules', async ({ page }) => {
+    await page.goto('/#/funds')
+    await page.getByLabel('搜索基金目录（跨分类）').fill('050025')
+    await page.locator('.table-action:visible, .fund-mobile-actions button:visible').filter({ hasText: /详情/ }).first().click()
+
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toBeVisible()
+    for (const label of ['近 1 周', '近 2 年', '近 3 年']) {
+      const metric = dialog.locator('.metric-card').filter({ hasText: label })
+      await expect(metric.locator('.metric-value')).toContainText('%')
+    }
+    await expect(dialog.getByText('3 年免', { exact: true }).first()).toBeVisible()
+
+    await dialog.getByRole('tab', { name: '费率' }).click()
+    await dialog.getByRole('button', { name: /C · 006075/ }).click()
+    await expect(dialog.locator('.metric-card').filter({ hasText: '免赎回费持有期' }).locator('.metric-value')).toHaveText('7 天')
+    await expect(dialog.locator('.fee-rule-block').first().getByText('免费', { exact: true })).toBeVisible()
+  })
+
+  test('compares current holdings with the previous quarter', async ({ page }) => {
+    await page.goto('/#/funds')
+    await page.getByLabel('搜索基金目录（跨分类）').fill('096001')
+    await page.locator('.table-action:visible, .fund-mobile-actions button:visible').filter({ hasText: /详情/ }).first().click()
+    const dialog = page.getByRole('dialog')
+    await dialog.getByRole('tab', { name: '持仓' }).click()
+    await expect(dialog.getByText(/对比 20\d{2}Q\d/)).toBeVisible()
+    await expect(dialog.getByRole('columnheader', { name: '较上季' })).toBeVisible()
+    await expect(dialog.locator('tbody tr').first()).toContainText(/新进|持平|[+-]\d+\.\d{2}pct/)
   })
 
   test('searches, sorts, expands shares, and opens detail', async ({ page }) => {
@@ -31,7 +63,7 @@ test.describe('funds workflow', () => {
 
     const sortHeader = page.getByRole('button', { name: '近 1 年' }).first()
     if (await sortHeader.isVisible().catch(() => false)) await sortHeader.click()
-    else await page.getByLabel('排序字段').selectOption('chg_1y')
+    else await page.getByLabel('排序方式').selectOption('chg_1y:desc')
     const expandButton = page.getByRole('button', { name: '展开份额' }).first()
     if (await expandButton.count()) await expandButton.click()
     else await page.getByRole('button', { name: '查看份额' }).first().click()

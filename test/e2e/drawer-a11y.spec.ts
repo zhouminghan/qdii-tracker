@@ -96,7 +96,7 @@ test('mobile navigation, filters, search, and forms meet the 44px target', async
   await expectMinimumTouchTarget(page.getByRole('button', { name: '打开设置' }))
   await expectMinimumTouchTarget(page.getByRole('button', { name: '收藏基金' }).first())
   await expectMinimumTouchTarget(page.locator('.chip').first())
-  await expectMinimumTouchTarget(page.locator('.mobile-sort .button').first())
+  await expectMinimumTouchTarget(page.locator('.mobile-sort .select').first())
 
   const search = page.getByLabel('搜索基金目录（跨分类）')
   await expectMinimumTouchTarget(search)

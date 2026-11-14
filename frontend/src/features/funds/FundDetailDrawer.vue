@@ -3,11 +3,12 @@ import { computed, ref, watch } from 'vue'
 import { CircleAlert, ExternalLink, History, Star, TrendingUp } from '@lucide/vue'
 import BaseDrawer from '@/shared/components/BaseDrawer.vue'
 import EChart from '@/shared/components/EChart.vue'
-import { buyStatusLabel, type FundRow } from '@/shared/lib/funds'
+import FundShareComparisonTable from '@/features/funds/FundShareComparisonTable.vue'
+import { buyStatusLabel, formatDailyLimit, type FundRow } from '@/shared/lib/funds'
 import { asNumber, daysSince, formatDate, formatPercent, formatPrice, movementClass } from '@/shared/lib/format'
 import { annualFeeDetail, cleanRuleCondition, formatHoldPeriod, formatRuleRate, freeHoldDays, sellRuleLabel, totalAnnualFee } from '@/shared/lib/fund-rules'
 import { fetchJson } from '@/shared/infrastructure/http'
-import type { BuyStatusHistory, FundShare, HoldingsData, KlineData } from '@/types/data'
+import type { BuyStatusHistory, FundShare, HoldingItem, HoldingsData, KlineData } from '@/types/data'
 import { useSettingsStore } from '@/stores/settings'
 
 const props = defineProps<{
@@ -23,8 +24,16 @@ const history = ref<KlineData | null>(null)
 const holdings = ref<HoldingsData | null>(null)
 const loading = ref(false)
 const loadError = ref('')
+const selectedFeeShareCode = ref('')
 const isEtf = computed(() => props.row?.category === 'etf')
 const defaultShare = computed(() => props.row?.defaultShare ?? null)
+const feeShare = computed(() => {
+  if (!props.row) return null
+  return props.row.shares.find((share) => share.code === selectedFeeShareCode.value)
+    ?? props.row.shares.find((share) => share.code === props.row?.default_share_code)
+    ?? props.row.shares[0]
+    ?? null
+})
 const navAge = computed(() => daysSince(defaultShare.value?.nav_date))
 const buyStatusHistory = computed(() => {
   if (isEtf.value) return []
@@ -32,24 +41,46 @@ const buyStatusHistory = computed(() => {
     .sort((left, right) => right.date.localeCompare(left.date))
     .slice(0, 6)
 })
+function historyReturn(tradingDays: number): number | null {
+  const payload = history.value
+  if (!payload) return null
+  const values = payload.navs ?? payload.close
+  if (!values?.length || values.length <= tradingDays) return null
+  const latest = asNumber(values[values.length - 1])
+  const base = asNumber(values[values.length - 1 - tradingDays])
+  if (latest === null || base === null || base <= 0) return null
+  return ((latest / base) - 1) * 100
+}
+
 const performanceMetrics = computed(() => {
   const share = defaultShare.value
   if (!share) return []
   return [
-    { label: '近 1 周', value: share.chg_1w },
-    { label: '近 1 月', value: share.chg_1m },
-    { label: '近 3 月', value: share.chg_3m },
-    { label: '近 6 月', value: share.chg_6m },
+    { label: '近 1 周', value: share.chg_1w ?? historyReturn(5) },
+    { label: '近 1 月', value: share.chg_1m ?? historyReturn(21) },
+    { label: '近 3 月', value: share.chg_3m ?? historyReturn(63) },
+    { label: '近 6 月', value: share.chg_6m ?? historyReturn(126) },
     { label: '今年来', value: share.chg_ytd },
-    { label: '近 1 年', value: share.chg_1y },
-    { label: '近 2 年', value: share.chg_2y },
-    { label: '近 3 年', value: share.chg_3y },
+    { label: '近 1 年', value: share.chg_1y ?? historyReturn(252) },
+    { label: '近 2 年', value: share.chg_2y ?? historyReturn(504) },
+    { label: '近 3 年', value: share.chg_3y ?? historyReturn(756) },
     { label: '成立来', value: share.chg_since_inception },
     { label: '基金规模', value: props.row?.series_scale, scale: true },
   ]
 })
-const annualFeeRate = computed(() => defaultShare.value ? totalAnnualFee(defaultShare.value) : 0)
-const holdFreeDays = computed(() => defaultShare.value ? freeHoldDays(defaultShare.value) : null)
+const annualFeeRate = computed(() => feeShare.value ? totalAnnualFee(feeShare.value) : 0)
+const holdFreeDays = computed(() => feeShare.value ? freeHoldDays(feeShare.value) : null)
+const holdingsQuarters = computed(() => Object.keys(holdings.value?.all_quarters ?? {}).sort().reverse())
+const previousHoldingsQuarter = computed(() => {
+  const latest = holdings.value?.latest_quarter
+  return holdingsQuarters.value.find((quarter) => quarter !== latest) ?? null
+})
+const previousHoldingByCode = computed(() => new Map(
+  (previousHoldingsQuarter.value
+    ? holdings.value?.all_quarters?.[previousHoldingsQuarter.value] ?? []
+    : []
+  ).map((item) => [item.stock_code, item]),
+))
 
 const filteredHistory = computed(() => {
   if (!history.value) return []
@@ -116,6 +147,7 @@ watch(() => [props.open, props.row?.default_share_code], ([open]) => {
   if (open) {
     mode.value = 'overview'
     range.value = '1y'
+    selectedFeeShareCode.value = props.row?.default_share_code ?? ''
     history.value = null
     holdings.value = null
     void loadDetail()
@@ -159,23 +191,27 @@ function setRange(value: string): void {
   }
 }
 
-function shareAnnualFee(share: FundShare): string {
-  const rate = totalAnnualFee(share)
-  return rate > 0 ? `${parseFloat(rate.toFixed(2))}%/年` : '--'
-}
-
 function shareBuyFee(share: FundShare): string {
   if (share.first_buy_rate == null) return '--'
   return formatRuleRate(share.first_buy_rate, true)
 }
 
-function shareSellRule(share: FundShare): string {
-  const days = freeHoldDays(share)
-  if (days === null) {
-    const rate = share.sell_rules?.[0]?.rate
-    return rate == null ? '--' : `${rate}%起`
-  }
-  return `${formatHoldPeriod(days)}免`
+function holdingWeightChange(item: HoldingItem): number | null {
+  const previous = previousHoldingByCode.value.get(item.stock_code)
+  return previous ? item.weight - previous.weight : null
+}
+
+function holdingChangeLabel(item: HoldingItem): string {
+  if (!previousHoldingsQuarter.value) return '--'
+  const change = holdingWeightChange(item)
+  if (change === null) return '新进'
+  if (Math.abs(change) < 0.005) return '持平'
+  return `${change > 0 ? '+' : ''}${change.toFixed(2)}pct`
+}
+
+function holdingChangeClass(item: HoldingItem): string {
+  const change = holdingWeightChange(item)
+  return change === null ? 'is-flat' : movementClass(change)
 }
 </script>
 
@@ -221,6 +257,9 @@ function shareSellRule(share: FundShare): string {
             {{ settings.isFavorite(defaultShare.code) ? '已收藏' : '收藏' }}
           </button>
           <span class="badge" :class="statusTone()" :title="defaultShare.buy_status || '场内交易'">{{ buyStatusLabel(defaultShare) }}</span>
+          <span v-if="defaultShare.daily_limit && defaultShare.daily_limit > 0" class="badge badge-warn">
+            日限额 {{ formatDailyLimit(defaultShare.daily_limit, defaultShare.currency) }}
+          </span>
         </div>
       </div>
 
@@ -289,34 +328,11 @@ function shareSellRule(share: FundShare): string {
           </div>
         </section>
         <h3>全部份额</h3>
-        <div class="table-shell">
-          <table class="data-table compact share-comparison-table">
-            <thead>
-              <tr>
-                <th>代码</th>
-                <th>份额</th>
-                <th class="align-right">净值<small>{{ formatDate(defaultShare.nav_date) }}</small></th>
-                <th class="align-right">近 1 年</th>
-                <th>申购</th>
-                <th class="align-right">买入费</th>
-                <th class="align-right">综合费率</th>
-                <th class="align-right">卖出规则</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="share in row.shares" :key="share.code">
-                <td class="mono">{{ share.code }}</td>
-                <td>{{ share.name }} <span class="badge">{{ share.currency === '美元' ? '美元' : '人民币' }}</span></td>
-                <td class="align-right mono">{{ formatPrice(share.nav ?? share.etf_price) }}</td>
-                <td class="align-right mono" :class="movementClass(share.chg_1y)">{{ formatPercent(share.chg_1y) }}</td>
-                <td><span class="badge" :class="statusTone(share.buy_status)" :title="share.buy_status || '--'">{{ buyStatusLabel(share) }}</span></td>
-                <td class="align-right mono">{{ shareBuyFee(share) }}</td>
-                <td class="align-right mono">{{ shareAnnualFee(share) }}</td>
-                <td class="align-right">{{ shareSellRule(share) }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <FundShareComparisonTable
+          :shares="row.shares"
+          :default-code="row.default_share_code"
+          :nav-date="defaultShare.nav_date"
+        />
       </section>
 
       <section v-else-if="mode === 'trend'" class="detail-section">
@@ -341,18 +357,23 @@ function shareSellRule(share: FundShare): string {
         <div class="section-header">
           <div>
             <h3>前十大重仓</h3>
-            <p v-if="holdings">{{ holdings.latest_quarter }} · 合计权重 {{ holdings.total_weight.toFixed(2) }}%</p>
+            <p v-if="holdings">
+              {{ holdings.latest_quarter }}
+              <template v-if="previousHoldingsQuarter"> · 对比 {{ previousHoldingsQuarter }}</template>
+              · 合计权重 {{ holdings.total_weight.toFixed(2) }}%
+            </p>
           </div>
         </div>
         <div v-if="loading" class="page-state">正在加载持仓...</div>
         <div v-else-if="holdings?.holdings.length" class="table-shell">
           <table class="data-table compact">
-            <thead><tr><th>#</th><th>股票</th><th class="align-right">权重</th><th class="align-right">市值</th></tr></thead>
+            <thead><tr><th>#</th><th>股票</th><th class="align-right">权重</th><th class="align-right">较上季</th><th class="align-right">市值</th></tr></thead>
             <tbody>
               <tr v-for="stock in holdings.holdings" :key="stock.stock_code">
                 <td class="muted">{{ stock.rank }}</td>
-                <td><strong>{{ stock.stock_name }}</strong><span class="mono muted"> {{ stock.stock_code }}</span></td>
+                <td><strong>{{ stock.stock_name }}</strong><span class="mono muted stock-code"> · {{ stock.stock_code }}</span></td>
                 <td class="align-right mono">{{ stock.weight.toFixed(2) }}%</td>
+                <td class="align-right mono" :class="holdingChangeClass(stock)">{{ holdingChangeLabel(stock) }}</td>
                 <td class="align-right mono">{{ stock.market_value ? stock.market_value.toFixed(0) : '--' }}</td>
               </tr>
             </tbody>
@@ -363,44 +384,59 @@ function shareSellRule(share: FundShare): string {
 
       <section v-else class="detail-section">
         <h3>费率与申赎规则</h3>
-        <div class="metric-grid">
-          <div class="metric-card"><span class="metric-label">首档买入费</span><strong class="metric-value">{{ shareBuyFee(defaultShare) }}</strong><small class="metric-meta">代销平台通常 1 折</small></div>
-          <div class="metric-card"><span class="metric-label">综合年费率</span><strong class="metric-value">{{ annualFeeRate > 0 ? `${parseFloat(annualFeeRate.toFixed(2))}%` : '--' }}</strong><small class="metric-meta">{{ annualFeeDetail(defaultShare) }}</small></div>
-          <div class="metric-card"><span class="metric-label">免赎回费持有期</span><strong class="metric-value">{{ formatHoldPeriod(holdFreeDays) }}</strong><small class="metric-meta">{{ defaultShare.free_hold_days ? '基金公开费率' : '按卖出规则末档推算' }}</small></div>
+        <div class="chip-row" role="group" aria-label="选择费率份额">
+          <button
+            v-for="share in row.shares"
+            :key="share.code"
+            class="chip"
+            :class="{ active: feeShare?.code === share.code }"
+            type="button"
+            :aria-pressed="feeShare?.code === share.code"
+            @click="selectedFeeShareCode = share.code"
+          >
+            {{ share.share_class }} · {{ share.code }}
+          </button>
         </div>
-        <div class="fee-block fee-rule-block">
-          <div class="fee-block-heading">
-            <h4>买入规则</h4>
-            <span>原费率 / 代销 1 折</span>
+        <template v-if="feeShare">
+          <div class="metric-grid">
+            <div class="metric-card"><span class="metric-label">首档买入费</span><strong class="metric-value">{{ shareBuyFee(feeShare) }}</strong><small class="metric-meta">代销平台通常 1 折</small></div>
+            <div class="metric-card"><span class="metric-label">综合年费率</span><strong class="metric-value">{{ annualFeeRate > 0 ? `${parseFloat(annualFeeRate.toFixed(2))}%` : '--' }}</strong><small class="metric-meta">{{ annualFeeDetail(feeShare) }}</small></div>
+            <div class="metric-card"><span class="metric-label">免赎回费持有期</span><strong class="metric-value">{{ formatHoldPeriod(holdFreeDays) }}</strong><small class="metric-meta">{{ feeShare.free_hold_days ? '基金公开费率' : '按卖出规则末档推算' }}</small></div>
           </div>
-          <div v-for="rule in defaultShare.buy_rules ?? []" :key="rule.condition" class="fee-rule fee-rule-detailed">
-            <span>{{ cleanRuleCondition(rule.condition) }}</span>
-            <span class="fee-rule-rates">
-              <del v-if="rule.rate > 0 && rule.rate < 100">{{ formatRuleRate(rule.rate) }}</del>
-              <strong class="mono" :class="{ 'fee-free': rule.rate === 0 }">{{ formatRuleRate(rule.rate, true) }}</strong>
-            </span>
+          <div class="fee-block fee-rule-block">
+            <div class="fee-block-heading">
+              <h4>买入规则</h4>
+              <span>{{ feeShare.share_class }} 类 · 原费率 / 代销 1 折</span>
+            </div>
+            <div v-for="rule in feeShare.buy_rules ?? []" :key="rule.condition" class="fee-rule fee-rule-detailed">
+              <span>{{ cleanRuleCondition(rule.condition) }}</span>
+              <span class="fee-rule-rates">
+                <del v-if="rule.rate > 0 && rule.rate < 100">{{ formatRuleRate(rule.rate) }}</del>
+                <strong class="mono" :class="{ 'fee-free': rule.rate === 0 }">{{ formatRuleRate(rule.rate, true) }}</strong>
+              </span>
+            </div>
+            <p v-if="!feeShare.buy_rules?.length" class="muted">暂无公开买入规则。</p>
           </div>
-          <p v-if="!defaultShare.buy_rules?.length" class="muted">暂无公开买入规则。</p>
-        </div>
-        <div class="fee-block fee-rule-block">
-          <div class="fee-block-heading">
-            <h4>卖出规则</h4>
-            <span>按持有期限</span>
+          <div class="fee-block fee-rule-block">
+            <div class="fee-block-heading">
+              <h4>卖出规则</h4>
+              <span>{{ feeShare.share_class }} 类 · 按持有期限</span>
+            </div>
+            <div v-for="rule in feeShare.sell_rules ?? []" :key="rule.condition" class="fee-rule fee-rule-detailed">
+              <span>{{ cleanRuleCondition(rule.condition) }}</span>
+              <strong class="mono" :class="{ 'fee-free': rule.rate === 0 }">{{ sellRuleLabel(rule) }}</strong>
+            </div>
+            <p v-if="!feeShare.sell_rules?.length" class="muted">场内交易无基金申赎规则。</p>
           </div>
-          <div v-for="rule in defaultShare.sell_rules ?? []" :key="rule.condition" class="fee-rule fee-rule-detailed">
-            <span>{{ cleanRuleCondition(rule.condition) }}</span>
-            <strong class="mono" :class="{ 'fee-free': rule.rate === 0 }">{{ sellRuleLabel(rule) }}</strong>
-          </div>
-          <p v-if="!defaultShare.sell_rules?.length" class="muted">场内交易无基金申赎规则。</p>
-        </div>
-        <a
-          class="button button-secondary"
-          :href="`https://fund.eastmoney.com/${defaultShare.code}.html`"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <ExternalLink :size="15" aria-hidden="true" /> 查看基金公开页面
-        </a>
+          <a
+            class="button button-secondary"
+            :href="`https://fund.eastmoney.com/${feeShare.code}.html`"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <ExternalLink :size="15" aria-hidden="true" /> 查看该份额公开页面
+          </a>
+        </template>
       </section>
     </template>
   </BaseDrawer>

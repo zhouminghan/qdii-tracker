@@ -224,4 +224,7 @@ export interface HoldingsData {
   holdings_count: number
   total_weight: number
   holdings: HoldingItem[]
+  heavy_count?: number
+  fetched_at?: string
+  all_quarters?: Record<string, HoldingItem[]>
 }

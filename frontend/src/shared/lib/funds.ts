@@ -42,8 +42,12 @@ export type FundSortKey =
   | 'price'
   | 'premium'
   | 'chg_1m'
+  | 'chg_3m'
+  | 'chg_6m'
   | 'chg_ytd'
   | 'chg_1y'
+  | 'chg_2y'
+  | 'chg_3y'
   | 'chg_since_inception'
   | 'buy_status'
 
@@ -59,8 +63,12 @@ export function sortFundRows(
       case 'price': return asNumber(row.category === 'etf' ? share.etf_price ?? share.nav : share.nav)
       case 'premium': return asNumber(share.etf_premium)
       case 'chg_1m': return asNumber(share.chg_1m)
+      case 'chg_3m': return asNumber(share.chg_3m)
+      case 'chg_6m': return asNumber(share.chg_6m)
       case 'chg_ytd': return asNumber(share.chg_ytd)
       case 'chg_1y': return asNumber(share.chg_1y)
+      case 'chg_2y': return asNumber(share.chg_2y)
+      case 'chg_3y': return asNumber(share.chg_3y)
       case 'chg_since_inception': return asNumber(share.chg_since_inception)
       case 'buy_status': return share.buy_status ?? ''
     }
@@ -119,9 +127,6 @@ export function buyStatusLabel(share: FundShare): string {
   const kind = classifyBuyStatus(share)
   if (kind === 'none') return '--'
   if (kind === 'paused') return '暂停'
-  if (kind === 'limited') {
-    const limit = formatDailyLimit(share.daily_limit, share.currency)
-    return limit === '--' ? '限购' : `限 ${limit}`
-  }
+  if (kind === 'limited') return share.buy_status || '限购'
   return share.buy_status || '开放'
 }

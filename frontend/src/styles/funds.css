@@ -178,6 +178,20 @@
   font-weight: 500;
 }
 
+.share-comparison-table {
+  min-width: 1220px;
+}
+
+.default-share-mark {
+  margin-left: 3px;
+  color: #d18a00;
+}
+
+.stock-code {
+  margin-left: 3px;
+  font-size: 0.66rem;
+}
+
 .table-sort-button {
   display: inline-flex;
   flex-direction: column;
@@ -710,7 +724,32 @@
     font-size: 0.79rem;
   }
 
+  .fund-mobile-performance {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .fund-mobile-performance > div {
+    display: grid;
+    gap: 2px;
+    padding: 7px 8px;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-raised);
+  }
+
+  .fund-mobile-performance span {
+    color: var(--color-text-tertiary);
+    font-size: 0.7rem;
+  }
+
+  .fund-mobile-performance b {
+    font-size: 0.76rem;
+    font-weight: 650;
+  }
+
   .fund-mobile-foot {
+    flex-wrap: wrap;
     color: var(--color-text-tertiary);
     font-size: 0.7rem;
   }

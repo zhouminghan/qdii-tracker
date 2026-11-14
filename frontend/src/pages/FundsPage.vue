@@ -26,6 +26,14 @@ const selectedGroup = ref('sp500')
 const search = ref(ui.quickSearch)
 const sortKey = ref<FundSortKey>('series_scale')
 const sortDirection = ref<'asc' | 'desc'>('desc')
+const sortSelection = computed({
+  get: () => `${sortKey.value}:${sortDirection.value}`,
+  set: (value: string) => {
+    const [key, direction] = value.split(':') as [FundSortKey, 'asc' | 'desc']
+    sortKey.value = key
+    sortDirection.value = direction
+  },
+})
 const selectedRow = ref<FundRow | null>(null)
 const detailOpen = ref(false)
 const shareSurface = ref<HTMLElement | null>(null)
@@ -64,6 +72,25 @@ const missingPriceShares = computed(() => data.allRows.flatMap((row) => row.shar
   .filter((share) => share.nav == null && share.etf_price == null)
   .map((share) => ({ code: share.code, name: share.name }))))
 const qualityLabel = computed(() => qualityStatusLabel(data.quality?.status))
+const sortOptions = computed(() => {
+  const fields: Array<{ key: FundSortKey; label: string }> = [
+    { key: 'series_scale', label: '规模' },
+    { key: 'price', label: '价格' },
+    { key: 'chg_1m', label: '近 1 月' },
+    { key: 'chg_3m', label: '近 3 月' },
+    { key: 'chg_6m', label: '近 6 月' },
+    { key: 'chg_ytd', label: '今年来' },
+    { key: 'chg_1y', label: '近 1 年' },
+    { key: 'chg_2y', label: '近 2 年' },
+    { key: 'chg_3y', label: '近 3 年' },
+    { key: 'chg_since_inception', label: '成立来' },
+  ]
+  if (tab.value === 'etf') fields.splice(2, 0, { key: 'premium', label: '溢价率' })
+  return fields.flatMap((field) => [
+    { value: `${field.key}:desc`, label: `${field.label} · 降序` },
+    { value: `${field.key}:asc`, label: `${field.label} · 升序` },
+  ])
+})
 
 watch(() => ui.quickSearch, (value) => {
   search.value = value
@@ -311,18 +338,10 @@ onBeforeUnmount(() => {
           <div class="mobile-sort">
             <label>
               <span>排序</span>
-              <select v-model="sortKey" class="select" aria-label="排序字段">
-                <option value="series_scale">规模</option>
-                <option value="price">价格</option>
-                <option value="chg_1m">近 1 月</option>
-                <option value="chg_ytd">今年来</option>
-                <option value="chg_1y">近 1 年</option>
-                <option v-if="tab === 'etf'" value="premium">溢价率</option>
+              <select v-model="sortSelection" class="select" aria-label="排序方式">
+                <option v-for="option in sortOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
               </select>
             </label>
-            <button class="button" type="button" :aria-label="sortDirection === 'desc' ? '切换为升序' : '切换为降序'" @click="sortDirection = sortDirection === 'desc' ? 'asc' : 'desc'">
-              {{ sortDirection === 'desc' ? '降序' : '升序' }}
-            </button>
           </div>
         </section>
 
