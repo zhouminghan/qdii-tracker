@@ -17,9 +17,12 @@ export const useDataStore = defineStore('data', () => {
   const loading = ref(false)
   const error = ref('')
   const loadedAt = ref<string>('')
-  const liveUpdatedAt = ref('')
-  const liveError = ref('')
-  const liveLoading = ref(false)
+  const etfLiveUpdatedAt = ref('')
+  const indexLiveUpdatedAt = ref('')
+  const etfLiveError = ref('')
+  const indexLiveError = ref('')
+  const etfLiveLoading = ref(false)
+  const indexLiveLoading = ref(false)
   const liveQuotes = ref<Record<string, {
     price: number
     changePct: number | null
@@ -31,6 +34,10 @@ export const useDataStore = defineStore('data', () => {
     changePct: number | null
   }>>({})
   let loadPromise: Promise<void> | null = null
+  let etfLivePromise: Promise<void> | null = null
+  let indexLivePromise: Promise<void> | null = null
+  let etfLiveController: AbortController | null = null
+  let indexLiveController: AbortController | null = null
 
   const settings = useSettingsStore()
 
@@ -104,67 +111,93 @@ export const useDataStore = defineStore('data', () => {
   }
 
   async function refreshEtfQuotes(): Promise<void> {
-    if (!catalog.value || liveLoading.value) return
+    if (etfLivePromise) return etfLivePromise
+    if (!catalog.value) return
     const etfs = catalog.value.data.categories.etf.series.flatMap((series) => series.shares)
     const symbols = etfs.map((share) => tencentEtfSymbol(share.code))
     if (!symbols.length) return
-    liveLoading.value = true
-    liveError.value = ''
-    try {
-      const payload = await loadScriptJsonp(
-        `https://qt.gtimg.cn/q=${symbols.join(',')}&t=${Date.now()}`,
-        () => {
-          const result: typeof liveQuotes.value = {}
-          for (const symbol of symbols) {
-            const raw = (window as unknown as Record<string, unknown>)[`v_${symbol}`]
-            if (typeof raw !== 'string') continue
-            const quote = parseTencentQuote(raw)
-            if (quote) result[symbol.slice(2)] = quote
-          }
-          return result
-        },
-      )
-      if (!Object.keys(payload).length) throw new Error('实时行情暂无有效报价')
-      liveQuotes.value = payload
-      liveUpdatedAt.value = new Date().toISOString()
-    } catch (reason) {
-      liveError.value = reason instanceof Error ? reason.message : '实时行情刷新失败'
-    } finally {
-      liveLoading.value = false
-    }
+    etfLiveLoading.value = true
+    etfLiveError.value = ''
+    const controller = new AbortController()
+    etfLiveController = controller
+    etfLivePromise = (async () => {
+      try {
+        const payload = await loadScriptJsonp(
+          `https://qt.gtimg.cn/q=${symbols.join(',')}&t=${Date.now()}`,
+          () => {
+            const result: typeof liveQuotes.value = {}
+            for (const symbol of symbols) {
+              const raw = (window as unknown as Record<string, unknown>)[`v_${symbol}`]
+              if (typeof raw !== 'string') continue
+              const quote = parseTencentQuote(raw)
+              if (quote) result[symbol.slice(2)] = quote
+            }
+            return result
+          },
+          { signal: controller.signal },
+        )
+        if (!Object.keys(payload).length) throw new Error('实时行情暂无有效报价')
+        liveQuotes.value = payload
+        etfLiveUpdatedAt.value = new Date().toISOString()
+      } catch (reason) {
+        liveQuotes.value = {}
+        if (reason instanceof DOMException && reason.name === 'AbortError') return
+        etfLiveError.value = reason instanceof Error ? reason.message : '实时行情刷新失败'
+      } finally {
+        if (etfLiveController === controller) etfLiveController = null
+        etfLiveLoading.value = false
+        etfLivePromise = null
+      }
+    })()
+    return etfLivePromise
   }
 
   async function refreshIndexQuotes(): Promise<void> {
-    if (liveLoading.value) return
+    if (indexLivePromise) return indexLivePromise
     const symbols = Object.keys(TENCENT_INDEX_SYMBOLS)
-    liveLoading.value = true
-    liveError.value = ''
-    try {
-      const payload = await loadScriptJsonp(
-        `https://qt.gtimg.cn/q=${symbols.join(',')}&t=${Date.now()}`,
-        () => {
-          const result: typeof liveIndices.value = {}
-          for (const symbol of symbols) {
-            const raw = (window as unknown as Record<string, unknown>)[`v_${symbol}`]
-            if (typeof raw !== 'string') continue
-            const quote = parseTencentQuote(raw)
-            if (!quote) continue
-            result[TENCENT_INDEX_SYMBOLS[symbol]] = {
-              price: quote.price,
-              changePct: quote.changePct,
+    indexLiveLoading.value = true
+    indexLiveError.value = ''
+    const controller = new AbortController()
+    indexLiveController = controller
+    indexLivePromise = (async () => {
+      try {
+        const payload = await loadScriptJsonp(
+          `https://qt.gtimg.cn/q=${symbols.join(',')}&t=${Date.now()}`,
+          () => {
+            const result: typeof liveIndices.value = {}
+            for (const symbol of symbols) {
+              const raw = (window as unknown as Record<string, unknown>)[`v_${symbol}`]
+              if (typeof raw !== 'string') continue
+              const quote = parseTencentQuote(raw)
+              if (!quote) continue
+              result[TENCENT_INDEX_SYMBOLS[symbol]] = {
+                price: quote.price,
+                changePct: quote.changePct,
+              }
             }
-          }
-          return result
-        },
-      )
-      if (!Object.keys(payload).length) throw new Error('实时指数暂无有效报价')
-      liveIndices.value = payload
-      liveUpdatedAt.value = new Date().toISOString()
-    } catch (reason) {
-      liveError.value = reason instanceof Error ? reason.message : '实时指数刷新失败'
-    } finally {
-      liveLoading.value = false
-    }
+            return result
+          },
+          { signal: controller.signal },
+        )
+        if (!Object.keys(payload).length) throw new Error('实时指数暂无有效报价')
+        liveIndices.value = payload
+        indexLiveUpdatedAt.value = new Date().toISOString()
+      } catch (reason) {
+        liveIndices.value = {}
+        if (reason instanceof DOMException && reason.name === 'AbortError') return
+        indexLiveError.value = reason instanceof Error ? reason.message : '实时指数刷新失败'
+      } finally {
+        if (indexLiveController === controller) indexLiveController = null
+        indexLiveLoading.value = false
+        indexLivePromise = null
+      }
+    })()
+    return indexLivePromise
+  }
+
+  function cancelLiveRefreshes(): void {
+    etfLiveController?.abort()
+    indexLiveController?.abort()
   }
 
   return {
@@ -173,9 +206,12 @@ export const useDataStore = defineStore('data', () => {
     loading,
     error,
     loadedAt,
-    liveUpdatedAt,
-    liveError,
-    liveLoading,
+    etfLiveUpdatedAt,
+    indexLiveUpdatedAt,
+    etfLiveError,
+    indexLiveError,
+    etfLiveLoading,
+    indexLiveLoading,
     liveQuotes,
     liveIndices,
     categories,
@@ -187,5 +223,6 @@ export const useDataStore = defineStore('data', () => {
     retry,
     refreshEtfQuotes,
     refreshIndexQuotes,
+    cancelLiveRefreshes,
   }
 })

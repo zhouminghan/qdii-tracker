@@ -115,7 +115,7 @@ Playwright 覆盖 Chromium、Firefox、WebKit 和移动 Chromium；视觉基准�
 ## Actions 与部署
 
 - `update-data.yml`：工作日更新数据，月度执行完整流水线。
-- `ci.yml`：Python 测试、数据门禁、前端检查与 Chromium E2E。
+- `ci.yml`：Python 测试、数据门禁、前端检查，以及 Chromium、Firefox、WebKit E2E。
 - `deploy-pages.yml`：`npm ci → npm run build → upload web/ → GitHub Pages`。
 - Vite 资源使用内容哈希，不再手工维护 `?v=dev`。
 

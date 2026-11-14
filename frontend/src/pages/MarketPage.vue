@@ -30,6 +30,7 @@ const selectedIndex = ref('')
 const kline = ref<KlineData | null>(null)
 const klineLoading = ref(false)
 let liveTimer: number | null = null
+let liveBootTimer: number | null = null
 
 const positiveColor = computed(() => settings.colorMode === 'green-up' ? '#067647' : '#d92d20')
 const negativeColor = computed(() => settings.colorMode === 'green-up' ? '#d92d20' : '#067647')
@@ -38,7 +39,9 @@ function quoteFor(key: string) {
   const base = market.value?.market_indices.items[key]
   const live = data.liveIndices[key]
   if (!base) return undefined
-  return live ? { ...base, price: live.price, change_pct: live.changePct } : base
+  return live
+    ? { ...base, price: live.price, change_pct: live.changePct, as_of: data.indexLiveUpdatedAt.slice(0, 10) || base.as_of }
+    : base
 }
 
 const indexItems = computed(() => Object.entries(market.value?.market_indices.items ?? {})
@@ -178,7 +181,7 @@ async function openIndex(key: string): Promise<void> {
 
 async function refreshLive(): Promise<void> {
   await data.refreshIndexQuotes()
-  if (data.liveError) ui.toast(data.liveError, 'error')
+  if (data.indexLiveError) ui.toast(data.indexLiveError, 'error')
   else ui.toast('指数实时行情已刷新', 'success')
 }
 
@@ -208,7 +211,9 @@ onMounted(() => {
   void data.load()
   void loadExtras()
   if (!navigator.webdriver) {
-    window.setTimeout(() => void data.refreshIndexQuotes(), 2500)
+    liveBootTimer = window.setTimeout(() => {
+      if (!document.hidden) void data.refreshIndexQuotes()
+    }, 2500)
     liveTimer = window.setInterval(() => {
       if (!document.hidden) void data.refreshIndexQuotes()
     }, 60 * 1000)
@@ -216,7 +221,9 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  if (liveBootTimer !== null) window.clearTimeout(liveBootTimer)
   if (liveTimer !== null) window.clearInterval(liveTimer)
+  data.cancelLiveRefreshes()
 })
 </script>
 
@@ -230,8 +237,10 @@ onBeforeUnmount(() => {
       </div>
       <div class="page-actions">
         <span v-if="market" class="data-stamp">快照 {{ formatDateTime(market.generated_at) }}</span>
-        <button class="button button-secondary" type="button" :disabled="data.liveLoading" @click="refreshLive">
-          <Radio :size="15" :class="{ spin: data.liveLoading }" aria-hidden="true" /> 实时指数
+        <span v-if="data.indexLiveError" class="live-status is-error" role="status">实时失败 · 已回退快照</span>
+        <span v-else-if="data.indexLiveUpdatedAt" class="live-status" role="status">实时 {{ formatDateTime(data.indexLiveUpdatedAt) }}</span>
+        <button class="button button-secondary" type="button" :disabled="data.indexLiveLoading" @click="refreshLive">
+          <Radio :size="15" :class="{ spin: data.indexLiveLoading }" aria-hidden="true" /> 实时指数
         </button>
       </div>
     </header>
@@ -259,9 +268,9 @@ onBeforeUnmount(() => {
           <div class="market-pulse-grid">
             <article class="pulse-card">
               <span>纳斯达克100</span>
-              <strong class="mono">{{ formatNumber(quoteFor('100.NDX')?.price) }}</strong>
-              <small :class="movementClass(quoteFor('100.NDX')?.change_pct)">
-                {{ formatPercent(quoteFor('100.NDX')?.change_pct) }}
+              <strong class="mono">{{ formatNumber(quoteFor('100.NDX100')?.price) }}</strong>
+              <small :class="movementClass(quoteFor('100.NDX100')?.change_pct)">
+                {{ formatPercent(quoteFor('100.NDX100')?.change_pct) }}
               </small>
             </article>
             <article class="pulse-card">

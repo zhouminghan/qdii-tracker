@@ -21,8 +21,8 @@ export const ETF_GROUPS = [
 export const MARKET_INDEX_LABELS: Record<string, string> = {
   '100.DJIA': '道琼斯',
   '100.SPX': '标普500',
-  '100.NDX': '纳斯达克100',
-  '100.NDX100': '纳指综合',
+  '100.NDX': '纳指综合',
+  '100.NDX100': '纳斯达克100',
   '251.SOX': '费城半导体',
   sh000001: '上证指数',
   sh000300: '沪深300',

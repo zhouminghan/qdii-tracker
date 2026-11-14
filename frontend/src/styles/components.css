@@ -264,6 +264,18 @@
   background: var(--color-warn);
 }
 
+.live-status {
+  align-self: center;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  white-space: nowrap;
+}
+
+.live-status.is-error {
+  color: var(--color-danger);
+}
+
 .page-state {
   display: flex;
   align-items: center;

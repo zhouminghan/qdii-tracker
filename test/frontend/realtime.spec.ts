@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { parseTencentQuote, tencentEtfSymbol } from '@/shared/lib/realtime'
+import { MARKET_INDEX_LABELS } from '@/shared/constants/funds'
 
 function payload(price: number, change: number, nav: number): string {
   const fields = Array.from({ length: 83 }, () => '')
@@ -25,5 +26,10 @@ describe('Tencent quote adapter', () => {
   it('rejects empty or invalid payloads', () => {
     expect(parseTencentQuote('')).toBeNull()
     expect(parseTencentQuote(payload(0, 1, 1))).toBeNull()
+  })
+
+  it('keeps Nasdaq Composite and Nasdaq 100 labels distinct', () => {
+    expect(MARKET_INDEX_LABELS['100.NDX']).toBe('纳指综合')
+    expect(MARKET_INDEX_LABELS['100.NDX100']).toBe('纳斯达克100')
   })
 })

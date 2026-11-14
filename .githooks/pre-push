@@ -29,6 +29,7 @@ cd "$ROOT/scripts"
 cd "$ROOT"
 if [ -d node_modules ]; then
   npm run check
+  npx playwright test --project=chromium-desktop --project=chromium-mobile --grep-invert "visual baselines"
 else
   echo "❌ 未安装前端依赖，请先运行 npm ci"
   exit 1
