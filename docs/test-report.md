@@ -12,7 +12,7 @@ Firefox 测试引擎在本机启动阶段被 Playwright Firefox profile 错误�
 |------|------|------|
 | TypeScript | 通过 | `npm run typecheck` |
 | ESLint | 通过 | `npm run lint` |
-| Vitest | 7 个文件 / 23 条通过 | `npm test` |
+| Vitest | 8 个文件 / 26 条通过 | `npm test` |
 | Python pytest | 96 条通过 | `pytest test/ -q` |
 | 数据门禁 | Layer 0–6 通过 | `fundctl.py check --offline` |
 | Agent 规则 | 7 层通过 | `fundctl.py check --offline --agent-rules` |
@@ -55,6 +55,7 @@ Firefox 错误发生在浏览器进程启动前，不是页面断言失败。该
 
 - 基金搜索、单字段排序、缺失值置底、收藏置顶、A/C 份额展开。
 - 场内/场外切换与溢价显示。
+- 场内 ETF / 指数 Tencent 实时行情覆盖：请求失败时自动回退静态快照；解析器定向单测通过。
 - 详情抽屉、历史走势、持仓与费率。
 - CSV 和 PNG（PNG 文件头、大小均验证）。
 - 多基金归一化走势对比。
@@ -70,6 +71,7 @@ Firefox 错误发生在浏览器进程启动前，不是页面断言失败。该
 - 主应用 gzip 约 52 KB。
 - ECharts 独立懒加载 chunk gzip 约 208 KB。
 - `web/data/`、`web/index.html`、manifest、Service Worker 在生产静态服务器可用。
+- 实时行情覆盖层改动后已做定向 `vue-tsc`、ESLint、Vitest 和生产构建；遵循本轮要求，未重复执行完整浏览器回归。
 
 ## 未执行
 

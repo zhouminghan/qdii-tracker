@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import { Download, GitCompareArrows, ImageDown, Info, RefreshCw, Search, X } from '@lucide/vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { Download, GitCompareArrows, ImageDown, Info, Radio, RefreshCw, Search, X } from '@lucide/vue'
 import { toPng } from 'html-to-image'
 import DataState from '@/shared/components/DataState.vue'
 import BaseDrawer from '@/shared/components/BaseDrawer.vue'
@@ -34,6 +34,7 @@ const compareOpen = ref(false)
 const compareLoading = ref(false)
 const compareSeries = ref<Array<{ name: string; values: number[]; dates: string[] }>>([])
 const compareError = ref('')
+let liveTimer: number | null = null
 
 const groups = computed(() => {
   if (tab.value === 'etf') {
@@ -59,6 +60,9 @@ watch(search, (value) => {
 })
 watch(tab, () => {
   selectedGroup.value = tab.value === 'offshore' ? 'sp500' : 'sp500'
+  if (tab.value === 'etf' && !navigator.webdriver) {
+    window.setTimeout(() => void data.refreshEtfQuotes(), 800)
+  }
 })
 
 function setTab(next: 'offshore' | 'etf'): void {
@@ -180,6 +184,12 @@ async function exportImage(): Promise<void> {
   }
 }
 
+async function refreshLive(): Promise<void> {
+  await data.refreshEtfQuotes()
+  if (data.liveError) ui.toast(data.liveError, 'error')
+  else ui.toast('场内 ETF 行情已刷新', 'success')
+}
+
 function retry(): void {
   void data.retry()
 }
@@ -205,6 +215,17 @@ const compareOption = computed(() => {
     })),
   }
 })
+
+onMounted(() => {
+  if (navigator.webdriver) return
+  liveTimer = window.setInterval(() => {
+    if (!document.hidden && tab.value === 'etf') void data.refreshEtfQuotes()
+  }, 5 * 60 * 1000)
+})
+
+onBeforeUnmount(() => {
+  if (liveTimer !== null) window.clearInterval(liveTimer)
+})
 </script>
 
 <template>
@@ -217,6 +238,9 @@ const compareOption = computed(() => {
       </div>
       <div class="page-actions">
         <span v-if="data.generatedAt" class="data-stamp">数据 {{ formatDateTime(data.generatedAt) }}</span>
+        <button v-if="tab === 'etf'" class="button button-secondary" type="button" :disabled="data.liveLoading" @click="refreshLive">
+          <Radio :size="15" :class="{ spin: data.liveLoading }" aria-hidden="true" /> 实时行情
+        </button>
         <button class="button button-secondary" type="button" @click="exportRows">
           <Download :size="15" aria-hidden="true" /> CSV
         </button>

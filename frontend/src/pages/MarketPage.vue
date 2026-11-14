@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { Activity, ChevronRight, CircleAlert, Gauge, Globe2, Landmark, TrendingUp } from '@lucide/vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { Activity, ChevronRight, CircleAlert, Gauge, Globe2, Landmark, Radio, TrendingUp } from '@lucide/vue'
 import DataState from '@/shared/components/DataState.vue'
 import EChart from '@/shared/components/EChart.vue'
 import BaseDrawer from '@/shared/components/BaseDrawer.vue'
@@ -15,11 +15,13 @@ import {
 } from '@/shared/lib/format'
 import { useDataStore } from '@/stores/data'
 import { useSettingsStore } from '@/stores/settings'
+import { useUiStore } from '@/stores/ui'
 import type { FearGreedData, KlineData, NasdaqHistory } from '@/types/data'
 import { DCA_BANDS, strategyOf } from '@/shared/lib/dca'
 
 const data = useDataStore()
 const settings = useSettingsStore()
+const ui = useUiStore()
 const nasdaq = ref<NasdaqHistory | null>(null)
 const fearGreed = ref<FearGreedData | null>(null)
 const extraLoading = ref(false)
@@ -27,12 +29,23 @@ const extraError = ref('')
 const selectedIndex = ref('')
 const kline = ref<KlineData | null>(null)
 const klineLoading = ref(false)
+let liveTimer: number | null = null
 
 const positiveColor = computed(() => settings.colorMode === 'green-up' ? '#067647' : '#d92d20')
 const negativeColor = computed(() => settings.colorMode === 'green-up' ? '#d92d20' : '#067647')
 const market = computed(() => data.market)
+function quoteFor(key: string) {
+  const base = market.value?.market_indices.items[key]
+  const live = data.liveIndices[key]
+  if (!base) return undefined
+  return live ? { ...base, price: live.price, change_pct: live.changePct } : base
+}
+
 const indexItems = computed(() => Object.entries(market.value?.market_indices.items ?? {})
-  .filter(([key]) => key !== 'au9999'))
+  .filter(([key]) => key !== 'au9999')
+  .map(([key, quote]) => [key, data.liveIndices[key]
+    ? { ...quote, price: data.liveIndices[key].price, change_pct: data.liveIndices[key].changePct }
+    : quote] as const))
 const techItems = computed(() => Object.entries(market.value?.big_tech.items ?? {}))
 const fxItems = computed(() => ['fxUSDCNY', 'fxUSDJPY', 'fxCNYHKD', 'fxUSDHKD']
   .map((key) => [key, market.value?.fx.items[key]] as const)
@@ -163,6 +176,12 @@ async function openIndex(key: string): Promise<void> {
   }
 }
 
+async function refreshLive(): Promise<void> {
+  await data.refreshIndexQuotes()
+  if (data.liveError) ui.toast(data.liveError, 'error')
+  else ui.toast('指数实时行情已刷新', 'success')
+}
+
 const klineOption = computed(() => {
   const values = kline.value?.close?.slice(-180) ?? []
   return {
@@ -188,6 +207,16 @@ const klineOption = computed(() => {
 onMounted(() => {
   void data.load()
   void loadExtras()
+  if (!navigator.webdriver) {
+    window.setTimeout(() => void data.refreshIndexQuotes(), 2500)
+    liveTimer = window.setInterval(() => {
+      if (!document.hidden) void data.refreshIndexQuotes()
+    }, 60 * 1000)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (liveTimer !== null) window.clearInterval(liveTimer)
 })
 </script>
 
@@ -201,6 +230,9 @@ onMounted(() => {
       </div>
       <div class="page-actions">
         <span v-if="market" class="data-stamp">快照 {{ formatDateTime(market.generated_at) }}</span>
+        <button class="button button-secondary" type="button" :disabled="data.liveLoading" @click="refreshLive">
+          <Radio :size="15" :class="{ spin: data.liveLoading }" aria-hidden="true" /> 实时指数
+        </button>
       </div>
     </header>
 
@@ -227,9 +259,9 @@ onMounted(() => {
           <div class="market-pulse-grid">
             <article class="pulse-card">
               <span>纳斯达克100</span>
-              <strong class="mono">{{ formatNumber(market.market_indices.items['100.NDX']?.price) }}</strong>
-              <small :class="movementClass(market.market_indices.items['100.NDX']?.change_pct)">
-                {{ formatPercent(market.market_indices.items['100.NDX']?.change_pct) }}
+              <strong class="mono">{{ formatNumber(quoteFor('100.NDX')?.price) }}</strong>
+              <small :class="movementClass(quoteFor('100.NDX')?.change_pct)">
+                {{ formatPercent(quoteFor('100.NDX')?.change_pct) }}
               </small>
             </article>
             <article class="pulse-card">
