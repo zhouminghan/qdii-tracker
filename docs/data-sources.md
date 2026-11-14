@@ -36,4 +36,5 @@ GitHub Actions 工作日 22:00（北京时间）
 - 公共数据只读。
 - 首次加载 `catalog.json` 与 `market-snapshot.json`，页面按需加载历史序列。
 - 不伪造实时数据；页面明确展示快照时间和净值日期。
+- Tencent 实时覆盖请求失败时清空该域旧实时值并回退静态 JSON，同时显示失败状态。
 - 个人资产和研究数据只写 IndexedDB，不上传。

@@ -2,7 +2,7 @@
   "goal_id": "qdii-architecture-upgrade-2026-11-14",
   "current_phase": "delivery",
   "current_task": "firefox-engine",
-  "last_commit": "f39e60c",
+  "last_verified_code_commit": "92c20b7",
   "tasks": [
     {
       "id": "sync-remote",
@@ -74,7 +74,10 @@
       "evidence": [
     "npm run check",
     "realtime overlay focused typecheck/lint/vitest/build: passed",
-    "Vitest: 26 passed",
+    "Vitest: 27 passed",
+    "live quote targeted E2E: 6 passed",
+    "Funds/Market targeted E2E: 15 passed",
+    "Funds/Market axe: 6 passed",
         "pytest: 96 passed",
         "Chromium desktop: 18 passed",
         "Chromium mobile: 14 passed",
@@ -89,6 +92,7 @@
       "depends_on": ["quality-gate"],
       "evidence": [
         "Playwright Firefox 159: Could not find profile folder",
+        "Firefox restricted-context crash: TransformProcessType/_RegisterApplication/abort",
         "Playwright Firefox 150 with 1.65 and 1.60: no browser session within 30s",
         "forced reinstall reproduced",
         "docs/test-report.md"
@@ -113,8 +117,8 @@
     "production static smoke: 4 pages passed"
   ],
   "failures": [
-    "Firefox Playwright engine fails before page execution with profile folder error"
+    "Firefox BLOCKED before page execution: profile initialization plus macOS application registration crash"
   ],
   "decisions": ["ADR-0001", "ADR-0002"],
-  "next_action": "Await explicit authorization before push/deploy; Firefox browser-process issue remains environmental."
+  "next_action": "Await owner decision on Firefox release-blocking policy and explicit authorization before push/deploy."
 }
