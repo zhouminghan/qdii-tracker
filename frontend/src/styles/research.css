@@ -147,14 +147,54 @@
   margin-top: 3px;
 }
 
-.research-card > p {
+.research-card > p,
+.markdown-note {
   color: var(--color-text-secondary);
   font-size: 0.74rem;
   white-space: pre-wrap;
 }
 
+.markdown-note {
+  display: grid;
+  gap: 6px;
+  overflow-wrap: anywhere;
+}
+
+.markdown-note h1,
+.markdown-note h2,
+.markdown-note h3 {
+  color: var(--color-text);
+  white-space: normal;
+}
+
+.markdown-note h1 {
+  font-size: 1rem;
+}
+
+.markdown-note h2 {
+  font-size: 0.9rem;
+}
+
+.markdown-note h3 {
+  font-size: 0.82rem;
+}
+
+.markdown-note ul {
+  display: grid;
+  gap: 3px;
+  padding-left: 18px;
+}
+
+.markdown-note a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .row-actions {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 2px;
 }
 

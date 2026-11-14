@@ -2,11 +2,30 @@ import { expect, test } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
 
 test.describe('funds workflow', () => {
+  test('restores default favorites and shows the D-class daily limit', async ({ page }) => {
+    await page.goto('/#/funds')
+    await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible').first()).toBeVisible()
+    await expect(page.getByRole('button', { name: '取消收藏' }).first()).toBeVisible()
+
+    await page.getByLabel('搜索基金目录（跨分类）').fill('022525')
+    await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible')).toHaveCount(1)
+    await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible')).toContainText('纳指100 指数基金')
+    await page
+      .locator('.table-action:visible, .fund-mobile-actions button:visible')
+      .filter({ hasText: /详情/ })
+      .first()
+      .click()
+
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toBeVisible()
+    await expect(dialog.getByText('限 ¥100', { exact: true })).toBeVisible()
+  })
+
   test('searches, sorts, expands shares, and opens detail', async ({ page }) => {
     await page.goto('/#/funds')
     await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible').first()).toBeVisible()
-    await page.getByLabel('搜索当前基金目录').fill('易方达')
-    await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible')).toHaveCount(1)
+    await page.getByLabel('搜索基金目录（跨分类）').fill('易方达')
+    await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible').first()).toBeVisible()
     await page.getByLabel('清空搜索').click()
     await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible').first()).toBeVisible()
 

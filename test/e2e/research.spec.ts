@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { readFile } from 'node:fs/promises'
 
 test.describe('local research workflow', () => {
   test('uses contextual actions and collapses knowledge by default', async ({ page }) => {
@@ -25,6 +26,28 @@ test.describe('local research workflow', () => {
     await page.reload()
     await page.getByRole('tab', { name: /基金笔记/ }).click()
     await expect(page.getByText('纳指限购观察')).toBeVisible()
+  })
+
+  test('renders Markdown links and exports a standalone note', async ({ page }) => {
+    await page.goto('/#/research')
+    await page.getByRole('button', { name: '新建笔记' }).click()
+    await page.getByLabel('标题').fill('Markdown 链接测试')
+    await page.getByRole('textbox', { name: '基金代码' }).fill('022525')
+    await page.getByRole('textbox', { name: '正文（Markdown）' }).fill('## 外部资料\n\n- [纳斯达克官网](https://www.nasdaq.com/)')
+    await page.getByRole('button', { name: '保存', exact: true }).click()
+    await page.getByRole('tab', { name: /基金笔记/ }).click()
+
+    await expect(page.getByRole('link', { name: '纳斯达克官网' })).toHaveAttribute('href', 'https://www.nasdaq.com/')
+    const downloadPromise = page.waitForEvent('download')
+    await page.getByRole('button', { name: '导出 Markdown' }).click()
+    const download = await downloadPromise
+    expect(download.suggestedFilename()).toBe('Markdown-链接测试.md')
+    const path = await download.path()
+    expect(path).toBeTruthy()
+    const content = await readFile(path!, 'utf8')
+    expect(content).toContain('# Markdown 链接测试')
+    expect(content).toContain('- 基金代码：022525')
+    expect(content).toContain('[纳斯达克官网](https://www.nasdaq.com/)')
   })
 
   test('keeps the previous note version as history', async ({ page }) => {

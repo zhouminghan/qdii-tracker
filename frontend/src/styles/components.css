@@ -36,6 +36,10 @@
   color: #fff;
 }
 
+:root[data-theme='dark'] .button-primary {
+  color: #111318;
+}
+
 .button-primary:hover {
   border-color: var(--color-accent-hover);
   background: var(--color-accent-hover);
@@ -207,6 +211,7 @@
   color: var(--color-text-secondary);
   font-size: 0.72rem;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .segmented button.active {

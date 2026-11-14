@@ -2,8 +2,8 @@
 import { computed, ref } from 'vue'
 import { ChevronDown, ChevronRight, GitCompareArrows, LineChart, Star } from '@lucide/vue'
 import type { FundSortKey, FundRow } from '@/shared/lib/funds'
-import { classifyBuyStatus, sortFundRows } from '@/shared/lib/funds'
-import { daysSince, formatDate, formatPercent, formatPrice, movementClass } from '@/shared/lib/format'
+import { buyStatusLabel, classifyBuyStatus, sortFundRows } from '@/shared/lib/funds'
+import { formatDate, formatPercent, formatPrice, movementClass } from '@/shared/lib/format'
 import { useSettingsStore } from '@/stores/settings'
 import { useDataStore } from '@/stores/data'
 
@@ -13,6 +13,8 @@ const props = defineProps<{
   sortKey: FundSortKey
   sortDirection: 'asc' | 'desc'
   totalScale: number
+  navDate: string | null
+  categoryLabel: (row: FundRow) => string
   compareCodes: string[]
 }>()
 const emit = defineEmits<{
@@ -26,10 +28,15 @@ const data = useDataStore()
 const expanded = ref(new Set<string>())
 
 const sortedRows = computed(() => sortFundRows(props.rows, props.sortKey, props.sortDirection))
-const columns: Array<{ key: FundSortKey | null; label: string; align?: 'right' | 'center' }> = [
+const columns = computed<Array<{ key: FundSortKey | null; label: string; align?: 'right' | 'center'; sub?: string }>>(() => [
   { key: null, label: '基金系列' },
   { key: 'series_scale', label: '规模', align: 'right' },
-  { key: 'price', label: props.tab === 'etf' ? '最新价' : '净值', align: 'right' },
+  {
+    key: 'price',
+    label: props.tab === 'etf' ? '最新价' : '净值',
+    align: 'right',
+    sub: props.navDate ? formatDate(props.navDate) : '',
+  },
   ...(props.tab === 'etf' ? [{ key: 'premium' as const, label: '溢价率', align: 'right' as const }] : []),
   { key: 'chg_1m', label: '近 1 月', align: 'right' },
   { key: 'chg_ytd', label: '今年来', align: 'right' },
@@ -39,7 +46,7 @@ const columns: Array<{ key: FundSortKey | null; label: string; align?: 'right' |
     { key: 'buy_status' as const, label: '申购', align: 'center' as const },
   ] : []),
   { key: null, label: '操作', align: 'center' },
-]
+])
 
 function toggle(code: string): void {
   const next = new Set(expanded.value)
@@ -111,10 +118,13 @@ function logoLetter(company: string): string {
               type="button"
               @click="emit('sort', column.key)"
             >
-              {{ column.label }}
-              <span aria-hidden="true">{{ column.key === sortKey ? (sortDirection === 'asc' ? '↑' : '↓') : '↕' }}</span>
+              <span>{{ column.label }} <span aria-hidden="true">{{ column.key === sortKey ? (sortDirection === 'asc' ? '↑' : '↓') : '↕' }}</span></span>
+              <small v-if="column.sub" class="column-sub">{{ column.sub }}</small>
             </button>
-            <span v-else>{{ column.label }}</span>
+            <template v-else>
+              <span>{{ column.label }}</span>
+              <small v-if="column.sub" class="column-sub">{{ column.sub }}</small>
+            </template>
           </th>
         </tr>
       </thead>
@@ -153,6 +163,7 @@ function logoLetter(company: string): string {
                   <span>
                     <span class="mono">{{ row.defaultShare.code }}</span>
                     · {{ row.company }}
+                    <span class="badge">{{ categoryLabel(row) }}</span>
                     <span class="badge">{{ tab === 'etf' ? 'ETF' : `${row.shares.length} 份额` }}</span>
                   </span>
                 </div>
@@ -163,9 +174,6 @@ function logoLetter(company: string): string {
               <div class="price-cell">
                 <strong class="mono">{{ formatPrice(price(row), tab === 'etf') }}</strong>
                 <span class="mono" :class="movementClass(dailyChange(row))">{{ formatPercent(dailyChange(row)) }}</span>
-                <small v-if="daysSince(row.defaultShare.nav_date) !== null && daysSince(row.defaultShare.nav_date)! >= 1">
-                  {{ formatDate(row.defaultShare.nav_date) }} · T-{{ daysSince(row.defaultShare.nav_date) }}
-                </small>
               </div>
             </td>
             <td v-if="tab === 'etf'" class="align-right mono premium-cell">
@@ -177,7 +185,7 @@ function logoLetter(company: string): string {
             <template v-if="tab === 'offshore'">
               <td class="align-right mono" :class="movementClass(row.defaultShare.chg_since_inception)">{{ formatPercent(row.defaultShare.chg_since_inception) }}</td>
               <td class="align-center">
-                <span class="badge" :class="statusClass(row)">{{ row.defaultShare.buy_status || '--' }}</span>
+                <span class="badge" :class="statusClass(row)" :title="row.defaultShare.buy_status || '--'">{{ buyStatusLabel(row.defaultShare) }}</span>
               </td>
             </template>
             <td class="align-center">
@@ -206,7 +214,7 @@ function logoLetter(company: string): string {
                       <td><span class="badge">{{ share.currency === '美元' ? '$ 美元' : '¥ 人民币' }}</span></td>
                       <td class="align-right mono">{{ formatPrice(share.nav) }}</td>
                       <td class="align-right mono" :class="movementClass(share.chg_1y)">{{ formatPercent(share.chg_1y) }}</td>
-                      <td><span class="badge" :class="classifyBuyStatus(share) === 'paused' ? 'badge-danger' : 'badge-accent'">{{ share.buy_status || '--' }}</span></td>
+                      <td><span class="badge" :class="classifyBuyStatus(share) === 'paused' ? 'badge-danger' : classifyBuyStatus(share) === 'limited' ? 'badge-warn' : 'badge-accent'" :title="share.buy_status || '--'">{{ buyStatusLabel(share) }}</span></td>
                       <td class="align-right">{{ share.free_hold_days ? `持有 ${share.free_hold_days} 天免` : '查看详情' }}</td>
                     </tr>
                   </tbody>
@@ -229,7 +237,7 @@ function logoLetter(company: string): string {
           <span class="fund-logo" :style="{ color: logoColor(row.company), background: `${logoColor(row.company)}16` }">{{ logoLetter(row.company) }}</span>
           <div class="fund-name-block">
             <strong>{{ tab === 'etf' ? row.defaultShare.name : row.display_name }}</strong>
-            <span><span class="mono">{{ row.default_share_code }}</span> · {{ row.company }}</span>
+            <span><span class="mono">{{ row.default_share_code }}</span> · {{ row.company }} <span class="badge">{{ categoryLabel(row) }}</span></span>
           </div>
         </div>
         <button
@@ -246,7 +254,7 @@ function logoLetter(company: string): string {
         <div><span>最新</span><strong class="mono">{{ formatPrice(price(row), tab === 'etf') }}</strong></div>
         <div><span>日涨跌</span><strong class="mono" :class="movementClass(dailyChange(row))">{{ formatPercent(dailyChange(row)) }}</strong></div>
         <div v-if="tab === 'etf'"><span>溢价</span><strong class="mono premium-cell">{{ formatPercent(row.defaultShare.etf_premium) }}</strong></div>
-        <div v-else><span>申购</span><span class="badge" :class="statusClass(row)">{{ row.defaultShare.buy_status || '--' }}</span></div>
+        <div v-else><span>申购</span><span class="badge" :class="statusClass(row)" :title="row.defaultShare.buy_status || '--'">{{ buyStatusLabel(row.defaultShare) }}</span></div>
       </div>
       <div class="fund-mobile-foot">
         <span>近 1 年 <b class="mono" :class="movementClass(row.defaultShare.chg_1y)">{{ formatPercent(row.defaultShare.chg_1y) }}</b></span>
@@ -273,7 +281,7 @@ function logoLetter(company: string): string {
           </div>
           <div>
             <strong class="mono">{{ formatPrice(share.nav ?? share.etf_price) }}</strong>
-            <span class="badge" :class="classifyBuyStatus(share) === 'paused' ? 'badge-danger' : 'badge-accent'">{{ share.buy_status || '--' }}</span>
+            <span class="badge" :class="classifyBuyStatus(share) === 'paused' ? 'badge-danger' : classifyBuyStatus(share) === 'limited' ? 'badge-warn' : 'badge-accent'" :title="share.buy_status || '--'">{{ buyStatusLabel(share) }}</span>
           </div>
         </div>
       </div>

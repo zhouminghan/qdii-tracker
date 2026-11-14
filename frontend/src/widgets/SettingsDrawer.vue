@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { Database, Download, Palette, RefreshCw, Trash2, Upload } from '@lucide/vue'
 import BaseDrawer from '@/shared/components/BaseDrawer.vue'
 import DataState from '@/shared/components/DataState.vue'
+import { qualityStatusLabel, qualityWarningText } from '@/shared/lib/data-quality'
 import { formatDateTime } from '@/shared/lib/format'
 import { useDataStore } from '@/stores/data'
 import { useSettingsStore } from '@/stores/settings'
@@ -10,13 +11,14 @@ import { useSettingsStore } from '@/stores/settings'
 const settings = useSettingsStore()
 const data = useDataStore()
 const qualityTone = computed(() => data.quality?.status === 'ok' ? 'ok' : 'warn')
+const qualityLabel = computed(() => qualityStatusLabel(data.quality?.status))
 </script>
 
 <template>
   <BaseDrawer
     :open="settings.settingsOpen"
     title="设置"
-    eyebrow="Preferences & local data"
+    eyebrow="偏好与本地数据"
     @close="settings.settingsOpen = false"
   >
     <section class="settings-section">
@@ -64,11 +66,11 @@ const qualityTone = computed(() => data.quality?.status === 'ok' ? 'ok' : 'warn'
           </div>
           <div>
             <dt>质量</dt>
-            <dd><span class="status-dot" :class="qualityTone" />{{ data.quality?.status ?? '--' }}</dd>
+            <dd><span class="status-dot" :class="qualityTone" />{{ qualityLabel }}</dd>
           </div>
         </dl>
-        <p v-if="data.quality?.warnings.length" class="inline-note">
-          {{ data.quality.warnings[0] }}
+        <p v-for="warning in data.quality?.warnings ?? []" :key="warning" class="inline-note">
+          {{ qualityWarningText(warning) }}
         </p>
       </DataState>
     </section>
@@ -78,7 +80,7 @@ const qualityTone = computed(() => data.quality?.status === 'ok' ? 'ok' : 'warn'
         <Database :size="17" aria-hidden="true" />
         <div>
           <h3>个人数据</h3>
-          <p>资产、交易和研究记录不上传。备份操作在 Portfolio 和 Research 中执行。</p>
+          <p>资产、交易和研究记录不上传。备份操作在组合和研究页面执行。</p>
         </div>
       </div>
       <div class="button-row">
@@ -86,7 +88,7 @@ const qualityTone = computed(() => data.quality?.status === 'ok' ? 'ok' : 'warn'
           <Upload :size="15" aria-hidden="true" /> 打开本地工作区
         </RouterLink>
         <button class="button button-secondary" type="button" disabled>
-          <Download :size="15" aria-hidden="true" /> 全量备份（Portfolio 内）
+          <Download :size="15" aria-hidden="true" /> 全量备份（组合页面内）
         </button>
       </div>
     </section>

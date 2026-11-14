@@ -2,7 +2,6 @@
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
-  Code2,
   Landmark,
   Moon,
   Search,
@@ -19,10 +18,10 @@ const ui = useUiStore()
 const search = ref(ui.quickSearch)
 
 const items = [
-  { to: '/market', label: 'Market' },
-  { to: '/funds', label: 'Funds' },
-  { to: '/portfolio', label: 'Portfolio' },
-  { to: '/research', label: 'Research' },
+  { to: '/market', label: '市场' },
+  { to: '/funds', label: '基金' },
+  { to: '/portfolio', label: '组合' },
+  { to: '/research', label: '研究' },
 ]
 
 const currentPath = computed(() => route.path)
@@ -51,7 +50,7 @@ function clearSearch(): void {
         </span>
         <span class="brand-copy">
           <strong>QDII Tracker</strong>
-          <small>Personal research terminal</small>
+          <small>个人基金研究终端</small>
         </span>
       </RouterLink>
 
@@ -81,14 +80,16 @@ function clearSearch(): void {
 
       <div class="header-actions" :class="{ 'header-actions-end': currentPath === '/funds' }">
         <a
-          class="icon-button desktop-only"
+          class="icon-button"
           href="https://github.com/zhouminghan/qdii-tracker"
           target="_blank"
           rel="noreferrer"
           aria-label="打开 GitHub 仓库"
           title="GitHub 仓库"
         >
-          <Code2 :size="17" aria-hidden="true" />
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.11.79-.25.79-.56v-2.2c-3.23.7-3.91-1.37-3.91-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.06-.72.08-.7.08-.7 1.17.08 1.78 1.2 1.78 1.2 1.04 1.79 2.74 1.27 3.41.97.11-.76.41-1.27.74-1.56-2.58-.29-5.29-1.29-5.29-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.47.11-3.05 0 0 .97-.31 3.16 1.18a10.9 10.9 0 0 1 5.75 0c2.19-1.49 3.15-1.18 3.15-1.18.63 1.58.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.08 0 4.4-2.72 5.38-5.3 5.67.42.36.79 1.07.79 2.16v3.2c0 .31.21.67.79.56A11.5 11.5 0 0 0 12 .7Z" />
+          </svg>
         </a>
         <button
           class="icon-button"

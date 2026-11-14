@@ -169,6 +169,7 @@
 .chart-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
   gap: 12px;
 }
 
@@ -282,7 +283,118 @@
 }
 
 .heatmap-panel {
-  grid-row: span 2;
+  grid-row: auto;
+}
+
+.heatmap-body {
+  display: grid;
+  gap: 10px;
+}
+
+.heatmap-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  color: var(--color-text-secondary);
+  font-size: 0.7rem;
+}
+
+.heatmap-summary strong {
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-weight: 650;
+}
+
+.annual-heat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: 5px;
+}
+
+.annual-heat-cell {
+  display: grid;
+  gap: 2px;
+  min-height: 72px;
+  padding: 7px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--heat-color) var(--heat-alpha), var(--color-surface));
+}
+
+.annual-heat-cell > span,
+.annual-heat-cell small {
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+}
+
+.annual-heat-cell strong {
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.heat-up {
+  --heat-color: var(--color-positive);
+}
+
+.heat-down {
+  --heat-color: var(--color-negative);
+}
+
+.heat-flat {
+  --heat-color: var(--color-surface-muted);
+  --heat-alpha: 100%;
+}
+
+.monthly-heat-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.monthly-heat-table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: separate;
+  border-spacing: 1px;
+  background: var(--color-border);
+  font-size: 0.64rem;
+}
+
+.monthly-heat-table th,
+.monthly-heat-table td {
+  min-width: 58px;
+  padding: 6px 7px;
+  background: color-mix(in srgb, var(--heat-color) var(--heat-alpha), var(--color-surface));
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.monthly-heat-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--color-surface-raised);
+  color: var(--color-text-tertiary);
+}
+
+.monthly-heat-table th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 54px;
+  background: var(--color-surface-raised);
+  color: var(--color-text-secondary);
+  text-align: left;
+}
+
+.monthly-heat-table thead th:first-child {
+  z-index: 3;
 }
 
 .fear-greed-summary {
@@ -502,7 +614,11 @@
   .market-list-row > div span,
   .note-line,
   .dca-matrix-row,
-  .dca-matrix-head {
+  .dca-matrix-head,
+  .heatmap-summary,
+  .annual-heat-cell > span,
+  .annual-heat-cell small,
+  .monthly-heat-table {
     font-size: 0.75rem;
   }
 

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { Activity, ChevronRight, CircleAlert, Gauge, Globe2, Landmark, Radio, TrendingUp } from '@lucide/vue'
+import { Activity, ChevronRight, CircleAlert, Gauge, Landmark, Radio, TrendingUp } from '@lucide/vue'
 import DataState from '@/shared/components/DataState.vue'
 import EChart from '@/shared/components/EChart.vue'
 import BaseDrawer from '@/shared/components/BaseDrawer.vue'
 import { MARKET_INDEX_LABELS, TECH_LABELS } from '@/shared/constants/funds'
 import { fetchJson } from '@/shared/infrastructure/http'
 import {
+  asNumber,
   formatDate,
   formatDateTime,
   formatNumber,
@@ -30,6 +31,7 @@ const selectedIndex = ref('')
 const kline = ref<KlineData | null>(null)
 const klineLoading = ref(false)
 const activeMarketSection = ref('market-overview')
+const heatmapMode = ref<'year' | 'month'>('year')
 let liveTimer: number | null = null
 let liveBootTimer: number | null = null
 let sectionObserver: IntersectionObserver | null = null
@@ -82,43 +84,20 @@ const annualOption = computed(() => ({
   }],
 }))
 
-const heatmapOption = computed(() => {
-  const values: Array<[number, number, number]> = []
-  nasdaq.value?.heatmap.rows.forEach((row, yearIndex) => {
-    row.forEach((value, monthIndex) => values.push([monthIndex, yearIndex, value]))
-  })
+const monthLabels = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+const annualHeatSummary = computed(() => {
+  const rows = nasdaq.value?.annual ?? []
+  const valid = rows.filter((item) => Number.isFinite(item.return_pct))
+  if (!valid.length) return null
+  const average = valid.reduce((sum, item) => sum + item.return_pct, 0) / valid.length
+  const best = valid.reduce((left, right) => right.return_pct > left.return_pct ? right : left)
+  const worst = valid.reduce((left, right) => right.return_pct < left.return_pct ? right : left)
   return {
-    animationDuration: 220,
-    grid: { left: 42, right: 52, top: 12, bottom: 28 },
-    tooltip: {
-      position: 'top',
-      formatter: (params: { value: [number, number, number] }) => {
-        const [month, year, value] = params.value
-        return `${nasdaq.value?.heatmap.years[year]} 年 ${month + 1} 月<br/>${value > 0 ? '+' : ''}${value.toFixed(2)}%`
-      },
-    },
-    xAxis: {
-      type: 'category',
-      data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-      splitArea: { show: true },
-    },
-    yAxis: {
-      type: 'category',
-      data: nasdaq.value?.heatmap.years ?? [],
-      axisLabel: { interval: 2 },
-      splitArea: { show: true },
-    },
-    visualMap: {
-      min: -20,
-      max: 20,
-      calculable: false,
-      orient: 'vertical',
-      right: 4,
-      top: 'middle',
-      text: ['涨', '跌'],
-      inRange: { color: [negativeColor.value, '#f5f5f5', positiveColor.value] },
-    },
-    series: [{ type: 'heatmap', data: values, emphasis: { itemStyle: { borderColor: '#111318', borderWidth: 1 } } }],
+    up: valid.filter((item) => item.return_pct > 0).length,
+    down: valid.filter((item) => item.return_pct < 0).length,
+    average,
+    best,
+    worst,
   }
 })
 
@@ -184,6 +163,12 @@ async function openIndex(key: string): Promise<void> {
 function scrollToSection(id: string): void {
   activeMarketSection.value = id
   document.getElementById(id)?.scrollIntoView({ block: 'start' })
+}
+
+function heatCellStyle(value: unknown): Record<string, string> {
+  const number = asNumber(value)
+  const strength = number === null ? 0 : Math.min(Math.abs(number) / 15, 1)
+  return { '--heat-alpha': `${Math.round(8 + strength * 40)}%` }
 }
 
 async function refreshLive(): Promise<void> {
@@ -256,7 +241,7 @@ onBeforeUnmount(() => {
   <div class="page market-page">
     <header class="page-header">
       <div class="page-title-group">
-        <div class="eyebrow">Market intelligence</div>
+        <div class="eyebrow">市场情报</div>
         <h1>市场</h1>
         <p class="page-subtitle">全球指数、宏观利率、黄金与纳指历史。数据来自本地收盘快照，展示实际日期与来源状态。</p>
       </div>
@@ -285,7 +270,7 @@ onBeforeUnmount(() => {
               <span>{{ market.temperature.score }}</span>
             </div>
             <div>
-              <div class="eyebrow">Market temperature</div>
+              <div class="eyebrow">市场温度</div>
               <h2>{{ market.temperature.verdict }}</h2>
               <p>{{ market.temperature.summary }}</p>
             </div>
@@ -319,7 +304,7 @@ onBeforeUnmount(() => {
         <section id="market-global" class="section">
           <div class="section-header">
             <div>
-              <div class="eyebrow">Global indices</div>
+              <div class="eyebrow">全球指数</div>
               <h2>全球市场</h2>
               <p>点击指数查看近 180 个交易日走势。</p>
             </div>
@@ -386,7 +371,7 @@ onBeforeUnmount(() => {
         <section id="market-macro" class="section">
           <div class="section-header">
             <div>
-              <div class="eyebrow">Rates & currencies</div>
+              <div class="eyebrow">利率与汇率</div>
               <h2>宏观与汇率</h2>
               <p>利率与汇率读数用于理解 QDII 的估值和汇率敞口。</p>
             </div>
@@ -417,7 +402,7 @@ onBeforeUnmount(() => {
         <section id="market-nasdaq" class="section">
           <div class="section-header">
             <div>
-              <div class="eyebrow">NASDAQ 100 history</div>
+              <div class="eyebrow">纳指 100 历史</div>
               <h2>纳指分析</h2>
               <p v-if="nasdaq">年度涨跌与月历热力图覆盖 {{ nasdaq.range.first_year }}–{{ nasdaq.range.last_year }}。</p>
             </div>
@@ -442,16 +427,62 @@ onBeforeUnmount(() => {
             <div class="chart-grid">
               <article class="panel chart-panel heatmap-panel">
                 <header class="panel-header">
-                  <div><h3>月度热力图</h3><p class="inline-note">颜色表达强度，悬停读取精确数值。</p></div>
-                  <Globe2 :size="17" aria-hidden="true" />
+                  <div><h3>纳指热力图</h3><p class="inline-note">每格直接显示区间涨跌幅，颜色只辅助识别方向。</p></div>
+                  <div class="segmented" role="group" aria-label="热力图周期">
+                    <button type="button" :class="{ active: heatmapMode === 'year' }" :aria-pressed="heatmapMode === 'year'" @click="heatmapMode = 'year'">年度</button>
+                    <button type="button" :class="{ active: heatmapMode === 'month' }" :aria-pressed="heatmapMode === 'month'" @click="heatmapMode = 'month'">月度</button>
+                  </div>
                 </header>
-                <div class="panel-body">
-                  <EChart v-if="nasdaq" :option="heatmapOption" label="纳斯达克月度涨跌热力图" height="520px" />
+                <div v-if="nasdaq" class="panel-body heatmap-body">
+                  <div v-if="annualHeatSummary" class="heatmap-summary">
+                    <span>上涨 <strong>{{ annualHeatSummary.up }}</strong> 年</span>
+                    <span>下跌 <strong>{{ annualHeatSummary.down }}</strong> 年</span>
+                    <span>均值 <strong :class="movementClass(annualHeatSummary.average)">{{ formatPercent(annualHeatSummary.average) }}</strong></span>
+                    <span>最佳 <strong>{{ annualHeatSummary.best.year }} · {{ formatPercent(annualHeatSummary.best.return_pct) }}</strong></span>
+                    <span>最差 <strong>{{ annualHeatSummary.worst.year }} · {{ formatPercent(annualHeatSummary.worst.return_pct) }}</strong></span>
+                  </div>
+                  <div v-if="heatmapMode === 'year'" class="annual-heat-grid" role="list" aria-label="纳指年度涨跌热力图">
+                    <article
+                      v-for="item in nasdaq.annual"
+                      :key="item.year"
+                      class="annual-heat-cell"
+                      :class="item.return_pct > 0 ? 'heat-up' : item.return_pct < 0 ? 'heat-down' : 'heat-flat'"
+                      :style="heatCellStyle(item.return_pct)"
+                      role="listitem"
+                    >
+                      <span>{{ item.year }}</span>
+                      <strong>{{ formatPercent(item.return_pct) }}</strong>
+                      <small>回撤 {{ formatPercent(item.max_drawdown_pct) }}</small>
+                    </article>
+                  </div>
+                  <div v-else class="monthly-heat-scroll" role="region" tabindex="0" aria-label="纳指月度涨跌热力图，可横向滚动">
+                    <table class="monthly-heat-table">
+                      <thead>
+                        <tr>
+                          <th scope="col">年份</th>
+                          <th v-for="month in monthLabels" :key="month" scope="col">{{ month }}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="(row, rowIndex) in nasdaq.heatmap.rows" :key="nasdaq.heatmap.years[rowIndex]">
+                          <th scope="row">{{ nasdaq.heatmap.years[rowIndex] }}</th>
+                          <td
+                            v-for="(value, monthIndex) in row"
+                            :key="`${rowIndex}-${monthIndex}`"
+                            :class="value > 0 ? 'heat-up' : value < 0 ? 'heat-down' : 'heat-flat'"
+                            :style="heatCellStyle(value)"
+                          >
+                            {{ formatPercent(value) }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </article>
               <article class="panel">
                 <header class="panel-header">
-                  <div><h3>情绪与风险</h3><p class="inline-note">CNN Fear &amp; Greed</p></div>
+                  <div><h3>情绪与风险</h3><p class="inline-note">CNN 恐慌贪婪指数</p></div>
                   <Gauge :size="17" aria-hidden="true" />
                 </header>
                 <div class="panel-body fear-greed-summary">
@@ -474,7 +505,7 @@ onBeforeUnmount(() => {
               </header>
               <div class="panel-body dca-body">
                 <div class="dca-verdict">
-                  <span class="eyebrow">Current action</span>
+                  <span class="eyebrow">当前动作</span>
                   <h3>{{ dca.band.action }}</h3>
                   <p>{{ dca.band.strategy }}</p>
                   <div class="dca-checks">
@@ -502,7 +533,7 @@ onBeforeUnmount(() => {
     <BaseDrawer
       :open="Boolean(selectedIndex)"
       :title="MARKET_INDEX_LABELS[selectedIndex] || selectedIndex"
-      eyebrow="Market series"
+      eyebrow="市场走势"
       width="min(820px, 100vw)"
       @close="selectedIndex = ''"
     >

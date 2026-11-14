@@ -15,8 +15,9 @@ import {
 } from '@lucide/vue'
 import BaseDrawer from '@/shared/components/BaseDrawer.vue'
 import DataState from '@/shared/components/DataState.vue'
+import MarkdownNote from '@/shared/components/MarkdownNote.vue'
 import { KNOWLEDGE_ARTICLES, KNOWLEDGE_CATEGORIES } from '@/features/research/knowledge'
-import { downloadJson, formatNumber, todayIso } from '@/shared/lib/format'
+import { downloadJson, downloadText, formatNumber, todayIso } from '@/shared/lib/format'
 import { exportLocalBackup, importLocalBackup, parseBackup } from '@/shared/infrastructure/local-db'
 import type { ResearchNote, StrategyLog, WatchItem } from '@/types/local'
 import { useDataStore } from '@/stores/data'
@@ -180,6 +181,17 @@ async function confirmDelete(): Promise<void> {
   }
 }
 
+function exportNoteMarkdown(note: ResearchNote): void {
+  const filename = `${note.title.trim().replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, '-') || note.id}.md`
+  const tags = note.tags.length ? note.tags.map((tag) => `#${tag}`).join(' ') : ''
+  const metadata = [
+    note.fundCode ? `- 基金代码：${note.fundCode}` : '',
+    tags ? `- 标签：${tags}` : '',
+    `- 更新时间：${note.updatedAt.slice(0, 16).replace('T', ' ')}`,
+  ].filter(Boolean).join('\n')
+  downloadText(filename, `# ${note.title}\n\n${metadata}\n\n${note.body}\n`)
+}
+
 async function exportBackup(): Promise<void> {
   try {
     const backup = await exportLocalBackup()
@@ -215,7 +227,7 @@ onMounted(async () => {
   <div class="page research-page">
     <header class="page-header">
       <div class="page-title-group">
-        <div class="eyebrow">Personal research</div>
+        <div class="eyebrow">个人研究</div>
         <h1>研究</h1>
         <p class="page-subtitle">知识库、基金笔记、观察清单和策略复盘。个人记录只保存在 IndexedDB。</p>
       </div>
@@ -273,10 +285,10 @@ onMounted(async () => {
         <div v-else class="research-card-grid">
           <article v-for="note in filteredNotes" :key="note.id" class="research-card">
             <div class="research-card-head">
-              <div><span class="eyebrow">{{ note.fundCode || 'General' }}</span><h3>{{ note.title }}</h3></div>
-              <div class="row-actions"><button class="button button-secondary history-button" type="button" @click="openHistory(note)">历史</button><button class="icon-button" type="button" aria-label="编辑笔记" @click="openNote(note)"><FileText :size="14" /></button><button class="icon-button" type="button" aria-label="删除笔记" @click="deleteTarget = { kind: 'note', id: note.id, title: note.title }"><Trash2 :size="14" /></button></div>
+              <div><span class="eyebrow">{{ note.fundCode || '通用' }}</span><h3>{{ note.title }}</h3></div>
+              <div class="row-actions"><button class="button button-secondary history-button" type="button" @click="openHistory(note)">历史</button><button class="icon-button" type="button" aria-label="导出 Markdown" title="导出 Markdown" @click="exportNoteMarkdown(note)"><Download :size="14" /></button><button class="icon-button" type="button" aria-label="编辑笔记" @click="openNote(note)"><FileText :size="14" /></button><button class="icon-button" type="button" aria-label="删除笔记" @click="deleteTarget = { kind: 'note', id: note.id, title: note.title }"><Trash2 :size="14" /></button></div>
             </div>
-            <p>{{ note.body }}</p>
+            <MarkdownNote :text="note.body" />
             <div class="tag-row"><span v-for="tag in note.tags" :key="tag" class="badge">{{ tag }}</span></div>
           </article>
         </div>
@@ -299,19 +311,19 @@ onMounted(async () => {
         <div v-if="!research.strategyLogs.length" class="page-state"><ShieldCheck :size="20" /><span>暂无策略记录</span></div>
         <div v-else class="strategy-list">
           <article v-for="item in research.strategyLogs" :key="item.id" class="strategy-card">
-            <div class="research-card-head"><div><span class="eyebrow">Strategy log</span><h3>{{ item.title }}</h3></div><div class="row-actions"><button class="icon-button" type="button" aria-label="编辑策略" @click="openStrategy(item)"><FileText :size="14" /></button><button class="icon-button" type="button" aria-label="删除策略" @click="deleteTarget = { kind: 'strategy', id: item.id, title: item.title }"><Trash2 :size="14" /></button></div></div>
+            <div class="research-card-head"><div><span class="eyebrow">策略复盘</span><h3>{{ item.title }}</h3></div><div class="row-actions"><button class="icon-button" type="button" aria-label="编辑策略" @click="openStrategy(item)"><FileText :size="14" /></button><button class="icon-button" type="button" aria-label="删除策略" @click="deleteTarget = { kind: 'strategy', id: item.id, title: item.title }"><Trash2 :size="14" /></button></div></div>
             <div class="strategy-flow"><div><span>假设</span><p>{{ item.thesis || '--' }}</p></div><div><span>动作</span><p>{{ item.action || '--' }}</p></div><div><span>结果</span><p>{{ item.result || '--' }}</p></div></div>
           </article>
         </div>
       </section>
     </DataState>
 
-    <BaseDrawer :open="editorOpen" :title="editorType === 'note' ? '研究笔记' : editorType === 'watch' ? '观察标的' : '策略记录'" eyebrow="Local research" side="responsive" @close="editorOpen = false">
+    <BaseDrawer :open="editorOpen" :title="editorType === 'note' ? '研究笔记' : editorType === 'watch' ? '观察标的' : '策略记录'" eyebrow="本地研究" side="responsive" @close="editorOpen = false">
       <div v-if="editorType === 'note'" class="form-grid">
         <label class="field span-2"><span>标题</span><input v-model="noteForm.title" class="input" /></label>
         <label class="field"><span>基金代码</span><input v-model="noteForm.fundCode" class="input" placeholder="可选" /></label>
         <label class="field"><span>标签</span><input v-model="noteForm.tags" class="input" placeholder="用逗号分隔" /></label>
-        <label class="field span-2"><span>正文</span><textarea v-model="noteForm.body" class="textarea" rows="7" /></label>
+        <label class="field span-2"><span>正文（Markdown）</span><textarea v-model="noteForm.body" class="textarea" rows="7" placeholder="支持 [链接](https://example.com) 和外部图表地址" /></label>
       </div>
       <div v-else-if="editorType === 'watch'" class="form-grid">
         <label class="field"><span>基金代码</span><input v-model="watchForm.code" class="input" /></label>
@@ -328,17 +340,17 @@ onMounted(async () => {
       <template #footer><button class="button button-secondary" type="button" @click="editorOpen = false">取消</button><button class="button button-primary" type="button" :disabled="saving" @click="saveEditor">保存</button></template>
     </BaseDrawer>
 
-    <BaseDrawer :open="historyOpen" :title="`${historyNote?.title || '笔记'} · 历史`" eyebrow="Revision history" side="bottom" @close="historyOpen = false">
+    <BaseDrawer :open="historyOpen" :title="`${historyNote?.title || '笔记'} · 历史`" eyebrow="历史版本" side="bottom" @close="historyOpen = false">
       <div v-if="!research.noteHistory.length" class="page-state">暂无历史版本。修改笔记后会保留修改前内容。</div>
       <div v-else class="revision-list">
         <article v-for="revision in research.noteHistory" :key="revision.id" class="revision-card">
           <div><strong>{{ revision.title }}</strong><time>{{ revision.createdAt.slice(0, 16).replace('T', ' ') }}</time></div>
-          <p>{{ revision.body }}</p>
+          <MarkdownNote :text="revision.body" />
         </article>
       </div>
     </BaseDrawer>
 
-    <BaseDrawer :open="Boolean(deleteTarget)" title="删除研究记录" eyebrow="Permanent action" side="responsive" @close="deleteTarget = null">
+    <BaseDrawer :open="Boolean(deleteTarget)" title="删除研究记录" eyebrow="不可撤销操作" side="responsive" @close="deleteTarget = null">
       <div class="notice notice-danger">
         <CircleAlert :size="16" aria-hidden="true" />
         删除后无法在当前设备恢复。需要保留时请先导出备份。

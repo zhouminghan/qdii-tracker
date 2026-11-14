@@ -169,15 +169,38 @@
   text-align: center !important;
 }
 
+.share-comparison-table th small {
+  display: block;
+  margin-top: 1px;
+  color: var(--color-text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 500;
+}
+
 .table-sort-button {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
-  gap: 3px;
+  gap: 1px;
   padding: 0;
   border: 0;
   background: transparent;
   color: inherit;
   font: inherit;
+}
+
+.table-sort-button .column-sub,
+.data-table th > .column-sub {
+  color: var(--color-text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.align-right .table-sort-button {
+  align-items: flex-end;
 }
 
 .table-sort-button:hover {
@@ -527,6 +550,23 @@
   font-size: 0.78rem;
 }
 
+.fee-block-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 7px;
+}
+
+.fee-block-heading h4 {
+  margin: 0;
+}
+
+.fee-block-heading span {
+  color: var(--color-text-tertiary);
+  font-size: 0.68rem;
+}
+
 .fee-rule {
   display: flex;
   justify-content: space-between;
@@ -535,6 +575,32 @@
   border-bottom: 1px solid var(--color-border);
   color: var(--color-text-secondary);
   font-size: 0.72rem;
+}
+
+.fee-rule-detailed {
+  align-items: baseline;
+  gap: 20px;
+}
+
+.fee-rule-detailed > span:first-child {
+  min-width: 0;
+}
+
+.fee-rule-rates {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.fee-rule-rates del {
+  color: var(--color-text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+}
+
+.fee-free {
+  color: var(--color-negative);
 }
 
 .fee-rule:last-child {

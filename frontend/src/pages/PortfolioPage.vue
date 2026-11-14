@@ -336,7 +336,7 @@ onMounted(async () => {
   <div class="page portfolio-page">
     <header class="page-header">
       <div class="page-title-group">
-        <div class="eyebrow">Local portfolio</div>
+        <div class="eyebrow">本地组合</div>
         <h1>投资组合</h1>
         <p class="page-subtitle">持仓与交易只保存在当前浏览器。价格来自公共目录，个人数据不会上传。</p>
       </div>
@@ -471,7 +471,7 @@ onMounted(async () => {
       </div>
     </DataState>
 
-    <BaseDrawer :open="positionOpen" title="添加持仓" eyebrow="Local position" side="responsive" @close="positionOpen = false">
+    <BaseDrawer :open="positionOpen" title="添加持仓" eyebrow="本地持仓" side="responsive" @close="positionOpen = false">
       <div class="form-grid">
         <label class="field span-2"><span>基金代码</span><input v-model="positionForm.code" class="input" list="position-funds" aria-label="基金代码" placeholder="输入代码或名称" /><datalist id="position-funds"><option v-for="fund in positionCodes" :key="fund.code" :value="fund.code">{{ fund.label }}</option></datalist></label>
         <label class="field"><span>本金</span><input v-model="positionForm.principal" class="input" aria-label="本金" type="number" step="any" min="0" @blur="deriveAmounts" /></label>
@@ -484,7 +484,7 @@ onMounted(async () => {
       <template #footer><button class="button button-secondary" type="button" @click="positionOpen = false">取消</button><button class="button button-primary" type="button" :disabled="saving" @click="savePosition">保存持仓</button></template>
     </BaseDrawer>
 
-    <BaseDrawer :open="tradeOpen" :title="editingTradeId ? '修改交易' : '记录交易'" eyebrow="Local trade" side="responsive" @close="tradeOpen = false">
+    <BaseDrawer :open="tradeOpen" :title="editingTradeId ? '修改交易' : '记录交易'" eyebrow="本地交易" side="responsive" @close="tradeOpen = false">
       <div class="form-grid">
         <div class="field span-2"><span>方向</span><div class="segmented"><button type="button" :class="{ active: tradeForm.side === 'buy' }" @click="tradeForm.side = 'buy'">买入</button><button type="button" :class="{ active: tradeForm.side === 'sell' }" @click="tradeForm.side = 'sell'">卖出</button></div></div>
         <label class="field span-2"><span>基金代码</span><input v-model="tradeForm.code" class="input" list="position-funds" aria-label="基金代码" /></label>
@@ -498,13 +498,13 @@ onMounted(async () => {
       <template #footer><button class="button button-secondary" type="button" @click="tradeOpen = false">取消</button><button class="button button-primary" type="button" :disabled="saving" @click="saveTrade">保存交易</button></template>
     </BaseDrawer>
 
-    <BaseDrawer :open="deleteOpen" title="删除持仓" eyebrow="Permanent action" side="bottom" @close="deleteOpen = false">
+    <BaseDrawer :open="deleteOpen" title="删除持仓" eyebrow="不可撤销操作" side="bottom" @close="deleteOpen = false">
       <div class="notice notice-danger"><CircleAlert :size="16" aria-hidden="true" />删除持仓不会删除历史交易。该操作不可撤销。</div>
       <p class="confirm-copy">确认删除 {{ deleteCode }} 的持仓？</p>
       <template #footer><button class="button button-secondary" type="button" @click="deleteOpen = false">取消</button><button class="button button-danger" type="button" @click="confirmDelete"><Trash2 :size="14" />确认删除</button></template>
     </BaseDrawer>
 
-    <BaseDrawer :open="deleteTradeOpen" title="删除交易" eyebrow="Permanent action" side="bottom" @close="deleteTradeOpen = false">
+    <BaseDrawer :open="deleteTradeOpen" title="删除交易" eyebrow="不可撤销操作" side="bottom" @close="deleteTradeOpen = false">
       <div class="notice notice-danger"><CircleAlert :size="16" aria-hidden="true" />只删除这条交易流水，不修改当前持仓。</div>
       <p class="confirm-copy">确认删除这条交易记录？</p>
       <template #footer><button class="button button-secondary" type="button" @click="deleteTradeOpen = false">取消</button><button class="button button-danger" type="button" @click="confirmDeleteTrade"><Trash2 :size="14" />确认删除</button></template>

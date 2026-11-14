@@ -30,6 +30,14 @@ test.describe('visual baselines', () => {
     await expect(page).toHaveScreenshot('funds-mobile-light.png', { fullPage: true })
   })
 
+  test('Market mobile dark', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('qdii-settings-v2', JSON.stringify({ theme: 'dark', colorMode: 'red-up', favorites: [] })))
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/#/market')
+    await expect(page.getByRole('heading', { name: '市场', exact: true })).toBeVisible()
+    await expect(page).toHaveScreenshot('market-mobile-dark.png', { fullPage: true })
+  })
+
   test('Portfolio mobile dark', async ({ page }) => {
     await page.addInitScript(() => localStorage.setItem('qdii-settings-v2', JSON.stringify({ theme: 'dark', colorMode: 'red-up', favorites: [] })))
     await page.setViewportSize({ width: 390, height: 844 })

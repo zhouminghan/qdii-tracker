@@ -9,10 +9,10 @@ import {
 
 const route = useRoute()
 const items = [
-  { to: '/market', label: 'Market', icon: ChartNoAxesCombined },
-  { to: '/funds', label: 'Funds', icon: Landmark },
-  { to: '/portfolio', label: 'Portfolio', icon: WalletCards },
-  { to: '/research', label: 'Research', icon: BookOpen },
+  { to: '/market', label: '市场', icon: ChartNoAxesCombined },
+  { to: '/funds', label: '基金', icon: Landmark },
+  { to: '/portfolio', label: '组合', icon: WalletCards },
+  { to: '/research', label: '研究', icon: BookOpen },
 ]
 </script>
 

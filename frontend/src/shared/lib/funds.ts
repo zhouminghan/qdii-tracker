@@ -1,5 +1,5 @@
 import type { FundCategory, FundSeries, FundShare } from '@/types/data'
-import { asNumber } from './format'
+import { asNumber, formatCompactMoney } from './format'
 
 export interface FundRow extends FundSeries {
   category: FundCategory
@@ -99,4 +99,29 @@ export function classifyBuyStatus(share: FundShare): 'open' | 'limited' | 'pause
   if (status.includes('暂停')) return 'paused'
   if (status.includes('限')) return 'limited'
   return 'open'
+}
+
+export function formatDailyLimit(value: unknown, currency?: string | null): string {
+  const limit = asNumber(value)
+  if (limit === null || limit <= 0) return '--'
+  const prefix = currency === '美元' ? '$' : '¥'
+  const amount = limit >= 100_000_000
+    ? `${parseFloat((limit / 100_000_000).toFixed(1))}亿`
+    : limit >= 10_000
+      ? `${parseFloat((limit / 10_000).toFixed(1))}万`
+      : Number.isInteger(limit)
+        ? limit.toFixed(0)
+        : formatCompactMoney(limit)
+  return `${prefix}${amount}`
+}
+
+export function buyStatusLabel(share: FundShare): string {
+  const kind = classifyBuyStatus(share)
+  if (kind === 'none') return '--'
+  if (kind === 'paused') return '暂停'
+  if (kind === 'limited') {
+    const limit = formatDailyLimit(share.daily_limit, share.currency)
+    return limit === '--' ? '限购' : `限 ${limit}`
+  }
+  return share.buy_status || '开放'
 }

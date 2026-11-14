@@ -77,6 +77,14 @@ export function daysSince(value: string | null | undefined, now = new Date()): n
 
 export function downloadJson(filename: string, value: unknown): void {
   const blob = new Blob([JSON.stringify(value, null, 2)], { type: 'application/json;charset=utf-8' })
+  downloadBlob(filename, blob)
+}
+
+export function downloadText(filename: string, value: string, type = 'text/markdown;charset=utf-8'): void {
+  downloadBlob(filename, new Blob([value], { type }))
+}
+
+function downloadBlob(filename: string, blob: Blob): void {
   const url = URL.createObjectURL(blob)
   const anchor = document.createElement('a')
   anchor.href = url

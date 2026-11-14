@@ -11,6 +11,7 @@ import { ETF_GROUPS, OFFSHORE_CATEGORIES } from '@/shared/constants/funds'
 import type { FundSortKey, FundRow } from '@/shared/lib/funds'
 import { matchesFundQuery } from '@/shared/lib/funds'
 import { downloadCsv } from '@/shared/lib/csv'
+import { qualityStatusLabel, qualityWarningText } from '@/shared/lib/data-quality'
 import { formatDateTime } from '@/shared/lib/format'
 import { useDataStore } from '@/stores/data'
 import { useUiStore } from '@/stores/ui'
@@ -45,13 +46,24 @@ const groups = computed(() => {
 })
 
 const currentRows = computed(() => data.allRows.filter((row) => {
-  if (tab.value === 'offshore') return row.category === selectedGroup.value
-  return row.category === 'etf' && etfGroupOf(row) === selectedGroup.value
+  if (tab.value === 'offshore') {
+    return search.value ? row.category !== 'etf' : row.category === selectedGroup.value
+  }
+  return row.category === 'etf' && (search.value || etfGroupOf(row) === selectedGroup.value)
 }))
 
 const visibleRows = computed(() => currentRows.value.filter((row) => matchesFundQuery(row, search.value)))
 const totalScale = computed(() => visibleRows.value.reduce((sum, row) => sum + (row.series_scale ?? 0), 0))
 const currentGroupLabel = computed(() => groups.value.find((group) => group.key === selectedGroup.value)?.label ?? '')
+const visibleNavDate = computed(() => visibleRows.value
+  .map((row) => row.defaultShare.nav_date)
+  .filter((date): date is string => Boolean(date))
+  .sort()
+  .at(-1) ?? data.catalog?.data.summary.newest_nav_date ?? null)
+const missingPriceShares = computed(() => data.allRows.flatMap((row) => row.shares
+  .filter((share) => share.nav == null && share.etf_price == null)
+  .map((share) => ({ code: share.code, name: share.name }))))
+const qualityLabel = computed(() => qualityStatusLabel(data.quality?.status))
 
 watch(() => ui.quickSearch, (value) => {
   search.value = value
@@ -75,6 +87,13 @@ function setTab(next: 'offshore' | 'etf'): void {
 
 function etfGroupOf(row: FundRow): string {
   return row.etf_target === 'sp500' || row.etf_target === 'nasdaq100' ? row.etf_target : 'global_other'
+}
+
+function categoryLabel(row: FundRow): string {
+  if (row.category === 'etf') {
+    return ETF_GROUPS.find((group) => group.key === etfGroupOf(row))?.label ?? '场内 ETF'
+  }
+  return OFFSHORE_CATEGORIES.find((group) => group.key === row.category)?.label ?? row.category
 }
 
 function sortBy(key: FundSortKey): void {
@@ -238,9 +257,9 @@ onBeforeUnmount(() => {
   <div class="page funds-page">
     <header class="page-header">
       <div class="page-title-group">
-        <div class="eyebrow">Fund universe</div>
+        <div class="eyebrow">基金全景</div>
         <h1>基金追踪</h1>
-        <p class="page-subtitle">场外 QDII 与场内 ETF 的分类、净值、申购和风险状态。默认按规模降序，收藏始终置顶。</p>
+        <p class="page-subtitle">场外 QDII 与场内 ETF 的分类、净值、申购状态和限购额度。默认按规模降序，收藏始终置顶。</p>
       </div>
       <div class="page-actions">
         <span v-if="data.generatedAt" class="data-stamp">数据 {{ formatDateTime(data.generatedAt) }}</span>
@@ -266,9 +285,17 @@ onBeforeUnmount(() => {
 
     <DataState :loading="data.loading" :error="data.error" @retry="retry">
       <template v-if="data.catalog">
-        <div v-if="data.quality?.status !== 'ok'" class="notice notice-warn">
+        <div v-if="data.quality?.status !== 'ok'" class="notice notice-warn" role="status">
           <Info :size="15" aria-hidden="true" />
-          数据目录状态为 {{ data.quality?.status }}。{{ data.quality?.warnings[0] || '请查看数据诊断。' }}
+          <span>
+            数据目录状态：{{ qualityLabel }}。
+            {{ data.quality?.warnings[0] ? qualityWarningText(data.quality.warnings[0]) : '请查看数据诊断。' }}
+            <template v-if="missingPriceShares.length">
+              缺少价格：
+              {{ missingPriceShares.slice(0, 4).map((share) => `${share.code} ${share.name}`).join('、') }}
+              <template v-if="missingPriceShares.length > 4">等 {{ missingPriceShares.length }} 个份额</template>
+            </template>
+          </span>
         </div>
 
         <section class="fund-toolbar" aria-label="基金筛选">
@@ -278,7 +305,7 @@ onBeforeUnmount(() => {
           </div>
           <label class="inline-search">
             <Search :size="15" aria-hidden="true" />
-            <input v-model="search" type="search" placeholder="代码、名称、公司" aria-label="搜索当前基金目录" />
+            <input v-model="search" type="search" placeholder="代码、名称、公司" aria-label="搜索基金目录（跨分类）" />
             <button v-if="search" type="button" aria-label="清空搜索" @click="clearSearch"><X :size="14" aria-hidden="true" /></button>
           </label>
           <div class="mobile-sort">
@@ -299,7 +326,7 @@ onBeforeUnmount(() => {
           </div>
         </section>
 
-        <div class="chip-row" role="group" :aria-label="`${currentGroupLabel} 分类筛选`">
+        <div v-if="!search" class="chip-row" role="group" :aria-label="`${currentGroupLabel} 分类筛选`">
           <button
             v-for="group in groups"
             :key="group.key"
@@ -318,7 +345,7 @@ onBeforeUnmount(() => {
           <div class="list-heading">
             <div>
               <h2>{{ tab === 'offshore' ? '场外 QDII' : '场内 ETF' }}</h2>
-              <p>{{ currentGroupLabel }} · {{ search ? `搜索“${search}”` : '按分类展示' }}</p>
+              <p>{{ search ? `跨分类搜索“${search}”` : `${currentGroupLabel} · 按分类展示` }}</p>
             </div>
             <span class="badge">{{ visibleRows.length }} 个系列</span>
           </div>
@@ -329,6 +356,8 @@ onBeforeUnmount(() => {
             :sort-key="sortKey"
             :sort-direction="sortDirection"
             :total-scale="totalScale"
+            :nav-date="visibleNavDate"
+            :category-label="categoryLabel"
             :compare-codes="compareRows.map((row) => row.default_share_code)"
             @sort="sortBy"
             @detail="openDetail"
@@ -344,7 +373,7 @@ onBeforeUnmount(() => {
       @close="detailOpen = false"
     />
 
-    <BaseDrawer :open="compareOpen" title="基金走势对比" eyebrow="Normalized performance" width="min(920px, 100vw)" @close="compareOpen = false">
+    <BaseDrawer :open="compareOpen" title="基金走势对比" eyebrow="归一化表现" width="min(920px, 100vw)" @close="compareOpen = false">
       <div class="compare-toolbar">
         <div class="chip-row">
           <span v-for="row in compareRows" :key="row.default_share_code" class="chip active">{{ row.display_name }}</span>
