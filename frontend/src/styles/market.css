@@ -26,6 +26,11 @@
   color: var(--color-text);
 }
 
+.anchor-bar a.active {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
 .market-overview-band {
   display: grid;
   grid-template-columns: 1.2fr 1.8fr;
@@ -478,7 +483,27 @@
   }
 
   .anchor-bar a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-right: 12px;
+    padding-left: 12px;
+    font-size: 0.75rem;
     white-space: nowrap;
+  }
+
+  .pulse-card > span:first-child,
+  .pulse-card small,
+  .index-name,
+  .index-card > span:nth-child(3),
+  .index-card small,
+  .gold-market-grid span,
+  .gold-market-grid small,
+  .market-list-row > div span,
+  .note-line,
+  .dca-matrix-row,
+  .dca-matrix-head {
+    font-size: 0.75rem;
   }
 
   .temperature-panel {

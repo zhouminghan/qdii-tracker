@@ -2,7 +2,8 @@
 import { computed, onMounted, ref } from 'vue'
 import {
   BookOpen,
-  Check,
+  ChevronDown,
+  CircleAlert,
   Download,
   Eye,
   FileText,
@@ -36,6 +37,8 @@ const saving = ref(false)
 const importInput = ref<HTMLInputElement | null>(null)
 const historyOpen = ref(false)
 const historyNote = ref<ResearchNote | null>(null)
+const deleteTarget = ref<{ kind: 'note' | 'watch' | 'strategy'; id: string; title: string } | null>(null)
+const deleting = ref(false)
 
 const noteForm = ref({
   id: '',
@@ -71,6 +74,10 @@ const filteredNotes = computed(() => {
 
 function fundName(code: string): string {
   return data.fundByCode.get(code)?.share.name ?? code
+}
+
+function knowledgeCategoryLabel(key: string): string {
+  return KNOWLEDGE_CATEGORIES.find((category) => category.key === key)?.label ?? key
 }
 
 function openNote(note?: ResearchNote): void {
@@ -157,6 +164,22 @@ async function openHistory(note: ResearchNote): Promise<void> {
   historyOpen.value = true
 }
 
+async function confirmDelete(): Promise<void> {
+  if (!deleteTarget.value) return
+  deleting.value = true
+  try {
+    if (deleteTarget.value.kind === 'note') await research.deleteNote(deleteTarget.value.id)
+    else if (deleteTarget.value.kind === 'watch') await research.deleteWatchItem(deleteTarget.value.id)
+    else await research.deleteStrategy(deleteTarget.value.id)
+    deleteTarget.value = null
+    ui.toast('研究记录已删除', 'success')
+  } catch (reason) {
+    ui.toast(reason instanceof Error ? reason.message : '删除失败', 'error')
+  } finally {
+    deleting.value = false
+  }
+}
+
 async function exportBackup(): Promise<void> {
   try {
     const backup = await exportLocalBackup()
@@ -200,13 +223,6 @@ onMounted(async () => {
         <button class="button button-secondary" type="button" @click="exportBackup"><Download :size="15" aria-hidden="true" />备份</button>
         <button class="button button-secondary" type="button" @click="importInput?.click()"><Upload :size="15" aria-hidden="true" />恢复</button>
         <input ref="importInput" class="visually-hidden" type="file" accept="application/json,.json" aria-label="选择本地备份文件" @change="importBackup" />
-        <button
-          class="button button-primary"
-          type="button"
-          @click="activeView === 'notes' ? openNote() : activeView === 'watchlist' ? openWatch() : activeView === 'strategies' ? openStrategy() : openNote()"
-        >
-          <Plus :size="15" aria-hidden="true" />新建
-        </button>
       </div>
     </header>
 
@@ -219,14 +235,18 @@ onMounted(async () => {
 
     <DataState :loading="research.loading" :error="research.error" @retry="research.load">
       <section v-if="activeView === 'knowledge'" class="knowledge-section">
+        <div class="research-toolbar">
+          <div><strong>知识库</strong><p>{{ filteredArticles.length }} 篇 · 按主题展开阅读关键概念</p></div>
+          <button class="button button-primary" type="button" @click="openNote()"><Plus :size="15" aria-hidden="true" />新建笔记</button>
+        </div>
         <div class="chip-row" role="group" aria-label="知识分类">
           <button v-for="category in KNOWLEDGE_CATEGORIES" :key="category.key" class="chip" :class="{ active: knowledgeFilter === category.key }" type="button" :aria-pressed="knowledgeFilter === category.key" @click="knowledgeFilter = category.key">{{ category.label }}</button>
         </div>
         <div class="knowledge-grid">
-          <details v-for="article in filteredArticles" :key="article.id" class="knowledge-card" open>
+          <details v-for="article in filteredArticles" :key="article.id" class="knowledge-card">
             <summary>
-              <div><span class="eyebrow">{{ article.category }}</span><h2>{{ article.title }}</h2></div>
-              <span class="knowledge-check"><Check :size="14" aria-hidden="true" /></span>
+              <div><span class="eyebrow">{{ knowledgeCategoryLabel(article.category) }}</span><h2>{{ article.title }}</h2></div>
+              <span class="knowledge-check"><ChevronDown :size="14" aria-hidden="true" /></span>
             </summary>
             <p>{{ article.summary }}</p>
             <ul>
@@ -243,13 +263,18 @@ onMounted(async () => {
         </div>
         <div v-if="!filteredNotes.length" class="page-state">
           <FileText :size="20" />
-          <div><strong>暂无研究笔记</strong><p>记录基金逻辑、风险点和后续验证条件。</p></div>
+          <div v-if="noteSearch">
+            <strong>未找到匹配笔记</strong>
+            <p>换一个关键词，或清空搜索查看全部笔记。</p>
+            <button class="button button-secondary" type="button" @click="noteSearch = ''">清空搜索</button>
+          </div>
+          <div v-else><strong>暂无研究笔记</strong><p>记录基金逻辑、风险点和后续验证条件。</p></div>
         </div>
         <div v-else class="research-card-grid">
           <article v-for="note in filteredNotes" :key="note.id" class="research-card">
             <div class="research-card-head">
               <div><span class="eyebrow">{{ note.fundCode || 'General' }}</span><h3>{{ note.title }}</h3></div>
-              <div class="row-actions"><button class="button button-secondary history-button" type="button" @click="openHistory(note)">历史</button><button class="icon-button" type="button" aria-label="编辑笔记" @click="openNote(note)"><FileText :size="14" /></button><button class="icon-button" type="button" aria-label="删除笔记" @click="research.deleteNote(note.id)"><Trash2 :size="14" /></button></div>
+              <div class="row-actions"><button class="button button-secondary history-button" type="button" @click="openHistory(note)">历史</button><button class="icon-button" type="button" aria-label="编辑笔记" @click="openNote(note)"><FileText :size="14" /></button><button class="icon-button" type="button" aria-label="删除笔记" @click="deleteTarget = { kind: 'note', id: note.id, title: note.title }"><Trash2 :size="14" /></button></div>
             </div>
             <p>{{ note.body }}</p>
             <div class="tag-row"><span v-for="tag in note.tags" :key="tag" class="badge">{{ tag }}</span></div>
@@ -262,7 +287,7 @@ onMounted(async () => {
         <div v-if="!research.watchlist.length" class="page-state"><Eye :size="20" /><span>暂无观察标的</span></div>
         <div v-else class="research-card-grid">
           <article v-for="item in research.watchlist" :key="item.id" class="research-card">
-            <div class="research-card-head"><div><span class="eyebrow">{{ item.code }}</span><h3>{{ fundName(item.code) }}</h3></div><div class="row-actions"><button class="icon-button" type="button" aria-label="编辑观察项" @click="openWatch(item)"><FileText :size="14" /></button><button class="icon-button" type="button" aria-label="删除观察项" @click="research.deleteWatchItem(item.id)"><Trash2 :size="14" /></button></div></div>
+            <div class="research-card-head"><div><span class="eyebrow">{{ item.code }}</span><h3>{{ fundName(item.code) }}</h3></div><div class="row-actions"><button class="icon-button" type="button" aria-label="编辑观察项" @click="openWatch(item)"><FileText :size="14" /></button><button class="icon-button" type="button" aria-label="删除观察项" @click="deleteTarget = { kind: 'watch', id: item.id, title: fundName(item.code) }"><Trash2 :size="14" /></button></div></div>
             <p>{{ item.thesis || '暂未填写观察逻辑。' }}</p>
             <div class="tag-row"><span v-if="item.targetPrice" class="badge">目标价 {{ formatNumber(item.targetPrice, 4) }}</span></div>
           </article>
@@ -274,14 +299,14 @@ onMounted(async () => {
         <div v-if="!research.strategyLogs.length" class="page-state"><ShieldCheck :size="20" /><span>暂无策略记录</span></div>
         <div v-else class="strategy-list">
           <article v-for="item in research.strategyLogs" :key="item.id" class="strategy-card">
-            <div class="research-card-head"><div><span class="eyebrow">Strategy log</span><h3>{{ item.title }}</h3></div><div class="row-actions"><button class="icon-button" type="button" aria-label="编辑策略" @click="openStrategy(item)"><FileText :size="14" /></button><button class="icon-button" type="button" aria-label="删除策略" @click="research.deleteStrategy(item.id)"><Trash2 :size="14" /></button></div></div>
+            <div class="research-card-head"><div><span class="eyebrow">Strategy log</span><h3>{{ item.title }}</h3></div><div class="row-actions"><button class="icon-button" type="button" aria-label="编辑策略" @click="openStrategy(item)"><FileText :size="14" /></button><button class="icon-button" type="button" aria-label="删除策略" @click="deleteTarget = { kind: 'strategy', id: item.id, title: item.title }"><Trash2 :size="14" /></button></div></div>
             <div class="strategy-flow"><div><span>假设</span><p>{{ item.thesis || '--' }}</p></div><div><span>动作</span><p>{{ item.action || '--' }}</p></div><div><span>结果</span><p>{{ item.result || '--' }}</p></div></div>
           </article>
         </div>
       </section>
     </DataState>
 
-    <BaseDrawer :open="editorOpen" :title="editorType === 'note' ? '研究笔记' : editorType === 'watch' ? '观察标的' : '策略记录'" eyebrow="Local research" side="bottom" @close="editorOpen = false">
+    <BaseDrawer :open="editorOpen" :title="editorType === 'note' ? '研究笔记' : editorType === 'watch' ? '观察标的' : '策略记录'" eyebrow="Local research" side="responsive" @close="editorOpen = false">
       <div v-if="editorType === 'note'" class="form-grid">
         <label class="field span-2"><span>标题</span><input v-model="noteForm.title" class="input" /></label>
         <label class="field"><span>基金代码</span><input v-model="noteForm.fundCode" class="input" placeholder="可选" /></label>
@@ -311,6 +336,20 @@ onMounted(async () => {
           <p>{{ revision.body }}</p>
         </article>
       </div>
+    </BaseDrawer>
+
+    <BaseDrawer :open="Boolean(deleteTarget)" title="删除研究记录" eyebrow="Permanent action" side="responsive" @close="deleteTarget = null">
+      <div class="notice notice-danger">
+        <CircleAlert :size="16" aria-hidden="true" />
+        删除后无法在当前设备恢复。需要保留时请先导出备份。
+      </div>
+      <p class="confirm-copy">确认删除“{{ deleteTarget?.title }}”？</p>
+      <template #footer>
+        <button class="button button-secondary" type="button" @click="deleteTarget = null">取消</button>
+        <button class="button button-danger" type="button" :disabled="deleting" @click="confirmDelete">
+          <Trash2 :size="14" aria-hidden="true" />确认删除
+        </button>
+      </template>
     </BaseDrawer>
   </div>
 </template>

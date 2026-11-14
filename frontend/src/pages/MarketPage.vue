@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { Activity, ChevronRight, CircleAlert, Gauge, Globe2, Landmark, Radio, TrendingUp } from '@lucide/vue'
 import DataState from '@/shared/components/DataState.vue'
 import EChart from '@/shared/components/EChart.vue'
@@ -29,8 +29,10 @@ const extraError = ref('')
 const selectedIndex = ref('')
 const kline = ref<KlineData | null>(null)
 const klineLoading = ref(false)
+const activeMarketSection = ref('market-overview')
 let liveTimer: number | null = null
 let liveBootTimer: number | null = null
+let sectionObserver: IntersectionObserver | null = null
 
 const positiveColor = computed(() => settings.colorMode === 'green-up' ? '#067647' : '#d92d20')
 const negativeColor = computed(() => settings.colorMode === 'green-up' ? '#d92d20' : '#067647')
@@ -179,6 +181,11 @@ async function openIndex(key: string): Promise<void> {
   }
 }
 
+function scrollToSection(id: string): void {
+  activeMarketSection.value = id
+  document.getElementById(id)?.scrollIntoView({ block: 'start' })
+}
+
 async function refreshLive(): Promise<void> {
   await data.refreshIndexQuotes()
   if (data.indexLiveError) ui.toast(data.indexLiveError, 'error')
@@ -220,9 +227,27 @@ onMounted(() => {
   }
 })
 
+watch(market, async (value) => {
+  if (!value) return
+  await nextTick()
+  sectionObserver?.disconnect()
+  const sections = ['market-overview', 'market-global', 'market-macro', 'market-nasdaq']
+    .map((id) => document.getElementById(id))
+    .filter((section): section is HTMLElement => Boolean(section))
+  if (!sections.length) return
+  sectionObserver = new IntersectionObserver((entries) => {
+    const visible = entries
+      .filter((entry) => entry.isIntersecting)
+      .sort((left, right) => right.intersectionRatio - left.intersectionRatio)[0]
+    if (visible?.target.id) activeMarketSection.value = visible.target.id
+  }, { rootMargin: '-120px 0px -55% 0px', threshold: [0, 0.2, 0.5] })
+  sections.forEach((section) => sectionObserver?.observe(section))
+}, { immediate: true })
+
 onBeforeUnmount(() => {
   if (liveBootTimer !== null) window.clearTimeout(liveBootTimer)
   if (liveTimer !== null) window.clearInterval(liveTimer)
+  sectionObserver?.disconnect()
   data.cancelLiveRefreshes()
 })
 </script>
@@ -248,10 +273,10 @@ onBeforeUnmount(() => {
     <DataState :loading="data.loading" :error="data.error" @retry="data.retry">
       <template v-if="market">
         <nav class="anchor-bar" aria-label="市场分区">
-          <a href="#market-overview">概览</a>
-          <a href="#market-global">全球指数</a>
-          <a href="#market-macro">宏观与汇率</a>
-          <a href="#market-nasdaq">纳指分析</a>
+          <a href="#market-overview" :class="{ active: activeMarketSection === 'market-overview' }" :aria-current="activeMarketSection === 'market-overview' ? 'location' : undefined" @click.prevent="scrollToSection('market-overview')">概览</a>
+          <a href="#market-global" :class="{ active: activeMarketSection === 'market-global' }" :aria-current="activeMarketSection === 'market-global' ? 'location' : undefined" @click.prevent="scrollToSection('market-global')">全球指数</a>
+          <a href="#market-macro" :class="{ active: activeMarketSection === 'market-macro' }" :aria-current="activeMarketSection === 'market-macro' ? 'location' : undefined" @click.prevent="scrollToSection('market-macro')">宏观与汇率</a>
+          <a href="#market-nasdaq" :class="{ active: activeMarketSection === 'market-nasdaq' }" :aria-current="activeMarketSection === 'market-nasdaq' ? 'location' : undefined" @click.prevent="scrollToSection('market-nasdaq')">纳指分析</a>
         </nav>
 
         <section id="market-overview" class="market-overview-band">

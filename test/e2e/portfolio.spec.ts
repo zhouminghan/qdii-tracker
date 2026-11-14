@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test'
 test.describe('local portfolio workflow', () => {
   test('adds a position, records a trade, and restores after refresh', async ({ page }) => {
     await page.goto('/#/portfolio')
+    await expect(page.getByRole('button', { name: '记录交易' })).toHaveCount(0)
     await page.getByRole('button', { name: '添加第一笔持仓' }).click()
     await page.getByLabel('基金代码', { exact: true }).fill('270042')
     await page.getByLabel('本金', { exact: true }).fill('1000')

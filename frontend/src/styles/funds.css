@@ -406,6 +406,115 @@
   gap: 7px;
 }
 
+.purchase-history-block {
+  display: grid;
+  gap: 8px;
+}
+
+.purchase-history-heading {
+  align-items: flex-start;
+}
+
+.purchase-history-heading p {
+  margin-top: 2px;
+  color: var(--color-text-tertiary);
+  font-size: 0.7rem;
+}
+
+.purchase-history-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  list-style: none;
+}
+
+.purchase-history-item {
+  display: grid;
+  grid-template-columns: minmax(96px, 0.32fr) minmax(0, 1fr);
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.purchase-history-item:last-child {
+  border-bottom: 0;
+}
+
+.purchase-history-item.current {
+  background: var(--color-accent-soft);
+  box-shadow: inset 3px 0 0 var(--color-accent);
+}
+
+.purchase-history-date {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: center;
+  gap: 5px 8px;
+}
+
+.purchase-history-date time {
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.purchase-history-current {
+  padding: 1px 5px;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 32%, var(--color-border));
+  border-radius: var(--radius-sm);
+  color: var(--color-accent);
+  font-size: 0.66rem;
+  font-weight: 700;
+}
+
+.purchase-history-event {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.purchase-history-limit {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 3px 7px;
+  min-width: 0;
+  text-align: right;
+}
+
+.purchase-history-limit > span {
+  color: var(--color-text-tertiary);
+  font-size: 0.67rem;
+}
+
+.purchase-history-limit strong {
+  color: var(--color-text-secondary);
+  font-size: 0.74rem;
+  font-weight: 650;
+}
+
+.purchase-history-empty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 12px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  color: var(--color-text-secondary);
+  font-size: 0.74rem;
+}
+
 .fee-block {
   padding: 10px;
   border: 1px solid var(--color-border);
@@ -548,7 +657,13 @@
   }
 
   .inline-search {
+    height: 46px;
     width: 100%;
+    padding-right: 2px;
+  }
+
+  .inline-search input {
+    height: 44px;
   }
 
   .mobile-sort {
@@ -562,7 +677,16 @@
     flex: 1;
     gap: 4px;
     color: var(--color-text-tertiary);
-    font-size: 0.68rem;
+    font-size: 0.75rem;
+  }
+
+  .fund-table-summary,
+  .list-heading p,
+  .fund-mobile-metrics span:first-child,
+  .fund-mobile-foot,
+  .fund-mobile-share-row strong,
+  .fund-mobile-share-row span {
+    font-size: 0.75rem;
   }
 
   .detail-hero {
@@ -571,6 +695,22 @@
 
   .detail-actions {
     justify-content: flex-start;
+  }
+
+  .purchase-history-item {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .purchase-history-event {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .purchase-history-limit {
+    justify-content: flex-start;
+    text-align: left;
   }
 
   .shares-panel {

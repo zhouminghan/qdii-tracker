@@ -43,7 +43,7 @@
 
 .brand-copy strong {
   font-size: 0.93rem;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
 .brand-copy small {
@@ -124,6 +124,10 @@
   display: flex;
   align-items: center;
   gap: 5px;
+}
+
+.header-actions-end {
+  margin-left: auto;
 }
 
 .app-main {
@@ -239,6 +243,16 @@
 
   .header-actions {
     margin-left: auto;
+  }
+
+  .brand-block,
+  .skip-link {
+    min-height: 44px;
+  }
+
+  .skip-link {
+    display: inline-flex;
+    align-items: center;
   }
 
   .brand-copy strong {

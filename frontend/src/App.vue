@@ -11,6 +11,10 @@ import { useUiStore } from '@/stores/ui'
 const data = useDataStore()
 const ui = useUiStore()
 
+function focusMain(): void {
+  document.getElementById('main-content')?.focus()
+}
+
 onMounted(async () => {
   try {
     await data.load()
@@ -21,9 +25,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <a class="skip-link" href="#main-content">跳到主内容</a>
+  <a class="skip-link" href="#main-content" @click.prevent="focusMain">跳到主内容</a>
   <AppHeader />
-  <main id="main-content" class="app-main">
+  <main id="main-content" class="app-main" tabindex="-1">
     <RouterView />
   </main>
   <BottomNav />

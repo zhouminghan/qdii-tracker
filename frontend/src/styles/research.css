@@ -84,6 +84,14 @@
   color: var(--color-accent);
 }
 
+.knowledge-check svg {
+  transition: transform var(--transition);
+}
+
+.knowledge-card[open] .knowledge-check svg {
+  transform: rotate(180deg);
+}
+
 .knowledge-card > p {
   margin-top: 9px;
   color: var(--color-text-secondary);
@@ -242,11 +250,28 @@
 
   .research-tabs button {
     flex: 0 0 auto;
+    min-height: 44px;
+    font-size: 0.78rem;
+  }
+
+  .research-tabs button span,
+  .research-toolbar p,
+  .knowledge-card > p,
+  .knowledge-card ul,
+  .research-card > p,
+  .history-button,
+  .revision-card time,
+  .strategy-flow span {
+    font-size: 0.75rem;
   }
 
   .knowledge-grid,
   .research-card-grid {
     grid-template-columns: 1fr;
+  }
+
+  .knowledge-card summary {
+    min-height: 44px;
   }
 
   .research-toolbar {

@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { CircleAlert, ExternalLink, Star, TrendingUp } from '@lucide/vue'
+import { CircleAlert, ExternalLink, History, Star, TrendingUp } from '@lucide/vue'
 import BaseDrawer from '@/shared/components/BaseDrawer.vue'
 import EChart from '@/shared/components/EChart.vue'
 import type { FundRow } from '@/shared/lib/funds'
-import { classifyBuyStatus } from '@/shared/lib/funds'
 import { asNumber, daysSince, formatDate, formatFee, formatPercent, formatPrice, movementClass } from '@/shared/lib/format'
 import { fetchJson } from '@/shared/infrastructure/http'
-import type { HoldingsData, KlineData } from '@/types/data'
+import type { BuyStatusHistory, HoldingsData, KlineData } from '@/types/data'
 import { useSettingsStore } from '@/stores/settings'
 
 const props = defineProps<{
@@ -26,6 +25,12 @@ const loadError = ref('')
 const isEtf = computed(() => props.row?.category === 'etf')
 const defaultShare = computed(() => props.row?.defaultShare ?? null)
 const navAge = computed(() => daysSince(defaultShare.value?.nav_date))
+const buyStatusHistory = computed(() => {
+  if (isEtf.value) return []
+  return [...(defaultShare.value?.buy_status_history ?? [])]
+    .sort((left, right) => right.date.localeCompare(left.date))
+    .slice(0, 6)
+})
 
 const filteredHistory = computed(() => {
   if (!history.value) return []
@@ -98,10 +103,35 @@ watch(() => [props.open, props.row?.default_share_code], ([open]) => {
   }
 }, { immediate: true })
 
-function statusTone(): string {
-  if (!defaultShare.value) return ''
-  const kind = classifyBuyStatus(defaultShare.value)
-  return kind === 'paused' ? 'badge-danger' : kind === 'limited' ? 'badge-warn' : 'badge-accent'
+function statusTone(status = defaultShare.value?.buy_status): string {
+  if (!status) return ''
+  if (status.includes('暂停')) return 'badge-danger'
+  if (status.includes('限')) return 'badge-warn'
+  return 'badge-accent'
+}
+
+function isCurrentHistoryEntry(entry: BuyStatusHistory, index: number): boolean {
+  const share = defaultShare.value
+  return index === 0
+    && share?.buy_status === entry.buy_status
+    && share.daily_limit === entry.daily_limit
+}
+
+function historyLimitText(entry: BuyStatusHistory): string {
+  if (entry.buy_status.includes('暂停')) return '暂停申购，无可用额度'
+  const limit = asNumber(entry.daily_limit)
+  if (limit === null || limit <= 0) {
+    if (entry.buy_status.includes('限')) return '限购额度未公布'
+    if (entry.buy_status.includes('开放')) return '不限额'
+    return '额度未提供'
+  }
+  const currency = defaultShare.value?.currency
+  const unit = currency === '美元' ? '美元' : currency === '人民币' ? '元' : currency ?? ''
+  const amount = limit.toLocaleString('zh-CN', {
+    minimumFractionDigits: Number.isInteger(limit) ? 0 : 2,
+    maximumFractionDigits: 2,
+  })
+  return unit ? `${amount} ${unit}` : amount
 }
 
 function setRange(value: string): void {
@@ -186,6 +216,44 @@ function setRange(value: string): void {
             </strong>
           </div>
         </div>
+        <section class="purchase-history-block" aria-labelledby="purchase-history-title">
+          <div class="section-header purchase-history-heading">
+            <div>
+              <h3 id="purchase-history-title">申购状态变化</h3>
+              <p>默认份额 · {{ defaultShare.currency }} · 由新到旧</p>
+            </div>
+            <span class="badge" :class="statusTone()">{{ defaultShare.buy_status || '--' }}</span>
+          </div>
+          <ol
+            v-if="buyStatusHistory.length"
+            class="purchase-history-list"
+            aria-label="申购状态变化记录，由新到旧"
+          >
+            <li
+              v-for="(entry, index) in buyStatusHistory"
+              :key="`${entry.date}-${entry.buy_status}-${entry.daily_limit}-${index}`"
+              class="purchase-history-item"
+              :class="{ current: isCurrentHistoryEntry(entry, index) }"
+              :aria-current="isCurrentHistoryEntry(entry, index) ? 'true' : undefined"
+            >
+              <div class="purchase-history-date">
+                <time :datetime="entry.date">{{ entry.date }}</time>
+                <span v-if="isCurrentHistoryEntry(entry, index)" class="purchase-history-current">当前</span>
+              </div>
+              <div class="purchase-history-event">
+                <span class="badge" :class="statusTone(entry.buy_status)">{{ entry.buy_status }}</span>
+                <span class="purchase-history-limit">
+                  <span>单日限购</span>
+                  <strong>{{ historyLimitText(entry) }}</strong>
+                </span>
+              </div>
+            </li>
+          </ol>
+          <div v-else class="purchase-history-empty">
+            <History :size="16" aria-hidden="true" />
+            <span>{{ isEtf ? '场内 ETF，不适用申购额度变化记录。' : '暂无可用的申购状态变化记录。' }}</span>
+          </div>
+        </section>
         <h3>全部份额</h3>
         <div class="table-shell">
           <table class="data-table compact">

@@ -67,7 +67,7 @@ function clearSearch(): void {
         </RouterLink>
       </nav>
 
-      <form class="header-search" role="search" @submit.prevent="applySearch">
+      <form v-if="currentPath !== '/funds'" class="header-search" role="search" @submit.prevent="applySearch">
         <Search :size="15" aria-hidden="true" />
         <input
           v-model="search"
@@ -79,7 +79,7 @@ function clearSearch(): void {
         />
       </form>
 
-      <div class="header-actions">
+      <div class="header-actions" :class="{ 'header-actions-end': currentPath === '/funds' }">
         <a
           class="icon-button desktop-only"
           href="https://github.com/zhouminghan/qdii-tracker"

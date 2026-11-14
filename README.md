@@ -165,7 +165,8 @@ qdii-tracker/
 │   ├── data-contract.md
 │   ├── data-sources.md
 │   ├── gotchas.md
-│   └── test-report.md
+│   ├── test-report.md
+│   └── ux-audit.md
 ├── test/    # 测试与 UI 回归（pytest + Playwright）
 │   ├── e2e/
 │   ├── frontend/

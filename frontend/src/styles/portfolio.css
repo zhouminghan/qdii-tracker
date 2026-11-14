@@ -273,7 +273,7 @@
 
   .portfolio-mobile-head span {
     color: var(--color-text-tertiary);
-    font-size: 0.65rem;
+    font-size: 0.75rem;
   }
 
   .portfolio-mobile-metrics {
@@ -290,7 +290,7 @@
   .portfolio-mobile-metrics span,
   .portfolio-mobile-cost {
     color: var(--color-text-tertiary);
-    font-size: 0.63rem;
+    font-size: 0.75rem;
   }
 
   .portfolio-mobile-metrics strong {
@@ -303,6 +303,15 @@
     gap: 10px;
     padding-top: 6px;
     border-top: 1px solid var(--color-border);
+  }
+
+  .trade-row {
+    grid-template-columns: 44px minmax(0, 1fr) 116px;
+  }
+
+  .trade-side-actions {
+    grid-template-columns: minmax(0, 1fr) 44px 44px;
+    gap: 4px;
   }
 
   .form-grid {

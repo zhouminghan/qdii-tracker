@@ -348,7 +348,7 @@ onMounted(async () => {
           <Upload :size="15" aria-hidden="true" /> 恢复
         </button>
         <input ref="importInput" class="visually-hidden" type="file" accept="application/json,.json" aria-label="选择本地备份文件" @change="importBackup" />
-        <button class="button button-primary" type="button" @click="resetTradeForm">
+        <button v-if="portfolio.rows.length" class="button button-primary" type="button" @click="resetTradeForm">
           <Plus :size="15" aria-hidden="true" /> 记录交易
         </button>
       </div>
@@ -471,7 +471,7 @@ onMounted(async () => {
       </div>
     </DataState>
 
-    <BaseDrawer :open="positionOpen" title="添加持仓" eyebrow="Local position" side="bottom" @close="positionOpen = false">
+    <BaseDrawer :open="positionOpen" title="添加持仓" eyebrow="Local position" side="responsive" @close="positionOpen = false">
       <div class="form-grid">
         <label class="field span-2"><span>基金代码</span><input v-model="positionForm.code" class="input" list="position-funds" aria-label="基金代码" placeholder="输入代码或名称" /><datalist id="position-funds"><option v-for="fund in positionCodes" :key="fund.code" :value="fund.code">{{ fund.label }}</option></datalist></label>
         <label class="field"><span>本金</span><input v-model="positionForm.principal" class="input" aria-label="本金" type="number" step="any" min="0" @blur="deriveAmounts" /></label>
@@ -484,7 +484,7 @@ onMounted(async () => {
       <template #footer><button class="button button-secondary" type="button" @click="positionOpen = false">取消</button><button class="button button-primary" type="button" :disabled="saving" @click="savePosition">保存持仓</button></template>
     </BaseDrawer>
 
-    <BaseDrawer :open="tradeOpen" :title="editingTradeId ? '修改交易' : '记录交易'" eyebrow="Local trade" side="bottom" @close="tradeOpen = false">
+    <BaseDrawer :open="tradeOpen" :title="editingTradeId ? '修改交易' : '记录交易'" eyebrow="Local trade" side="responsive" @close="tradeOpen = false">
       <div class="form-grid">
         <div class="field span-2"><span>方向</span><div class="segmented"><button type="button" :class="{ active: tradeForm.side === 'buy' }" @click="tradeForm.side = 'buy'">买入</button><button type="button" :class="{ active: tradeForm.side === 'sell' }" @click="tradeForm.side = 'sell'">卖出</button></div></div>
         <label class="field span-2"><span>基金代码</span><input v-model="tradeForm.code" class="input" list="position-funds" aria-label="基金代码" /></label>
