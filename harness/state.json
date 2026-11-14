@@ -1,0 +1,116 @@
+{
+  "goal_id": "qdii-architecture-upgrade-2026-11-14",
+  "current_phase": "final-verification",
+  "current_task": "firefox-engine",
+  "tasks": [
+    {
+      "id": "sync-remote",
+      "status": "completed",
+      "depends_on": [],
+      "evidence": ["origin/main fast-forwarded to 1997131; local AGENTS.md change preserved"]
+    },
+    {
+      "id": "audit-repository",
+      "status": "completed",
+      "depends_on": ["sync-remote"],
+      "evidence": ["docs/audit.md"]
+    },
+    {
+      "id": "technical-research",
+      "status": "completed",
+      "depends_on": ["audit-repository"],
+      "evidence": [
+        "docs/decisions/0001-frontend-platform.md",
+        "docs/decisions/0002-local-data.md"
+      ]
+    },
+    {
+      "id": "public-data-contract",
+      "status": "completed",
+      "depends_on": ["audit-repository"],
+      "evidence": ["web/data/catalog.json", "docs/data-contract.md", "test/test_public_catalog.py"]
+    },
+    {
+      "id": "frontend-foundation",
+      "status": "completed",
+      "depends_on": ["technical-research", "public-data-contract"],
+      "evidence": ["npm run typecheck", "npm run build"]
+    },
+    {
+      "id": "funds-migration",
+      "status": "completed",
+      "depends_on": ["frontend-foundation"],
+      "evidence": ["test/e2e/funds.spec.ts", "Vitest fund sort/missing-value tests"]
+    },
+    {
+      "id": "market-migration",
+      "status": "completed",
+      "depends_on": ["frontend-foundation"],
+      "evidence": ["test/e2e/market.spec.ts", "docs/evidence/market-desktop-dark.png"]
+    },
+    {
+      "id": "portfolio-migration",
+      "status": "completed",
+      "depends_on": ["frontend-foundation", "public-data-contract"],
+      "evidence": ["test/e2e/portfolio.spec.ts", "test/frontend/local-db.spec.ts"]
+    },
+    {
+      "id": "research-workspace",
+      "status": "completed",
+      "depends_on": ["frontend-foundation", "portfolio-migration"],
+      "evidence": ["test/e2e/research.spec.ts", "Dexie v2 noteHistory"]
+    },
+    {
+      "id": "legacy-cleanup",
+      "status": "completed",
+      "depends_on": ["funds-migration", "market-migration", "portfolio-migration", "research-workspace"],
+      "evidence": ["web/js and web/css removed", "Vite production output verified"]
+    },
+    {
+      "id": "quality-gate",
+      "status": "completed",
+      "depends_on": ["legacy-cleanup"],
+      "evidence": [
+        "npm run check",
+        "pytest: 96 passed",
+        "Chromium desktop: 18 passed",
+        "Chromium mobile: 14 passed",
+        "WebKit desktop: 14 passed",
+        "fundctl check --offline --agent-rules: passed",
+        "npm audit: 0 vulnerabilities"
+      ]
+    },
+    {
+      "id": "firefox-engine",
+      "status": "blocked",
+      "depends_on": ["quality-gate"],
+      "evidence": [
+        "Playwright Firefox 159: Could not find profile folder",
+        "forced reinstall reproduced",
+        "docs/test-report.md"
+      ]
+    }
+  ],
+  "modified_files": [
+    "frontend/",
+    "scripts/pipeline/public_catalog.py",
+    "web/data/catalog.json",
+    ".github/workflows/",
+    "README.md",
+    "docs/",
+    "AGENTS.md"
+  ],
+  "tests": [
+    "npm run check: passed",
+    "pytest: 96 passed",
+    "Chromium desktop: 18 passed",
+    "Chromium mobile: 14 passed",
+    "WebKit desktop: 14 passed",
+    "production static smoke: 4 pages passed"
+  ],
+  "failures": [
+    "Firefox Playwright engine fails before page execution with profile folder error"
+  ],
+  "decisions": ["ADR-0001", "ADR-0002"],
+  "next_action": "User decision on commit/push; Firefox browser-process issue remains environmental."
+}

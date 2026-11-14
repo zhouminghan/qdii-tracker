@@ -1,0 +1,315 @@
+.portfolio-metrics {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  gap: 9px;
+}
+
+.portfolio-metric {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.portfolio-metric > span {
+  color: var(--color-text-tertiary);
+  font-size: 0.7rem;
+}
+
+.portfolio-metric strong {
+  overflow: hidden;
+  font-size: 1.05rem;
+  text-overflow: ellipsis;
+}
+
+.portfolio-metric small {
+  color: var(--color-text-tertiary);
+  font-size: 0.65rem;
+}
+
+.hero-metric {
+  border-color: color-mix(in srgb, var(--color-accent) 34%, var(--color-border));
+  background: var(--color-accent-soft);
+}
+
+.hero-metric strong {
+  font-size: 1.35rem;
+}
+
+.portfolio-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(280px, 0.8fr);
+  gap: 12px;
+}
+
+.portfolio-side {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.panel-body.no-padding {
+  padding: 0;
+}
+
+.portfolio-empty {
+  display: grid;
+  justify-items: center;
+  min-height: 260px;
+  border: 0;
+  text-align: center;
+}
+
+.portfolio-empty p {
+  margin-top: 3px;
+  color: var(--color-text-tertiary);
+  font-size: 0.74rem;
+}
+
+.portfolio-table-shell {
+  border: 0;
+}
+
+.portfolio-table-shell td:nth-child(2) small {
+  display: block;
+  color: var(--color-text-tertiary);
+  font-size: 0.62rem;
+}
+
+.portfolio-mobile-list {
+  display: none;
+}
+
+.platform-tag {
+  display: inline-flex;
+  margin-left: 6px;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: var(--color-surface-muted);
+  color: var(--color-text-tertiary);
+  font-size: 0.6rem;
+}
+
+.table-delete {
+  width: 28px;
+  height: 28px;
+  color: var(--color-danger);
+}
+
+.trade-list {
+  display: grid;
+  padding: 2px 12px;
+}
+
+.trade-row {
+  display: grid;
+  grid-template-columns: 29px minmax(0, 1fr) 100px;
+  align-items: center;
+  gap: 9px;
+  min-height: 52px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.trade-row:last-child {
+  border-bottom: 0;
+}
+
+.trade-side-actions {
+  display: grid;
+  grid-template-columns: 1fr 26px 26px;
+  align-items: center;
+  gap: 2px;
+  text-align: right;
+}
+
+.trade-side-actions .icon-button {
+  width: 26px;
+  height: 26px;
+}
+
+.trade-icon {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: var(--radius-md);
+}
+
+.trade-icon.buy {
+  background: var(--color-positive-soft);
+  color: var(--color-positive);
+}
+
+.trade-icon.sell {
+  background: var(--color-negative-soft);
+  color: var(--color-negative);
+}
+
+.trade-row > div {
+  display: grid;
+  min-width: 0;
+}
+
+.trade-row > div strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trade-row > div span {
+  color: var(--color-text-tertiary);
+  font-size: 0.65rem;
+}
+
+.mini-empty {
+  display: grid;
+  min-height: 120px;
+  place-items: center;
+  color: var(--color-text-tertiary);
+  font-size: 0.75rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.field {
+  display: grid;
+  gap: 5px;
+  color: var(--color-text-secondary);
+  font-size: 0.74rem;
+}
+
+.field.span-2 {
+  grid-column: span 2;
+}
+
+.form-help {
+  margin-top: 10px;
+  color: var(--color-text-tertiary);
+  font-size: 0.7rem;
+}
+
+.form-error {
+  margin-top: 10px;
+  padding: 7px 9px;
+  border-radius: var(--radius-sm);
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  font-size: 0.72rem;
+}
+
+.confirm-copy {
+  margin-top: 12px;
+  color: var(--color-text-secondary);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@media (max-width: 1050px) {
+  .portfolio-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio-side {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .portfolio-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .portfolio-side {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio-table-shell {
+    display: none;
+  }
+
+  .portfolio-mobile-list {
+    display: grid;
+    gap: 8px;
+    padding: 9px;
+  }
+
+  .portfolio-mobile-card {
+    display: grid;
+    gap: 9px;
+    padding: 10px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-raised);
+  }
+
+  .portfolio-mobile-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .portfolio-mobile-head > div {
+    display: grid;
+    gap: 2px;
+  }
+
+  .portfolio-mobile-head span {
+    color: var(--color-text-tertiary);
+    font-size: 0.65rem;
+  }
+
+  .portfolio-mobile-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .portfolio-mobile-metrics > div {
+    display: grid;
+    gap: 3px;
+  }
+
+  .portfolio-mobile-metrics span,
+  .portfolio-mobile-cost {
+    color: var(--color-text-tertiary);
+    font-size: 0.63rem;
+  }
+
+  .portfolio-mobile-metrics strong {
+    font-size: 0.76rem;
+  }
+
+  .portfolio-mobile-cost {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 6px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field.span-2 {
+    grid-column: auto;
+  }
+}

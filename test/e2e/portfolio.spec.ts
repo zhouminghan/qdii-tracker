@@ -1,0 +1,33 @@
+import { expect, test } from '@playwright/test'
+
+test.describe('local portfolio workflow', () => {
+  test('adds a position, records a trade, and restores after refresh', async ({ page }) => {
+    await page.goto('/#/portfolio')
+    await page.getByRole('button', { name: '添加第一笔持仓' }).click()
+    await page.getByLabel('基金代码', { exact: true }).fill('270042')
+    await page.getByLabel('本金', { exact: true }).fill('1000')
+    await page.getByLabel('总金额 / 市值', { exact: true }).fill('1200')
+    await page.getByRole('button', { name: '保存持仓' }).click()
+    await expect(page.locator('strong:visible').filter({ hasText: /^广发纳斯达克100ETF联接$/ })).toBeVisible()
+    await expect(page.getByText('总资产')).toBeVisible()
+
+    await page.getByRole('button', { name: '记录交易' }).first().click()
+    await page.getByLabel('基金代码', { exact: true }).fill('270042')
+    await page.getByLabel('交易金额', { exact: true }).fill('100')
+    await page.getByRole('button', { name: '保存交易' }).click()
+    await expect(page.getByRole('dialog')).toBeHidden()
+    await expect(page.getByText('交易已保存')).toBeVisible()
+    await page.reload()
+    await expect(page.locator('strong:visible').filter({ hasText: /^广发纳斯达克100ETF联接$/ })).toBeVisible()
+    await page.getByRole('button', { name: '交易流水' }).click()
+    await expect(page.getByText(/买入 1\d+\.\d+ 份/)).toBeVisible()
+    await page.getByRole('button', { name: '编辑交易' }).click()
+    await page.getByLabel('交易金额', { exact: true }).fill('200')
+    await page.getByRole('button', { name: '保存交易' }).click()
+    await expect(page.getByText('交易已保存')).toBeVisible()
+    await page.getByRole('button', { name: '删除交易' }).click()
+    await page.getByRole('button', { name: '确认删除' }).click()
+    await expect(page.getByText('交易记录已删除')).toBeVisible()
+    await expect(page.getByText('暂无交易记录。')).toBeVisible()
+  })
+})

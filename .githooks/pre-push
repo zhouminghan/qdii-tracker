@@ -25,4 +25,13 @@ fi
 cd "$ROOT/scripts"
 "$PY" fundctl.py check --offline --agent-rules
 
+# 3) 前端类型、lint、单测、生产构建
+cd "$ROOT"
+if [ -d node_modules ]; then
+  npm run check
+else
+  echo "❌ 未安装前端依赖，请先运行 npm ci"
+  exit 1
+fi
+
 echo "✅ pre-push: 本地门禁通过"

@@ -31,6 +31,10 @@ def _check_docs_files():
     required = [
         "docs/gotchas.md",
         "docs/architecture.md",
+        "docs/data-contract.md",
+        "docs/data-sources.md",
+        "docs/decisions/0001-frontend-platform.md",
+        "docs/decisions/0002-local-data.md",
     ]
     return _files_exist(required)
 

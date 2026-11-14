@@ -5,6 +5,7 @@ scripts/checks/build_snapshot.py — 生成每日 JSON / RSS 快照
 从 web/data/*.json 汇总为便于二次加工的轻量快照：
   - web/data/snapshot.json  全部基金扁平化列表（代码/名称/分类/净值/涨跌/日期/限额/溢价/规模）
   - web/data/market-snapshot.json  首屏行情离线收盘快照（指数/科技/汇率/黄金/宏观/温度）
+  - web/data/catalog.json   前端公共基金目录契约（分类/品牌/质量状态）
   - web/feed.rss            数据更新时间 + 当日涨跌幅度最大的 20 只（供 RSS 订阅）
 
 纯离线、只读数据文件，写入 snapshot.json + feed.rss，不触碰原始数据。
@@ -15,7 +16,7 @@ import html
 from datetime import datetime, timezone
 
 from core.constants import DATA_DIR, CATEGORIES, ROOT_DIR
-from pipeline import market_snapshot
+from pipeline import market_snapshot, public_catalog
 
 
 def _load_categories():
@@ -128,9 +129,11 @@ def main():
     (DATA_DIR / "holdings-index.json").write_text(
         json.dumps({"codes": holdings_codes}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
+    catalog = public_catalog.write_catalog()
     print(
         f"✅ 快照已生成：{len(snapshot['funds'])} 只基金 + "
-        f"{len(holdings_codes)} 个持仓索引 + market-snapshot.json"
+        f"{len(holdings_codes)} 个持仓索引 + market-snapshot.json + "
+        f"catalog.json（{catalog['status']}）"
     )
 
 

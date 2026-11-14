@@ -4,25 +4,25 @@
 
 | ID | 现象 | 根因 | 源码位置 | 状态 | 发现日期 | 修复日期 |
 |----|------|------|----------|------|----------|----------|
-| G001 | 截图空白 | cloneNode `left:-99999px` 离屏 → html-to-image 渲染空白 | `web/js/screenshot.js:snapPng()` | ✅已修复 | 2026-07-13 | 2026-07-13 |
-| G002 | 表格错位 | 克隆挂 `document.body` → 丢 CSS 上下文（`.ss-preview td` 等选择器匹配不到） | `web/js/screenshot.js:snapPng()` | ✅已修复 | 2026-07-13 | 2026-07-13 |
-| G003 | 指标卡脏阴影 | html-to-image 渲染 `box-shadow` 在半透明背景上显脏影 | `web/css/app.css:.ss-mkt-card` | ✅已修复 | 2026-07-13 | 2026-07-13 |
-| G004 | backdrop-filter 无效果 | 缺 `-webkit-` 前缀 → Safari/iOS 无效 | `web/css/app.css:玻璃态规则` | ✅已修复 | 2026-07-13 | 2026-07-13 |
-| G005 | 远程 API ERR_EMPTY_RESPONSE | 东方财富 push2/push2his 对 GitHub Pages 跨站来源限制访问（本地正常） | `web/js/market-indices.js:fetchAll()` / `web/js/market-trend.js:fetchDayKFromHost()` | ⚠️已知限制 | 2026-07 | — |
-| G006 | 截图弹窗暗色消失 | `snapPng()` 截完恢复暗色时 `classList.add('dark')` 覆盖了截前的 `classList.remove` → 截完可能丢失暗色 | `web/js/screenshot.js:snapPng()` | ✅已修复 | 2026-07-13 | 2026-07-13 |
+| G001 | 截图空白 | cloneNode `left:-99999px` 离屏 → html-to-image 渲染空白 | `frontend/src/pages/FundsPage.vue` | ✅已修复（Vue 迁移） | 2026-07-13 | 2026-11-14 |
+| G002 | 表格错位 | 克隆挂 `document.body` → 丢 CSS 上下文（`.ss-preview td` 等选择器匹配不到） | `frontend/src/features/funds/FundTable.vue` | ✅已修复（Vue 迁移） | 2026-07-13 | 2026-11-14 |
+| G003 | 指标卡脏阴影 | html-to-image 渲染 `box-shadow` 在半透明背景上显脏影 | `frontend/src/styles/components.css` | ✅已修复（Vue 迁移） | 2026-07-13 | 2026-11-14 |
+| G004 | backdrop-filter 无效果 | 缺 `-webkit-` 前缀 → Safari/iOS 无效 | `frontend/src/styles/components.css` | ✅已修复（Vue 迁移） | 2026-07-13 | 2026-11-14 |
+| G005 | 远程 API ERR_EMPTY_RESPONSE | 东方财富 push2/push2his 对 GitHub Pages 跨站来源限制访问（本地正常） | `docs/data-sources.md` | ⚠️已知限制 | 2026-07 | — |
+| G006 | 截图弹窗暗色消失 | `snapPng()` 截完恢复暗色时 `classList.add('dark')` 覆盖了截前的 `classList.remove` → 截完可能丢失暗色 | `frontend/src/pages/FundsPage.vue` | ✅已修复（Vue 迁移） | 2026-07-13 | 2026-11-14 |
 | G007 | NAV 日期 `<div>` 换行 | 表头 `<div>` 自动换行导致两行过高 | `web/index.html` 净值列 | ✅已修复 | 2026-07-13 | 2026-07-13 |
 | G008 | scan 后不接 enrich+fill | scan 覆盖现有 JSON → 丢失 enrich 填充的规模和费率数据 | `scripts/fundctl.py::cmd_sync()` | ✅已修复 | — | — |
 | G009 | LOF chg_ytd 为空 | LOF 场内份额不暴露场外收益字段 | `scripts/pipeline/fill.py:_fill_ytd()` → 取同系列兄弟份额兜底 | ✅已修复 | — | — |
 | G010 | 份额 key 顺序不一致 | 多脚本写盘时 dict key 顺序依赖插入顺序 → diff 噪音 | `scripts/core/utils.py::normalize_share_keys()` | ✅已修复 | — | — |
-| G011 | 主动基金「每日可购买」显示错误恒定值 ¥7200 | `renderGroupNotice()` 使用 `daily_purchase` 字段求和，但该字段从未被 pipeline 更新，72 个份额全是死值 100 | `web/js/main.js:renderGroupNotice()` → 改用 `daily_limit`（AKShare 真实数据） | ✅已修复 | 2026-08-05 | 2026-08-05 |
-| G012 | 详情 Modal「日买入限额」始终不显示「暂停」 | `render-modal.js:103` 用了不存在的字段 `share.purchase_state`，实际字段是 `share.buy_status` | `web/js/render-modal.js:103` | ✅已修复 | 2026-08-05 | 2026-08-05 |
-| G013 | 截图弹窗 + 申购浮层在亮色模式下完全无样式 | `.ss-*` 和 `.buy-hist-tip` 只有暗色覆盖（`html.dark`），亮色基础 CSS 全部缺失 | `web/css/app.css` → 补全 ~420 行亮色样式 | ✅已修复 | 2026-08-05 | 2026-08-05 |
+| G011 | 主动基金「每日可购买」显示错误恒定值 ¥7200 | `renderGroupNotice()` 使用 `daily_purchase` 字段求和，但该字段从未被 pipeline 更新，72 个份额全是死值 100 | `frontend/src/features/funds/FundTable.vue` → 只展示 `daily_limit`（AKShare 真实数据） | ✅已修复 | 2026-08-05 | 2026-08-05 |
+| G012 | 详情 Modal「日买入限额」始终不显示「暂停」 | `render-modal.js:103` 用了不存在的字段 `share.purchase_state`，实际字段是 `share.buy_status` | `frontend/src/features/funds/FundDetailDrawer.vue` | ✅已修复 | 2026-08-05 | 2026-08-05 |
+| G013 | 截图弹窗 + 申购浮层在亮色模式下完全无样式 | `.ss-*` 和 `.buy-hist-tip` 只有暗色覆盖（`html.dark`），亮色基础 CSS 全部缺失 | `frontend/src/styles/components.css` | ✅已修复（Vue 迁移） | 2026-08-05 | 2026-11-14 |
 | G014 | 版本戳 `?v=` 漏打 ES module 单引号路径 | `stamp_asset_version.py` 正则只匹配双引号 `"`，5 处 `import from '...'` 从不更新 | `scripts/checks/stamp_asset_version.py` → 正则兼容双引号+单引号 | ✅已修复 | 2026-08-05 | 2026-08-05 |
 | G015 | 场内 ETF 的 `buy_status_history` 被误写入「暂停申购」噪音 | `_refresh_purchase_status` 先 `share.update(purchase_map[code])` 覆盖 ETF 的「场内交易」，`_update_history` 的「场内」跳过判断被覆盖后的值绕过 | `scripts/pipeline/fill.py:_refresh_purchase_status` → ETF（159/513/510 开头）跳过覆盖与追踪 | ✅已修复 | 2026-09-11 | 2026-09-11 |
 | G016 | 「开放申购」基金日限额显示为哨兵值 ¥1000 亿 | 东方财富 `fund_purchase_em` 对不限额返回 `100000000000`，未归一化直接入库并参与排序/历史追踪 | `scripts/sources/akshare_source.py:fetch_purchase_data` → `>=1e11` 归一化为 None | ✅已修复 | 2026-09-11 | 2026-09-11 |
-| G017 | 「限购 1 万」这类短暂放宽在申购变更 tooltip 里看不到 | tooltip 只展示最近 3 条，短促的额度变化被后续调整挤出，用户误判「没记录到」 | `web/js/main.js:statusBadge` → 展示最近 8 条 | ✅已修复 | 2026-09-11 | 2026-09-11 |
+| G017 | 「限购 1 万」这类短暂放宽在申购变更 tooltip 里看不到 | tooltip 只展示最近 3 条，短促的额度变化被后续调整挤出，用户误判「没记录到」 | `frontend/src/features/funds/FundDetailDrawer.vue` → 展示完整份额状态 | ✅已修复（Vue 迁移） | 2026-09-11 | 2026-11-14 |
 | G018 | 跨源交叉验证「假绿」：数据源不可用时仍报 OK | `run_cross_validation` 网络失败逐只静默跳过，`anomalies` 为空即返回 passed=True，`check` 打印「OK ✓」 | `scripts/checks/cross_validate.py` → 返回 `compared` 计数，0 只对比时报「⚠ 未验证」 | ✅已修复 | 2026-09-11 | 2026-09-11 |
-| G019 | 新增 Tailwind 类静默失效（顶栏/序号/卡片配色不生效） | 预编译 `tailwind.css` 只含原应用用到的部分工具类；新加的 `flex-1`/`md:flex`/`list-decimal`/`w-36`/`bg-violet-50` 等不在产物里，无报错但样式不生效 | `web/index.html` + `web/css/app.css` → 在 app.css 用自定义类补齐（`.header-spacer`/`.fund-search` 等），或用已编译类 | ✅已修复 | 2026-09-29 | 2026-09-29 |
+| G019 | 新增 Tailwind 类静默失效（顶栏/序号/卡片配色不生效） | 预编译 `tailwind.css` 只含原应用用到的部分工具类；新加的 `flex-1`/`md:flex`/`list-decimal`/`w-36`/`bg-violet-50` 等不在产物里，无报错但样式不生效 | `frontend/src/styles/tokens.css` → Vue 迁移后使用明确 CSS 组件类 | ✅已修复（Vue 迁移） | 2026-09-29 | 2026-11-14 |
 | G020 | 申购变更 tooltip 连续两条都显示「暂停」（博时纳斯达克100ETF联接 07-11/09-08） | `_update_history` 把 `daily_limit` 也当变化信号；「暂停申购」的额度是数据源噪音（100→None），导致同一「暂停」被重复追加 | `scripts/pipeline/fill.py:_update_history` → 暂停/封闭态 `daily_limit` 归一为 None，`_normalize_purchase_state` + `_compact_history` 自愈 | ✅已修复 | 2026-09-29 | 2026-09-29 |
 | G021 | `fundctl.py add` 后门禁报 `buy_status_history` 尾条与当前状态不一致 | `add` 走 `enrich --codes X`，enrich 仍批量把 `purchase_map` 覆盖到所有份额，而 `fill --codes X` 只对新增份额做 `_update_history`，其余基金历史未同步 | `scripts/pipeline/enrich.py` Step4 → `--codes` 时跳过非选中代码 | ✅已修复 | 2026-10-16 | 2026-10-16 |
 | G022 | 美元份额限购额度缺额：天天基金 `fund_purchase_em` 返回 0，同花顺 `money` 又滞后/口径打架（000906 显示 280 万 vs 实际 280 美元，013404 显示 200 万 vs 实际 75 美元） | 同花顺对部分美元份额缓存了机构级旧额度，单靠一个源无法可靠取值 | `scripts/sources/ths_source.py` → `_MANUAL_LIMIT_OVERRIDE` 静态人工确认值优先命中（不联网），`_USD_LIMIT_CAP` 拦截超百万美元的滞后值 | ✅已修复 | 2026-10-29 | 2026-10-29 |
@@ -31,6 +31,9 @@
 | G025 | 美元份额规模缺失：雪球 `fund_individual_basic_info_xq` 对美元份额无「最新规模」，`enrich` 每月会把已有值清空；真实来源是天天基金 F10「资产规模」，但美元份额披露单位是「亿美元」，旧解析只认「亿元」 | 雪球与 F10 两源覆盖范围不一致，且美元规模单位与人民币不同 | `scripts/sources/eastmoney_source.py:fetch_f10` → 同时解析 `亿元`/`亿美元`；美元份额由 `fill` Pass2（enrich 之后）用 F10 补回 | ✅已修复 | 2026-10-29 | 2026-10-29 |
 | G026 | 纳指实时 PE 无稳定免费源：PE(NDX) 无法自动入库，V2 白皮书模块 3.3/4.2 的 PE 维度只能前端手动输入 | multpl 无纳指100 PE 页面（404）、WSJ 401（付费墙）、stockanalysis/slickcharts 均为 JS 渲染 SPA 服务端无数据、Yahoo v7 quote 对指数无 PE 且当前 429、东财 `RPT_INDEX_PE` 报表不存在（9501） | ✅已接入（Siblis `pe-trailing` 月末快照 → `scripts/pipeline/ndx_pe.py`） | 2026-11-06 | 2026-11-06 |
 | G027 | 品牌实物金价（水贝/周大福/老凤祥/中国黄金 足金饰品与投资金条）无稳定 API：V2 白皮书模块 3.4 的品牌金价维度暂未接入 | cngold（金投网）页面为 JS 渲染，curl 拿不到数据；`api.jijinhao.com/sQuoteCenter/realTime.htm` 空返回；需浏览器级抓取或付费源 | ✅已接入（证券之星 `salegold.shtml` GBK 表格 → `scripts/pipeline/brand_gold.py`；水贝批发价该源未收录） | 2026-11-06 | 2026-11-06 |
+| G028 | 缺失值在降序排序时跑到顶部 | 缺失比较结果先被方向系数相乘；`null` 被当成最小值参与反向排序 | `frontend/src/shared/lib/funds.ts:sortFundRows()` → 缺失值在方向乘数前直接返回置底 | ✅已修复 | 2026-11-14 | 2026-11-14 |
+| G029 | Vite 开发页把 `web/data/catalog.json` 请求到 `frontend/data/` 并收到 HTML | Vite root 为 `frontend/`，生产 `web/data/` 不在开发静态根内 | `vite.config.ts` → 只读 `/data` 中间件映射 `web/data/` | ✅已修复 | 2026-11-14 | 2026-11-14 |
+| G030 | Playwright Firefox 在 macOS 启动前报 `Could not find profile folder` | Firefox 159 构建在此环境的 profile 初始化失败；重装、临时/工作区 profile 和 `MOZ_HEADLESS` 均复现 | `docs/test-report.md` → 记录环境阻塞；Chromium/WebKit 继续完整回归 | ⚠️环境阻塞 | 2026-11-14 | — |
 
 ## Gotchas 生命周期规则
 - 已修复 → 保留条目，标记 `✅已修复`（不删——后人要知道坑存在过）

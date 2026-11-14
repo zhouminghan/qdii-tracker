@@ -15,7 +15,10 @@
   → ❷ 按 add/remove/move/diagnose/check 调用 fundctl.py
   → ❸ 自动 3 轮循环：执行 → check → 失败则 diagnose+fix → re-check（最多 3 轮，中途不打断用户）
   → ❹ 一次性汇报结果（不在循环中间问用户）
+  → ❺ 3 轮仍未全绿 → 停下，一次性汇报失败原因、已试修复与建议，不自动继续
 ```
+
+`remove` 的不可逆确认在进入 ❸ 循环前一次性完成，循环内不再打断。
 
 **覆盖关键词**：加/删/移除/调整分类/诊断/修复/检查数据/有没有异常
 
@@ -26,13 +29,13 @@
 | 调整分类 | `fundctl.py move --keyword K --from A --to B` |
 | 诊断/检查 | `fundctl.py diagnose [--cat C]` / `fundctl.py check` |
 
-### 2. 代码修改（scripts/ web/ config/）
+### 2. 代码修改（scripts/ frontend/ config/）
 
 ```
 修改任何代码文件
   → ❶ blast-radius（grep 影响面 + `docs/architecture.md`）
   → ❷ 修改
-  → ❸ fundctl.py check → 文档同步
+  → ❸ fundctl.py check + frontend checks → 文档同步
 ```
 
 改中约束（按触及模块）：
@@ -42,10 +45,11 @@
 - `checks/verify_data.py`：fixtures 格式变更 → 同步 `scripts/checks/golden-fixtures.json`
 - `core/constants.py`：改 CATEGORIES → 必须重跑全量 `sync`
 - `config/funds.json`：禁止直接编辑，走 `fundctl.py`
-- `web/js|css` 新文件 → `index.html` 加 `?v=` 版本戳
-- `web/js/screenshot.js` 改后浏览器验证 PNG 正常
-- `web/css/app.css` 改后检查暗色/玻璃态/响应式
-- `web/index.html` 新增 Tailwind 类前先确认在 `tailwind.css` 产物里已存在；缺失类在 `app.css` 用自定义类补齐（踩坑：`flex-1`/`md:flex`/`list-decimal`/`w-36` 等会静默失效）
+- `frontend/src` 是唯一前端源码；`web/index.html` 与 `web/assets/` 是 Vite 产物，不直接编辑
+- 前端改动必须跑 `npm run check`；涉及交互/布局/主题时再跑 `npm run test:e2e`
+- 公共数据契约改 `pipeline/public_catalog.py`，同步 `docs/data-contract.md` 与前端类型
+- 本地个人数据结构改 `frontend/src/shared/infrastructure/local-db.ts` → 必须递增 Dexie 版本并测迁移/备份恢复
+- `html-to-image` PNG 导出改动 → 浏览器验证 PNG 非空且可下载
 
 ### 3. 知识查询 / 经验沉淀
 
@@ -62,14 +66,15 @@
 
 ## 关键边界（不可协商）
 
-- `fundctl.py check` 必须全绿才算完成
+- `fundctl.py check` 必须全绿才算完成（限涉及 `scripts/` / `config/` / 数据产出的改动；纯 `docs/` 改动走文档校验；纯前端改动必须 `npm run check` + 相关 E2E）
 - nav_date 永不回退（lsjz 失败保留旧值）
 - scan 后必须接 enrich + fill
-- 禁止直接改 `config/funds.json`（通过 fund-ops Skill + fundctl.py）
-- **推送前必须确认**：任何 `git push` / 部署触发前，必须先向用户说明本批次改动范围（哪些文件、为什么、验证结果）并取得明确确认；上一批次的推送确认不自动延续到新批次。多个改动先攒成一批，全部改完并验证后再统一确认，不要每改一处就 `git commit` / `git push`。未确认前只停留在工作区改动，不 `git add` / `commit` / `push`
+- 禁止直接改 `config/funds.json`（一律走 `fundctl.py`）
+- **本地提交**：`fundctl.py check` 全绿后可直接 `git add` / `git commit` 留检查点，不需要逐批确认。
+- **推送前必须确认**：任何 `git push` / 部署触发前，必须先向用户说明本批次改动范围（哪些文件、为什么、验证结果）并取得明确确认；上一批次的推送确认不自动延续到新批次。多个改动先攒成一批，全部改完并验证后再统一确认，不要每改一处就 `git push`。未确认前不 `git push`。
 - **文档不滞后**：README 目录树 / 命令列表由 `doc_sync.py` 从真实状态自动生成；提交前 pre-commit 钩子自动 `--fix`，推送前 pre-push 钩子本地跑门禁，CI 用 `--check` 强制校验
 - 部署（确认后执行）：commit+push → `gh workflow run deploy-pages.yml --ref main`
-- 版本戳：本地 `?v=dev`（占位），部署时 `deploy-pages.yml` 自动 `stamp_asset_version.py --version ${GITHUB_SHA::12}` 替换为 commit SHA，无需手动改
+- 前端资源版本：Vite 生产构建自动生成内容哈希，部署 workflow 执行 `npm ci && npm run build`
 
 ### 自动联动（docs ↔ Agent ↔ README）
 
@@ -101,10 +106,12 @@ cd scripts && python3 fundctl.py check                          # 门禁（7层�
 cd scripts && python3 fundctl.py check --offline                # 门禁（跳过 Layer 6 跨源验证，断网/CI 用）
 cd scripts && python3 fundctl.py diagnose --auto-fix            # 诊断修复
 cd scripts && python3 fundctl.py probe                          # 数据源适配层探针
+cd scripts && python3 fundctl.py catalog                        # 生成前端公共目录契约
 cd scripts && python3 checks/doc_sync.py --fix                  # 文档自动同步（README 目录树/命令）
-cd test && python3 run_ui_scenarios.py                          # UI 回归场景
+npm ci && npm run check                                        # 类型 + lint + 单测 + 生产构建
+npm run test:e2e                                               # Playwright 全浏览器回归
+npm run dev                                                     # Vite 本地开发（8765）
 ./scripts/setup_hooks.sh                                        # 启用 pre-commit 文档同步
-cd ../web && python3 -m http.server 8765                        # 本地开发
 ```
 
 ## 门禁
@@ -122,16 +129,12 @@ cd scripts && python3 fundctl.py check    # Layer 0-6: nav_date→配置→lint�
 ```bash
 python3 -m pytest test/ -q                          # 单元测试（未装 pytest 则提示跳过）
 cd scripts && python3 fundctl.py check --offline --agent-rules  # 数据 + Agent + 文档门禁
+npm run check                                        # TypeScript + lint + Vitest + build
 ```
 
 与 CI 的 `ci.yml` 对齐，把「推到远端才发现」的问题前置到本地。
 
 > 门禁通过只代表「可以推送」，不代表已获得推送授权；`git push` 前仍需用户明确确认。
-
-## 操作协议（原 fund-ops / code-change Skills，已内联）
-
-> CodeBuddy 时代的 `.codebuddy/skills/` 已移除，两个 Skill 的流程内联到本文件，
-> 与「任务路由」对应，避免重复维护。
 
 ## 代码结构
 
@@ -140,11 +143,12 @@ scripts/
 ├── fundctl.py            ← 统一入口
 ├── core/                 ← 基础设施（constants / utils / config_loader / dca_strategy / gold）
 ├── sources/              ← 数据源适配（akshare / eastmoney / xueqiu / ths）
-├── pipeline/             ← 数据生产链路（scan / enrich / fill / holdings / reclassify / codegen / premium_history / nav_history / kline_history / market_temperature / nasdaq_history / cnn_sentiment / brand_gold / ndx_pe / macro_rates / market_snapshot）
-└── checks/               ← 质量门禁（verify_data / verify_purchase / cross_validate / diagnose / architecture_lint / scan_scenarios / stamp_asset_version / check_agent_rules / doc_sync / build_snapshot）
+├── pipeline/             ← 数据生产链路（scan / enrich / fill / holdings / reclassify / public_catalog / premium_history / nav_history / kline_history / market_temperature / nasdaq_history / cnn_sentiment / brand_gold / ndx_pe / macro_rates / market_snapshot）
+└── checks/               ← 质量门禁（verify_data / verify_purchase / cross_validate / diagnose / architecture_lint / stamp_asset_version / check_agent_rules / doc_sync / build_snapshot）
 
-test/                     ← 测试与回归（test_utils.py 单测 + ui_scenarios/ 声明式 UI 回归，Playwright 执行）
-.github/workflows/        ← ci.yml（单测+门禁，UI 回归仅本地）/ update-data.yml（数据）/ deploy-pages.yml（部署）
+frontend/                 ← Vue 3 + TypeScript 源码（app / pages / widgets / features / entities / shared）
+test/                     ← Python 单测 + frontend/ 单测 + e2e/ Playwright
+.github/workflows/        ← ci.yml（Python + 前端检查）/ update-data.yml（数据）/ deploy-pages.yml（构建并部署）
 .githooks/pre-commit      ← 提交前自动 doc_sync
 ```
 
@@ -153,7 +157,11 @@ test/                     ← 测试与回归（test_utils.py 单测 + ui_scenar
 ```
 docs/
 ├── gotchas.md            # 踩坑记录 + 生命周期（最高价值：硬踩的坑）
-└── architecture.md       # 模块输入/输出契约（人读；机器校验直接读代码 docstring）
+├── architecture.md       # 模块输入/输出契约（人读；机器校验直接读代码 docstring）
+├── data-contract.md      # 公共 JSON 与前端消费契约
+├── data-sources.md       # 数据源与更新机制
+├── audit.md              # 迁移前审计
+└── decisions/            # ADR
 
 scripts/checks/
 └── golden-fixtures.json  # 黄金样例（checks/verify_data.py 直接读取，纯 JSON）
@@ -162,27 +170,20 @@ scripts/checks/
 ## 前端结构
 
 ```
+frontend/
+├── index.html            # Vite 入口
+├── public/               # manifest / icon / service worker
+└── src/
+    ├── pages/            # Market / Funds / Portfolio / Research
+    ├── widgets/          # 全局壳、导航、设置
+    ├── features/         # 基金表格/详情、知识内容
+    ├── shared/           # 数据访问、Dexie、格式化、通用组件
+    ├── stores/           # Pinia 数据/设置/资产/研究状态
+    ├── styles/           # Design tokens 与响应式样式
+    └── types/            # 公共与本地数据契约
+
 web/
-├── index.html            # 五大一级 Tab（QDII追踪/全球行情/纳指图谱/投资知识/我的资产）+ 站内搜索 + 表头吸顶
-├── css/
-│   ├── app.css           # 自定义样式 + 暗色 token（zinc 中性）+ 补齐 tailwind 缺失类
-│   └── tailwind.css      # Tailwind 构建产物（只含原应用用到的部分工具类）
-└── js/
-    ├── config.js         # 全局常量（AUTO-GENERATED 段由 codegen.py 维护）
-    ├── utils.js          # 工具函数（JSONP / 格式化 / Modal）
-    ├── render-trend.js   # 历史净值走势图（SVG + Crosshair + JSONP）
-    ├── main.js           # 主渲染 + 一级 Tab/场内外切换 + 搜索 + 吸顶
-    ├── portfolio.js      # 我的组合（持仓/盈亏/配比，localStorage + 本地种子文件）
-    ├── market-indices.js # 全球指数宫格（腾讯/东财实时行情）
-    ├── macro-rates.js    # 宏观利率区（美债 2/10/30 年 + VIX + 纳指 PE）
-    ├── fx-rates.js       # 外汇汇率区（按基础货币分组 + 互换对）
-    ├── big-tech.js       # 科技七姐妹行情
-    ├── gold-hub.js       # 黄金多市场（折算/溢价/品牌金价）
-    ├── nasdaq-history.js # 纳指图谱（年度涨跌/回撤/年-月热力图/排行）
-    ├── fear-greed.js     # CNN 恐慌贪婪仪表盘
-    ├── dca-strategy.js   # VIX & PE 阶梯定投
-    ├── market-temperature.js # 市场温度（红绿灯 + 四指标打分）
-    ├── bj-clock.js       # 顶栏北京时间（精确到秒，tabular-nums 防跳动）
-    ├── save-image.js     # 长图/海报导出与预览
-    └── screenshot.js     # 场外/场内截图分享
+├── data/                 # Python 生成的公共 JSON
+├── index.html            # Vite 构建产物
+└── assets/               # Vite 内容哈希资源（不提交）
 ```

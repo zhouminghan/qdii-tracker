@@ -50,13 +50,13 @@
 | **输出文件** | 同上文件覆写 + `web/data/meta.json` + `config/funds.json`（白名单更新） |
 | **依赖** | `core.constants`、`core.utils`、`core.config_loader`、`sources.akshare_source` |
 
-### 6. codegen.py — 前端配置生成
+### 6. public_catalog.py — 公共目录契约
 
 | 属性 | 内容 |
 |------|------|
-| **职责** | 从 `config/funds.json` 生成 `web/js/config.js` 中的派生常量段 |
-| **输入文件** | `config/funds.json`、`web/js/config.js` |
-| **输出文件** | `web/js/config.js`（替换 AUTO-GENERATED CONFIG 块） |
+| **职责** | 汇总六个分类 JSON 与公司品牌配置，生成带 schema/status/quality 的前端唯一入口 |
+| **输入文件** | `web/data/{CATEGORIES}.json`、`web/data/meta.json`、`config/funds.json` |
+| **输出文件** | `web/data/catalog.json` |
 | **依赖** | `core.constants` |
 
 ### 7. market_temperature.py — 市场温度评分
@@ -163,25 +163,16 @@
 | **输出文件** | 无（返回错误列表） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 18. scan_scenarios.py — 改动↔场景联动
+### 18. stamp_asset_version.py — 历史版本戳工具
 
 | 属性 | 内容 |
 |------|------|
-| **职责** | git diff 获取改动文件 → 匹配 ui_scenarios/*.yaml 的 fixed_in 字段 → 提示关联场景 |
-| **输入文件** | git diff (HEAD)、`test/ui_scenarios/*.yaml` |
-| **输出文件** | 无（返回映射字典，non-blocking 提示） |
-| **依赖** | 无兄弟模块依赖 |
-
-### 19. stamp_asset_version.py — 版本戳
-
-| 属性 | 内容 |
-|------|------|
-| **职责** | 统一改写 `web/index.html` 中本地 JS/CSS 资源的 `?v=` 版本戳。现已兼容双引号（`<script src="...">`）和单引号（`import from '...'` ES module）两种引用格式。 |
+| **职责** | 旧 Vanilla 前端时期的资源版本工具；Vue/Vite 迁移后生产资源使用内容哈希，部署流程不再调用 |
 | **输入文件** | `web/index.html` |
 | **输出文件** | 同文件覆写 |
 | **依赖** | `core.constants` |
 
-### 20. verify_purchase.py — 申购状态/限额/历史一致性校验
+### 19. verify_purchase.py — 申购状态/限额/历史一致性校验
 
 | 属性 | 内容 |
 |------|------|
@@ -202,7 +193,7 @@ enrich.py ──────► core.constants, core.utils, sources.akshare_sour
 fill.py ────────► core.constants, core.utils, sources.eastmoney_source, sources.akshare_source, sources.ths_source
 holdings.py ────► core.constants, core.utils, core.config_loader, sources.akshare_source
 reclassify.py ──► core.constants, core.utils, core.config_loader, sources.akshare_source
-codegen.py ─────► core.constants
+public_catalog.py ─► core.constants
 market_temperature.py ► core.constants, core.utils, akshare, requests
 nasdaq_history.py ► core.constants, core.utils, requests, akshare
 cnn_sentiment.py ► core.constants, core.utils, requests
@@ -219,9 +210,36 @@ verify_data.py ──────► (独立)
 cross_validate.py ───► (独立)
 diagnose.py ─────────► (独立)
 architecture_lint.py ─► (独立)
-scan_scenarios.py ───► (独立)
 stamp_asset_version.py ► core.constants
 verify_purchase.py ───► core.constants
 ```
 
 > 注：`checks/` 模块通过 `fundctl.py` 统一调用，无兄弟模块依赖，各自独立。
+
+## frontend/ — Vue 应用
+
+```text
+pages/
+  FundsPage      -> catalog.json + holdings + nav-history
+  MarketPage     -> market-snapshot + nasdaq-history + fear-greed
+  PortfolioPage  -> catalog.json + Dexie(positions/trades)
+  ResearchPage   -> knowledge.ts + Dexie(notes/watchlist/strategyLogs/noteHistory)
+
+stores/
+  data           -> 公共 JSON 唯一加载入口
+  settings       -> 主题、涨跌配色、收藏
+  portfolio      -> 持仓/交易计算与持久化
+  research       -> 笔记/观察/策略/历史版本
+```
+
+依赖方向固定为 `pages → features/widgets/stores → shared/infrastructure/lib/components`。
+`shared` 不依赖页面；页面不得直接操作 IndexedDB 或猜测公共数据契约。
+
+## 数据流
+
+```text
+sources/ → pipeline/ → web/data/*.json
+web/data/*.json → public_catalog.py → catalog.json
+catalog.json + market-snapshot.json → Vue stores → pages/components
+pages/components → Dexie personal data → JSON backup
+```

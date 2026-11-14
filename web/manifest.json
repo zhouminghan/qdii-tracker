@@ -1,13 +1,10 @@
 {
-  "name": "QDII Tracker，QDII 基金追踪看板",
-  "short_name": "QDII Tracker",
-  "description": "QDII 基金追踪看板，覆盖场外基金、场内 ETF 与全球行情，追踪标普500、纳斯达克100等跨境基金。",
+  "name": "QDII Tracker",
+  "short_name": "QDII",
   "start_url": "./",
-  "scope": "./",
   "display": "standalone",
-  "background_color": "#fafaf9",
-  "theme_color": "#fafaf9",
-  "lang": "zh-CN",
+  "background_color": "#f4f5f7",
+  "theme_color": "#0f766e",
   "icons": [
     {
       "src": "./icon.svg",

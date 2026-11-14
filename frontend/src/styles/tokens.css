@@ -1,0 +1,78 @@
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: "SFMono-Regular", "Cascadia Code", "Roboto Mono", ui-monospace, monospace;
+
+  --color-bg: #f4f5f7;
+  --color-surface: #ffffff;
+  --color-surface-raised: #fbfbfc;
+  --color-surface-muted: #eef0f3;
+  --color-text: #18191d;
+  --color-text-secondary: #5d626c;
+  --color-text-tertiary: #626973;
+  --color-border: #dde0e5;
+  --color-border-strong: #c5cad2;
+  --color-accent: #0f766e;
+  --color-accent-hover: #0b5f59;
+  --color-accent-soft: #e5f4f1;
+  --color-warn: #a15c00;
+  --color-warn-soft: #fff5df;
+  --color-danger: #b42318;
+  --color-danger-soft: #fff0ee;
+  --color-positive: #d92d20;
+  --color-negative: #067647;
+  --color-positive-soft: #fff1f0;
+  --color-negative-soft: #eaf8f1;
+  --color-focus: #0f766e;
+
+  --shadow-sm: 0 1px 2px rgb(16 24 40 / 5%);
+  --shadow-md: 0 8px 24px rgb(16 24 40 / 10%);
+  --shadow-lg: 0 24px 64px rgb(16 24 40 / 18%);
+
+  --radius-sm: 4px;
+  --radius-md: 7px;
+  --radius-lg: 10px;
+  --header-height: 58px;
+  --page-max: 1500px;
+  --transition: 180ms ease;
+}
+
+:root[data-theme='dark'] {
+  --color-bg: #111318;
+  --color-surface: #191c22;
+  --color-surface-raised: #1e2229;
+  --color-surface-muted: #242931;
+  --color-text: #f0f2f5;
+  --color-text-secondary: #a9b0bb;
+  --color-text-tertiary: #98a1ad;
+  --color-border: #303640;
+  --color-border-strong: #444c58;
+  --color-accent: #4fd1c5;
+  --color-accent-hover: #73ded4;
+  --color-accent-soft: #173733;
+  --color-warn: #f0b45d;
+  --color-warn-soft: #372b19;
+  --color-danger: #ff8a80;
+  --color-danger-soft: #3b211f;
+  --color-positive: #ff8a80;
+  --color-negative: #63d7a2;
+  --color-positive-soft: #3a211f;
+  --color-negative-soft: #17352a;
+  --color-focus: #4fd1c5;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 24%);
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 32%);
+  --shadow-lg: 0 24px 64px rgb(0 0 0 / 48%);
+}
+
+:root[data-color-mode='green-up'] {
+  --color-positive: #067647;
+  --color-negative: #d92d20;
+  --color-positive-soft: #eaf8f1;
+  --color-negative-soft: #fff1f0;
+}
+
+:root[data-theme='dark'][data-color-mode='green-up'] {
+  --color-positive: #63d7a2;
+  --color-negative: #ff8a80;
+  --color-positive-soft: #17352a;
+  --color-negative-soft: #3a211f;
+}

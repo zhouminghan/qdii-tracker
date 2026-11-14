@@ -1,0 +1,579 @@
+.fund-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.mobile-sort {
+  display: none;
+}
+
+.inline-search {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: min(320px, 42vw);
+  height: 32px;
+  padding: 0 9px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  color: var(--color-text-tertiary);
+}
+
+.inline-search:focus-within {
+  border-color: var(--color-accent);
+}
+
+.inline-search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 0.76rem;
+}
+
+.inline-search button {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-tertiary);
+}
+
+.list-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 2px;
+}
+
+.funds-share-surface {
+  display: grid;
+  gap: 10px;
+  padding: 2px;
+  background: var(--color-bg);
+}
+
+.list-heading p {
+  margin-top: 3px;
+  color: var(--color-text-tertiary);
+  font-size: 0.73rem;
+}
+
+.data-stamp {
+  align-self: center;
+  color: var(--color-text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+}
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 9px 11px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+}
+
+.notice-warn {
+  border-color: color-mix(in srgb, var(--color-warn) 32%, var(--color-border));
+  background: var(--color-warn-soft);
+  color: var(--color-warn);
+}
+
+.notice-danger {
+  border-color: color-mix(in srgb, var(--color-danger) 32%, var(--color-border));
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.fund-table-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 0 2px;
+  color: var(--color-text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
+.table-shell {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.data-table {
+  width: 100%;
+  font-size: 0.76rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 8px 9px;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.data-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--color-surface-raised);
+  color: var(--color-text-tertiary);
+  font-size: 0.67rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.data-table tbody tr:hover {
+  background: color-mix(in srgb, var(--color-accent-soft) 42%, transparent);
+}
+
+.data-table.compact {
+  font-size: 0.71rem;
+}
+
+.data-table.compact th,
+.data-table.compact td {
+  padding: 6px 8px;
+}
+
+.align-right {
+  text-align: right !important;
+}
+
+.align-center {
+  text-align: center !important;
+}
+
+.table-sort-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.table-sort-button:hover {
+  color: var(--color-text);
+}
+
+.expand-col {
+  width: 30px;
+  padding-right: 0 !important;
+}
+
+.expand-button,
+.favorite-button,
+.table-action {
+  display: inline-grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-tertiary);
+}
+
+.table-action-group {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.table-action.active {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.compare-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.expand-button {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+}
+
+.expand-button:hover {
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+}
+
+.fund-row {
+  cursor: pointer;
+}
+
+.fund-identity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 230px;
+}
+
+.fund-logo {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: var(--radius-md);
+  font-size: 0.69rem;
+  font-weight: 750;
+}
+
+.fund-name-block {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.fund-name-block strong {
+  overflow: hidden;
+  font-size: 0.78rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fund-name-block > span {
+  overflow: hidden;
+  color: var(--color-text-tertiary);
+  font-size: 0.66rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.favorite-button {
+  width: 25px;
+  height: 27px;
+  flex: 0 0 auto;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-tertiary);
+}
+
+.favorite-button:hover,
+.favorite-button.active {
+  color: #d18a00;
+}
+
+.price-cell {
+  display: grid;
+  justify-items: end;
+  gap: 1px;
+}
+
+.price-cell strong {
+  font-size: 0.79rem;
+}
+
+.price-cell small {
+  color: var(--color-text-tertiary);
+  font-size: 0.6rem;
+}
+
+.premium-cell {
+  color: var(--color-danger);
+}
+
+.table-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 25px;
+  padding: 0 7px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+  color: var(--color-text-secondary);
+  font-size: 0.67rem;
+}
+
+.table-action:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.shares-row:hover {
+  background: transparent !important;
+}
+
+.shares-panel {
+  padding: 10px 14px 12px 42px;
+  background: var(--color-surface-raised);
+}
+
+.shares-title {
+  margin-bottom: 6px;
+  color: var(--color-text-secondary);
+  font-size: 0.7rem;
+  font-weight: 650;
+}
+
+.shares-table {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.table-empty {
+  padding: 28px !important;
+  color: var(--color-text-tertiary);
+  text-align: center !important;
+}
+
+.detail-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.detail-identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.detail-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.detail-price {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 10px;
+  margin-top: 3px;
+  color: var(--color-text-tertiary);
+  font-size: 0.7rem;
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.detail-tabs {
+  margin: 12px 0;
+}
+
+.detail-section {
+  display: grid;
+  gap: 11px;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 7px;
+}
+
+.fee-block {
+  padding: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+}
+
+.fee-block h4 {
+  margin: 0 0 7px;
+  font-size: 0.78rem;
+}
+
+.fee-rule {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: 0.72rem;
+}
+
+.fee-rule:last-child {
+  border-bottom: 0;
+}
+
+.echart {
+  width: 100%;
+  min-width: 0;
+}
+
+.fund-mobile-list {
+  display: none;
+}
+
+.fund-mobile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.fund-mobile-shares {
+  display: grid;
+  gap: 5px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border);
+}
+
+.fund-mobile-share-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.fund-mobile-share-row:last-child {
+  border-bottom: 0;
+}
+
+.fund-mobile-share-row > div {
+  display: grid;
+  gap: 2px;
+}
+
+.fund-mobile-share-row > div:last-child {
+  justify-items: end;
+}
+
+.fund-mobile-share-row strong {
+  font-size: 0.7rem;
+}
+
+.fund-mobile-share-row span {
+  color: var(--color-text-tertiary);
+  font-size: 0.63rem;
+}
+
+@media (max-width: 900px) {
+  .fund-table-shell {
+    display: none;
+  }
+
+  .fund-mobile-list {
+    display: grid;
+    gap: 8px;
+  }
+
+  .fund-mobile-card {
+    display: grid;
+    gap: 10px;
+    padding: 11px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  .fund-mobile-head,
+  .fund-mobile-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .fund-mobile-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    padding: 8px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface-raised);
+  }
+
+  .fund-mobile-metrics > div {
+    display: grid;
+    gap: 3px;
+  }
+
+  .fund-mobile-metrics span:first-child {
+    color: var(--color-text-tertiary);
+    font-size: 0.64rem;
+  }
+
+  .fund-mobile-metrics strong {
+    font-size: 0.79rem;
+  }
+
+  .fund-mobile-foot {
+    color: var(--color-text-tertiary);
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .fund-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .inline-search {
+    width: 100%;
+  }
+
+  .mobile-sort {
+    display: flex;
+    align-items: end;
+    gap: 8px;
+  }
+
+  .mobile-sort label {
+    display: grid;
+    flex: 1;
+    gap: 4px;
+    color: var(--color-text-tertiary);
+    font-size: 0.68rem;
+  }
+
+  .detail-hero {
+    flex-direction: column;
+  }
+
+  .detail-actions {
+    justify-content: flex-start;
+  }
+
+  .shares-panel {
+    padding-left: 10px;
+  }
+}

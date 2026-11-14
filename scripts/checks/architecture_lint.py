@@ -16,8 +16,7 @@ scripts/architecture_lint.py — 目录纪律强制校验
         - manifest.json / sw.js / icon.svg（PWA）
         - feed.rss（每日快照订阅）
     web/data/  仅允许 *.json（+ holdings/、nav-history/、index-kline/、etf-kline/、fx-kline/ 子目录，同样仅 *.json）
-    web/js/    仅允许 *.js
-    web/css/   仅允许 *.css
+    web/assets/ 仅允许 Vite 构建产物（*.js / *.css / *.map）
 
 设计原则：
     - 只做「结构」校验，不做内容语义校验（内容校验交给 scripts/pipeline/verify_data.py）
@@ -35,15 +34,14 @@ WEB_DIR = ROOT_DIR / "web"
 
 # web/ 顶层允许的文件名（精确匹配）
 WEB_TOP_ALLOWED_FILES = {"index.html", "robots.txt", "sitemap.xml", ".nojekyll",
-                         "manifest.json", "sw.js", "icon.svg", "feed.rss"}
+                         "manifest.json", "sw.js", "icon.svg", "feed.rss", "robots.txt"}
 # web/ 顶层允许的子目录名
-WEB_TOP_ALLOWED_DIRS = {"data", "js", "css"}
+WEB_TOP_ALLOWED_DIRS = {"data", "assets"}
 
 # 各子目录允许的文件扩展名
 SUBDIR_ALLOWED_EXT = {
     "data": {".json"},
-    "js": {".js"},
-    "css": {".css"},
+    "assets": {".js", ".css", ".map"},
 }
 
 

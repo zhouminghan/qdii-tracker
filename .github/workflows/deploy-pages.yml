@@ -15,6 +15,11 @@ on:
     branches: [main]
     paths:
       - 'web/**'
+      - 'frontend/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vite.config.ts'
+      - 'tsconfig*.json'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
@@ -42,9 +47,17 @@ jobs:
       - name: ⚙️ Setup Pages
         uses: actions/configure-pages@v6
 
-      - name: 🏷️ Stamp frontend asset versions
-        run: |
-          python3 scripts/checks/stamp_asset_version.py --version "${GITHUB_SHA::12}"
+      - name: 🟢 Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: 📦 Install frontend dependencies
+        run: npm ci
+
+      - name: 🏗️ Build frontend
+        run: npm run build
 
       - name: 📦 Upload web/ as artifact
         uses: actions/upload-pages-artifact@v5

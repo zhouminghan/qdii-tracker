@@ -58,3 +58,14 @@ akshare_cache/
 # 日志
 *.log
 logs/
+
+# ==================== 前端工程 ====================
+node_modules/
+coverage/
+test-results/
+playwright-report/
+blob-report/
+
+# Vite 生成资源由构建产生；HTML 与 data 仍追踪
+web/assets/
+*.tsbuildinfo

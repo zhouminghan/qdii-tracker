@@ -22,11 +22,10 @@ from core.constants import CATEGORIES, DATA_DIR, DATA_SCHEMA_VERSION, HOLDINGS_C
 from core.config_loader import get_config, save_config, validate_config
 
 # 直接 import pipeline 模块（替代 subprocess 调用）
-from pipeline import scan, enrich, fill, holdings, reclassify, codegen, premium_history, nav_history, kline_history, market_temperature, nasdaq_history, cnn_sentiment, brand_gold, ndx_pe, macro_rates
+from pipeline import scan, enrich, fill, holdings, reclassify, premium_history, nav_history, kline_history, market_temperature, nasdaq_history, cnn_sentiment, brand_gold, ndx_pe, macro_rates, public_catalog
 
 from checks.verify_data import run_verification
 from checks.verify_purchase import run_verification as run_purchase_verification
-from checks.scan_scenarios import find_related_scenarios
 from checks.cross_validate import run_cross_validation
 from checks.architecture_lint import run_lint as run_architecture_lint
 from checks.diagnose import diagnose_all
@@ -55,9 +54,6 @@ def cmd_add(args):
     save_config(cfg)
     print(f"✅ 配置已更新: force_include[{code}]={to_cat}")
 
-    # 生成前端派生常量
-    _run(codegen.main)
-
     # 扫描 + 局部补数
     _run(scan.main)
     _run(enrich.main, "--codes", code)
@@ -65,6 +61,7 @@ def cmd_add(args):
     if to_cat in HOLDINGS_CATEGORIES:
         _run(holdings.main, "--codes", code)
 
+    public_catalog.write_catalog()
     print("🎉 add 完成")
 
 
@@ -76,7 +73,7 @@ def cmd_move(args):
         extra.append("--no-whitelist")
     _run(reclassify.main, "--keyword", args.keyword,
          "--from", args.from_cat, "--to", args.to_cat, *extra)
-    _run(codegen.main)
+    public_catalog.write_catalog()
 
 
 def cmd_brand(args):
@@ -99,7 +96,7 @@ def cmd_brand(args):
 
     save_config(cfg)
     print(f"✅ company_brand[{company}].letter: {old_letter!r} -> {letter!r}")
-    _run(codegen.main)
+    public_catalog.write_catalog()
 
 
 def cmd_remove(args):
@@ -153,8 +150,8 @@ def cmd_remove(args):
         meta["generated_at"] = datetime.datetime.now().isoformat()
         meta_fp.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    # 5. 重新生成前端配置
-    _run(codegen.main)
+    # 5. 重新生成前端公共契约
+    public_catalog.write_catalog()
     print(f"🎉 remove 完成: {code}")
 
 
@@ -195,7 +192,11 @@ def cmd_sync(_args):
     _run(brand_gold.main)
     _run(ndx_pe.main)
     _run(macro_rates.main)
-    _run(codegen.main)
+    public_catalog.write_catalog()
+
+
+def cmd_catalog(_args):
+    public_catalog.main()
 
 
 def cmd_nasdaq(_args):
@@ -252,7 +253,7 @@ def _check_module_contracts():
                                                    "诊断", "校验", "生成", "重分类",
                                                    "版本", "模块", "module", "enrich",
                                                    "fill", "scan", "holdings", "diagnose",
-                                                   "verify", "codegen", "reclassify",
+                                                   "verify", "reclassify",
                                                    "stamp"]):
                     has_doc = True
                     break
@@ -408,16 +409,6 @@ def cmd_check(_args):
 
     print(f"\n✅ 全部分层校验通过（总耗时 {time.time() - _t0:.2f}s）")
 
-    # 联动提示（non-blocking）：本次改动是否有匹配的 UI 回归场景该重跑
-    related = find_related_scenarios()
-    if related:
-        print("\n💡 检测到未提交改动涉及以下文件，有关联的回归场景建议重跑确认：")
-        for changed_file, scenarios in related.items():
-            print(f"   {changed_file}")
-            for sc in scenarios:
-                print(f"     → {sc}")
-
-
 def cmd_probe(_args):
     """数据源适配层探针：导入级健康检查（不发起网络请求）。"""
     import importlib
@@ -498,6 +489,9 @@ def main():
 
     p_sentiment = sub.add_parser("sentiment", help="刷新 CNN 恐慌贪婪指数")
     p_sentiment.set_defaults(func=cmd_sentiment)
+
+    p_catalog = sub.add_parser("catalog", help="生成前端公共基金目录契约")
+    p_catalog.set_defaults(func=cmd_catalog)
 
     p_diagnose = sub.add_parser("diagnose", help="诊断数据异常")
     p_diagnose.add_argument("--cat", help="按分类筛选")

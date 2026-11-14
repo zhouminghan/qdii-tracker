@@ -1,44 +1,130 @@
-# US Fund Tracker · 美股基金追踪看板
+# QDII Tracker
 
-美股 QDII 基金追踪看板。纯静态部署，零后端。**🤖 Agent 模式开箱即用**（Codex 自动读 AGENTS.md + docs/）。
+个人 QDII 基金追踪、市场研究、投资组合与本地研究工作区。
 
-🌐 **在线看板**：<https://zhouminghan.github.io/qdii-tracker/>
-📦 **源码仓库**：<https://github.com/zhouminghan/qdii-tracker>
+线上地址：<https://zhouminghan.github.io/qdii-tracker/>
 
-[![Update](https://github.com/zhouminghan/qdii-tracker/actions/workflows/update-data.yml/badge.svg)](https://github.com/zhouminghan/qdii-tracker/actions/workflows/update-data.yml)
-[![License](https://img.shields.io/github/license/zhouminghan/qdii-tracker?color=orange)](https://github.com/zhouminghan/qdii-tracker/blob/main/LICENSE)
+前端为 Vue 3 + TypeScript + Vite；Python 负责数据采集、丰富与质量门禁。站点保持纯静态部署，无后端、无账号、无云端个人数据同步。
 
-## ✨ 核心功能
+## 界面
 
-- **五大一级 Tab**：🏦 QDII 追踪 · 🌐 全球行情 · 📊 纳指图谱 · 📚 投资知识 · 💼 我的资产（默认 QDII，支持 hash 深链、刷新/分享与浏览器前进/后退）
-- **🌐 全球行情**：宏观利率（美元/离岸人民币 + 美债 2/10/30 年 + VIX + 纳指 PE）→ 全球指数宫格 → 科技七姐妹 → 外汇汇率（按基础货币分组）→ 黄金多市场（折算/溢价/品牌金价）
-- **📊 纳指图谱**：1986 至今年度涨跌幅 / 年内最大回撤 / 谷值分布、年度·月度热力图切换、多周期月份排行、CNN 恐慌贪婪 + VIX & PE 阶梯定投
-- **🏦 QDII 追踪**：场外/场内一键切换，申购状态/限额/费率列表，溢价警示与站内搜索
-- **💼 我的资产**：本地录入持仓与交易流水，自动估算市值、盈亏与配比（数据仅存浏览器）
-- **📚 投资知识**：场内 vs 场外、A/C 类份额、LOF 套利、QDII 选基、纳指 ETF 溢价成因，按子分类筛选
-- **🎨 主题与配色**：深浅双主题 + 红涨绿跌/绿涨红跌一键切换
-- **📸 分享与导出**：场外/场内截图分享（7 风格 × 3 布局）、纳指图谱长图与海报导出
-- **📈 历史走势图**：指数/外汇/黄金/个股可点击弹窗看日 K，9 档区间，Crosshair 悬停交互
-- **纯静态首屏**：本地 JSON 零外部请求，按需加载实时数据
-- **智能轮询**：5 档分时调度，Settled 自动停止，页面隐藏自动暂停
+![Funds desktop](docs/evidence/funds-desktop-light.png)
 
-## 🏗️ 架构
+| Market dark | Portfolio |
+|-------------|-----------|
+| ![Market dark](docs/evidence/market-desktop-dark.png) | ![Portfolio](docs/evidence/portfolio-desktop-light.png) |
 
-```mermaid
-graph LR
-    A["📡 公开数据源<br/>天天基金 · 雪球"]
-    B["🐍 数据流水线<br/>pipeline/ 生产 + checks/ 校验"]
-    C["📁 数据层<br/>web/data/"]
-    D["🌐 前端<br/>Vanilla JS · Tailwind CSS"]
+## 功能
 
-    A -->|拉取| B
-    B -->|生成| C
-    C -->|读取| D
+### Market
+
+- 全球指数、科技七姐妹、外汇、黄金多市场与品牌金价。
+- 美债 2/10/30 年、VIX、美元指数、纳指 PE。
+- 纳指年度收益、回撤、月度热力图和情绪历史。
+- 市场温度与 VIX/PE 阶梯定投观察。
+
+### Funds
+
+- 场外 QDII / 场内 ETF 分类切换。
+- 跨分类搜索、多字段排序、缺失值置底、收藏置顶。
+- 基金系列展开、A/C/美元份额、申购状态与历史状态。
+- 详情抽屉、历史净值、Top10 持仓、费率规则。
+- CSV 和 PNG 分享。
+
+### Portfolio
+
+- IndexedDB 本地持仓与交易流水。
+- 本金、市值、持有收益、收益率和资产分布。
+- 当前份额的近似收益趋势。
+- 交易新增、修改、删除与刷新后持久化。
+- 旧 `localStorage` 数据自动迁移。
+
+### Research
+
+- 场内/场外、份额、溢价、选基、额度与汇率知识库。
+- 基金研究笔记、观察清单、策略记录。
+- 笔记修改历史。
+- JSON 备份与校验恢复。
+
+## 架构
+
+```text
+公开数据源
+  → Python pipeline/
+  → web/data/*.json
+  → public_catalog.py
+  → catalog.json + market-snapshot.json
+  → Vue pages / Pinia stores
+  → IndexedDB 个人数据
 ```
 
-> 纯 GitHub Pages 静态托管，无后端、无数据库、无 Docker。
+- 公共数据只读、静态 JSON、GitHub Actions 定时更新。
+- 个人数据只保存在浏览器 Dexie `qdii-tracker` 数据库。
+- 数据契约见 [docs/data-contract.md](./docs/data-contract.md)。
+- 模块边界见 [docs/architecture.md](./docs/architecture.md)。
+- 技术决策见 [docs/decisions/](./docs/decisions/)。
 
-## 📂 目录
+## 技术栈
+
+- Vue 3、TypeScript、Vite、Vue Router、Pinia。
+- TanStack Table PoC 与纯函数排序层。
+- Apache ECharts。
+- Dexie / IndexedDB。
+- Vitest、Vue Test Utils、Playwright、axe-core。
+- Python、AKShare、静态 JSON、GitHub Pages。
+
+## 本地开发
+
+```bash
+npm ci
+npm run dev                    # http://127.0.0.1:8765/
+
+python3 -m venv .venv          # 首次
+source .venv/bin/activate
+pip install -r scripts/requirements.txt -r scripts/requirements-dev.txt
+
+cd scripts
+python3 fundctl.py sync        # 全量数据同步
+python3 fundctl.py check       # 数据质量门禁
+```
+
+默认打开 Funds。hash 路由支持 `#/market`、`#/funds`、`#/portfolio`、`#/research`。
+
+## 测试
+
+```bash
+npm run typecheck
+npm run lint
+npm test
+npm run build
+npm run test:e2e
+python3 -m pytest test/ -q
+cd scripts && python3 fundctl.py check --offline
+```
+
+Playwright 覆盖 Chromium、Firefox、WebKit 和移动 Chromium；视觉基准使用 Chromium。
+完整结果与证据记录在 [docs/test-report.md](./docs/test-report.md)。
+
+## 个人数据
+
+- 不上传个人数据。
+- 备份文件包含持仓、交易、笔记、观察清单和策略记录。
+- 导入先校验 schema 与结构，再在单个 IndexedDB 事务中恢复；失败时保留原数据。
+- 删除持仓、交易和研究数据均需要明确操作。
+
+## Actions 与部署
+
+- `update-data.yml`：工作日更新数据，月度执行完整流水线。
+- `ci.yml`：Python 测试、数据门禁、前端检查与 Chromium E2E。
+- `deploy-pages.yml`：`npm ci → npm run build → upload web/ → GitHub Pages`。
+- Vite 资源使用内容哈希，不再手工维护 `?v=dev`。
+
+## 数据来源
+
+AKShare、天天基金、东方财富、雪球、Yahoo Finance、CNN dataviz、证券之星等公开数据。
+具体链路与失败策略见 [docs/data-sources.md](./docs/data-sources.md)。
+
+## 目录
 
 <!-- DOCSYNC START: tree -->
 ```text
@@ -55,15 +141,12 @@ qdii-tracker/
 │   ├── sources/
 │   ├── fundctl.py
 │   ├── requirements-dev.txt
-│   ├── requirements-ui.txt
 │   ├── requirements.txt
 │   └── setup_hooks.sh
 ├── config/    # 基金分类 SSOT 配置
 │   └── funds.json
 ├── web/    # 前端（纯静态）
-│   ├── css/
 │   ├── data/
-│   ├── js/
 │   ├── .nojekyll
 │   ├── feed.rss
 │   ├── icon.svg
@@ -73,11 +156,17 @@ qdii-tracker/
 │   ├── sitemap.xml
 │   └── sw.js
 ├── docs/    # 人读文档 — 踩坑 / 架构
+│   ├── decisions/
+│   ├── evidence/
 │   ├── architecture.md
-│   └── gotchas.md
+│   ├── audit.md
+│   ├── data-contract.md
+│   ├── data-sources.md
+│   ├── gotchas.md
+│   └── test-report.md
 ├── test/    # 测试与 UI 回归（pytest + Playwright）
-│   ├── ui_scenarios/
-│   ├── run_ui_scenarios.py
+│   ├── e2e/
+│   ├── frontend/
 │   ├── test_akshare_source.py
 │   ├── test_brand_gold.py
 │   ├── test_classify.py
@@ -89,39 +178,35 @@ qdii-tracker/
 │   ├── test_nasdaq_history.py
 │   ├── test_nav_history.py
 │   ├── test_premium_history.py
+│   ├── test_public_catalog.py
 │   ├── test_purchase_history.py
 │   ├── test_ths_source.py
 │   └── test_utils.py
+├── design-system/
+│   └── qdii-tracker/
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   └── index.html
+├── harness/
+│   └── state.json
 ├── .gitignore
+├── .nvmrc
 ├── AGENTS.md
 ├── LICENSE
-└── README.md
+├── README.md
+├── eslint.config.js
+├── package-lock.json
+├── package.json
+├── playwright.config.ts
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
 ```
 <!-- DOCSYNC END: tree -->
 
-Agent 规则详见 [AGENTS.md](./AGENTS.md)。
-
-## 🚀 部署（GitHub Pages）
-
-1. 创建 Public 仓库，推送代码
-2. Settings → Pages → Source: `GitHub Actions`
-3. Settings → Actions → Workflow permissions: `Read and write`
-4. Actions → Run workflow 验证 → 访问 `https://{user}.github.io/qdii-tracker/`
-
-日常：打开网页即可。想立刻更新 → Actions → Run workflow。
-
-## 💻 本地开发
-
-```bash
-cd scripts && pip install -r requirements.txt
-./scripts/setup_hooks.sh                      # 启用本地 git hooks（pre-commit + pre-push，一次性）
-python3 fundctl.py sync                       # 全量同步
-python3 fundctl.py check --agent-rules        # 门禁 + Agent 规则 + 文档同步
-python3 fundctl.py check --offline            # 断网/CI 时跳过 Layer 6 跨源验证
-cd ../web && python3 -m http.server 8765      # 本地开发
-```
-
-日常维护命令（由 `doc_sync.py` 自动生成，请勿手改）：
+## Commands
 
 <!-- DOCSYNC START: commands -->
 ```bash
@@ -133,21 +218,13 @@ python3 fundctl.py refresh      # 增量刷新
 python3 fundctl.py sync         # 全量同步
 python3 fundctl.py nasdaq       # 刷新纳指 40 年历史图谱数据
 python3 fundctl.py sentiment    # 刷新 CNN 恐慌贪婪指数
+python3 fundctl.py catalog      # 生成前端公共基金目录契约
 python3 fundctl.py diagnose     # 诊断数据异常
 python3 fundctl.py check        # 一致性校验
 python3 fundctl.py probe        # 数据源适配层探针（导入级）
 ```
 <!-- DOCSYNC END: commands -->
 
-```bash
-cd scripts && python3 checks/doc_sync.py --fix   # 手动文档同步
+## License
 
-# UI 回归（仅本地跑；云端 CI 不跑，避免每次下载 Chromium）
-pip install -r scripts/requirements-ui.txt       # 一次性
-python -m playwright install chromium            # 一次性（约 94MB）
-python test/run_ui_scenarios.py                  # 跑 6 条浏览器回归场景
-```
-
-## 📜 License
-
-[MIT License](./LICENSE)。数据仅聚合公开信息展示，不构成投资建议。
+[MIT License](./LICENSE)。数据仅供个人研究参考，不构成投资建议。

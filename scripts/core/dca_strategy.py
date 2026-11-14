@@ -10,7 +10,7 @@ scripts/core/dca_strategy.py — VIX & PE 阶梯定投实操矩阵（纯逻辑�
   - 55-75  贪婪      VIX 12-20  风险预警：停止加仓，保持观望
   - 75-100 极度贪婪  VIX<15     泡沫高危：卖出 / 买入对冲
 
-与前端 web/js/dca-strategy.js 保持同一套规则，改动时两边同步。
+与前端 frontend/src/shared/lib/dca.ts 保持同一套规则，改动时两边同步。
 """
 
 BANDS = [
