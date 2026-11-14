@@ -158,6 +158,30 @@ Reviewer 未发现 JSONP 永久脚本泄漏或重复监听；确认正常、错�
 - 本轮生产构建验证的代码 SHA：`9c0975f`
 - 底层 `origin/main` 未修改，本地提交未 push。
 
+## 发布候选对账
+
+| 字段 | 值 |
+|------|----|
+| `validated_code_sha` | `9c0975fe52bf767fc2605785d4b7efddbf5f5eab` |
+| `documentation_sha` | `0c2b5dd9a552c35671f258ef387c15aedf233911` |
+| `release_candidate_sha` | `0c2b5dd9a552c35671f258ef387c15aedf233911` |
+| `last_test_run` | `2026-11-14T23:53:45+08:00` |
+| `test_level` | T0 + Chromium T3 interactions + visual recheck + data/agent gate |
+| `test_result` | Passed；36 条唯一 Chromium 测试通过，4 条移动视觉重复项跳过 |
+
+前端源码在 `9c0975f` 后未再变化；`0c2b5dd` 只修改文档、Harness 和 Agent 规则校验脚本。
+针对该脚本执行了 `fundctl check --offline --agent-rules`，因此复用前端 T0/T3 结果是有效的。
+T0/T3 的验证代码 SHA 为 `9c0975f`；`0c2b5dd` 的 Agent 规则脚本也已单独通过门禁。
+
+当前未创建 Tag 或正式 Release。发布候选以 SHA 标识，避免为本次审计制造无意义版本号。
+
+远端审计结果：
+
+- `git ls-remote origin refs/heads/main`：`199713153f6e70c042ed221ab7c4f58bae0fa115`
+- 最近 5 次远程 Actions 仍运行在旧远端基线上。
+- 当前 RC 的远程 CI 与 Pages 部署状态：**NOT VERIFIED**。
+- `package.json` 版本为 `3.0.0`；未创建 Git Tag 或正式 Release。
+
 `AGENTS.md` 已补充 Chromium-only、T0–T3、Actions 边界、Commit 规范和 Harness 规则。
 `README.md` 已同步本地测试命令、Actions 职责和浏览器支持范围。
 
@@ -166,6 +190,8 @@ Reviewer 未发现 JSONP 永久脚本泄漏或重复监听；确认正常、错�
 - 新的轻量 CI 配置尚未 push，因此没有远程执行耗时；已通过 YAML 解析和本地静态审计。
 - ECharts 懒加载 chunk gzip 约 208 KB，构建仅提示体积 warning，不影响构建产物。
 - 视觉基准当前记录为 macOS Chromium snapshot；跨平台 CI 不执行视觉回归。
+- 当前 RC 未经过远程 CI 和 Pages 部署；远程 baseline 仍为 `1997131`。
+- 相对远端共有 9 个业务/验证提交；本轮审计元数据提交不改变业务代码。
 
 ## 发布判断
 
