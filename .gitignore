@@ -11,8 +11,13 @@ __pycache__/
 scripts/tests/
 scripts/test_nav_date_display.py
 
-# Playwright 运行时产物（浏览器缓存 / 报告；验证脚本 test/ 已纳入版本库）
+# Playwright 运行时产物（浏览器缓存 / 报告 / trace；验证脚本 test/ 已纳入版本库）
 .playwright-cli/
+.playwright/
+.playwright-firefox-profile/
+.ffhome/
+*.trace.zip
+*.webm
 
 # 虚拟环境
 venv/
@@ -65,6 +70,7 @@ coverage/
 test-results/
 playwright-report/
 blob-report/
+playwright/.cache/
 
 # Vite 生成资源由构建产生；HTML 与 data 仍追踪
 web/assets/

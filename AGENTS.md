@@ -46,7 +46,8 @@
 - `core/constants.py`：改 CATEGORIES → 必须重跑全量 `sync`
 - `config/funds.json`：禁止直接编辑，走 `fundctl.py`
 - `frontend/src` 是唯一前端源码；`web/index.html` 与 `web/assets/` 是 Vite 产物，不直接编辑
-- 前端改动必须跑 `npm run check`；涉及交互/布局/主题时再跑 `npm run test:e2e`
+- 前端改动必须跑 `npm run test:t0`；涉及交互/布局/主题时按影响范围跑 T1–T3
+- 浏览器支持范围仅为 Chromium/Chrome；禁止主动安装 Firefox/WebKit，也禁止因缺少它们阻塞验收
 - 公共数据契约改 `pipeline/public_catalog.py`，同步 `docs/data-contract.md` 与前端类型
 - 本地个人数据结构改 `frontend/src/shared/infrastructure/local-db.ts` → 必须递增 Dexie 版本并测迁移/备份恢复
 - `html-to-image` PNG 导出改动 → 浏览器验证 PNG 非空且可下载
@@ -66,7 +67,7 @@
 
 ## 关键边界（不可协商）
 
-- `fundctl.py check` 必须全绿才算完成（限涉及 `scripts/` / `config/` / 数据产出的改动；纯 `docs/` 改动走文档校验；纯前端改动必须 `npm run check` + 相关 E2E）
+- `fundctl.py check` 必须全绿才算完成（限涉及 `scripts/` / `config/` / 数据产出的改动；纯 `docs/` 改动走文档校验；纯前端改动必须 T0 + 受影响交互测试）
 - nav_date 永不回退（lsjz 失败保留旧值）
 - scan 后必须接 enrich + fill
 - 禁止直接改 `config/funds.json`（一律走 `fundctl.py`）
@@ -75,6 +76,21 @@
 - **文档不滞后**：README 目录树 / 命令列表由 `doc_sync.py` 从真实状态自动生成；提交前 pre-commit 钩子自动 `--fix`，推送前 pre-push 钩子本地跑门禁，CI 用 `--check` 强制校验
 - 部署（确认后执行）：commit+push → `gh workflow run deploy-pages.yml --ref main`
 - 前端资源版本：Vite 生产构建自动生成内容哈希，部署 workflow 执行 `npm ci && npm run build`
+- CI 不安装浏览器、不执行 Playwright；浏览器测试只在本机 Chromium 执行
+- Commit 使用语义化前缀：`feat:` / `fix:` / `refactor:` / `test:` / `docs:` / `chore:`
+- `.gitignore` 必须覆盖依赖、构建产物、浏览器缓存/profile、trace、临时截图和本地日志；正式 `docs/evidence/` 保留
+- `harness/state.json` 只持久化阶段、任务、验证证据和代码 SHA，不写机器路径或临时日志
+
+### 浏览器与分级测试
+
+| 等级 | 范围 | 命令 |
+|------|------|------|
+| T0 | 类型、Lint、Vitest、相关 Python 单测 | `npm run test:t0` |
+| T1 | 当前变更涉及的 Chromium 桌面交互 | `npm run test:t1` |
+| T2 | 跨模块、IndexedDB、契约、桌面视觉 | `npm run test:t2` |
+| T3 | 全部核心交互、桌面/移动、axe、视觉、构建 smoke | `npm run test:t3` |
+
+小修改用 T0；用户交互修改用 T0 + T1；公共组件/数据/存储扩大范围；重大改动或发布前用 T3。
 
 ### 自动联动（docs ↔ Agent ↔ README）
 
@@ -108,8 +124,10 @@ cd scripts && python3 fundctl.py diagnose --auto-fix            # 诊断修复
 cd scripts && python3 fundctl.py probe                          # 数据源适配层探针
 cd scripts && python3 fundctl.py catalog                        # 生成前端公共目录契约
 cd scripts && python3 checks/doc_sync.py --fix                  # 文档自动同步（README 目录树/命令）
-npm ci && npm run check                                        # 类型 + lint + 单测 + 生产构建
-npm run test:e2e                                               # Playwright 全浏览器回归
+npm ci && npm run test:t0                                      # T0：类型 + lint + 单测
+npm run test:t1                                                 # T1：Chromium 受影响交互
+npm run test:t2                                                 # T2：Chromium 桌面集成/视觉
+npm run test:t3                                                 # T3：Chromium 桌面 + 移动完整回归
 npm run dev                                                     # Vite 本地开发（8765）
 ./scripts/setup_hooks.sh                                        # 启用 pre-commit 文档同步
 ```
@@ -135,6 +153,21 @@ npm run check                                        # TypeScript + lint + Vites
 与 CI 的 `ci.yml` 对齐，把「推到远端才发现」的问题前置到本地。
 
 > 门禁通过只代表「可以推送」，不代表已获得推送授权；`git push` 前仍需用户明确确认。
+
+## GitHub Actions 边界
+
+- `update-data.yml` 只做 Python 数据采集、Layer 0–6、JSON/RSS/快照生成与数据提交。
+- `ci.yml` 只做 Python 单测、数据/Agent 门禁、前端类型/Lint/Vitest/Build。
+- 任何 Actions 都不得安装 Chromium/Firefox/WebKit，也不得运行 Playwright 或视觉回归。
+- `deploy-pages.yml` 只允许执行部署所必需的前端构建与 Pages 发布。
+- Python 依赖使用 `setup-python` + `requirements.txt` 缓存；前端使用 `setup-node` + lockfile 缓存。
+
+## Git 与 Harness
+
+- 不提交 `node_modules/`、`web/assets/`、coverage、pytest/Playwright 缓存、trace、本地浏览器 profile、临时截图和日志。
+- `docs/evidence/` 只保留长期验收截图；临时截图写入 ignored 目录。
+- `harness/state.json` 记录任务状态、验证证据和代码 SHA，不记录机器路径或运行日志。
+- 不重写历史、不强推、不删除现有分支/Tag；远程操作必须获得明确授权。
 
 ## 代码结构
 

@@ -1,7 +1,5 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const localChrome = process.env.CI ? {} : { channel: 'chrome' as const }
-
 export default defineConfig({
   testDir: './test/e2e',
   fullyParallel: true,
@@ -15,10 +13,8 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   projects: [
-    { name: 'chromium-desktop', use: { ...devices['Desktop Chrome'], ...localChrome } },
-    { name: 'firefox-desktop', use: { ...devices['Desktop Firefox'] } },
-    { name: 'webkit-desktop', use: { ...devices['Desktop Safari'] } },
-    { name: 'chromium-mobile', use: { ...devices['Pixel 7'], ...localChrome } },
+    { name: 'chromium-desktop', use: { ...devices['Desktop Chrome'], channel: 'chrome' } },
+    { name: 'chromium-mobile', use: { ...devices['Pixel 7'], channel: 'chrome' } },
   ],
   webServer: {
     command: 'npm run dev',

@@ -93,16 +93,18 @@ python3 fundctl.py check       # 数据质量门禁
 ## 测试
 
 ```bash
-npm run typecheck
-npm run lint
-npm test
+npm ci
+npm run test:t0       # 类型 + ESLint + Vitest
+npm run test:t1       # 当前变更涉及的 Chromium 桌面交互
+npm run test:t2       # Chromium 桌面集成 + 视觉基准
+npm run test:t3       # Chromium 桌面 + 移动完整回归
 npm run build
-npm run test:e2e
 python3 -m pytest test/ -q
 cd scripts && python3 fundctl.py check --offline
 ```
 
-Playwright 覆盖 Chromium、Firefox、WebKit 和移动 Chromium；视觉基准使用 Chromium。
+浏览器测试只使用本机 Chromium/Chrome；不要求安装 Firefox/WebKit。
+小修改执行 T0，交互修改执行 T0 + T1，公共组件/存储/契约扩大范围，发布前执行 T3。
 完整结果与证据记录在 [docs/test-report.md](./docs/test-report.md)。
 
 ## 个人数据
@@ -115,7 +117,7 @@ Playwright 覆盖 Chromium、Firefox、WebKit 和移动 Chromium；视觉基准�
 ## Actions 与部署
 
 - `update-data.yml`：工作日更新数据，月度执行完整流水线。
-- `ci.yml`：Python 测试、数据门禁、前端检查，以及 Chromium、Firefox、WebKit E2E。
+- `ci.yml`：Python 测试、数据门禁、前端类型/Lint/Vitest/Build，不安装浏览器。
 - `deploy-pages.yml`：`npm ci → npm run build → upload web/ → GitHub Pages`。
 - Vite 资源使用内容哈希，不再手工维护 `?v=dev`。
 

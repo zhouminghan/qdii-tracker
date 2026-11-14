@@ -17,7 +17,11 @@
     "lint": "eslint frontend/src test/frontend test/e2e",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test",
+    "test:t0": "npm run typecheck && npm run lint && npm test",
+    "test:t1": "playwright test --project=chromium-desktop --grep-invert \"visual baselines\"",
+    "test:t2": "playwright test --project=chromium-desktop",
+    "test:t3": "playwright test --project=chromium-desktop --project=chromium-mobile",
+    "test:e2e": "npm run test:t3",
     "test:a11y": "playwright test test/e2e/accessibility.spec.ts",
     "check": "npm run typecheck && npm run lint && npm run test && npm run build"
   },

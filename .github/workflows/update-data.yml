@@ -6,7 +6,7 @@ name: 🔄 更新基金数据
 #
 # ⏰ 【关于 cron 时间设置】
 #   22:00（北京时间）：大多数基金已披露，少量延迟交给前端实时 overlay 兜底
-#   实时兜底：offshore-live-nav.js 在 15:00~次日06:00 提供实时净值 overlay
+#   实时兜底：前端按需刷新 Tencent 指数/ETF 行情，失败时回退本地快照
 #
 # 🔗 【部署链路】数据 push 后由 deploy-pages.yml（push web/** 触发）自动部署 Pages，
 #    不再在此 workflow 内重复部署（重复部署导致 concurrency 冲突 + 超时）。
