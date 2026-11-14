@@ -165,7 +165,7 @@ Reviewer 未发现 JSONP 永久脚本泄漏或重复监听；确认正常、错�
 | `validated_code_sha` | `9c0975fe52bf767fc2605785d4b7efddbf5f5eab` |
 | `documentation_sha` | `0c2b5dd9a552c35671f258ef387c15aedf233911` |
 | `release_candidate_sha` | `0c2b5dd9a552c35671f258ef387c15aedf233911` |
-| `last_test_run` | `2026-11-14T23:53:45+08:00` |
+| `last_test_run` | `2026-11-15T00:59:09+08:00`（最终增量门禁） |
 | `test_level` | T0 + Chromium T3 interactions + visual recheck + data/agent gate |
 | `test_result` | Passed；36 条唯一 Chromium 测试通过，4 条移动视觉重复项跳过 |
 
