@@ -89,6 +89,7 @@
       "depends_on": ["quality-gate"],
       "evidence": [
         "Playwright Firefox 159: Could not find profile folder",
+        "Playwright Firefox 150 with 1.65 and 1.60: no browser session within 30s",
         "forced reinstall reproduced",
         "docs/test-report.md"
       ]

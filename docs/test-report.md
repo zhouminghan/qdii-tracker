@@ -27,10 +27,10 @@ Firefox 测试引擎在本机启动阶段被 Playwright Firefox profile 错误�
 | Chromium 桌面 | 18 条通过 | 导航、Funds、PNG、对比、Market/DCA、Portfolio、Research、4 页 axe、4 张视觉基准 |
 | Chromium 移动 | 14 条通过 | 底部导航、移动基金卡片、移动排序、份额展开、交易、研究、4 页 axe |
 | WebKit 桌面 | 14 条通过 | Chromium 交互批次；含 4 页 axe |
-| Firefox 桌面 | 未启动 | Playwright Firefox 159 报 `Could not find profile folder`；重装与多种 profile 路径均复现 |
+| Firefox 桌面 | 未启动 | Firefox 159 报 `Could not find profile folder`；Firefox 150 在 Playwright 1.65/1.60 下 30 秒内未建立会话 |
 
-Firefox 错误发生在浏览器进程启动前，不是页面断言失败。该问题记录为本地测试环境阻塞，
-未虚报为通过。
+Firefox 错误发生在浏览器进程启动或协议握手阶段，不是页面断言失败。该问题记录为本地测试环境阻塞，
+未虚报为通过，也不再重复重试。
 
 ## 可访问性
 
