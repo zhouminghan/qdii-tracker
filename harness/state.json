@@ -2,7 +2,7 @@
   "goal_id": "qdii-architecture-upgrade-2026-11-14",
   "current_phase": "delivery",
   "current_task": "firefox-engine",
-  "last_commit": "a54faed",
+  "last_commit": "f39e60c",
   "tasks": [
     {
       "id": "sync-remote",
