@@ -1,4 +1,4 @@
-# 最终测试报告（2026-11-14）
+# 最终测试报告（2026-11-15）
 
 ## 结论
 
@@ -19,6 +19,17 @@ Firefox/WebKit 不属于当前支持目标，不参与发布验收。
 | 生产构建 | 通过 | `npm run build` |
 | 生产静态 smoke | 4 页通过，0 console/page error | `http://127.0.0.1:8766/` |
 | npm 安全审计 | 0 vulnerabilities | `npm audit` / `npm audit --omit=dev` |
+
+实际执行命令：
+
+```bash
+npm run test:t0
+npm run test:t3
+npx playwright test test/e2e/visual.spec.ts --project=chromium-desktop
+npm run build
+python fundctl.py check --offline --agent-rules
+gh run list --repo zhouminghan/qdii-tracker --limit 30
+```
 
 ## 浏览器回归
 
@@ -43,7 +54,7 @@ T3 实际发现 40 条：36 条唯一测试通过，4 条移动端视觉重复�
 | 一次性 timer 与请求未随卸载取消 | 清理 boot timer/interval，为 JSONP 增加 AbortSignal | typecheck/lint + 代码审查 |
 | 实时路径浏览器覆盖不足 | 新增 mock Tencent 成功与失败回退 E2E | Chromium 桌面/移动共 4 条通过 |
 | CI 测试过重 | Actions 改为只做静态/单测/构建，不安装浏览器、不跑 Playwright | workflow 审计 |
-| Harness 提交指针滞后 | 改为记录已验证代码提交 `92c20b7`，避免文档提交造成伪滞后 | `harness/state.json` |
+| Harness 提交指针滞后 | 改为记录已验证代码提交 `9c0975f`，避免文档提交造成伪滞后 | `harness/state.json` |
 
 Reviewer 未发现 JSONP 永久脚本泄漏或重复监听；确认正常、错误、超时路径都会清理脚本和计时器。
 
@@ -137,6 +148,24 @@ Reviewer 未发现 JSONP 永久脚本泄漏或重复监听；确认正常、错�
 - `harness/state.json` 已纳入 Git，不包含机器路径或临时日志。
 - `git ls-files` 未发现 `node_modules`、构建资源、trace、报告或 profile 被追踪。
 - 本轮不重写历史、不删除分支/Tag。
+
+## Git 可追溯性
+
+- 远端基线：`1997131`
+- 架构迁移：`a54faed`
+- 实时行情加固：`f39e60c`、`92c20b7`
+- Chromium-only 策略与轻量 CI：`9c0975f`
+- 本轮生产构建验证的代码 SHA：`9c0975f`
+- 底层 `origin/main` 未修改，本地提交未 push。
+
+`AGENTS.md` 已补充 Chromium-only、T0–T3、Actions 边界、Commit 规范和 Harness 规则。
+`README.md` 已同步本地测试命令、Actions 职责和浏览器支持范围。
+
+## 尚未解决与风险
+
+- 新的轻量 CI 配置尚未 push，因此没有远程执行耗时；已通过 YAML 解析和本地静态审计。
+- ECharts 懒加载 chunk gzip 约 208 KB，构建仅提示体积 warning，不影响构建产物。
+- 视觉基准当前记录为 macOS Chromium snapshot；跨平台 CI 不执行视觉回归。
 
 ## 发布判断
 
