@@ -1,26 +1,28 @@
 {
-  "schema_version": 1,
-  "generated_at": "2026-11-15T16:30:00+08:00",
-  "source": "渠道资料汇总，需以银行 APP 当日可购买名单为准",
+  "schema_version": 2,
+  "generated_at": "2026-11-15T18:00:00+08:00",
+  "source": "易方达香港官方产品页；银行 APP 可购买名单需当日核验",
   "disclaimer": "仅限符合跨境理财通南向通资格的投资者，不构成投资建议。",
   "products": [
     {
-      "code": "83004",
+      "id": "efund-hk-sp500",
       "name": "易方达（香港）标普500指数基金",
-      "channel_type": "场外基金",
-      "share_class": "美元累积类",
-      "currency": "美元",
-      "isin": "HK0001050308",
-      "ticker": "EHSPACU HK",
-      "official_url": "https://www.efunds.com.hk/products/40/info",
-      "one_year_return_pct": 10.72,
+      "aliases": [
+        "易方达标普500",
+        "易方达标普500指数",
+        "易方达香港标普500",
+        "标普500指数基金"
+      ],
+      "index_name": "S&P 500",
+      "channel_type": "南向通场外基金",
+      "official_url": "https://www.efunds.com.hk/products/40/info/",
       "channels": [
         "香港众安银行 ZA Bank",
         "招商永隆银行 CMB Wing Lung"
       ],
       "personal_quota_cny": 3000000,
       "quota_note": "个人总额度最高 300 万元；同时使用银行和券商渠道时，各 150 万元。",
-      "status": "银行 APP 可购买名单需当日核验",
+      "status": "银行 APP 可购买名单与渠道代码需当日核验",
       "advantages": [
         "监管认可的跨境投资渠道",
         "不需要参与内地 QDII 每日申购额度抢购",
@@ -31,26 +33,76 @@
         "仅限符合南向通资格的投资者",
         "近一年收益不代表未来表现",
         "仍需承担市场回撤、汇率波动和跨境汇款成本",
-        "实际费率、代码和额度以银行 APP 页面为准"
+        "银行内部产品代码可能不同于 ISIN 或港交所代码"
+      ],
+      "shares": [
+        {
+          "code": "EHSPAHK HK",
+          "bank_code": null,
+          "share_class": "Class A (Acc) HKD",
+          "currency": "港元",
+          "currency_code": "HKD",
+          "isin": "HK0001050324",
+          "ticker": "EHSPAHK HK",
+          "nav": 116.8405,
+          "nav_date": "2026-11-12",
+          "one_year_return_pct": null,
+          "inception_date": "2025-08-14",
+          "management_fee_pct": 0.9,
+          "subscription_fee": "最高 3%"
+        },
+        {
+          "code": "EHSPAAR HK",
+          "bank_code": null,
+          "share_class": "Class A (Acc) RMB",
+          "currency": "人民币",
+          "currency_code": "RMB",
+          "isin": "HK0001050266",
+          "ticker": "EHSPAAR HK",
+          "nav": 108.4586,
+          "nav_date": "2026-11-12",
+          "one_year_return_pct": null,
+          "inception_date": "2025-08-14",
+          "management_fee_pct": 0.9,
+          "subscription_fee": "最高 3%"
+        },
+        {
+          "code": "EHSPACU HK",
+          "bank_code": "83004",
+          "share_class": "Class A (Acc) USD",
+          "currency": "美元",
+          "currency_code": "USD",
+          "isin": "HK0001050308",
+          "ticker": "EHSPACU HK",
+          "nav": 11.6509,
+          "nav_date": "2026-11-12",
+          "one_year_return_pct": null,
+          "inception_date": "2025-08-14",
+          "management_fee_pct": 0.9,
+          "subscription_fee": "最高 3%"
+        }
       ]
     },
     {
-      "code": "EFHNAAU HK",
+      "id": "efund-hk-nasdaq100",
       "name": "易方达（香港）纳斯达克100指数基金",
-      "channel_type": "场外基金",
-      "share_class": "美元累积类",
-      "currency": "美元",
-      "isin": "HK0001026985",
-      "ticker": "EFHNAAU HK",
-      "official_url": "https://www.efunds.com.hk/products/38/info",
-      "one_year_return_pct": null,
+      "aliases": [
+        "易方达纳斯达克100",
+        "易方达纳斯达克100指数",
+        "易方达香港纳斯达克100",
+        "易方达纳指100",
+        "纳指100指数基金"
+      ],
+      "index_name": "NASDAQ-100",
+      "channel_type": "南向通场外基金",
+      "official_url": "https://www.efunds.com.hk/products/38/info/",
       "channels": [
         "香港众安银行 ZA Bank",
         "招商永隆银行 CMB Wing Lung"
       ],
       "personal_quota_cny": 3000000,
       "quota_note": "个人总额度最高 300 万元；同时使用银行和券商渠道时，各 150 万元。",
-      "status": "官方代码已确认；银行 APP 渠道码与可购状态需当日核验",
+      "status": "银行 APP 可购买名单与渠道代码需当日核验",
       "advantages": [
         "跟踪纳斯达克100指数",
         "不需要参与内地 QDII 每日申购额度抢购",
@@ -61,7 +113,54 @@
         "仅限符合南向通资格的投资者",
         "科技成长股波动和回撤通常高于标普500",
         "仍需承担汇率波动和跨境汇款成本",
-        "银行内部产品代码可能不同于官方 ISIN 或港交所代码"
+        "银行内部产品代码可能不同于 ISIN 或港交所代码"
+      ],
+      "shares": [
+        {
+          "code": "EFHNAAH HK",
+          "bank_code": null,
+          "share_class": "Class A (Acc) HKD",
+          "currency": "港元",
+          "currency_code": "HKD",
+          "isin": "HK0001027009",
+          "ticker": "EFHNAAH HK",
+          "nav": 135.0027,
+          "nav_date": "2026-11-12",
+          "one_year_return_pct": null,
+          "inception_date": "2024-07-03",
+          "management_fee_pct": 0.9,
+          "subscription_fee": "最高 3%"
+        },
+        {
+          "code": "EFHNAAR HK",
+          "bank_code": null,
+          "share_class": "Class A (Acc) RMB",
+          "currency": "人民币",
+          "currency_code": "RMB",
+          "isin": "HK0001026944",
+          "ticker": "EFHNAAR HK",
+          "nav": 123.0113,
+          "nav_date": "2026-11-12",
+          "one_year_return_pct": null,
+          "inception_date": "2024-07-03",
+          "management_fee_pct": 0.9,
+          "subscription_fee": "最高 3%"
+        },
+        {
+          "code": "EFHNAAU HK",
+          "bank_code": null,
+          "share_class": "Class A (Acc) USD",
+          "currency": "美元",
+          "currency_code": "USD",
+          "isin": "HK0001026985",
+          "ticker": "EFHNAAU HK",
+          "nav": 13.4203,
+          "nav_date": "2026-11-12",
+          "one_year_return_pct": null,
+          "inception_date": "2024-07-03",
+          "management_fee_pct": 0.9,
+          "subscription_fee": "最高 3%"
+        }
       ]
     }
   ]

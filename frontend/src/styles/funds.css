@@ -45,107 +45,160 @@
   color: var(--color-warn);
 }
 
-.southbound-panel {
+.southbound-view {
   display: grid;
-  gap: 14px;
-  padding: 16px;
+  gap: 12px;
+}
+
+.southbound-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--color-text-tertiary);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.southbound-summary strong {
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+}
+
+.southbound-table-shell {
+  overflow-x: auto;
+}
+
+.southbound-table {
+  min-width: 1120px;
+}
+
+.southbound-table caption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.southbound-table th {
+  white-space: nowrap;
+}
+
+.southbound-row td {
+  vertical-align: top;
+}
+
+.southbound-product-cell {
+  min-width: 230px;
+  padding-top: 13px !important;
+}
+
+.southbound-logo {
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.southbound-sub {
+  display: block;
+  margin-top: 3px;
+  color: var(--color-text-tertiary);
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
+
+.southbound-code-cell {
+  min-width: 190px;
+}
+
+.southbound-code-cell strong {
+  color: var(--color-text-primary);
+  font-size: 0.78rem;
+}
+
+.southbound-currency {
+  min-width: 42px;
+  justify-content: center;
+}
+
+.southbound-currency.currency-hkd {
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.southbound-currency.currency-rmb {
+  color: var(--color-up);
+  background: var(--color-up-soft);
+}
+
+.southbound-currency.currency-usd {
+  color: var(--color-warn);
+  background: var(--color-warn-soft);
+}
+
+.southbound-channels {
+  min-width: 180px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.southbound-channels .chip {
+  font-size: 0.66rem;
+}
+
+.southbound-official-link {
+  white-space: nowrap;
+}
+
+.southbound-disclosure-list {
+  display: grid;
+  gap: 8px;
+}
+
+.southbound-disclosure {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
 }
 
-.southbound-panel + .southbound-panel {
-  margin-top: 12px;
-}
-
-.southbound-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.southbound-head h2 {
-  margin-top: 4px;
-}
-
-.southbound-head p {
-  margin-top: 4px;
+.southbound-disclosure summary {
+  padding: 11px 13px;
   color: var(--color-text-secondary);
+  cursor: pointer;
   font-size: 0.76rem;
+  font-weight: 650;
 }
 
-.southbound-hero {
+.southbound-disclosure-body {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
+  padding: 0 13px 13px;
 }
 
-.southbound-code,
-.southbound-return,
-.southbound-quota {
-  display: grid;
-  gap: 4px;
-  padding: 13px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-raised);
-}
-
-.southbound-code span,
-.southbound-return span,
-.southbound-quota span,
-.southbound-code small,
-.southbound-return small,
-.southbound-quota small {
-  color: var(--color-text-tertiary);
-  font-size: 0.7rem;
-}
-
-.southbound-code strong,
-.southbound-return strong,
-.southbound-quota strong {
-  font-size: 1.15rem;
-}
-
-.southbound-channel-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 7px;
-  color: var(--color-text-secondary);
-}
-
-.southbound-notes {
+.southbound-disclosure-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 
-.southbound-notes article {
-  padding: 12px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+.southbound-disclosure-grid section {
+  padding: 11px;
+  border-radius: var(--radius-sm);
   background: var(--color-surface-raised);
 }
 
-.southbound-notes h3 {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-bottom: 7px;
+.southbound-disclosure-grid h3 {
+  margin-bottom: 6px;
+  font-size: 0.76rem;
 }
 
-.southbound-notes ul {
+.southbound-disclosure-grid ul {
   display: grid;
-  gap: 5px;
+  gap: 4px;
   padding-left: 18px;
   color: var(--color-text-secondary);
-  font-size: 0.75rem;
-}
-
-.southbound-official-link {
-  justify-self: start;
+  font-size: 0.72rem;
 }
 
 .mobile-sort {
@@ -840,6 +893,10 @@
     display: none;
   }
 
+  .southbound-table-shell {
+    display: block;
+  }
+
   .fund-mobile-list {
     display: grid;
     gap: 8px;
@@ -917,12 +974,7 @@
 }
 
 @media (max-width: 760px) {
-  .southbound-head {
-    flex-direction: column;
-  }
-
-  .southbound-hero,
-  .southbound-notes {
+  .southbound-disclosure-grid {
     grid-template-columns: 1fr;
   }
 

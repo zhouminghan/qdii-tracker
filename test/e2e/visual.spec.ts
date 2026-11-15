@@ -50,7 +50,8 @@ test.describe('visual baselines', () => {
     await page.setViewportSize({ width: 1440, height: 1000 })
     await page.goto('/#/funds')
     await page.getByRole('button', { name: '南向通' }).click()
-    await expect(page.getByRole('heading', { name: '易方达（香港）标普500指数基金' })).toBeVisible()
+    await expect(page.getByRole('table', { name: '跨境理财通南向通基金份额' })).toBeVisible()
+    await expect(page.locator('.southbound-row')).toHaveCount(6)
     await expect(page).toHaveScreenshot('southbound-desktop-light.png', { fullPage: true })
   })
 
@@ -66,6 +67,18 @@ test.describe('visual baselines', () => {
   })
 
   test('Southbound note reader desktop light', async ({ page }) => {
+    await page.route('https://images.weserv.nl/**', (route) => route.fulfill({
+      status: 200,
+      contentType: 'image/svg+xml',
+      body: [
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">',
+        '<rect width="1200" height="900" fill="#ffffff"/>',
+        '<rect x="48" y="48" width="1104" height="804" rx="12" fill="#f8fafc" stroke="#cbd5e1"/>',
+        '<polyline fill="none" stroke="#dc2626" stroke-width="8" points="90,620 210,560 330,590 450,430 570,470 690,330 810,360 930,220 1050,250"/>',
+        '<line x1="90" y1="760" x2="1110" y2="760" stroke="#94a3b8" stroke-width="3"/>',
+        '</svg>',
+      ].join(''),
+    }))
     await page.setViewportSize({ width: 1440, height: 1000 })
     await page.goto('/#/research')
     await page.getByRole('tab', { name: /基金笔记/ }).click()
@@ -73,8 +86,17 @@ test.describe('visual baselines', () => {
     await note.getByRole('button', { name: '查看全文' }).click()
     const reader = page.getByRole('dialog')
     await expect(reader).toBeVisible()
-    await expect.poll(() => reader.getByRole('img', { name: '南向通渠道资料截图' })
-      .evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
+    const noteImage = reader.getByRole('img', { name: '南向通渠道资料截图' })
+    await expect.poll(() => noteImage.evaluate(async (element) => {
+      const image = element as HTMLImageElement
+      if (!image.complete || image.naturalWidth === 0) return false
+      try {
+        await image.decode()
+        return true
+      } catch {
+        return false
+      }
+    })).toBe(true)
     await expect(page).toHaveScreenshot('southbound-note-reader-desktop-light.png')
   })
 })

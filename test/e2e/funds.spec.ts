@@ -36,12 +36,42 @@ test.describe('funds workflow', () => {
 
     await page.getByRole('button', { name: '清空搜索' }).click()
     await page.getByRole('button', { name: '南向通' }).click()
-    await expect(page.getByRole('heading', { name: '易方达（香港）标普500指数基金' })).toBeVisible()
-    await expect(page.getByText('83004', { exact: true })).toBeVisible()
-    await expect(page.getByText('香港众安银行 ZA Bank').first()).toBeVisible()
-    await expect(page.getByRole('heading', { name: '易方达（香港）纳斯达克100指数基金' })).toBeVisible()
-    await expect(page.getByText('ISIN HK0001026985')).toBeVisible()
+    await expect(page.getByRole('table', { name: '跨境理财通南向通基金份额' })).toBeVisible()
+    await expect(page.locator('.southbound-row')).toHaveCount(6)
+    await expect(page.getByText('EFHNAAH HK', { exact: true }).first()).toBeVisible()
+    await expect(page.getByText('EFHNAAR HK', { exact: true }).first()).toBeVisible()
     await expect(page.getByText('EFHNAAU HK', { exact: true }).first()).toBeVisible()
+    await expect(page.getByText('ISIN HK0001027009')).toBeVisible()
+    await expect(page.getByText('ISIN HK0001026944')).toBeVisible()
+    await expect(page.getByText('ISIN HK0001026985')).toBeVisible()
+    await expect(page.getByText('香港众安银行 ZA Bank').first()).toBeVisible()
+
+    const southboundSearch = page.getByLabel('搜索南向通基金代码和份额')
+    await southboundSearch.fill('HK0001027009')
+    await expect(page.locator('.southbound-row')).toHaveCount(1)
+    await expect(page.locator('.southbound-row')).toContainText('港元')
+    await expect(page.locator('.southbound-row')).toContainText('EFHNAAH HK')
+
+    await page.getByRole('button', { name: '清空南向通搜索' }).click()
+    await southboundSearch.fill('83004')
+    await expect(page.locator('.southbound-row')).toHaveCount(1)
+    await expect(page.locator('.southbound-row')).toContainText('EHSPACU HK')
+    await expect(page.locator('.southbound-row')).toContainText('银行 83004')
+
+    await southboundSearch.fill('RMB')
+    await expect(page.locator('.southbound-row')).toHaveCount(2)
+    await expect(page.locator('.southbound-row').first()).toContainText('人民币')
+
+    await southboundSearch.fill('EFHNAAU HK')
+    await expect(page.locator('.southbound-row')).toHaveCount(1)
+    await expect(page.locator('.southbound-row')).toContainText('美元')
+
+    await southboundSearch.fill('易方达纳斯达克100')
+    await expect(page.locator('.southbound-row')).toHaveCount(3)
+    await expect(page.locator('.southbound-row').first()).toContainText('银行渠道码待核验')
+
+    await southboundSearch.fill('易方达标普500')
+    await expect(page.locator('.southbound-row')).toHaveCount(3)
   })
 
   test('labels closed-period shares without pretending they have a price', async ({ page }) => {

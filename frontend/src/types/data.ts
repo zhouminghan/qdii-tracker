@@ -108,18 +108,36 @@ export interface CatalogEnvelope {
   }
 }
 
-export interface SouthboundProduct {
+export interface SouthboundShare {
   code: string
-  name: string
+  bank_code: string | null
   share_class: string
   currency: string
+  currency_code: 'HKD' | 'RMB' | 'USD'
+  isin: string
+  ticker: string
+  nav: number | null
+  nav_date: string | null
   one_year_return_pct: number | null
+  inception_date: string | null
+  management_fee_pct: number | null
+  subscription_fee: string | null
+}
+
+export interface SouthboundProduct {
+  id: string
+  name: string
+  aliases: string[]
+  index_name: string
+  channel_type: string
+  official_url: string
   channels: string[]
   personal_quota_cny: number
   quota_note: string
   status: string
   advantages: string[]
   risks: string[]
+  shares: SouthboundShare[]
 }
 
 export interface SouthboundData {

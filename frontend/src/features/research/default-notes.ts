@@ -29,10 +29,18 @@ export const DEFAULT_RESEARCH_NOTES: ResearchNote[] = [
 ## 补充：纳斯达克100产品
 
 - **产品**：易方达（香港）纳斯达克100指数基金
-- **官方美元份额 ISIN**：HK0001026985
-- **港交所代码**：EFHNAAU HK
+- **HKD 份额**：EFHNAAH HK / HK0001027009
+- **RMB 份额**：EFHNAAR HK / HK0001026944
+- **USD 份额**：EFHNAAU HK / HK0001026985
 - **银行 APP 渠道码**：待众安银行、招商永隆银行人工核验
 - **状态**：官方产品页已确认，银行当日可购名单和费率需在 APP 内核对
+
+## 补充：标普500三币种份额
+
+- **HKD 份额**：EHSPAHK HK / HK0001050324
+- **RMB 份额**：EHSPAAR HK / HK0001050266
+- **USD 份额**：EHSPACU HK / HK0001050308
+- **银行 APP 渠道码**：83004 对应美元份额，其他币种渠道码待人工核验
 
 ## 使用前必须核对
 
