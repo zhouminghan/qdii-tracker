@@ -107,6 +107,10 @@ test.describe('funds workflow', () => {
   })
 
   test('supports long trend ranges and a net-value table', async ({ page }) => {
+    const chartErrors: string[] = []
+    page.on('console', (message) => {
+      if (message.type() === 'error' && message.text().includes('[ECharts]')) chartErrors.push(message.text())
+    })
     await page.goto('/#/funds')
     await page.getByLabel('搜索基金目录（跨分类）').fill('050025')
     await page.locator('.table-action:visible, .fund-mobile-actions button:visible').filter({ hasText: /详情/ }).first().click()
@@ -117,6 +121,7 @@ test.describe('funds workflow', () => {
     await expect(dialog.getByRole('button', { name: '10年' })).toBeVisible()
     await expect(dialog.getByRole('columnheader', { name: '单位净值' })).toBeVisible()
     await expect(dialog.locator('.trend-history-shell tbody tr').first()).toBeVisible()
+    expect(chartErrors).toEqual([])
   })
 
   test('compares current holdings with the previous quarter', async ({ page }) => {

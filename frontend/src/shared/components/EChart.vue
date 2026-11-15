@@ -4,6 +4,7 @@ import { init, use } from 'echarts/core'
 import { BarChart, HeatmapChart, LineChart, PieChart } from 'echarts/charts'
 import {
   DatasetComponent,
+  DataZoomComponent,
   GridComponent,
   LegendComponent,
   MarkLineComponent,
@@ -20,6 +21,7 @@ use([
   LineChart,
   PieChart,
   DatasetComponent,
+  DataZoomComponent,
   GridComponent,
   LegendComponent,
   MarkLineComponent,
