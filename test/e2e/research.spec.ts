@@ -12,7 +12,8 @@ test.describe('local research workflow', () => {
     await note.click()
     const reader = page.getByRole('dialog', { name: /跨境理财通南向通/ })
     await expect(reader).toBeVisible()
-    await expect(reader.getByText('对比内地 QDII、场内 ETF 和南向通三种渠道的综合成本。')).toBeVisible()
+    await expect(reader.getByText(/南向通个人额度上限 300 万元/)).toBeVisible()
+    await expect(reader).not.toContainText('待核验')
     const image = reader.getByRole('img', { name: '南向通渠道资料截图' })
     await expect(image).toBeAttached()
     await expect.poll(() => image.evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
@@ -22,10 +23,13 @@ test.describe('local research workflow', () => {
     )
   })
 
-  test('uses contextual actions and collapses knowledge by default', async ({ page }) => {
+  test('shows knowledge articles expanded with contextual actions', async ({ page }) => {
     await page.goto('/#/research')
     await expect(page.getByRole('button', { name: '新建笔记' })).toBeVisible()
-    await expect(page.locator('.knowledge-card[open]')).toHaveCount(0)
+    await expect(page.locator('.knowledge-card')).toHaveCount(14)
+    await expect(page.locator('details.knowledge-card')).toHaveCount(0)
+    await expect(page.locator('.knowledge-card').first()).toContainText('场内 ETF 与场外基金')
+    await expect(page.locator('.knowledge-card').first()).toContainText('场外基金按交易日收盘后的基金净值确认份额')
 
     await page.getByRole('tab', { name: /观察清单/ }).click()
     await expect(page.getByRole('button', { name: '添加标的' })).toBeVisible()

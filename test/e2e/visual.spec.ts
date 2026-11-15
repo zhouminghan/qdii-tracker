@@ -100,4 +100,11 @@ test.describe('visual baselines', () => {
     })).toBe(true)
     await expect(page).toHaveScreenshot('southbound-note-reader-desktop-light.png')
   })
+
+  test('Research knowledge desktop light', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 })
+    await page.goto('/#/research')
+    await expect(page.locator('.knowledge-card')).toHaveCount(14)
+    await expect(page).toHaveScreenshot('research-knowledge-desktop-light.png')
+  })
 })

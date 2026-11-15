@@ -642,6 +642,12 @@
   white-space: nowrap;
 }
 
+.rule-popover-note {
+  color: var(--color-text-tertiary);
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+
 .stock-code {
   margin-left: 3px;
   font-size: 0.66rem;

@@ -194,6 +194,9 @@ test.describe('funds workflow', () => {
       await shareRow.getByRole('button', { name: /买入和卖出规则/ }).last().click()
       await expect(page.getByRole('tooltip')).toContainText('买入规则')
       await expect(page.getByRole('tooltip')).toContainText('卖出规则')
+      await shareRow.getByRole('button', { name: /综合费率构成/ }).click()
+      await expect(page.getByRole('tooltip')).toContainText('综合费率')
+      await expect(page.getByRole('tooltip')).toContainText('管理费')
     }
 
     await page.getByRole('button', { name: '详情' }).first().click()

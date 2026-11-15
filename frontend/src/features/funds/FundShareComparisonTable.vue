@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, ref } from 'vue'
 import type { FundShare } from '@/types/data'
 import { buyStatusLabel, classifyBuyStatus, formatDailyLimit } from '@/shared/lib/funds'
 import {
+  annualFeeDetail,
   cleanRuleCondition,
   formatHoldPeriod,
   formatRuleRate,
@@ -90,11 +91,6 @@ function showRules(share: FundShare, event: Event): void {
   ruleShare.value = share
 }
 
-function toggleRules(share: FundShare, event: Event): void {
-  if (ruleShare.value?.code === share.code) hideRulesSoon()
-  else showRules(share, event)
-}
-
 function ruleStatusClass(share: FundShare): string {
   const status = classifyBuyStatus(share)
   return status === 'paused' ? 'badge-danger' : status === 'limited' ? 'badge-warn' : 'badge-accent'
@@ -161,12 +157,25 @@ onBeforeUnmount(cancelRuleHide)
               @mouseleave="hideRulesSoon"
               @focus="showRules(share, $event)"
               @blur="hideRulesSoon"
-              @click="toggleRules(share, $event)"
+              @click="showRules(share, $event)"
             >
               {{ buyFee(share) }}
             </button>
           </td>
-          <td class="align-right mono">{{ annualFee(share) }}</td>
+          <td class="align-right rule-anchor-cell">
+            <button
+              class="rule-hover-trigger mono"
+              type="button"
+              :aria-label="`查看 ${share.code} 综合费率构成`"
+              @mouseenter="showRules(share, $event)"
+              @mouseleave="hideRulesSoon"
+              @focus="showRules(share, $event)"
+              @blur="hideRulesSoon"
+              @click="showRules(share, $event)"
+            >
+              {{ annualFee(share) }}
+            </button>
+          </td>
           <td class="align-right rule-anchor-cell">
             <button
               class="rule-hover-trigger"
@@ -176,7 +185,7 @@ onBeforeUnmount(cancelRuleHide)
               @mouseleave="hideRulesSoon"
               @focus="showRules(share, $event)"
               @blur="hideRulesSoon"
-              @click="toggleRules(share, $event)"
+              @click="showRules(share, $event)"
             >
               {{ sellRule(share) }}
             </button>
@@ -203,6 +212,14 @@ onBeforeUnmount(cancelRuleHide)
         <span class="badge" :class="ruleStatusClass(ruleShare)">{{ buyStatusLabel(ruleShare) }}</span>
         <span>{{ ruleLimit(ruleShare) }}</span>
       </div>
+      <section class="rule-popover-section">
+        <h4>综合费率</h4>
+        <div class="rule-popover-row">
+          <span>合计</span>
+          <strong class="mono">{{ annualFee(ruleShare) }}</strong>
+        </div>
+        <p class="rule-popover-note">{{ annualFeeDetail(ruleShare) }}</p>
+      </section>
       <section class="rule-popover-section">
         <h4>买入规则</h4>
         <div v-for="rule in ruleShare.buy_rules ?? []" :key="rule.condition" class="rule-popover-row">

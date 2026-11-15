@@ -2,7 +2,6 @@
 import { computed, onMounted, ref } from 'vue'
 import {
   BookOpen,
-  ChevronDown,
   CircleAlert,
   Download,
   Eye,
@@ -259,23 +258,26 @@ onMounted(async () => {
     <DataState :loading="research.loading" :error="research.error" @retry="research.load">
       <section v-if="activeView === 'knowledge'" class="knowledge-section">
         <div class="research-toolbar">
-          <div><strong>知识库</strong><p>{{ filteredArticles.length }} 篇 · 按主题展开阅读关键概念</p></div>
+          <div><strong>知识库</strong><p>{{ filteredArticles.length }} 篇 · 全部展开，按主题阅读关键概念</p></div>
           <button class="button button-primary" type="button" @click="openNote()"><Plus :size="15" aria-hidden="true" />新建笔记</button>
         </div>
         <div class="chip-row" role="group" aria-label="知识分类">
           <button v-for="category in KNOWLEDGE_CATEGORIES" :key="category.key" class="chip" :class="{ active: knowledgeFilter === category.key }" type="button" :aria-pressed="knowledgeFilter === category.key" @click="knowledgeFilter = category.key">{{ category.label }}</button>
         </div>
         <div class="knowledge-grid">
-          <details v-for="article in filteredArticles" :key="article.id" class="knowledge-card">
-            <summary>
-              <div><span class="eyebrow">{{ knowledgeCategoryLabel(article.category) }}</span><h2>{{ article.title }}</h2></div>
-              <span class="knowledge-check"><ChevronDown :size="14" aria-hidden="true" /></span>
-            </summary>
-            <p>{{ article.summary }}</p>
+          <article v-for="article in filteredArticles" :key="article.id" class="knowledge-card">
+            <div class="knowledge-card-head">
+              <span class="eyebrow">{{ knowledgeCategoryLabel(article.category) }}</span>
+              <h2>{{ article.title }}</h2>
+            </div>
+            <p class="knowledge-summary">{{ article.summary }}</p>
+            <div class="knowledge-body">
+              <p v-for="paragraph in article.body" :key="paragraph">{{ paragraph }}</p>
+            </div>
             <ul>
               <li v-for="point in article.points" :key="point">{{ point }}</li>
             </ul>
-          </details>
+          </article>
         </div>
       </section>
 
