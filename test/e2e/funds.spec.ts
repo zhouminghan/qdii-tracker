@@ -37,14 +37,25 @@ test.describe('funds workflow', () => {
     await page.getByRole('button', { name: '清空搜索' }).click()
     await page.getByRole('button', { name: '南向通' }).click()
     await expect(page.getByRole('table', { name: '跨境理财通南向通基金份额' })).toBeVisible()
-    await expect(page.locator('.southbound-row')).toHaveCount(6)
-    await expect(page.getByText('EFHNAAH HK', { exact: true }).first()).toBeVisible()
-    await expect(page.getByText('EFHNAAR HK', { exact: true }).first()).toBeVisible()
-    await expect(page.getByText('EFHNAAU HK', { exact: true }).first()).toBeVisible()
+    await expect(page.locator('.southbound-row')).toHaveCount(13)
+    await expect(page.locator('.southbound-row').filter({ hasText: 'EFHNAAH HK' }).first()).toBeVisible()
+    await expect(page.locator('.southbound-row').filter({ hasText: 'EFHNAAR HK' }).first()).toBeVisible()
+    await expect(page.locator('.southbound-row').filter({ hasText: 'EFHNAAU HK' }).first()).toBeVisible()
+    await expect(page.getByText('易方达（香港）日经225指数基金').first()).toBeVisible()
+    await expect(page.getByText('恒生标普500指数ETF（非上市类别）').first()).toBeVisible()
     await expect(page.getByText('ISIN HK0001027009')).toBeVisible()
     await expect(page.getByText('ISIN HK0001026944')).toBeVisible()
     await expect(page.getByText('ISIN HK0001026985')).toBeVisible()
     await expect(page.getByText('香港众安银行 ZA Bank').first()).toBeVisible()
+    await expect(page.getByText(/344 个南向通合资格基金份额/)).toBeVisible()
+    await expect(page.getByRole('link', { name: '查看银行完整名单' })).toHaveAttribute(
+      'href',
+      'https://online.asia.ccb.com/PersonalHKWeb/pubmutualfund/webForm/PMF_FundSearchController.jpf?lang=chinese&linkFrom=pubmutualfund',
+    )
+    await expect(page.getByRole('heading', { name: '渠道、额度与风险' })).toBeVisible()
+    await expect(page.locator('.southbound-note-card')).toHaveCount(4)
+    await expect(page.getByRole('heading', { name: '渠道优势' }).first()).toBeVisible()
+    await expect(page.locator('.southbound-note-card').filter({ hasText: '恒生标普500指数ETF（非上市类别）' })).toContainText('建行亚洲 HM01')
 
     const southboundSearch = page.getByLabel('搜索南向通基金代码和份额')
     await southboundSearch.fill('HK0001027009')
@@ -56,10 +67,10 @@ test.describe('funds workflow', () => {
     await southboundSearch.fill('83004')
     await expect(page.locator('.southbound-row')).toHaveCount(1)
     await expect(page.locator('.southbound-row')).toContainText('EHSPACU HK')
-    await expect(page.locator('.southbound-row')).toContainText('银行 83004')
+    await expect(page.locator('.southbound-row')).toContainText('83004')
 
     await southboundSearch.fill('RMB')
-    await expect(page.locator('.southbound-row')).toHaveCount(2)
+    await expect(page.locator('.southbound-row')).toHaveCount(4)
     await expect(page.locator('.southbound-row').first()).toContainText('人民币')
 
     await southboundSearch.fill('EFHNAAU HK')
@@ -68,10 +79,17 @@ test.describe('funds workflow', () => {
 
     await southboundSearch.fill('易方达纳斯达克100')
     await expect(page.locator('.southbound-row')).toHaveCount(3)
-    await expect(page.locator('.southbound-row').first()).toContainText('银行渠道码待核验')
+    await expect(page.locator('.southbound-row').first()).toContainText('建行亚洲 EF13')
 
     await southboundSearch.fill('易方达标普500')
     await expect(page.locator('.southbound-row')).toHaveCount(3)
+
+    await southboundSearch.fill('日经225')
+    await expect(page.locator('.southbound-row')).toHaveCount(4)
+
+    await southboundSearch.fill('HM01')
+    await expect(page.locator('.southbound-row')).toHaveCount(1)
+    await expect(page.locator('.southbound-row')).toContainText('恒生标普500指数ETF（非上市类别）')
   })
 
   test('labels closed-period shares without pretending they have a price', async ({ page }) => {

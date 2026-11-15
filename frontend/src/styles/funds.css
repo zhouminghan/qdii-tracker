@@ -64,6 +64,41 @@
   font-family: var(--font-mono);
 }
 
+.southbound-coverage {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 22%, var(--color-border));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-accent-soft) 72%, var(--color-surface));
+  color: var(--color-text-secondary);
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+
+.southbound-coverage > svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--color-accent);
+}
+
+.southbound-coverage p {
+  flex: 1;
+  min-width: 0;
+}
+
+.southbound-coverage a {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 3px;
+  color: var(--color-accent);
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .southbound-table-shell {
   overflow-x: auto;
 }
@@ -136,6 +171,11 @@
   background: var(--color-warn-soft);
 }
 
+.southbound-currency.currency-jpy {
+  color: var(--color-text-primary);
+  background: var(--color-surface-raised);
+}
+
 .southbound-channels {
   min-width: 180px;
   display: flex;
@@ -151,54 +191,127 @@
   white-space: nowrap;
 }
 
-.southbound-disclosure-list {
+.southbound-notes {
   display: grid;
-  gap: 8px;
+  gap: 12px;
 }
 
-.southbound-disclosure {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
+.southbound-notes-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
 }
 
-.southbound-disclosure summary {
-  padding: 11px 13px;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  font-size: 0.76rem;
-  font-weight: 650;
+.southbound-notes-head h2 {
+  margin-top: 2px;
+  font-size: 1.08rem;
 }
 
-.southbound-disclosure-body {
-  display: grid;
-  gap: 10px;
-  padding: 0 13px 13px;
+.southbound-notes-head p {
+  max-width: 520px;
+  color: var(--color-text-tertiary);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  text-align: right;
 }
 
-.southbound-disclosure-grid {
+.southbound-note-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 
-.southbound-disclosure-grid section {
-  padding: 11px;
+.southbound-note-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.southbound-note-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.southbound-note-head h3 {
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.southbound-note-head p {
+  margin-top: 3px;
+  color: var(--color-text-tertiary);
+  font-size: 0.66rem;
+}
+
+.southbound-note-codes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.southbound-note-codes .chip {
+  font-size: 0.64rem;
+}
+
+.southbound-note-quota {
+  padding: 9px 10px;
   border-radius: var(--radius-sm);
   background: var(--color-surface-raised);
-}
-
-.southbound-disclosure-grid h3 {
-  margin-bottom: 6px;
-  font-size: 0.76rem;
-}
-
-.southbound-disclosure-grid ul {
-  display: grid;
-  gap: 4px;
-  padding-left: 18px;
   color: var(--color-text-secondary);
+  font-size: 0.7rem;
+  line-height: 1.55;
+}
+
+.southbound-note-quota strong {
+  margin-right: 5px;
+  color: var(--color-text-primary);
+}
+
+.southbound-note-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.southbound-note-columns h4 {
+  margin-bottom: 5px;
   font-size: 0.72rem;
+}
+
+.southbound-note-columns ul {
+  display: grid;
+  gap: 3px;
+  padding-left: 17px;
+  color: var(--color-text-secondary);
+  font-size: 0.69rem;
+  line-height: 1.5;
+}
+
+.southbound-note-sources {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  padding-top: 9px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-tertiary);
+  font-size: 0.66rem;
+}
+
+.southbound-note-sources a {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .mobile-sort {
@@ -974,8 +1087,27 @@
 }
 
 @media (max-width: 760px) {
-  .southbound-disclosure-grid {
+  .southbound-notes-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .southbound-notes-head p {
+    max-width: none;
+    text-align: left;
+  }
+
+  .southbound-note-grid,
+  .southbound-note-columns {
     grid-template-columns: 1fr;
+  }
+
+  .southbound-coverage {
+    flex-wrap: wrap;
+  }
+
+  .southbound-coverage a {
+    margin-left: 23px;
   }
 
   .fund-toolbar {

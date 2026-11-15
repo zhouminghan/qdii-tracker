@@ -64,7 +64,7 @@
 - `cnn-fear-greed.json`：当前值、分档和历史序列。
 - `nav-history/{code}.json`：日期与净值/收盘序列。
 - `holdings/{code}.json`：最近季度 Top10 持仓。
-- `southbound.json` v2：南向通产品与份额目录。每个产品包含官方产品页、搜索别名、渠道、额度与风险；`shares[]` 分别保存 HKD / RMB / USD 份额的银行渠道码、Bloomberg ticker、ISIN、净值、净值日期和人工核验状态。
+- `southbound.json` v3：南向通产品与份额目录。顶层包含银行合资格名单覆盖说明与来源；每个产品包含官方来源、核验日期、搜索别名、渠道、额度和风险；`shares[]` 保存币种、银行名称/渠道码/核验状态、Bloomberg ticker、ISIN、净值、净值日期、近一年收益及收益截止日。
 
 所有缺失数值在 TypeScript 中映射为 `null`，不伪造成 0；封闭期显示“封闭期”，历史不足显示 `-`。
 

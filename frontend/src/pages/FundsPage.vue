@@ -76,7 +76,7 @@ const missingPriceShares = computed(() => data.allRows.flatMap((row) => row.shar
   .map((share) => ({ code: share.code, name: share.name }))))
 const qualityLabel = computed(() => qualityStatusLabel(data.quality?.status))
 const pageSubtitle = computed(() => tab.value === 'southbound'
-  ? '跨境理财通南向通产品与三币种份额。支持产品名、银行码、Bloomberg、ISIN 和币种搜索。'
+  ? '跨境理财通南向通产品与多币种份额。支持产品名、银行码、Bloomberg、ISIN 和币种搜索。'
   : '场外 QDII 与场内 ETF 的分类、净值、申购状态和限购额度。默认按规模降序，收藏始终置顶。')
 const sortOptions = computed(() => {
   const fields: Array<{ key: FundSortKey; label: string }> = [

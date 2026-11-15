@@ -6,7 +6,7 @@
 |------|--------|------|----------|
 | 场外基金净值/申购 | 天天基金、pingzhongdata、AKShare | 六个分类 JSON | 保留旧值，nav_date 不回退 |
 | 区间收益补算 | 本地 `nav-history/`、pingzhongdata | 六个分类 JSON | 只填 `null`，不覆盖已有公开值；封闭期份额不伪造净值 |
-| 南向通渠道资料 | 易方达香港官方产品页、银行 APP 人工核验 | `southbound.json` | 官方页提供 Bloomberg ticker、ISIN 和净值；银行渠道码、额度和可购状态以银行 APP 当日信息为准 |
+| 南向通渠道资料 | 基金公司官方产品/业绩页、建行亚洲南向通合资格基金筛选器、银行 APP 人工核验 | `southbound.json` | 官方页提供份额代码、ISIN、净值与收益；银行渠道码来自公开合资格名单，实际可购状态仍以 APP 当日信息为准。建行亚洲 2026-11-15 显示 344 个合资格份额，名单按销售银行动态变化 |
 | ETF 价格/规模 | 东方财富、AKShare | `etf.json` | 保留旧值并标记缺失 |
 | 指数/ETF/外汇/科技股 K 线 | 东方财富、腾讯、Yahoo | `index-kline/`、`etf-kline/`、`fx-kline/` | 保留最近成功快照 |
 | 美债收益率 | 东方财富 | `macro-rates.json` | 复用旧快照 |

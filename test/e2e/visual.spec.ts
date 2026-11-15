@@ -51,7 +51,8 @@ test.describe('visual baselines', () => {
     await page.goto('/#/funds')
     await page.getByRole('button', { name: '南向通' }).click()
     await expect(page.getByRole('table', { name: '跨境理财通南向通基金份额' })).toBeVisible()
-    await expect(page.locator('.southbound-row')).toHaveCount(6)
+    await expect(page.locator('.southbound-row')).toHaveCount(13)
+    await expect(page.locator('.southbound-note-card')).toHaveCount(4)
     await expect(page).toHaveScreenshot('southbound-desktop-light.png', { fullPage: true })
   })
 

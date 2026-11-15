@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { ExternalLink, Search, X } from '@lucide/vue'
+import { ExternalLink, Info, Search, X } from '@lucide/vue'
 import DataState from '@/shared/components/DataState.vue'
 import { fetchJson } from '@/shared/infrastructure/http'
 import { formatDate, formatNumber, formatPercent, movementClass } from '@/shared/lib/format'
-import type { SouthboundData, SouthboundShare } from '@/types/data'
+import type { SouthboundData, SouthboundProduct, SouthboundShare } from '@/types/data'
 
 const payload = ref<SouthboundData | null>(null)
 const loading = ref(true)
@@ -32,6 +32,7 @@ function shareMatches(share: SouthboundShare, query: string): boolean {
   return [
     share.code,
     share.bank_code,
+    share.bank_name,
     share.ticker,
     share.isin,
     share.currency,
@@ -65,7 +66,18 @@ function clearSearch(): void {
 }
 
 function codeLabel(share: SouthboundShare): string {
-  return share.bank_code ? `银行 ${share.bank_code}` : share.ticker
+  if (share.bank_code) return `${share.bank_name ?? '银行'} ${share.bank_code}`
+  return share.ticker ?? share.code
+}
+
+function productSource(product: SouthboundProduct): { label: string; url: string } {
+  if (product.official_url) return { label: '产品页', url: product.official_url }
+  const source = product.sources[0]
+  return { label: '银行名单', url: source?.url ?? '' }
+}
+
+function noteCode(share: SouthboundShare): string {
+  return share.bank_code ? `${share.bank_name ?? '银行'} ${share.bank_code}` : share.ticker ?? share.code
 }
 
 onMounted(load)
@@ -80,7 +92,7 @@ onMounted(load)
           <input
             v-model="search"
             type="search"
-            placeholder="产品名、代码、ISIN、彭博代码、币种"
+            placeholder="产品名、代码、ISIN、银行码、币种"
             aria-label="搜索南向通基金代码和份额"
           />
           <button v-if="search" type="button" aria-label="清空南向通搜索" @click="clearSearch">
@@ -92,6 +104,14 @@ onMounted(load)
           <span>·</span>
           <strong>{{ visibleShareCount }}</strong> 个份额
         </div>
+      </div>
+
+      <div class="southbound-coverage">
+        <Info :size="15" aria-hidden="true" />
+        <p>{{ payload.coverage_note }}</p>
+        <a :href="payload.coverage_source_url" target="_blank" rel="noreferrer">
+          查看银行完整名单 <ExternalLink :size="13" aria-hidden="true" />
+        </a>
       </div>
 
       <div class="table-shell fund-table-shell southbound-table-shell">
@@ -106,19 +126,19 @@ onMounted(load)
               <th scope="col" class="align-right">近 1 年</th>
               <th scope="col">销售渠道</th>
               <th scope="col">核验状态</th>
-              <th scope="col" class="align-center">官方</th>
+              <th scope="col" class="align-center">来源</th>
             </tr>
           </thead>
           <tbody>
             <template v-for="group in groups" :key="group.product.id">
               <tr
                 v-for="(share, shareIndex) in group.shares"
-                :key="share.isin"
+                :key="share.isin ?? share.code"
                 class="southbound-row"
               >
                 <td v-if="shareIndex === 0" :rowspan="group.shares.length" class="southbound-product-cell">
                   <div class="fund-identity">
-                    <span class="fund-logo compact southbound-logo">易</span>
+                    <span class="fund-logo compact southbound-logo">跨</span>
                     <div class="fund-name-block">
                       <strong>{{ group.product.name }}</strong>
                       <span>{{ group.product.index_name }} · {{ group.product.channel_type }}</span>
@@ -133,9 +153,10 @@ onMounted(load)
                 </td>
                 <td class="southbound-code-cell">
                   <strong class="mono">{{ codeLabel(share) }}</strong>
-                  <small class="southbound-sub">ISIN {{ share.isin }}</small>
+                  <small v-if="share.bank_code && share.ticker" class="southbound-sub">Bloomberg {{ share.ticker }}</small>
+                  <small v-if="share.isin" class="southbound-sub">ISIN {{ share.isin }}</small>
                   <small class="southbound-sub">
-                    {{ share.bank_code ? `Bloomberg ${share.ticker}` : '银行渠道码待核验' }}
+                    {{ share.bank_code ? share.bank_code_status : '银行渠道码待核验' }}
                   </small>
                 </td>
                 <td class="align-right">
@@ -143,7 +164,8 @@ onMounted(load)
                   <small class="southbound-sub">{{ share.nav_date ? formatDate(share.nav_date) : '待核验' }}</small>
                 </td>
                 <td class="align-right mono" :class="movementClass(share.one_year_return_pct)">
-                  {{ share.one_year_return_pct == null ? '--' : formatPercent(share.one_year_return_pct) }}
+                  <strong>{{ share.one_year_return_pct == null ? '--' : formatPercent(share.one_year_return_pct) }}</strong>
+                  <small v-if="share.return_as_of" class="southbound-sub">{{ formatDate(share.return_as_of) }}</small>
                 </td>
                 <td>
                   <div class="southbound-channels">
@@ -155,13 +177,14 @@ onMounted(load)
                 </td>
                 <td class="align-center">
                   <a
+                    v-if="productSource(group.product).url"
                     class="button button-secondary southbound-official-link"
-                    :href="group.product.official_url"
+                    :href="productSource(group.product).url"
                     target="_blank"
                     rel="noreferrer"
-                    :aria-label="`查看 ${group.product.name} 官方产品页`"
+                    :aria-label="`查看 ${group.product.name} 来源`"
                   >
-                    <ExternalLink :size="14" aria-hidden="true" /> 产品页
+                    <ExternalLink :size="14" aria-hidden="true" /> {{ productSource(group.product).label }}
                   </a>
                 </td>
               </tr>
@@ -173,29 +196,69 @@ onMounted(load)
         </table>
       </div>
 
-      <div class="southbound-disclosure-list">
-        <details v-for="product in payload.products" :key="product.id" class="southbound-disclosure">
-          <summary>{{ product.name }} · 渠道、额度与风险</summary>
-          <div class="southbound-disclosure-body">
-            <p>{{ product.quota_note }}</p>
-            <div class="southbound-disclosure-grid">
+      <section class="southbound-notes" aria-labelledby="southbound-notes-title">
+        <header class="southbound-notes-head">
+          <div>
+            <div class="eyebrow">备注说明</div>
+            <h2 id="southbound-notes-title">渠道、额度与风险</h2>
+          </div>
+          <p>以下内容独立于上方基金表，不随搜索筛选折叠，便于直接核对产品备注。</p>
+        </header>
+
+        <div class="southbound-note-grid">
+          <article v-for="product in payload.products" :key="product.id" class="southbound-note-card">
+            <header class="southbound-note-head">
+              <div>
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.index_name }} · {{ product.channel_type }}</p>
+              </div>
+              <span class="badge">{{ product.verified_at }} 核验</span>
+            </header>
+
+            <div class="southbound-note-codes">
+              <span v-for="share in product.shares" :key="share.code" class="chip mono">
+                {{ share.currency }} · {{ noteCode(share) }}
+              </span>
+            </div>
+
+            <p class="southbound-note-quota">
+              <strong>个人总额度</strong>
+              {{ product.quota_note }}
+            </p>
+
+            <div class="southbound-note-columns">
               <section>
-                <h3>渠道优势</h3>
+                <h4>渠道优势</h4>
                 <ul>
                   <li v-for="item in product.advantages" :key="item">{{ item }}</li>
                 </ul>
               </section>
               <section>
-                <h3>风险与核验</h3>
+                <h4>风险与核验</h4>
                 <ul>
                   <li v-for="item in product.risks" :key="item">{{ item }}</li>
                 </ul>
               </section>
             </div>
-            <p class="inline-note">{{ payload.disclaimer }} 数据来源：{{ payload.source }}</p>
-          </div>
-        </details>
-      </div>
+
+            <footer class="southbound-note-sources">
+              <span>来源</span>
+              <a
+                v-for="source in product.sources"
+                :key="source.url"
+                :href="source.url"
+                target="_blank"
+                rel="noreferrer"
+                :title="source.scope"
+              >
+                {{ source.label }} <ExternalLink :size="12" aria-hidden="true" />
+              </a>
+            </footer>
+          </article>
+        </div>
+
+        <p class="inline-note">{{ payload.disclaimer }} {{ payload.source }}</p>
+      </section>
     </section>
   </DataState>
 </template>

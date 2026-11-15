@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
-  "generated_at": "2026-11-15T18:00:00+08:00",
-  "source": "易方达香港官方产品页；银行 APP 可购买名单需当日核验",
+  "schema_version": 3,
+  "generated_at": "2026-11-15T20:00:00+08:00",
+  "source": "易方达香港官方产品页；中国建设银行（亚洲）南向通合资格基金筛选器；银行 APP 可购状态需当日核验",
   "disclaimer": "仅限符合跨境理财通南向通资格的投资者，不构成投资建议。",
+  "coverage_note": "中国建设银行（亚洲）公开筛选器 2026-11-15 显示 344 个南向通合资格基金份额，其中易方达香港有 21 个。本页仅收录已核验代码与来源的代表产品，不代表完整在售名单；不同银行的可购范围不同。",
+  "coverage_source_url": "https://online.asia.ccb.com/PersonalHKWeb/pubmutualfund/webForm/PMF_FundSearchController.jpf?lang=chinese&linkFrom=pubmutualfund",
   "products": [
     {
       "id": "efund-hk-sp500",
@@ -16,13 +18,26 @@
       "index_name": "S&P 500",
       "channel_type": "南向通场外基金",
       "official_url": "https://www.efunds.com.hk/products/40/info/",
+      "verified_at": "2026-11-15",
+      "sources": [
+        {
+          "label": "易方达香港官方产品页",
+          "url": "https://www.efunds.com.hk/products/40/info/",
+          "scope": "份额代码、ISIN、净值、费率"
+        },
+        {
+          "label": "易方达香港官方业绩页",
+          "url": "https://www.efunds.com.hk/products/40/performance/",
+          "scope": "近一年收益"
+        }
+      ],
       "channels": [
         "香港众安银行 ZA Bank",
         "招商永隆银行 CMB Wing Lung"
       ],
       "personal_quota_cny": 3000000,
       "quota_note": "个人总额度最高 300 万元；同时使用银行和券商渠道时，各 150 万元。",
-      "status": "银行 APP 可购买名单与渠道代码需当日核验",
+      "status": "官方代码已核验；银行 APP 可购状态需当日核验",
       "advantages": [
         "监管认可的跨境投资渠道",
         "不需要参与内地 QDII 每日申购额度抢购",
@@ -39,6 +54,8 @@
         {
           "code": "EHSPAHK HK",
           "bank_code": null,
+          "bank_name": null,
+          "bank_code_status": null,
           "share_class": "Class A (Acc) HKD",
           "currency": "港元",
           "currency_code": "HKD",
@@ -46,7 +63,8 @@
           "ticker": "EHSPAHK HK",
           "nav": 116.8405,
           "nav_date": "2026-11-12",
-          "one_year_return_pct": null,
+          "one_year_return_pct": 11.8,
+          "return_as_of": "2026-10-31",
           "inception_date": "2025-08-14",
           "management_fee_pct": 0.9,
           "subscription_fee": "最高 3%"
@@ -54,6 +72,8 @@
         {
           "code": "EHSPAAR HK",
           "bank_code": null,
+          "bank_name": null,
+          "bank_code_status": null,
           "share_class": "Class A (Acc) RMB",
           "currency": "人民币",
           "currency_code": "RMB",
@@ -61,7 +81,8 @@
           "ticker": "EHSPAAR HK",
           "nav": 108.4586,
           "nav_date": "2026-11-12",
-          "one_year_return_pct": null,
+          "one_year_return_pct": 3.5,
+          "return_as_of": "2026-10-31",
           "inception_date": "2025-08-14",
           "management_fee_pct": 0.9,
           "subscription_fee": "最高 3%"
@@ -69,6 +90,8 @@
         {
           "code": "EHSPACU HK",
           "bank_code": "83004",
+          "bank_name": "ZA Bank / 招商永隆",
+          "bank_code_status": "需在银行 APP 当日核验",
           "share_class": "Class A (Acc) USD",
           "currency": "美元",
           "currency_code": "USD",
@@ -76,7 +99,8 @@
           "ticker": "EHSPACU HK",
           "nav": 11.6509,
           "nav_date": "2026-11-12",
-          "one_year_return_pct": null,
+          "one_year_return_pct": 10.6,
+          "return_as_of": "2026-10-31",
           "inception_date": "2025-08-14",
           "management_fee_pct": 0.9,
           "subscription_fee": "最高 3%"
@@ -96,13 +120,32 @@
       "index_name": "NASDAQ-100",
       "channel_type": "南向通场外基金",
       "official_url": "https://www.efunds.com.hk/products/38/info/",
+      "verified_at": "2026-11-15",
+      "sources": [
+        {
+          "label": "易方达香港官方产品页",
+          "url": "https://www.efunds.com.hk/products/38/info/",
+          "scope": "份额代码、ISIN、净值、费率"
+        },
+        {
+          "label": "易方达香港官方业绩页",
+          "url": "https://www.efunds.com.hk/products/38/performance/",
+          "scope": "近一年收益"
+        },
+        {
+          "label": "建行亚洲南向通合资格基金",
+          "url": "https://online.asia.ccb.com/PersonalHKWeb/pubmutualfund/webForm/PMF_FundSearchController.jpf?lang=chinese&linkFrom=pubmutualfund",
+          "scope": "银行渠道码与合资格状态"
+        }
+      ],
       "channels": [
         "香港众安银行 ZA Bank",
-        "招商永隆银行 CMB Wing Lung"
+        "招商永隆银行 CMB Wing Lung",
+        "中国建设银行（亚洲）"
       ],
       "personal_quota_cny": 3000000,
       "quota_note": "个人总额度最高 300 万元；同时使用银行和券商渠道时，各 150 万元。",
-      "status": "银行 APP 可购买名单与渠道代码需当日核验",
+      "status": "官方代码和建行亚洲合资格份额已核验；其他银行可购状态需当日核验",
       "advantages": [
         "跟踪纳斯达克100指数",
         "不需要参与内地 QDII 每日申购额度抢购",
@@ -118,7 +161,9 @@
       "shares": [
         {
           "code": "EFHNAAH HK",
-          "bank_code": null,
+          "bank_code": "EF13",
+          "bank_name": "建行亚洲",
+          "bank_code_status": "合资格名单已核验",
           "share_class": "Class A (Acc) HKD",
           "currency": "港元",
           "currency_code": "HKD",
@@ -126,14 +171,17 @@
           "ticker": "EFHNAAH HK",
           "nav": 135.0027,
           "nav_date": "2026-11-12",
-          "one_year_return_pct": null,
+          "one_year_return_pct": 22.4,
+          "return_as_of": "2026-09-30",
           "inception_date": "2024-07-03",
           "management_fee_pct": 0.9,
           "subscription_fee": "最高 3%"
         },
         {
           "code": "EFHNAAR HK",
-          "bank_code": null,
+          "bank_code": "EF14",
+          "bank_name": "建行亚洲",
+          "bank_code_status": "合资格名单已核验",
           "share_class": "Class A (Acc) RMB",
           "currency": "人民币",
           "currency_code": "RMB",
@@ -141,14 +189,17 @@
           "ticker": "EFHNAAR HK",
           "nav": 123.0113,
           "nav_date": "2026-11-12",
-          "one_year_return_pct": null,
+          "one_year_return_pct": 14.2,
+          "return_as_of": "2026-09-30",
           "inception_date": "2024-07-03",
           "management_fee_pct": 0.9,
           "subscription_fee": "最高 3%"
         },
         {
           "code": "EFHNAAU HK",
-          "bank_code": null,
+          "bank_code": "EF12",
+          "bank_name": "建行亚洲",
+          "bank_code_status": "合资格名单已核验",
           "share_class": "Class A (Acc) USD",
           "currency": "美元",
           "currency_code": "USD",
@@ -156,10 +207,231 @@
           "ticker": "EFHNAAU HK",
           "nav": 13.4203,
           "nav_date": "2026-11-12",
-          "one_year_return_pct": null,
+          "one_year_return_pct": 21.3,
+          "return_as_of": "2026-09-30",
           "inception_date": "2024-07-03",
           "management_fee_pct": 0.9,
           "subscription_fee": "最高 3%"
+        }
+      ]
+    },
+    {
+      "id": "efund-hk-nikkei225",
+      "name": "易方达（香港）日经225指数基金",
+      "aliases": [
+        "易方达日经225",
+        "易方达日经指数",
+        "日经225",
+        "日经指数",
+        "Nikkei 225"
+      ],
+      "index_name": "Nikkei 225",
+      "channel_type": "南向通场外基金",
+      "official_url": "https://www.efunds.com.hk/products/39/info/",
+      "verified_at": "2026-11-15",
+      "sources": [
+        {
+          "label": "易方达香港官方产品页",
+          "url": "https://www.efunds.com.hk/products/39/info/",
+          "scope": "份额代码、ISIN、净值、费率"
+        },
+        {
+          "label": "易方达香港官方业绩页",
+          "url": "https://www.efunds.com.hk/products/39/performance/",
+          "scope": "近一年收益"
+        },
+        {
+          "label": "建行亚洲南向通合资格基金",
+          "url": "https://online.asia.ccb.com/PersonalHKWeb/pubmutualfund/webForm/PMF_FundSearchController.jpf?lang=chinese&linkFrom=pubmutualfund",
+          "scope": "银行渠道码与合资格状态"
+        }
+      ],
+      "channels": [
+        "中国建设银行（亚洲）"
+      ],
+      "personal_quota_cny": 3000000,
+      "quota_note": "个人总额度最高 300 万元；同时使用银行和券商渠道时，各 150 万元。",
+      "status": "官方代码和建行亚洲合资格份额已核验",
+      "advantages": [
+        "覆盖日本大型股票市场，与美股形成区域分散",
+        "不需要参与内地 QDII 每日申购额度抢购",
+        "不承担场内 ETF 的二级市场高溢价风险",
+        "提供港元、日元、人民币和美元份额"
+      ],
+      "risks": [
+        "仅限符合南向通资格的投资者",
+        "日本股市与日元汇率均可能显著波动",
+        "仍需承担跨境汇款和换汇成本",
+        "银行渠道码只代表当前合资格名单，实际可购状态需当日核验"
+      ],
+      "shares": [
+        {
+          "code": "EIONIAH HK",
+          "bank_code": "EF25",
+          "bank_name": "建行亚洲",
+          "bank_code_status": "合资格名单已核验",
+          "share_class": "Class A (Acc) HKD",
+          "currency": "港元",
+          "currency_code": "HKD",
+          "isin": "HK0001027348",
+          "ticker": "EIONIAH HK",
+          "nav": 156.2439,
+          "nav_date": "2026-11-12",
+          "one_year_return_pct": 19.5,
+          "return_as_of": "2026-10-31",
+          "inception_date": "2024-06-26",
+          "management_fee_pct": 0.9,
+          "subscription_fee": "最高 3%"
+        },
+        {
+          "code": "EHKNKAJ HK",
+          "bank_code": "EF23",
+          "bank_name": "建行亚洲",
+          "bank_code_status": "合资格名单已核验",
+          "share_class": "Class A (Acc) JPY",
+          "currency": "日元",
+          "currency_code": "JPY",
+          "isin": "HK0001027389",
+          "ticker": "EHKNKAJ HK",
+          "nav": 2151.6587,
+          "nav_date": "2026-11-12",
+          "one_year_return_pct": null,
+          "return_as_of": null,
+          "inception_date": "2024-07-17",
+          "management_fee_pct": 0.9,
+          "subscription_fee": "最高 3%"
+        },
+        {
+          "code": "EHKNARM HK",
+          "bank_code": "EF26",
+          "bank_name": "建行亚洲",
+          "bank_code_status": "合资格名单已核验",
+          "share_class": "Class A (Acc) RMB",
+          "currency": "人民币",
+          "currency_code": "RMB",
+          "isin": "HK0001027264",
+          "ticker": "EHKNARM HK",
+          "nav": 132.9917,
+          "nav_date": "2026-11-12",
+          "one_year_return_pct": 10.5,
+          "return_as_of": "2026-10-31",
+          "inception_date": "2024-07-03",
+          "management_fee_pct": 0.9,
+          "subscription_fee": "最高 3%"
+        },
+        {
+          "code": "EIFNIAA HK",
+          "bank_code": "EF24",
+          "bank_name": "建行亚洲",
+          "bank_code_status": "合资格名单已核验",
+          "share_class": "Class A (Acc) USD",
+          "currency": "美元",
+          "currency_code": "USD",
+          "isin": "HK0001027306",
+          "ticker": "EIFNIAA HK",
+          "nav": 14.9279,
+          "nav_date": "2026-11-12",
+          "one_year_return_pct": 18.3,
+          "return_as_of": "2026-10-31",
+          "inception_date": "2024-06-26",
+          "management_fee_pct": 0.9,
+          "subscription_fee": "最高 3%"
+        }
+      ]
+    },
+    {
+      "id": "hangseng-sp500-unlisted",
+      "name": "恒生标普500指数ETF（非上市类别）",
+      "aliases": [
+        "恒生标普500",
+        "恒生标普500指数ETF",
+        "恒生S&P500",
+        "09195",
+        "9195"
+      ],
+      "index_name": "S&P 500",
+      "channel_type": "南向通 ETF 非上市类别",
+      "official_url": null,
+      "verified_at": "2026-11-15",
+      "sources": [
+        {
+          "label": "建行亚洲南向通合资格基金",
+          "url": "https://online.asia.ccb.com/PersonalHKWeb/pubmutualfund/webForm/PMF_FundSearchController.jpf?lang=chinese&linkFrom=pubmutualfund",
+          "scope": "银行渠道码、净值、费率与合资格状态"
+        }
+      ],
+      "channels": [
+        "中国建设银行（亚洲）"
+      ],
+      "personal_quota_cny": 3000000,
+      "quota_note": "个人总额度最高 300 万元；同时使用银行和券商渠道时，各 150 万元。",
+      "status": "建行亚洲合资格名单已核验；非上市类别无公开 ISIN",
+      "advantages": [
+        "跟踪标普500指数，可通过银行南向通渠道申购",
+        "不需要参与内地 QDII 每日申购额度抢购",
+        "非上市类别不涉及场内 ETF 的实时二级市场溢价",
+        "提供港元、人民币对冲和美元份额"
+      ],
+      "risks": [
+        "仅限符合南向通资格的投资者",
+        "人民币对冲份额仍可能存在对冲成本和跟踪误差",
+        "买入卖出按基金未知价成交，不是场内实时价格",
+        "非上市类别信息以销售银行及基金销售文件为准"
+      ],
+      "shares": [
+        {
+          "code": "HM01",
+          "bank_code": "HM01",
+          "bank_name": "建行亚洲",
+          "bank_code_status": "合资格名单已核验",
+          "share_class": "Class A HKD Accumulation",
+          "currency": "港元",
+          "currency_code": "HKD",
+          "isin": null,
+          "ticker": null,
+          "nav": 14.62,
+          "nav_date": "2026-11-12",
+          "one_year_return_pct": null,
+          "return_as_of": null,
+          "inception_date": null,
+          "management_fee_pct": 0.55,
+          "subscription_fee": "最高 5%"
+        },
+        {
+          "code": "HM02",
+          "bank_code": "HM02",
+          "bank_name": "建行亚洲",
+          "bank_code_status": "合资格名单已核验",
+          "share_class": "Class A RMB Hedged Accumulation",
+          "currency": "人民币",
+          "currency_code": "RMB",
+          "isin": null,
+          "ticker": null,
+          "nav": 13.52,
+          "nav_date": "2026-11-12",
+          "one_year_return_pct": null,
+          "return_as_of": null,
+          "inception_date": null,
+          "management_fee_pct": 0.55,
+          "subscription_fee": "最高 5%"
+        },
+        {
+          "code": "HM03",
+          "bank_code": "HM03",
+          "bank_name": "建行亚洲",
+          "bank_code_status": "合资格名单已核验",
+          "share_class": "Class A USD Accumulation",
+          "currency": "美元",
+          "currency_code": "USD",
+          "isin": null,
+          "ticker": null,
+          "nav": 14.57,
+          "nav_date": "2026-11-12",
+          "one_year_return_pct": null,
+          "return_as_of": null,
+          "inception_date": null,
+          "management_fee_pct": 0.55,
+          "subscription_fee": "最高 5%"
         }
       ]
     }
