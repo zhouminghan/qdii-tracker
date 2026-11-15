@@ -376,7 +376,7 @@ function holdingChangeClass(item: HoldingItem): string {
             <strong class="metric-value" :class="item.scale ? '' : movementClass(item.value)">
               {{ item.scale
                 ? (asNumber(item.value) ? `${asNumber(item.value)?.toFixed(0)}亿` : '--')
-                : performanceDisplay(item.value, item.key, defaultShare) }}
+                : item.key ? performanceDisplay(item.value, item.key, defaultShare) : '--' }}
             </strong>
           </div>
         </div>

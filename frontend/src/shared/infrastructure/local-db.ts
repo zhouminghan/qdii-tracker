@@ -78,7 +78,7 @@ export async function ensureLegacyMigration(): Promise<void> {
         const trades: Trade[] = legacy.activity.filter(isRecord).map((item) => ({
           date: String(item.date ?? ''),
           code: String(item.code ?? ''),
-          side: item.side === 'sell' ? 'sell' : 'buy',
+          side: (item.side === 'sell' ? 'sell' : 'buy') as Trade['side'],
           qty: finiteNumber(item.qty),
           price: finiteNumber(item.price),
           fee: finiteNumber(item.fee),

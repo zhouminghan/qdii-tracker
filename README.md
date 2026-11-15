@@ -200,9 +200,7 @@ qdii-tracker/
 ├── package-lock.json
 ├── package.json
 ├── playwright.config.ts
-├── tsconfig.app.json
 ├── tsconfig.json
-├── tsconfig.node.json
 └── vite.config.ts
 ```
 <!-- DOCSYNC END: tree -->
