@@ -1,5 +1,5 @@
 export interface MarkdownToken {
-  type: 'text' | 'link'
+  type: 'text' | 'link' | 'strong'
   text: string
   href?: string
 }
@@ -20,15 +20,19 @@ function safeHref(value: string): string | null {
 
 export function parseMarkdownInline(value: string): MarkdownToken[] {
   const tokens: MarkdownToken[] = []
-  const pattern = /\[([^\]]+)\]\(((?:https?|mailto):[^)\s]+)\)|(https?:\/\/[^\s<]+)/g
+  const pattern = /\[([^\]]+)\]\(((?:https?|mailto):[^)\s]+)\)|(https?:\/\/[^\s<]+)|(\*\*[^*]+\*\*)/g
   let cursor = 0
   for (const match of value.matchAll(pattern)) {
     const index = match.index ?? 0
     if (index > cursor) tokens.push({ type: 'text', text: value.slice(cursor, index) })
-    const label = match[1] ?? match[3] ?? ''
-    const href = safeHref(match[2] ?? match[3] ?? '')
-    if (href) tokens.push({ type: 'link', text: label, href })
-    else tokens.push({ type: 'text', text: match[0] })
+    if (match[4]) {
+      tokens.push({ type: 'strong', text: match[4].slice(2, -2) })
+    } else {
+      const label = match[1] ?? match[3] ?? ''
+      const href = safeHref(match[2] ?? match[3] ?? '')
+      if (href) tokens.push({ type: 'link', text: label, href })
+      else tokens.push({ type: 'text', text: match[0] })
+    }
     cursor = index + match[0].length
   }
   if (cursor < value.length) tokens.push({ type: 'text', text: value.slice(cursor) })

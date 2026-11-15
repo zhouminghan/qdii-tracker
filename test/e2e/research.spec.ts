@@ -2,6 +2,15 @@ import { expect, test } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
 
 test.describe('local research workflow', () => {
+  test('seeds the dated Southbound note', async ({ page }) => {
+    await page.goto('/#/research')
+    await page.getByRole('tab', { name: /基金笔记/ }).click()
+    const note = page.locator('.research-card').filter({ hasText: '跨境理财通南向通' })
+    await expect(note).toContainText('2026-11-15')
+    await expect(note).toContainText('83004')
+    await expect(note).toContainText('香港众安银行')
+  })
+
   test('uses contextual actions and collapses knowledge by default', async ({ page }) => {
     await page.goto('/#/research')
     await expect(page.getByRole('button', { name: '新建笔记' })).toBeVisible()
@@ -37,9 +46,10 @@ test.describe('local research workflow', () => {
     await page.getByRole('button', { name: '保存', exact: true }).click()
     await page.getByRole('tab', { name: /基金笔记/ }).click()
 
-    await expect(page.getByRole('link', { name: '纳斯达克官网' })).toHaveAttribute('href', 'https://www.nasdaq.com/')
+    const note = page.locator('.research-card').filter({ hasText: 'Markdown 链接测试' })
+    await expect(note.getByRole('link', { name: '纳斯达克官网' })).toHaveAttribute('href', 'https://www.nasdaq.com/')
     const downloadPromise = page.waitForEvent('download')
-    await page.getByRole('button', { name: '导出 Markdown' }).click()
+    await note.getByRole('button', { name: '导出 Markdown' }).click()
     const download = await downloadPromise
     expect(download.suggestedFilename()).toBe('Markdown-链接测试.md')
     const path = await download.path()
@@ -57,10 +67,11 @@ test.describe('local research workflow', () => {
     await page.getByRole('textbox', { name: '正文' }).fill('第一版内容')
     await page.getByRole('button', { name: '保存', exact: true }).click()
     await page.getByRole('tab', { name: /基金笔记/ }).click()
-    await page.getByRole('button', { name: '编辑笔记' }).click()
+    const note = page.locator('.research-card').filter({ hasText: '历史版本测试' })
+    await note.getByRole('button', { name: '编辑笔记' }).click()
     await page.getByRole('textbox', { name: '正文' }).fill('第二版内容')
     await page.getByRole('button', { name: '保存', exact: true }).click()
-    await page.getByRole('button', { name: '历史' }).click()
+    await note.getByRole('button', { name: '历史' }).click()
     await expect(page.getByText('第一版内容')).toBeVisible()
   })
 
@@ -72,12 +83,13 @@ test.describe('local research workflow', () => {
     await page.getByRole('button', { name: '保存', exact: true }).click()
     await page.getByRole('tab', { name: /基金笔记/ }).click()
 
-    await page.getByRole('button', { name: '删除笔记' }).click()
+    const note = () => page.locator('.research-card').filter({ hasText: '待删除笔记' })
+    await note().getByRole('button', { name: '删除笔记' }).click()
     await expect(page.getByRole('dialog', { name: '删除研究记录' })).toBeVisible()
     await page.getByRole('button', { name: '取消' }).click()
     await expect(page.getByRole('heading', { name: '待删除笔记', exact: true })).toBeVisible()
 
-    await page.getByRole('button', { name: '删除笔记' }).click()
+    await note().getByRole('button', { name: '删除笔记' }).click()
     await page.getByRole('button', { name: '确认删除' }).click()
     await expect(page.getByRole('heading', { name: '待删除笔记', exact: true })).toHaveCount(0)
   })

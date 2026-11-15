@@ -17,4 +17,11 @@ describe('safe Markdown rendering model', () => {
       { type: 'text', text: '[危险](javascript:alert(1))' },
     ])
   })
+
+  it('renders bold metadata without raw Markdown markers', () => {
+    expect(parseMarkdownInline('**记录日期**：2026-11-15')).toEqual([
+      { type: 'strong', text: '记录日期' },
+      { type: 'text', text: '：2026-11-15' },
+    ])
+  })
 })

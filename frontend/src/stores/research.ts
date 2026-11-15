@@ -1,7 +1,24 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { db, ensureLegacyMigration } from '@/shared/infrastructure/local-db'
+import { DEFAULT_RESEARCH_NOTES } from '@/features/research/default-notes'
 import type { NoteRevision, ResearchNote, StrategyLog, WatchItem } from '@/types/local'
+
+const SEEDED_NOTES_KEY = 'qdii-default-notes-seeded-v1'
+
+async function seedDefaultNotes(): Promise<void> {
+  try {
+    if (localStorage.getItem(SEEDED_NOTES_KEY)) return
+    await db.transaction('rw', db.notes, async () => {
+      for (const note of DEFAULT_RESEARCH_NOTES) {
+        if (!await db.notes.get(note.id)) await db.notes.put(note)
+      }
+    })
+    localStorage.setItem(SEEDED_NOTES_KEY, '1')
+  } catch {
+    // Seeding is best effort; existing local notes must remain usable.
+  }
+}
 
 function id(): string {
   return crypto.randomUUID()
@@ -20,6 +37,7 @@ export const useResearchStore = defineStore('research', () => {
     error.value = ''
     try {
       await ensureLegacyMigration()
+      await seedDefaultNotes()
       const [noteRows, watchRows, strategyRows] = await Promise.all([
         db.notes.orderBy('updatedAt').reverse().toArray(),
         db.watchlist.orderBy('updatedAt').reverse().toArray(),

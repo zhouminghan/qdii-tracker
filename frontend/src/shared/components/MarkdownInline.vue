@@ -12,6 +12,7 @@ defineProps<{ tokens: MarkdownToken[] }>()
       target="_blank"
       rel="noreferrer"
     >{{ token.text }}</a>
+    <strong v-else-if="token.type === 'strong'">{{ token.text }}</strong>
     <template v-else>{{ token.text }}</template>
   </template>
 </template>

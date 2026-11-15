@@ -77,6 +77,10 @@ function fundName(code: string): string {
   return data.fundByCode.get(code)?.share.name ?? code
 }
 
+function noteDate(value: string): string {
+  return value.slice(0, 10)
+}
+
 function knowledgeCategoryLabel(key: string): string {
   return KNOWLEDGE_CATEGORIES.find((category) => category.key === key)?.label ?? key
 }
@@ -285,7 +289,13 @@ onMounted(async () => {
         <div v-else class="research-card-grid">
           <article v-for="note in filteredNotes" :key="note.id" class="research-card">
             <div class="research-card-head">
-              <div><span class="eyebrow">{{ note.fundCode || '通用' }}</span><h3>{{ note.title }}</h3></div>
+              <div>
+                <span class="eyebrow">
+                  <time :datetime="noteDate(note.updatedAt)">{{ noteDate(note.updatedAt) }}</time>
+                  · {{ note.fundCode || '通用' }}
+                </span>
+                <h3>{{ note.title }}</h3>
+              </div>
               <div class="row-actions"><button class="button button-secondary history-button" type="button" @click="openHistory(note)">历史</button><button class="icon-button" type="button" aria-label="导出 Markdown" title="导出 Markdown" @click="exportNoteMarkdown(note)"><Download :size="14" /></button><button class="icon-button" type="button" aria-label="编辑笔记" @click="openNote(note)"><FileText :size="14" /></button><button class="icon-button" type="button" aria-label="删除笔记" @click="deleteTarget = { kind: 'note', id: note.id, title: note.title }"><Trash2 :size="14" /></button></div>
             </div>
             <MarkdownNote :text="note.body" />
