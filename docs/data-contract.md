@@ -64,8 +64,9 @@
 - `cnn-fear-greed.json`：当前值、分档和历史序列。
 - `nav-history/{code}.json`：日期与净值/收盘序列。
 - `holdings/{code}.json`：最近季度 Top10 持仓。
+- `southbound.json`：南向通渠道资料，包含银行、产品代码、额度、优势、风险与人工核验状态。
 
-所有缺失数值在 TypeScript 中映射为 `null`，展示为 `--`，不伪造成 0。
+所有缺失数值在 TypeScript 中映射为 `null`，不伪造成 0；封闭期显示“封闭期”，历史不足显示 `-`。
 
 ## 本地数据契约
 

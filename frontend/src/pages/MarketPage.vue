@@ -19,6 +19,7 @@ import { useSettingsStore } from '@/stores/settings'
 import { useUiStore } from '@/stores/ui'
 import type { FearGreedData, KlineData, NasdaqHistory } from '@/types/data'
 import { DCA_BANDS, strategyOf } from '@/shared/lib/dca'
+import { dailyChange, filterTimeSeries, TIME_RANGES, type TimeRange } from '@/shared/lib/time-series'
 
 const data = useDataStore()
 const settings = useSettingsStore()
@@ -30,6 +31,7 @@ const extraError = ref('')
 const selectedIndex = ref('')
 const kline = ref<KlineData | null>(null)
 const klineLoading = ref(false)
+const indexRange = ref<TimeRange>('all')
 const activeMarketSection = ref('market-overview')
 const heatmapMode = ref<'year' | 'month'>('year')
 let liveTimer: number | null = null
@@ -150,6 +152,7 @@ async function loadExtras(): Promise<void> {
 async function openIndex(key: string): Promise<void> {
   selectedIndex.value = key
   kline.value = null
+  indexRange.value = 'all'
   klineLoading.value = true
   try {
     kline.value = await fetchJson<KlineData>(`data/index-kline/${key}.json`)
@@ -177,24 +180,55 @@ async function refreshLive(): Promise<void> {
   else ui.toast('指数实时行情已刷新', 'success')
 }
 
-const klineOption = computed(() => {
-  const values = kline.value?.close?.slice(-180) ?? []
+const filteredKline = computed(() => kline.value
+  ? filterTimeSeries(kline.value.dates ?? [], kline.value.close ?? [], indexRange.value)
+  : { startIndex: 0, dates: [], values: [] })
+const klineTableRows = computed(() => filteredKline.value.dates.map((date, index) => {
+  const absoluteIndex = filteredKline.value.startIndex + index
+  const value = filteredKline.value.values[index]
   return {
-    animationDuration: 220,
-    grid: { left: 10, right: 12, top: 18, bottom: 24, containLabel: true },
-    tooltip: { trigger: 'axis' },
+    date,
+    value,
+    change: dailyChange(value, kline.value?.close?.[absoluteIndex - 1]),
+  }
+}).slice(-30).reverse())
+const klineOption = computed(() => {
+  return {
+    animationDuration: 320,
+    color: [settings.resolvedTheme === 'dark' ? '#4fd1c5' : '#0f766e'],
+    grid: { left: 16, right: 18, top: 34, bottom: 64, containLabel: true },
+    tooltip: {
+      trigger: 'axis',
+      valueFormatter: (value: number) => formatNumber(value),
+    },
+    dataZoom: [
+      { type: 'inside', start: 0, end: 100 },
+      { type: 'slider', height: 18, bottom: 12, borderColor: 'transparent' },
+    ],
     xAxis: {
       type: 'category',
-      data: kline.value?.dates?.slice(-180) ?? [],
-      axisLabel: { hideOverlap: true },
+      data: filteredKline.value.dates,
+      axisLabel: { hideOverlap: true, formatter: (value: string) => value.slice(2, 7) },
     },
     yAxis: { type: 'value', scale: true, splitLine: { lineStyle: { opacity: 0.18 } } },
     series: [{
       type: 'line',
-      data: values,
+      data: filteredKline.value.values,
       showSymbol: false,
-      lineStyle: { width: 1.8 },
-      areaStyle: { opacity: 0.07 },
+      lineStyle: { width: 2.2 },
+      areaStyle: {
+        color: {
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [
+            { offset: 0, color: settings.resolvedTheme === 'dark' ? 'rgba(79,209,197,.32)' : 'rgba(15,118,110,.24)' },
+            { offset: 1, color: 'rgba(15,118,110,0)' },
+          ],
+        },
+      },
     }],
   }
 })
@@ -306,7 +340,7 @@ onBeforeUnmount(() => {
             <div>
               <div class="eyebrow">全球指数</div>
               <h2>全球市场</h2>
-              <p>点击指数查看近 180 个交易日走势。</p>
+              <p>点击指数查看多区间历史走势和每日收盘明细。</p>
             </div>
             <span class="badge">{{ indexItems.length }} 个指数</span>
           </div>
@@ -538,12 +572,41 @@ onBeforeUnmount(() => {
       @close="selectedIndex = ''"
     >
       <div v-if="klineLoading" class="page-state">正在加载走势...</div>
-      <EChart
-        v-else-if="kline"
-        :option="klineOption"
-        :label="`${MARKET_INDEX_LABELS[selectedIndex] || selectedIndex} 历史走势`"
-        height="460px"
-      />
+      <template v-else-if="kline && filteredKline.values.length">
+        <div class="index-trend-toolbar">
+          <span class="inline-note">
+            {{ filteredKline.dates[0] }} 至 {{ filteredKline.dates[filteredKline.dates.length - 1] }}
+          </span>
+          <div class="segmented trend-ranges" role="group" aria-label="指数走势区间">
+            <button
+              v-for="item in TIME_RANGES"
+              :key="item.key"
+              type="button"
+              :class="{ active: indexRange === item.key }"
+              @click="indexRange = item.key"
+            >
+              {{ item.label }}
+            </button>
+          </div>
+        </div>
+        <EChart
+          :option="klineOption"
+          :label="`${MARKET_INDEX_LABELS[selectedIndex] || selectedIndex} 历史走势`"
+          height="460px"
+        />
+        <div class="table-shell trend-history-shell">
+          <table class="data-table compact">
+            <thead><tr><th>日期</th><th class="align-right">收盘</th><th class="align-right">日涨跌</th></tr></thead>
+            <tbody>
+              <tr v-for="row in klineTableRows" :key="row.date">
+                <td class="mono">{{ row.date }}</td>
+                <td class="align-right mono">{{ formatNumber(row.value) }}</td>
+                <td class="align-right mono" :class="movementClass(row.change)">{{ formatPercent(row.change) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </template>
       <div v-else class="page-state">暂无该指数历史走势数据。</div>
     </BaseDrawer>
   </div>

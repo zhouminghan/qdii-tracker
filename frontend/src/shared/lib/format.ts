@@ -62,6 +62,12 @@ export function movementClass(value: unknown): string {
   return number > 0 ? 'is-up' : 'is-down'
 }
 
+export function movementSurfaceClass(value: unknown): string {
+  const number = asNumber(value)
+  if (number === null || number === 0) return 'surface-flat'
+  return number > 0 ? 'surface-up' : 'surface-down'
+}
+
 export function formatFee(value: unknown): string {
   const number = asNumber(value)
   if (number === null || number <= 0) return '--'

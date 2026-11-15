@@ -104,6 +104,28 @@ export interface CatalogEnvelope {
   }
 }
 
+export interface SouthboundProduct {
+  code: string
+  name: string
+  share_class: string
+  currency: string
+  one_year_return_pct: number | null
+  channels: string[]
+  personal_quota_cny: number
+  quota_note: string
+  status: string
+  advantages: string[]
+  risks: string[]
+}
+
+export interface SouthboundData {
+  schema_version: number
+  generated_at: string
+  source: string
+  disclaimer: string
+  products: SouthboundProduct[]
+}
+
 export interface MarketQuote {
   price: number | null
   change: number | null

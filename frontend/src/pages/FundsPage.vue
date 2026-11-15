@@ -7,9 +7,10 @@ import BaseDrawer from '@/shared/components/BaseDrawer.vue'
 import EChart from '@/shared/components/EChart.vue'
 import FundTable from '@/features/funds/FundTable.vue'
 import FundDetailDrawer from '@/features/funds/FundDetailDrawer.vue'
+import SouthboundPanel from '@/features/funds/SouthboundPanel.vue'
 import { ETF_GROUPS, OFFSHORE_CATEGORIES } from '@/shared/constants/funds'
 import type { FundSortKey, FundRow } from '@/shared/lib/funds'
-import { matchesFundQuery } from '@/shared/lib/funds'
+import { formatDailyLimit, matchesFundQuery } from '@/shared/lib/funds'
 import { downloadCsv } from '@/shared/lib/csv'
 import { qualityStatusLabel, qualityWarningText } from '@/shared/lib/data-quality'
 import { formatDateTime } from '@/shared/lib/format'
@@ -21,7 +22,7 @@ import type { KlineData } from '@/types/data'
 const data = useDataStore()
 const ui = useUiStore()
 
-const tab = ref<'offshore' | 'etf'>('offshore')
+const tab = ref<'offshore' | 'etf' | 'southbound'>('offshore')
 const selectedGroup = ref('sp500')
 const search = ref(ui.quickSearch)
 const sortKey = ref<FundSortKey>('series_scale')
@@ -47,6 +48,7 @@ let liveTimer: number | null = null
 let liveBootTimer: number | null = null
 
 const groups = computed(() => {
+  if (tab.value === 'southbound') return []
   if (tab.value === 'etf') {
     return ETF_GROUPS.map((group) => ({ ...group, count: data.allRows.filter((row) => row.category === 'etf' && etfGroupOf(row) === group.key).length }))
   }
@@ -54,6 +56,7 @@ const groups = computed(() => {
 })
 
 const currentRows = computed(() => data.allRows.filter((row) => {
+  if (tab.value === 'southbound') return false
   if (tab.value === 'offshore') {
     return search.value ? row.category !== 'etf' : row.category === selectedGroup.value
   }
@@ -72,6 +75,9 @@ const missingPriceShares = computed(() => data.allRows.flatMap((row) => row.shar
   .filter((share) => share.nav == null && share.etf_price == null)
   .map((share) => ({ code: share.code, name: share.name }))))
 const qualityLabel = computed(() => qualityStatusLabel(data.quality?.status))
+const pageSubtitle = computed(() => tab.value === 'southbound'
+  ? '跨境理财通南向通渠道资料。代码、额度和费率需以银行 APP 当日信息为准。'
+  : '场外 QDII 与场内 ETF 的分类、净值、申购状态和限购额度。默认按规模降序，收藏始终置顶。')
 const sortOptions = computed(() => {
   const fields: Array<{ key: FundSortKey; label: string }> = [
     { key: 'series_scale', label: '规模' },
@@ -91,6 +97,48 @@ const sortOptions = computed(() => {
     { value: `${field.key}:asc`, label: `${field.label} · 升序` },
   ])
 })
+const groupNotices: Record<string, { text: string; tone: 'info' | 'warn' }> = {
+  'offshore:sp500': {
+    tone: 'info',
+    text: '被动跟踪 S&P 500；QDII 限购可能留下 5~10% 现金仓位，长期可能少赚 1~2 个点，但风格不易跑偏。',
+  },
+  'offshore:nasdaq_passive': {
+    tone: 'info',
+    text: '被动跟踪纳斯达克100；限购常态化可能拖累 1~2 个点，长期定投仍需关注现金仓位和溢价。',
+  },
+  'offshore:active': {
+    tone: 'warn',
+    text: '主动基金需核对季报持仓，部分产品可能实际重仓 A 股或港股，不能只看名称判断美股敞口。',
+  },
+  'offshore:global_index': {
+    tone: 'info',
+    text: '覆盖日经225、中韩半导体等非美指数，适合分散区域风险，但汇率和交易时差会放大波动。',
+  },
+  'offshore:global_other': {
+    tone: 'info',
+    text: '覆盖全球配置和非美股核心方向，需同时核对底层市场、汇率和申购状态。',
+  },
+  'etf:sp500': { tone: 'warn', text: '场内交易无申赎费，但高溢价时买入可能承担较大回归风险。' },
+  'etf:nasdaq100': { tone: 'warn', text: '盘中价格实时波动，关注溢价率和成交活跃度，避免在异常溢价追高。' },
+  'etf:global_other': { tone: 'info', text: '不同市场和交易时段差异较大，折溢价与流动性需要单独核对。' },
+}
+const activeGroupNotice = computed(() => search.value
+  ? null
+  : groupNotices[`${tab.value}:${selectedGroup.value}`] ?? null)
+const groupDailyPurchase = computed(() => {
+  if (tab.value !== 'offshore' || search.value) return null
+  let totalLimit = 0
+  let openCount = 0
+  for (const row of currentRows.value) {
+    const share = row.defaultShare
+    if (!String(share.share_class).includes('A') || String(share.buy_status || '').includes('暂停')) continue
+    if (share.daily_limit && share.daily_limit > 0) totalLimit += share.daily_limit
+    else if (String(share.buy_status || '').includes('开放')) openCount += 1
+  }
+  if (totalLimit > 0) return `当前每日可购买 ${formatDailyLimit(totalLimit, '人民币')}（仅 A 类）`
+  if (openCount > 0) return `${openCount} 只 A 类当前开放申购`
+  return '当前分组没有可申购的 A 类份额'
+})
 
 watch(() => ui.quickSearch, (value) => {
   search.value = value
@@ -99,8 +147,9 @@ watch(search, (value) => {
   ui.quickSearch = value.trim()
 })
 watch(tab, () => {
-  selectedGroup.value = tab.value === 'offshore' ? 'sp500' : 'sp500'
   if (liveBootTimer !== null) window.clearTimeout(liveBootTimer)
+  if (tab.value === 'southbound') return
+  selectedGroup.value = tab.value === 'offshore' ? 'sp500' : 'sp500'
   if (tab.value === 'etf' && !navigator.webdriver) {
     liveBootTimer = window.setTimeout(() => {
       if (!document.hidden) void data.refreshEtfQuotes()
@@ -108,7 +157,7 @@ watch(tab, () => {
   }
 })
 
-function setTab(next: 'offshore' | 'etf'): void {
+function setTab(next: 'offshore' | 'etf' | 'southbound'): void {
   tab.value = next
 }
 
@@ -136,22 +185,46 @@ function openDetail(row: FundRow): void {
   detailOpen.value = true
 }
 
-async function toggleCompare(row: FundRow): Promise<void> {
-  const existing = compareRows.value.some((item) => item.default_share_code === row.default_share_code)
-  if (existing) {
-    compareRows.value = compareRows.value.filter((item) => item.default_share_code !== row.default_share_code)
-    return
-  }
+const compareCandidates = computed(() => data.allRows
+  .filter((row) => !compareRows.value.some((selected) => selected.default_share_code === row.default_share_code))
+  .sort((left, right) => left.display_name.localeCompare(right.display_name, 'zh-CN')))
+
+function openCompareDrawer(): void {
+  compareOpen.value = true
+  if (compareRows.value.length >= 2) void loadCompareSeries()
+}
+
+function addCompareFund(event: Event): void {
+  const select = event.target as HTMLSelectElement
+  const row = data.allRows.find((candidate) => candidate.default_share_code === select.value)
+  select.value = ''
+  if (!row) return
   if (compareRows.value.length >= 3) {
     ui.toast('最多同时对比 3 只基金', 'info')
     return
   }
   compareRows.value = [...compareRows.value, row]
+  if (compareRows.value.length >= 2) void loadCompareSeries()
+  else {
+    compareSeries.value = []
+    compareError.value = ''
+  }
 }
 
-async function openCompare(): Promise<void> {
-  if (!compareRows.value.length) return
-  compareOpen.value = true
+function removeCompareFund(code: string): void {
+  compareRows.value = compareRows.value.filter((row) => row.default_share_code !== code)
+  if (compareRows.value.length >= 2) void loadCompareSeries()
+  else {
+    compareSeries.value = []
+    compareError.value = ''
+  }
+}
+
+async function loadCompareSeries(): Promise<void> {
+  if (compareRows.value.length < 2) {
+    compareSeries.value = []
+    return
+  }
   compareLoading.value = true
   compareError.value = ''
   try {
@@ -189,7 +262,7 @@ async function openCompare(): Promise<void> {
 function clearCompare(): void {
   compareRows.value = []
   compareSeries.value = []
-  compareOpen.value = false
+  compareError.value = ''
 }
 
 function exportRows(): void {
@@ -286,31 +359,49 @@ onBeforeUnmount(() => {
       <div class="page-title-group">
         <div class="eyebrow">基金全景</div>
         <h1>基金追踪</h1>
-        <p class="page-subtitle">场外 QDII 与场内 ETF 的分类、净值、申购状态和限购额度。默认按规模降序，收藏始终置顶。</p>
+        <p class="page-subtitle">{{ pageSubtitle }}</p>
       </div>
       <div class="page-actions">
-        <span v-if="data.generatedAt" class="data-stamp">数据 {{ formatDateTime(data.generatedAt) }}</span>
-        <span v-if="tab === 'etf' && data.etfLiveError" class="live-status is-error" role="status">实时失败 · 已回退快照</span>
-        <span v-else-if="tab === 'etf' && data.etfLiveUpdatedAt" class="live-status" role="status">实时 {{ formatDateTime(data.etfLiveUpdatedAt) }}</span>
-        <button v-if="tab === 'etf'" class="button button-secondary" type="button" :disabled="data.etfLiveLoading" @click="refreshLive">
-          <Radio :size="15" :class="{ spin: data.etfLiveLoading }" aria-hidden="true" /> 实时行情
-        </button>
-        <button class="button button-secondary" type="button" @click="exportRows">
-          <Download :size="15" aria-hidden="true" /> CSV
-        </button>
-        <button class="button button-secondary" type="button" :disabled="sharing" @click="exportImage">
-          <ImageDown :size="15" :class="{ spin: sharing }" aria-hidden="true" /> 分享 PNG
-        </button>
-        <button v-if="compareRows.length" class="button button-primary" type="button" @click="openCompare">
-          <GitCompareArrows :size="15" aria-hidden="true" /> 对比 {{ compareRows.length }}
-        </button>
-        <button class="button button-secondary" type="button" :disabled="data.loading" @click="retry">
-          <RefreshCw :size="15" :class="{ spin: data.loading }" aria-hidden="true" /> 刷新
-        </button>
+        <template v-if="tab !== 'southbound'">
+          <span v-if="data.generatedAt" class="data-stamp">数据 {{ formatDateTime(data.generatedAt) }}</span>
+          <span v-if="tab === 'etf' && data.etfLiveError" class="live-status is-error" role="status">实时失败 · 已回退快照</span>
+          <span v-else-if="tab === 'etf' && data.etfLiveUpdatedAt" class="live-status" role="status">实时 {{ formatDateTime(data.etfLiveUpdatedAt) }}</span>
+          <button v-if="tab === 'etf'" class="button button-secondary" type="button" :disabled="data.etfLiveLoading" @click="refreshLive">
+            <Radio :size="15" :class="{ spin: data.etfLiveLoading }" aria-hidden="true" /> 实时行情
+          </button>
+          <button class="button button-secondary" type="button" @click="exportRows">
+            <Download :size="15" aria-hidden="true" /> CSV
+          </button>
+          <button class="button button-secondary" type="button" :disabled="sharing" @click="exportImage">
+            <ImageDown :size="15" :class="{ spin: sharing }" aria-hidden="true" /> 分享 PNG
+          </button>
+          <button
+            class="button"
+            :class="compareRows.length ? 'button-primary' : 'button-secondary'"
+            type="button"
+            @click="openCompareDrawer"
+          >
+            <GitCompareArrows :size="15" aria-hidden="true" /> 对比{{ compareRows.length ? ` ${compareRows.length}` : '' }}
+          </button>
+          <button class="button button-secondary" type="button" :disabled="data.loading" @click="retry">
+            <RefreshCw :size="15" :class="{ spin: data.loading }" aria-hidden="true" /> 刷新
+          </button>
+        </template>
+        <span v-else class="data-stamp">渠道资料 · 2026-11-15</span>
       </div>
     </header>
 
-    <DataState :loading="data.loading" :error="data.error" @retry="retry">
+    <section class="fund-toolbar fund-type-toolbar" aria-label="基金类型">
+      <div class="segmented" role="group" aria-label="基金类型">
+        <button type="button" :class="{ active: tab === 'offshore' }" :aria-pressed="tab === 'offshore'" @click="setTab('offshore')">场外基金</button>
+        <button type="button" :class="{ active: tab === 'etf' }" :aria-pressed="tab === 'etf'" @click="setTab('etf')">场内 ETF</button>
+        <button type="button" :class="{ active: tab === 'southbound' }" :aria-pressed="tab === 'southbound'" @click="setTab('southbound')">南向通</button>
+      </div>
+    </section>
+
+    <SouthboundPanel v-if="tab === 'southbound'" />
+
+    <DataState v-else :loading="data.loading" :error="data.error" @retry="retry">
       <template v-if="data.catalog">
         <div v-if="data.quality?.status !== 'ok'" class="notice notice-warn" role="status">
           <Info :size="15" aria-hidden="true" />
@@ -326,10 +417,6 @@ onBeforeUnmount(() => {
         </div>
 
         <section class="fund-toolbar" aria-label="基金筛选">
-          <div class="segmented" role="group" aria-label="市场类型">
-            <button type="button" :class="{ active: tab === 'offshore' }" :aria-pressed="tab === 'offshore'" @click="setTab('offshore')">场外基金</button>
-            <button type="button" :class="{ active: tab === 'etf' }" :aria-pressed="tab === 'etf'" @click="setTab('etf')">场内 ETF</button>
-          </div>
           <label class="inline-search">
             <Search :size="15" aria-hidden="true" />
             <input v-model="search" type="search" placeholder="代码、名称、公司" aria-label="搜索基金目录（跨分类）" />
@@ -360,11 +447,19 @@ onBeforeUnmount(() => {
           </button>
         </div>
 
+        <aside v-if="activeGroupNotice" class="group-brief" :class="`group-brief-${activeGroupNotice.tone}`">
+          <Info :size="15" aria-hidden="true" />
+          <div>
+            <p>{{ activeGroupNotice.text }}</p>
+            <p v-if="groupDailyPurchase"><strong>{{ groupDailyPurchase }}</strong></p>
+          </div>
+        </aside>
+
         <div ref="shareSurface" class="funds-share-surface">
           <div class="list-heading">
             <div>
               <h2>{{ tab === 'offshore' ? '场外 QDII' : '场内 ETF' }}</h2>
-              <p>{{ search ? `跨分类搜索“${search}”` : `${currentGroupLabel} · 按分类展示` }}</p>
+              <p>{{ search ? `跨分类搜索“${search}”` : '规模降序 · 收藏置顶' }}</p>
             </div>
             <span class="badge">{{ visibleRows.length }} 个系列</span>
           </div>
@@ -377,10 +472,9 @@ onBeforeUnmount(() => {
             :total-scale="totalScale"
             :nav-date="visibleNavDate"
             :category-label="categoryLabel"
-            :compare-codes="compareRows.map((row) => row.default_share_code)"
+            :show-category="Boolean(search)"
             @sort="sortBy"
             @detail="openDetail"
-            @compare="toggleCompare"
           />
         </div>
       </template>
@@ -393,14 +487,33 @@ onBeforeUnmount(() => {
     />
 
     <BaseDrawer :open="compareOpen" title="基金走势对比" eyebrow="归一化表现" width="min(920px, 100vw)" @close="compareOpen = false">
-      <div class="compare-toolbar">
-        <div class="chip-row">
-          <span v-for="row in compareRows" :key="row.default_share_code" class="chip active">{{ row.display_name }}</span>
+      <div class="compare-picker">
+        <label class="field span-2">
+          <span>添加基金</span>
+          <select class="select" aria-label="添加对比基金" :disabled="compareRows.length >= 3" @change="addCompareFund">
+            <option value="">选择基金加入对比</option>
+            <option v-for="row in compareCandidates" :key="row.default_share_code" :value="row.default_share_code">
+              {{ row.display_name }} · {{ row.default_share_code }}
+            </option>
+          </select>
+        </label>
+        <div v-if="compareRows.length" class="chip-row">
+          <button
+            v-for="row in compareRows"
+            :key="row.default_share_code"
+            class="chip active compare-chip"
+            type="button"
+            :aria-label="`移除 ${row.display_name}`"
+            @click="removeCompareFund(row.default_share_code)"
+          >
+            {{ row.display_name }} <X :size="12" aria-hidden="true" />
+          </button>
         </div>
-        <button class="button button-secondary" type="button" @click="clearCompare">清空</button>
+        <button v-if="compareRows.length" class="button button-secondary" type="button" @click="clearCompare">清空</button>
       </div>
-      <p class="inline-note">近一年净值按各自首个有效值归一化，只比较走势，不叠加汇率或费用之外的额外推算。</p>
-      <div v-if="compareLoading" class="page-state">正在加载对比数据...</div>
+      <p class="inline-note">最多选择 3 只，近一年净值按各自首个有效值归一化。</p>
+      <div v-if="compareRows.length < 2" class="page-state">再选择 {{ 2 - compareRows.length }} 只基金开始对比。</div>
+      <div v-else-if="compareLoading" class="page-state">正在加载对比数据...</div>
       <div v-else-if="compareError" class="notice notice-danger">{{ compareError }}</div>
       <EChart v-else-if="compareSeries.length" :option="compareOption" label="多基金归一化收益对比图" height="420px" />
     </BaseDrawer>

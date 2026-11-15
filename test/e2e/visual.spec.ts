@@ -45,4 +45,23 @@ test.describe('visual baselines', () => {
     await expect(page.getByRole('heading', { name: '投资组合' })).toBeVisible()
     await expect(page).toHaveScreenshot('portfolio-mobile-dark.png', { fullPage: true })
   })
+
+  test('Southbound desktop light', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 })
+    await page.goto('/#/funds')
+    await page.getByRole('button', { name: '南向通' }).click()
+    await expect(page.getByRole('heading', { name: '易方达（香港）标普500指数基金' })).toBeVisible()
+    await expect(page).toHaveScreenshot('southbound-desktop-light.png', { fullPage: true })
+  })
+
+  test('Fund trend desktop light', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 })
+    await page.goto('/#/funds')
+    await page.getByLabel('搜索基金目录（跨分类）').fill('050025')
+    await page.locator('.table-action:visible').filter({ hasText: '详情' }).first().click()
+    await page.getByRole('tab', { name: '走势' }).click()
+    await page.getByRole('button', { name: '5年' }).click()
+    await expect(page.getByRole('dialog')).toBeVisible()
+    await expect(page).toHaveScreenshot('fund-trend-desktop-light.png')
+  })
 })

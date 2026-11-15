@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { ChevronDown, ChevronRight, GitCompareArrows, LineChart, Star } from '@lucide/vue'
+import { ChevronDown, ChevronRight, LineChart, Star } from '@lucide/vue'
 import type { FundSortKey, FundRow } from '@/shared/lib/funds'
-import { buyStatusLabel, classifyBuyStatus, formatDailyLimit, sortFundRows } from '@/shared/lib/funds'
+import { buyStatusLabel, classifyBuyStatus, sortFundRows } from '@/shared/lib/funds'
 import FundShareComparisonTable from '@/features/funds/FundShareComparisonTable.vue'
-import { formatDate, formatPercent, formatPrice, movementClass } from '@/shared/lib/format'
+import { formatDate, formatPercent, formatPrice, movementClass, movementSurfaceClass } from '@/shared/lib/format'
 import { performanceDisplay, type PerformanceKey } from '@/shared/lib/performance'
 import { useSettingsStore } from '@/stores/settings'
 import { useDataStore } from '@/stores/data'
@@ -17,12 +17,11 @@ const props = defineProps<{
   totalScale: number
   navDate: string | null
   categoryLabel: (row: FundRow) => string
-  compareCodes: string[]
+  showCategory: boolean
 }>()
 const emit = defineEmits<{
   sort: [key: FundSortKey]
   detail: [row: FundRow]
-  compare: [row: FundRow]
 }>()
 
 const settings = useSettingsStore()
@@ -50,7 +49,6 @@ const columns = computed<Array<{ key: FundSortKey | null; label: string; align?:
   ...(props.tab === 'offshore' ? [
     { key: 'chg_since_inception' as const, label: '成立来', align: 'right' as const },
     { key: 'buy_status' as const, label: '申购', align: 'center' as const },
-    { key: null, label: '日限额', align: 'center' as const },
   ] : []),
   { key: null, label: '操作', align: 'center' },
 ])
@@ -85,22 +83,21 @@ function price(row: FundRow): number | null {
 }
 
 function logoColor(company: string): string {
-  return data.catalog?.data.company_brands[company]?.color ?? '#506070'
+  return data.catalog?.data.company_brands[company]?.color
+    ?? (settings.resolvedTheme === 'dark' ? '#c8d1dc' : '#506070')
 }
 
 function logoLetter(company: string): string {
-  return data.catalog?.data.company_brands[company]?.letter ?? company.slice(0, 1)
+  const configured = data.catalog?.data.company_brands[company]?.letter
+  if (configured) return configured
+  const sameInitial = new Set(data.allRows
+    .map((row) => row.company)
+    .filter((name) => name.startsWith(company.slice(0, 1))))
+  return sameInitial.size > 1 ? company.slice(0, 2) : company.slice(0, 1)
 }
 
 function companySuffix(row: FundRow): string {
   return row.display_name.includes(row.company) ? '' : row.company
-}
-
-function dailyLimitText(row: FundRow): string {
-  if (String(row.defaultShare.buy_status || '').includes('封闭')) return '封闭期'
-  if (classifyBuyStatus(row.defaultShare) === 'paused') return '—'
-  const limit = formatDailyLimit(row.defaultShare.daily_limit, row.defaultShare.currency)
-  return limit === '--' ? (row.defaultShare.buy_status?.includes('开放') ? '不限' : '--') : limit
 }
 
 function metricDisplay(row: FundRow, key: PerformanceKey): string {
@@ -185,7 +182,7 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
                 >
                   <Star :size="14" :fill="settings.isFavorite(row.default_share_code) ? 'currentColor' : 'none'" aria-hidden="true" />
                 </button>
-                <span class="fund-logo" :style="{ color: logoColor(row.company), background: `${logoColor(row.company)}16` }">
+                <span class="fund-logo" :class="{ compact: logoLetter(row.company).length > 1 }" :style="{ color: logoColor(row.company), background: `${logoColor(row.company)}16` }">
                   {{ logoLetter(row.company) }}
                 </span>
                 <div class="fund-name-block">
@@ -193,7 +190,7 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
                   <span>
                     <span class="mono">{{ row.defaultShare.code }}</span>
                     <template v-if="companySuffix(row)"> · {{ companySuffix(row) }}</template>
-                    <span class="badge">{{ categoryLabel(row) }}</span>
+                    <span v-if="showCategory" class="badge">{{ categoryLabel(row) }}</span>
                     <span class="badge">{{ tab === 'etf' ? 'ETF' : `${row.shares.length} 份额` }}</span>
                   </span>
                 </div>
@@ -221,17 +218,11 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
               <td class="align-center">
                 <span class="badge" :class="statusClass(row)" :title="row.defaultShare.buy_status || '--'">{{ buyStatusLabel(row.defaultShare) }}</span>
               </td>
-              <td class="align-center mono">{{ dailyLimitText(row) }}</td>
             </template>
             <td class="align-center">
-              <div class="table-action-group">
-                <button class="table-action" :class="{ active: compareCodes.includes(row.default_share_code) }" type="button" @click.stop="emit('compare', row)">
-                  <GitCompareArrows :size="14" aria-hidden="true" /> 对比
-                </button>
-                <button class="table-action" type="button" @click.stop="emit('detail', row)">
-                  <LineChart :size="14" aria-hidden="true" /> 详情
-                </button>
-              </div>
+              <button class="table-action" type="button" @click.stop="emit('detail', row)">
+                <LineChart :size="14" aria-hidden="true" /> 详情
+              </button>
             </td>
           </tr>
           <tr v-if="tab === 'offshore' && expanded.has(row.default_share_code)" class="shares-row">
@@ -258,10 +249,10 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
     <article v-for="row in sortedRows" :key="row.series_id" class="fund-mobile-card">
       <div class="fund-mobile-head">
         <div class="fund-identity">
-          <span class="fund-logo" :style="{ color: logoColor(row.company), background: `${logoColor(row.company)}16` }">{{ logoLetter(row.company) }}</span>
+          <span class="fund-logo" :class="{ compact: logoLetter(row.company).length > 1 }" :style="{ color: logoColor(row.company), background: `${logoColor(row.company)}16` }">{{ logoLetter(row.company) }}</span>
           <div class="fund-name-block">
             <strong>{{ tab === 'etf' ? row.defaultShare.name : row.display_name }}</strong>
-            <span><span class="mono">{{ row.default_share_code }}</span><template v-if="companySuffix(row)"> · {{ companySuffix(row) }}</template> <span class="badge">{{ categoryLabel(row) }}</span></span>
+            <span><span class="mono">{{ row.default_share_code }}</span><template v-if="companySuffix(row)"> · {{ companySuffix(row) }}</template> <span v-if="showCategory" class="badge">{{ categoryLabel(row) }}</span></span>
           </div>
         </div>
         <button
@@ -281,17 +272,19 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
         <div v-else><span>申购</span><span class="badge" :class="statusClass(row)" :title="row.defaultShare.buy_status || '--'">{{ buyStatusLabel(row.defaultShare) }}</span></div>
       </div>
       <div class="fund-mobile-performance">
-        <div v-for="item in mobilePerformance()" :key="item.key">
+        <div
+          v-for="item in mobilePerformance()"
+          :key="item.key"
+          :class="movementSurfaceClass(row.defaultShare[item.key])"
+        >
           <span>{{ item.label }}</span>
           <b class="mono" :class="movementClass(row.defaultShare[item.key])">{{ metricDisplay(row, item.key) }}</b>
         </div>
       </div>
       <div class="fund-mobile-foot">
         <span>近 1 年 <b class="mono" :class="movementClass(row.defaultShare.chg_1y)">{{ metricDisplay(row, 'chg_1y') }}</b></span>
-        <span v-if="tab === 'offshore'">日限额 <b class="mono">{{ dailyLimitText(row) }}</b></span>
-        <span v-else>规模 <b class="mono">{{ scaleText(row.series_scale) }}</b></span>
+        <span v-if="tab === 'etf'">规模 <b class="mono">{{ scaleText(row.series_scale) }}</b></span>
         <div class="fund-mobile-actions">
-          <button class="button" :class="{ 'button-primary': compareCodes.includes(row.default_share_code) }" type="button" @click="emit('compare', row)">对比</button>
           <button
             v-if="tab === 'offshore'"
             class="button"

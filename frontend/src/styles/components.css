@@ -129,6 +129,20 @@
   background: var(--color-surface);
 }
 
+.surface-up {
+  border-color: color-mix(in srgb, var(--color-positive) 22%, var(--color-border));
+  background: color-mix(in srgb, var(--color-positive-soft) 78%, var(--color-surface));
+}
+
+.surface-down {
+  border-color: color-mix(in srgb, var(--color-negative) 22%, var(--color-border));
+  background: color-mix(in srgb, var(--color-negative-soft) 78%, var(--color-surface));
+}
+
+.surface-flat {
+  background: var(--color-surface-raised);
+}
+
 .metric-label {
   overflow: hidden;
   color: var(--color-text-tertiary);

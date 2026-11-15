@@ -6,6 +6,9 @@ test.describe('funds workflow', () => {
     await page.goto('/#/funds')
     await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible').first()).toBeVisible()
     await expect(page.getByRole('button', { name: '取消收藏' }).first()).toBeVisible()
+    await expect(page.locator('.table-action').filter({ hasText: '对比' })).toHaveCount(0)
+    await expect(page.getByRole('button', { name: '对比', exact: true })).toBeVisible()
+    await expect(page.getByText('当前每日可购买 ¥60（仅 A 类）')).toBeVisible()
 
     await page.getByLabel('搜索基金目录（跨分类）').fill('022525')
     await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible')).toHaveCount(1)
@@ -18,10 +21,24 @@ test.describe('funds workflow', () => {
 
     const dialog = page.getByRole('dialog')
     await expect(dialog).toBeVisible()
+    await expect(dialog.locator('.metric-card.surface-up, .metric-card.surface-down').first()).toBeVisible()
     const dShare = dialog.locator('.share-comparison-table tbody tr').filter({ hasText: '022525' })
-    await expect(dShare).toContainText('限大额')
-    await expect(dShare).toContainText('¥100')
-    await expect(dShare).toContainText('不足3年')
+    await expect(dShare).toContainText('限 ¥100')
+  })
+
+  test('uses distinct company logos and exposes the Southbound category', async ({ page }) => {
+    await page.goto('/#/funds')
+    const search = page.getByLabel('搜索基金目录（跨分类）')
+    await search.fill('华宝')
+    await expect(page.locator('.fund-row:visible .fund-logo, .fund-mobile-card:visible .fund-logo').first()).toHaveText('华宝')
+    await search.fill('华夏')
+    await expect(page.locator('.fund-row:visible .fund-logo, .fund-mobile-card:visible .fund-logo').first()).toHaveText('华夏')
+
+    await page.getByRole('button', { name: '清空搜索' }).click()
+    await page.getByRole('button', { name: '南向通' }).click()
+    await expect(page.getByRole('heading', { name: '易方达（香港）标普500指数基金' })).toBeVisible()
+    await expect(page.getByText('83004', { exact: true })).toBeVisible()
+    await expect(page.getByText('香港众安银行 ZA Bank')).toBeVisible()
   })
 
   test('labels closed-period shares without pretending they have a price', async ({ page }) => {
@@ -51,6 +68,22 @@ test.describe('funds workflow', () => {
     await dialog.getByRole('button', { name: /C · 006075/ }).click()
     await expect(dialog.locator('.metric-card').filter({ hasText: '免赎回费持有期' }).locator('.metric-value')).toHaveText('7 天')
     await expect(dialog.locator('.fee-rule-block').first().getByText('免费', { exact: true })).toBeVisible()
+
+    await dialog.getByRole('button', { name: /A · 050025/ }).click()
+    await expect(dialog.locator('.fee-rule-block').first().locator('del').first()).toBeVisible()
+  })
+
+  test('supports long trend ranges and a net-value table', async ({ page }) => {
+    await page.goto('/#/funds')
+    await page.getByLabel('搜索基金目录（跨分类）').fill('050025')
+    await page.locator('.table-action:visible, .fund-mobile-actions button:visible').filter({ hasText: /详情/ }).first().click()
+    const dialog = page.getByRole('dialog')
+    await dialog.getByRole('tab', { name: '走势' }).click()
+    await expect(dialog.getByRole('button', { name: '3年' })).toBeVisible()
+    await expect(dialog.getByRole('button', { name: '5年' })).toBeVisible()
+    await expect(dialog.getByRole('button', { name: '10年' })).toBeVisible()
+    await expect(dialog.getByRole('columnheader', { name: '单位净值' })).toBeVisible()
+    await expect(dialog.locator('.trend-history-shell tbody tr').first()).toBeVisible()
   })
 
   test('compares current holdings with the previous quarter', async ({ page }) => {
@@ -111,12 +144,10 @@ test.describe('funds workflow', () => {
   test('compares up to multiple funds on one normalized chart', async ({ page }) => {
     await page.goto('/#/funds')
     await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible').first()).toBeVisible()
-    const compareButtons = page
-      .locator('button.table-action:visible, .fund-mobile-actions button:visible')
-      .filter({ hasText: '对比' })
-    await compareButtons.nth(0).click()
-    await compareButtons.nth(1).click()
-    await page.getByRole('button', { name: '对比 2' }).click()
+    await page.getByRole('button', { name: '对比', exact: true }).click()
+    const picker = page.getByLabel('添加对比基金')
+    await picker.selectOption('050025')
+    await picker.selectOption('017641')
     await expect(page.getByRole('dialog')).toBeVisible()
     await expect(page.getByRole('img', { name: '多基金归一化收益对比图' })).toBeVisible()
   })

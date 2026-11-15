@@ -13,6 +13,15 @@
   backdrop-filter: blur(12px);
 }
 
+.index-trend-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
 .anchor-bar a {
   padding: 6px 9px;
   border-radius: var(--radius-sm);

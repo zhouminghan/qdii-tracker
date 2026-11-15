@@ -4,10 +4,11 @@ import { CircleAlert, ExternalLink, History, Star, TrendingUp } from '@lucide/vu
 import BaseDrawer from '@/shared/components/BaseDrawer.vue'
 import EChart from '@/shared/components/EChart.vue'
 import FundShareComparisonTable from '@/features/funds/FundShareComparisonTable.vue'
-import { buyStatusLabel, formatDailyLimit, type FundRow } from '@/shared/lib/funds'
-import { asNumber, daysSince, formatDate, formatPercent, formatPrice, movementClass } from '@/shared/lib/format'
+import { buyStatusLabel, type FundRow } from '@/shared/lib/funds'
+import { asNumber, daysSince, formatDate, formatPercent, formatPrice, movementClass, movementSurfaceClass } from '@/shared/lib/format'
 import { annualFeeDetail, cleanRuleCondition, formatHoldPeriod, formatRuleRate, freeHoldDays, sellRuleLabel, totalAnnualFee } from '@/shared/lib/fund-rules'
 import { performanceDisplay, type PerformanceKey } from '@/shared/lib/performance'
+import { dailyChange, filterTimeSeries, TIME_RANGES, type TimeRange } from '@/shared/lib/time-series'
 import { fetchJson } from '@/shared/infrastructure/http'
 import type { BuyStatusHistory, FundShare, HoldingItem, HoldingsData, KlineData } from '@/types/data'
 import { useSettingsStore } from '@/stores/settings'
@@ -20,7 +21,7 @@ const emit = defineEmits<{ close: [] }>()
 
 const settings = useSettingsStore()
 const mode = ref<'overview' | 'trend' | 'holdings' | 'fees'>('overview')
-const range = ref<'1m' | '3m' | '6m' | '1y' | 'all'>('1y')
+const range = ref<TimeRange>('1y')
 const history = ref<KlineData | null>(null)
 const holdings = ref<HoldingsData | null>(null)
 const loading = ref(false)
@@ -92,36 +93,70 @@ const previousHoldingByCode = computed(() => new Map(
   ).map((item) => [item.stock_code, item]),
 ))
 
-const filteredHistory = computed(() => {
-  if (!history.value) return []
+const filteredSeries = computed(() => {
+  if (!history.value) return { startIndex: 0, dates: [], values: [] }
   const dates = history.value.dates ?? []
   const values = history.value.navs ?? history.value.close ?? []
-  const count = range.value === '1m' ? 22 : range.value === '3m' ? 66 : range.value === '6m' ? 132 : range.value === '1y' ? 252 : values.length
-  return dates.slice(-count).map((date, index) => [date, values.slice(-count)[index]] as [string, number])
+  return filterTimeSeries(dates, values, range.value)
+})
+
+const historyTableRows = computed(() => {
+  const fullValues = history.value?.navs ?? history.value?.close ?? []
+  return filteredSeries.value.dates.map((date, index) => {
+    const absoluteIndex = filteredSeries.value.startIndex + index
+    const value = filteredSeries.value.values[index]
+    return {
+      date,
+      value,
+      change: dailyChange(value, fullValues[absoluteIndex - 1]),
+    }
+  }).slice(-30).reverse()
 })
 
 const trendOption = computed(() => ({
-  animationDuration: 260,
-  grid: { left: 12, right: 16, top: 24, bottom: 30, containLabel: true },
-  tooltip: { trigger: 'axis' },
+  animationDuration: 320,
+  color: [settings.resolvedTheme === 'dark' ? '#4fd1c5' : '#0f766e'],
+  grid: { left: 16, right: 18, top: 34, bottom: 62, containLabel: true },
+  tooltip: {
+    trigger: 'axis',
+    valueFormatter: (value: number) => value?.toFixed(4),
+  },
+  dataZoom: [
+    { type: 'inside', start: 0, end: 100 },
+    { type: 'slider', height: 18, bottom: 12, borderColor: 'transparent' },
+  ],
   xAxis: {
     type: 'category',
     boundaryGap: false,
-    data: filteredHistory.value.map((item) => item[0]),
-    axisLabel: { hideOverlap: true },
+    data: filteredSeries.value.dates,
+    axisLabel: { hideOverlap: true, formatter: (value: string) => value.slice(2, 7) },
+    axisLine: { lineStyle: { color: settings.resolvedTheme === 'dark' ? '#303640' : '#dde0e5' } },
   },
   yAxis: {
     type: 'value',
     scale: true,
-    splitLine: { lineStyle: { opacity: 0.22 } },
+    axisLabel: { formatter: (value: number) => value.toFixed(2) },
+    splitLine: { lineStyle: { opacity: 0.18 } },
   },
   series: [{
     type: 'line',
-    data: filteredHistory.value.map((item) => item[1]),
+    data: filteredSeries.value.values,
     showSymbol: false,
     smooth: false,
-    lineStyle: { width: 1.8 },
-    areaStyle: { opacity: 0.08 },
+    lineStyle: { width: 2.2 },
+    areaStyle: {
+      color: {
+        type: 'linear',
+        x: 0,
+        y: 0,
+        x2: 0,
+        y2: 1,
+        colorStops: [
+          { offset: 0, color: settings.resolvedTheme === 'dark' ? 'rgba(79,209,197,.32)' : 'rgba(15,118,110,.24)' },
+          { offset: 1, color: 'rgba(15,118,110,0)' },
+        ],
+      },
+    },
   }],
 }))
 
@@ -195,10 +230,8 @@ function historyLimitText(entry: BuyStatusHistory): string {
   return unit ? `${amount} ${unit}` : amount
 }
 
-function setRange(value: string): void {
-  if (value === '1m' || value === '3m' || value === '6m' || value === '1y' || value === 'all') {
-    range.value = value
-  }
+function setRange(value: TimeRange): void {
+  range.value = value
 }
 
 function shareBuyFee(share: FundShare): string {
@@ -267,9 +300,6 @@ function holdingChangeClass(item: HoldingItem): string {
             {{ settings.isFavorite(defaultShare.code) ? '已收藏' : '收藏' }}
           </button>
           <span class="badge" :class="statusTone()" :title="defaultShare.buy_status || '场内交易'">{{ buyStatusLabel(defaultShare) }}</span>
-          <span v-if="defaultShare.daily_limit && defaultShare.daily_limit > 0" class="badge badge-warn">
-            日限额 {{ formatDailyLimit(defaultShare.daily_limit, defaultShare.currency) }}
-          </span>
         </div>
       </div>
 
@@ -290,7 +320,12 @@ function holdingChangeClass(item: HoldingItem): string {
       <section v-if="mode === 'overview'" class="detail-section">
         <h3>业绩表现</h3>
         <div class="metric-grid">
-          <div v-for="item in performanceMetrics" :key="item.label" class="metric-card">
+          <div
+            v-for="item in performanceMetrics"
+            :key="item.label"
+            class="metric-card"
+            :class="item.scale ? 'surface-flat' : movementSurfaceClass(item.value)"
+          >
             <span class="metric-label">{{ item.label }}</span>
             <strong class="metric-value" :class="item.scale ? '' : movementClass(item.value)">
               {{ item.scale
@@ -351,12 +386,26 @@ function holdingChangeClass(item: HoldingItem): string {
             <h3>历史净值</h3>
             <p v-if="history">更新于 {{ formatDate(history.updated_at) }}</p>
           </div>
-          <div class="segmented" role="group" aria-label="走势区间">
-            <button v-for="item in [['1m', '1月'], ['3m', '3月'], ['6m', '6月'], ['1y', '1年'], ['all', '全部']]" :key="item[0]" type="button" :class="{ active: range === item[0] }" @click="setRange(item[0])">{{ item[1] }}</button>
+          <div class="segmented trend-ranges" role="group" aria-label="走势区间">
+            <button v-for="item in TIME_RANGES" :key="item.key" type="button" :class="{ active: range === item.key }" @click="setRange(item.key)">{{ item.label }}</button>
           </div>
         </div>
         <div v-if="loading" class="page-state">正在加载走势...</div>
-        <EChart v-else-if="filteredHistory.length" :option="trendOption" label="历史净值走势图" height="320px" />
+        <template v-else-if="filteredSeries.values.length">
+          <EChart :option="trendOption" label="历史净值走势图" height="380px" />
+          <div class="table-shell trend-history-shell">
+            <table class="data-table compact">
+              <thead><tr><th>日期</th><th class="align-right">单位净值</th><th class="align-right">日涨跌</th></tr></thead>
+              <tbody>
+                <tr v-for="point in historyTableRows" :key="point.date">
+                  <td class="mono">{{ point.date }}</td>
+                  <td class="align-right mono">{{ point.value.toFixed(4) }}</td>
+                  <td class="align-right mono" :class="movementClass(point.change)">{{ formatPercent(point.change) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </template>
         <div v-else class="page-state">
           <TrendingUp :size="18" aria-hidden="true" />
           暂无可用走势数据

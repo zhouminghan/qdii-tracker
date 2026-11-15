@@ -6,6 +6,7 @@
 |------|--------|------|----------|
 | 场外基金净值/申购 | 天天基金、pingzhongdata、AKShare | 六个分类 JSON | 保留旧值，nav_date 不回退 |
 | 区间收益补算 | 本地 `nav-history/`、pingzhongdata | 六个分类 JSON | 只填 `null`，不覆盖已有公开值；封闭期份额不伪造净值 |
+| 南向通渠道资料 | 用户渠道信息、银行 APP 人工核验 | `southbound.json` | 不伪造实时净值；代码、额度和可购状态以银行 APP 为准 |
 | ETF 价格/规模 | 东方财富、AKShare | `etf.json` | 保留旧值并标记缺失 |
 | 指数/ETF/外汇/科技股 K 线 | 东方财富、腾讯、Yahoo | `index-kline/`、`etf-kline/`、`fx-kline/` | 保留最近成功快照 |
 | 美债收益率 | 东方财富 | `macro-rates.json` | 复用旧快照 |

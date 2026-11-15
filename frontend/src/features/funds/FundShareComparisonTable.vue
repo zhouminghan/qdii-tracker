@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { FundShare } from '@/types/data'
-import { buyStatusLabel, classifyBuyStatus, formatDailyLimit } from '@/shared/lib/funds'
+import { buyStatusLabel, classifyBuyStatus } from '@/shared/lib/funds'
 import {
   formatHoldPeriod,
   formatRuleRate,
@@ -33,13 +33,6 @@ const headerDate = computed(() => {
 function scaleText(share: FundShare): string {
   if (share.scale_raw) return share.scale_raw
   return share.scale ? `${share.scale.toFixed(2)}亿` : '--'
-}
-
-function dailyLimitText(share: FundShare): string {
-  if (String(share.buy_status || '').includes('封闭')) return '封闭期'
-  if (classifyBuyStatus(share) === 'paused') return '暂停'
-  if (!share.buy_status || !share.buy_status.includes('限')) return share.buy_status?.includes('开放') ? '不限' : '--'
-  return formatDailyLimit(share.daily_limit, share.currency)
 }
 
 function navDisplay(share: FundShare): string {
@@ -82,7 +75,6 @@ function sellRule(share: FundShare): string {
           <th class="align-right">近 1 年</th>
           <th class="align-right">近 3 年</th>
           <th class="align-right">成立来</th>
-          <th class="align-center">日限额</th>
           <th class="align-center">申购</th>
           <th class="align-right">买入费</th>
           <th class="align-right">综合费率</th>
@@ -103,7 +95,6 @@ function sellRule(share: FundShare): string {
           <td class="align-right mono" :class="movementClass(share.chg_1y)">{{ performanceDisplay(share.chg_1y, 'chg_1y', share) }}</td>
           <td class="align-right mono" :class="movementClass(share.chg_3y)">{{ performanceDisplay(share.chg_3y, 'chg_3y', share) }}</td>
           <td class="align-right mono" :class="movementClass(share.chg_since_inception)">{{ performanceDisplay(share.chg_since_inception, 'chg_since_inception', share) }}</td>
-          <td class="align-center mono">{{ dailyLimitText(share) }}</td>
           <td class="align-center">
             <span
               class="badge"
