@@ -65,6 +65,7 @@ def build_catalog(
     total_series = 0
     total_shares = 0
     missing_nav = 0
+    expected_no_nav = 0
     stale_nav = 0
     newest_nav_date: str | None = None
 
@@ -82,6 +83,7 @@ def build_catalog(
             series = []
 
         category_missing_nav = 0
+        category_expected_no_nav = 0
         category_stale_nav = 0
         for item in series:
             shares = item.get("shares", [])
@@ -92,7 +94,10 @@ def build_catalog(
                 is_etf = category == "etf"
                 price = share.get("etf_price") if is_etf else share.get("nav")
                 if price is None:
-                    category_missing_nav += 1
+                    if "封闭" in str(share.get("buy_status") or ""):
+                        category_expected_no_nav += 1
+                    else:
+                        category_missing_nav += 1
                 nav_date = share.get("nav_date")
                 if nav_date and (newest_nav_date is None or nav_date > newest_nav_date):
                     newest_nav_date = nav_date
@@ -102,6 +107,7 @@ def build_catalog(
 
         total_series += len(series)
         missing_nav += category_missing_nav
+        expected_no_nav += category_expected_no_nav
         stale_nav += category_stale_nav
         if category_missing_nav:
             warnings.append(f"{category}: {category_missing_nav} 个份额缺少可用价格")
@@ -137,6 +143,7 @@ def build_catalog(
             "status": status,
             "checked_at": datetime.now().astimezone().isoformat(),
             "missing_nav": missing_nav,
+            "expected_no_nav": expected_no_nav,
             "stale_nav": stale_nav,
             "warnings": warnings,
             "errors": errors,

@@ -7,6 +7,7 @@ import FundShareComparisonTable from '@/features/funds/FundShareComparisonTable.
 import { buyStatusLabel, formatDailyLimit, type FundRow } from '@/shared/lib/funds'
 import { asNumber, daysSince, formatDate, formatPercent, formatPrice, movementClass } from '@/shared/lib/format'
 import { annualFeeDetail, cleanRuleCondition, formatHoldPeriod, formatRuleRate, freeHoldDays, sellRuleLabel, totalAnnualFee } from '@/shared/lib/fund-rules'
+import { performanceDisplay, type PerformanceKey } from '@/shared/lib/performance'
 import { fetchJson } from '@/shared/infrastructure/http'
 import type { BuyStatusHistory, FundShare, HoldingItem, HoldingsData, KlineData } from '@/types/data'
 import { useSettingsStore } from '@/stores/settings'
@@ -41,13 +42,22 @@ const buyStatusHistory = computed(() => {
     .sort((left, right) => right.date.localeCompare(left.date))
     .slice(0, 6)
 })
-function historyReturn(tradingDays: number): number | null {
+function historyReturn(calendarDays: number): number | null {
   const payload = history.value
   if (!payload) return null
+  const dates = payload.dates ?? []
   const values = payload.navs ?? payload.close
-  if (!values?.length || values.length <= tradingDays) return null
+  if (!dates.length || !values?.length) return null
+  const latestDate = Date.parse(`${dates[dates.length - 1]}T00:00:00Z`)
+  if (Number.isNaN(latestDate)) return null
+  const target = new Date(latestDate - calendarDays * 86_400_000).toISOString().slice(0, 10)
+  let baseIndex = -1
+  for (let index = 0; index < dates.length - 1; index += 1) {
+    if (dates[index] <= target) baseIndex = index
+  }
+  if (baseIndex < 0) return null
   const latest = asNumber(values[values.length - 1])
-  const base = asNumber(values[values.length - 1 - tradingDays])
+  const base = asNumber(values[baseIndex])
   if (latest === null || base === null || base <= 0) return null
   return ((latest / base) - 1) * 100
 }
@@ -56,15 +66,15 @@ const performanceMetrics = computed(() => {
   const share = defaultShare.value
   if (!share) return []
   return [
-    { label: '近 1 周', value: share.chg_1w ?? historyReturn(5) },
-    { label: '近 1 月', value: share.chg_1m ?? historyReturn(21) },
-    { label: '近 3 月', value: share.chg_3m ?? historyReturn(63) },
-    { label: '近 6 月', value: share.chg_6m ?? historyReturn(126) },
-    { label: '今年来', value: share.chg_ytd },
-    { label: '近 1 年', value: share.chg_1y ?? historyReturn(252) },
-    { label: '近 2 年', value: share.chg_2y ?? historyReturn(504) },
-    { label: '近 3 年', value: share.chg_3y ?? historyReturn(756) },
-    { label: '成立来', value: share.chg_since_inception },
+    { label: '近 1 周', key: 'chg_1w' as PerformanceKey, value: share.chg_1w ?? historyReturn(7) },
+    { label: '近 1 月', key: 'chg_1m' as PerformanceKey, value: share.chg_1m ?? historyReturn(30) },
+    { label: '近 3 月', key: 'chg_3m' as PerformanceKey, value: share.chg_3m ?? historyReturn(90) },
+    { label: '近 6 月', key: 'chg_6m' as PerformanceKey, value: share.chg_6m ?? historyReturn(180) },
+    { label: '今年来', key: 'chg_ytd' as PerformanceKey, value: share.chg_ytd },
+    { label: '近 1 年', key: 'chg_1y' as PerformanceKey, value: share.chg_1y ?? historyReturn(365) },
+    { label: '近 2 年', key: 'chg_2y' as PerformanceKey, value: share.chg_2y ?? historyReturn(730) },
+    { label: '近 3 年', key: 'chg_3y' as PerformanceKey, value: share.chg_3y ?? historyReturn(1095) },
+    { label: '成立来', key: 'chg_since_inception' as PerformanceKey, value: share.chg_since_inception },
     { label: '基金规模', value: props.row?.series_scale, scale: true },
   ]
 })
@@ -285,7 +295,7 @@ function holdingChangeClass(item: HoldingItem): string {
             <strong class="metric-value" :class="item.scale ? '' : movementClass(item.value)">
               {{ item.scale
                 ? (asNumber(item.value) ? `${asNumber(item.value)?.toFixed(0)}亿` : '--')
-                : formatPercent(item.value) }}
+                : performanceDisplay(item.value, item.key, defaultShare) }}
             </strong>
           </div>
         </div>

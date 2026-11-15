@@ -14,9 +14,11 @@ name: 🔄 更新基金数据
   schedule:
     # 增量更新（cron 用 UTC）：
     #   '0 14 * * 1-5'  UTC 周一~五 14:00 = 北京 周一~五 22:00（晚间更新）
+    #   '30 16 * * 1-5' UTC 周一~五 16:30 = 北京 周二~六 00:30（迟到披露兜底）
     #   '0 18 1 * *'    每月 1 日 UTC 18:00 = 每月 2 日北京 02:00（完整流水线）
     # 注：schedule 仅保证不早于该时刻起跑，实际仍可能有队列延迟。
     - cron: '0 14 * * 1-5'
+    - cron: '30 16 * * 1-5'
     - cron: '0 18 1 * *'
   workflow_dispatch:
     inputs:
@@ -119,6 +121,8 @@ jobs:
             echo "=== pipeline.nav_history（增量历史净值）==="
             python -m pipeline.nav_history --incremental
           fi
+          echo "=== pipeline.performance（补算缺失区间收益）==="
+          python -m pipeline.performance
           if [ "${{ steps.mode.outputs.mode }}" = "full" ]; then
             echo "=== pipeline.kline_history（全量指数/ETF 日 K）==="
             python -m pipeline.kline_history

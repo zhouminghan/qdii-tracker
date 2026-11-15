@@ -180,6 +180,7 @@ qdii-tracker/
 │   ├── test_market_temperature.py
 │   ├── test_nasdaq_history.py
 │   ├── test_nav_history.py
+│   ├── test_performance.py
 │   ├── test_premium_history.py
 │   ├── test_public_catalog.py
 │   ├── test_purchase_history.py

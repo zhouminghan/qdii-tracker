@@ -301,7 +301,8 @@
           "sell_status": "开放赎回",
           "buy_min": 500.0,
           "free_hold_days": 30,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 5.58
         },
         {
           "code": "000906",
@@ -375,7 +376,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 730,
-          "error": "'declare_rate_table'"
+          "error": "'declare_rate_table'",
+          "chg_1w": 5.55,
+          "chg_2y": 53.79,
+          "chg_3y": 125.66
         }
       ],
       "default_share_code": "270023",
@@ -856,7 +860,10 @@
           "sell_status": "开放赎回",
           "buy_min": 0.0,
           "free_hold_days": 180,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.68,
+          "chg_2y": 88.15,
+          "chg_3y": 177.44
         },
         {
           "code": "021843",
@@ -915,7 +922,9 @@
           "sell_status": "开放赎回",
           "buy_min": 0.0,
           "free_hold_days": 30,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.67,
+          "chg_2y": 86.63
         }
       ],
       "series_id": "国海富兰克林__全球科技互联混合__active",
@@ -1110,7 +1119,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 730,
-          "error": "'declare_rate_table'"
+          "error": "'declare_rate_table'",
+          "chg_1w": 5.07,
+          "chg_2y": 33.07,
+          "chg_3y": 89.71
         }
       ],
       "default_share_code": "000043",
@@ -1390,7 +1402,10 @@
           "sell_status": "开放赎回",
           "buy_min": 1.0,
           "free_hold_days": 365,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 9.58,
+          "chg_2y": 15.52,
+          "chg_3y": 70.28
         },
         {
           "code": "019448",
@@ -1461,7 +1476,10 @@
           "sell_status": "开放赎回",
           "buy_min": 1.0,
           "free_hold_days": 365,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 9.58,
+          "chg_2y": 15.52,
+          "chg_3y": 70.28
         }
       ],
       "default_share_code": "005698",
@@ -1769,7 +1787,8 @@
           "sell_status": "开放赎回",
           "buy_min": 1.0,
           "free_hold_days": 180,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 2.91
         }
       ],
       "category": "active",
@@ -1867,7 +1886,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": null,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "chg_1w": 4.84,
+          "chg_2y": 34.02,
+          "chg_3y": 98.84
         },
         {
           "code": "012868",
@@ -1925,7 +1947,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 7,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "chg_1w": 4.83,
+          "chg_2y": 33.11,
+          "chg_3y": 96.77
         },
         {
           "code": "003721",
@@ -1998,7 +2023,10 @@
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "error": "'declare_rate_table'"
+          "error": "'declare_rate_table'",
+          "chg_1w": 4.81,
+          "chg_2y": 42.04,
+          "chg_3y": 112.34
         },
         {
           "code": "012869",
@@ -2053,7 +2081,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 7,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 4.8,
+          "chg_2y": 41.06,
+          "chg_3y": 110.1
         }
       ],
       "default_share_code": "161128",
@@ -2295,7 +2326,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 730,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 2.89,
+          "chg_2y": 166.44,
+          "chg_3y": 263.66
         },
         {
           "code": "012923",
@@ -2354,7 +2388,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 30,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 2.89,
+          "chg_2y": 163.6,
+          "chg_3y": 258.69
         }
       ],
       "default_share_code": "012920",
@@ -2810,7 +2847,10 @@
           "sell_status": "开放赎回",
           "buy_min": 1.0,
           "free_hold_days": 365,
-          "error": "'declare_rate_table'"
+          "error": "'declare_rate_table'",
+          "chg_1w": 10.31,
+          "chg_2y": 70.39,
+          "chg_3y": 49.74
         },
         {
           "code": "002893",
@@ -2884,7 +2924,10 @@
           "sell_status": "开放赎回",
           "buy_min": 1.0,
           "free_hold_days": 365,
-          "error": "'declare_rate_table'"
+          "error": "'declare_rate_table'",
+          "chg_1w": 10.31,
+          "chg_2y": 70.39,
+          "chg_3y": 49.74
         }
       ],
       "default_share_code": "002891",
@@ -3658,7 +3701,10 @@
           "sell_status": "开放赎回",
           "buy_min": 1.0,
           "free_hold_days": 180,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 5.64,
+          "chg_2y": 46.63,
+          "chg_3y": 121.92
         }
       ],
       "default_share_code": "017091",
@@ -3935,7 +3981,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 180,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 0.82,
+          "chg_2y": 67.3,
+          "chg_3y": 84.71
         },
         {
           "code": "018232",
@@ -3994,7 +4043,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 30,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 0.76,
+          "chg_2y": 65.32,
+          "chg_3y": 81.69
         }
       ],
       "display_name": "易方达全球优质企业混合",
@@ -4414,7 +4466,10 @@
           "sell_status": "开放赎回",
           "buy_min": 1.0,
           "free_hold_days": 30,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "chg_1w": 6.58,
+          "chg_2y": 32.43,
+          "chg_3y": 86.57
         },
         {
           "code": "006426",
@@ -4485,7 +4540,9 @@
           "sell_status": "暂停赎回",
           "buy_min": 10.0,
           "free_hold_days": 180,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.56,
+          "chg_2y": 41.53
         }
       ],
       "default_share_code": "001668",
@@ -5587,7 +5644,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 180,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "chg_1w": 12.39,
+          "chg_2y": 83.62,
+          "chg_3y": 155.83
         },
         {
           "code": "016668",
@@ -5649,7 +5709,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 30,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "chg_1w": 12.38,
+          "chg_2y": 82.14,
+          "chg_3y": 152.55
         },
         {
           "code": "016667",
@@ -5720,7 +5783,10 @@
           "sell_status": "开放赎回",
           "buy_min": 200.0,
           "free_hold_days": 180,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 12.38,
+          "chg_2y": 94.6,
+          "chg_3y": 173.16
         }
       ],
       "display_name": "景顺长城全球半导体芯片股票",
@@ -5994,7 +6060,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 180,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 3.05,
+          "chg_2y": 48.17,
+          "chg_3y": 49.24
         },
         {
           "code": "019158",
@@ -6053,7 +6122,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 30,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 3.04,
+          "chg_2y": 46.54,
+          "chg_3y": 46.96
         }
       ],
       "display_name": "易方达全球配置混合",

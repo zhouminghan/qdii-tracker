@@ -42,7 +42,10 @@
           "buy_min": 0.0,
           "etf_price": 1.63,
           "etf_change_pct": 3.69,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.25,
+          "chg_2y": 29.78,
+          "chg_3y": 77.63
         }
       ],
       "default_share_code": "159941",
@@ -87,7 +90,10 @@
           "buy_min": 0.0,
           "etf_price": 2.652,
           "etf_change_pct": 1.84,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 3.27,
+          "chg_2y": 22.83,
+          "chg_3y": 66.86
         }
       ],
       "default_share_code": "513500",
@@ -132,7 +138,10 @@
           "buy_min": 0.0,
           "etf_price": 2.21,
           "etf_change_pct": 3.17,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.23,
+          "chg_2y": 30.96,
+          "chg_3y": 79.2
         }
       ],
       "default_share_code": "513100",
@@ -168,7 +177,10 @@
           "buy_min": 0.0,
           "error": "'data'",
           "etf_price": 2.896,
-          "etf_change_pct": 3.47
+          "etf_change_pct": 3.47,
+          "chg_1w": 6.02,
+          "chg_2y": 48.44,
+          "chg_3y": 128.53
         }
       ],
       "etf_target": "nasdaq100",
@@ -220,7 +232,10 @@
           "buy_min": 0.0,
           "etf_price": 2.669,
           "etf_change_pct": 3.53,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.21,
+          "chg_2y": 30.39,
+          "chg_3y": 75.63
         }
       ],
       "default_share_code": "513300",
@@ -265,7 +280,10 @@
           "buy_min": 0.0,
           "etf_price": 2.11,
           "etf_change_pct": 2.68,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.25,
+          "chg_2y": 31.5,
+          "chg_3y": 77.34
         }
       ],
       "default_share_code": "159501",
@@ -310,7 +328,10 @@
           "buy_min": 0.0,
           "etf_price": 2.418,
           "etf_change_pct": 3.87,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.24,
+          "chg_2y": 30.52,
+          "chg_3y": 78.25
         }
       ],
       "default_share_code": "159632",
@@ -355,7 +376,10 @@
           "buy_min": 0.0,
           "etf_price": 2.344,
           "etf_change_pct": 3.81,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.24,
+          "chg_2y": 32.14,
+          "chg_3y": 77.94
         }
       ],
       "default_share_code": "159659",
@@ -400,7 +424,10 @@
           "buy_min": 0.0,
           "etf_price": 1.985,
           "etf_change_pct": 2.11,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 3.28,
+          "chg_2y": 22.65,
+          "chg_3y": 66.2
         }
       ],
       "default_share_code": "513650",
@@ -445,7 +472,10 @@
           "buy_min": 0.0,
           "etf_price": 1.76,
           "etf_change_pct": 3.71,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.21,
+          "chg_2y": 29.6,
+          "chg_3y": 72.46
         }
       ],
       "default_share_code": "159513",
@@ -490,7 +520,10 @@
           "buy_min": 0.0,
           "etf_price": 2.428,
           "etf_change_pct": 3.72,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.2,
+          "chg_2y": 30.74,
+          "chg_3y": 79.06
         }
       ],
       "default_share_code": "513110",
@@ -535,7 +568,10 @@
           "buy_min": 0.0,
           "etf_price": 2.049,
           "etf_change_pct": 3.54,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.25,
+          "chg_2y": 32.05,
+          "chg_3y": 81.89
         }
       ],
       "default_share_code": "159696",
@@ -580,7 +616,10 @@
           "buy_min": 0.0,
           "etf_price": 2.345,
           "etf_change_pct": 3.49,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.25,
+          "chg_2y": 31.47,
+          "chg_3y": 80.68
         }
       ],
       "default_share_code": "159660",
@@ -625,7 +664,10 @@
           "buy_min": 0.0,
           "etf_price": 2.409,
           "etf_change_pct": 3.61,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.24,
+          "chg_2y": 31.68,
+          "chg_3y": 81.0
         }
       ],
       "default_share_code": "513390",
@@ -670,7 +712,10 @@
           "buy_min": 0.0,
           "etf_price": 1.995,
           "etf_change_pct": 2.36,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 3.22,
+          "chg_2y": 22.11,
+          "chg_3y": 62.92
         }
       ],
       "default_share_code": "159655",
@@ -706,7 +751,10 @@
           "buy_min": 0.0,
           "error": "'data'",
           "etf_price": 1.957,
-          "etf_change_pct": 2.41
+          "etf_change_pct": 2.41,
+          "chg_1w": 4.87,
+          "chg_2y": 41.31,
+          "chg_3y": 64.86
         }
       ],
       "series_id": "华安__日经225ETF华安__etf",
@@ -758,7 +806,10 @@
           "buy_min": 0.0,
           "etf_price": 2.055,
           "etf_change_pct": 3.58,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.25,
+          "chg_2y": 31.78,
+          "chg_3y": 68.76
         }
       ],
       "default_share_code": "513870",
@@ -795,7 +846,10 @@
           "buy_min": 0.0,
           "error": "'data'",
           "etf_price": 1.851,
-          "etf_change_pct": 3.29
+          "etf_change_pct": 3.29,
+          "chg_1w": 3.77,
+          "chg_2y": 30.04,
+          "chg_3y": 70.44
         }
       ],
       "series_id": "易方达__美国50ETF易方达__etf",
@@ -839,7 +893,9 @@
           "buy_min": 0.0,
           "error": "'data'",
           "etf_price": 1.659,
-          "etf_change_pct": 2.92
+          "etf_change_pct": 2.92,
+          "chg_1w": 3.83,
+          "chg_2y": 29.59
         }
       ],
       "series_id": "汇添富__美国50ETF汇添富__etf",
@@ -891,7 +947,10 @@
           "buy_min": 0.0,
           "etf_price": 2.052,
           "etf_change_pct": 1.89,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 3.25,
+          "chg_2y": 22.54,
+          "chg_3y": 64.59
         }
       ],
       "default_share_code": "159612",
@@ -927,7 +986,10 @@
           "buy_min": 0.0,
           "error": "'data'",
           "etf_price": 1.917,
-          "etf_change_pct": 3.01
+          "etf_change_pct": 3.01,
+          "chg_1w": 2.2,
+          "chg_2y": 39.27,
+          "chg_3y": 69.17
         }
       ],
       "category": "etf",

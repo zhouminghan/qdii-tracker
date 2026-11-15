@@ -22,7 +22,7 @@ from core.constants import CATEGORIES, DATA_DIR, DATA_SCHEMA_VERSION, HOLDINGS_C
 from core.config_loader import get_config, save_config, validate_config
 
 # 直接 import pipeline 模块（替代 subprocess 调用）
-from pipeline import scan, enrich, fill, holdings, reclassify, premium_history, nav_history, kline_history, market_temperature, nasdaq_history, cnn_sentiment, brand_gold, ndx_pe, macro_rates, public_catalog
+from pipeline import scan, enrich, fill, holdings, reclassify, premium_history, nav_history, kline_history, market_temperature, nasdaq_history, cnn_sentiment, brand_gold, ndx_pe, macro_rates, public_catalog, performance
 
 from checks.verify_data import run_verification
 from checks.verify_purchase import run_verification as run_purchase_verification
@@ -175,6 +175,12 @@ def cmd_refresh(args):
     if args.codes:
         nav_args += ["--codes", args.codes]
     _run(nav_history.main, "--incremental", *nav_args)
+    perf_args = []
+    if args.scope and args.scope != "all":
+        perf_args += ["--scope", args.scope]
+    if args.codes:
+        perf_args += ["--codes", args.codes]
+    _run(performance.main, *perf_args)
     _run(kline_history.main, "--incremental")
 
 
@@ -185,6 +191,7 @@ def cmd_sync(_args):
     _run(holdings.main)
     _run(premium_history.main)
     _run(nav_history.main)
+    _run(performance.main)
     _run(kline_history.main)
     _run(market_temperature.main)
     _run(nasdaq_history.main)

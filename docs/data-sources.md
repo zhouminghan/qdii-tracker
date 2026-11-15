@@ -5,6 +5,7 @@
 | 数据 | 数据源 | 产物 | 失败策略 |
 |------|--------|------|----------|
 | 场外基金净值/申购 | 天天基金、pingzhongdata、AKShare | 六个分类 JSON | 保留旧值，nav_date 不回退 |
+| 区间收益补算 | 本地 `nav-history/`、pingzhongdata | 六个分类 JSON | 只填 `null`，不覆盖已有公开值；封闭期份额不伪造净值 |
 | ETF 价格/规模 | 东方财富、AKShare | `etf.json` | 保留旧值并标记缺失 |
 | 指数/ETF/外汇/科技股 K 线 | 东方财富、腾讯、Yahoo | `index-kline/`、`etf-kline/`、`fx-kline/` | 保留最近成功快照 |
 | 美债收益率 | 东方财富 | `macro-rates.json` | 复用旧快照 |
@@ -15,8 +16,8 @@
 ## 更新链路
 
 ```text
-GitHub Actions 工作日 22:00（北京时间）
-  → fill / nav_history / kline_history / market data
+GitHub Actions 工作日 22:00（北京时间）与次日 00:30 兜底
+  → fill / nav_history / performance / kline_history / market data
   → fundctl.py check
   → checks/build_snapshot.py
       → snapshot.json / feed.rss

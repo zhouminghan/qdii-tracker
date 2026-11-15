@@ -97,6 +97,7 @@ export interface CatalogEnvelope {
     status: 'ok' | 'degraded' | 'error'
     checked_at: string
     missing_nav: number
+    expected_no_nav: number
     stale_nav: number
     warnings: string[]
     errors: string[]

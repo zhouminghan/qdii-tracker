@@ -8,7 +8,8 @@ import {
   freeHoldDays,
   totalAnnualFee,
 } from '@/shared/lib/fund-rules'
-import { formatPercent, formatPrice, movementClass } from '@/shared/lib/format'
+import { formatPrice, movementClass } from '@/shared/lib/format'
+import { performanceDisplay } from '@/shared/lib/performance'
 
 const props = withDefaults(defineProps<{
   shares: FundShare[]
@@ -35,9 +36,15 @@ function scaleText(share: FundShare): string {
 }
 
 function dailyLimitText(share: FundShare): string {
+  if (String(share.buy_status || '').includes('封闭')) return '封闭期'
   if (classifyBuyStatus(share) === 'paused') return '暂停'
   if (!share.buy_status || !share.buy_status.includes('限')) return share.buy_status?.includes('开放') ? '不限' : '--'
   return formatDailyLimit(share.daily_limit, share.currency)
+}
+
+function navDisplay(share: FundShare): string {
+  if (share.nav == null && share.etf_price == null && String(share.buy_status || '').includes('封闭')) return '封闭期'
+  return formatPrice(share.nav ?? share.etf_price)
 }
 
 function buyFee(share: FundShare): string {
@@ -88,14 +95,14 @@ function sellRule(share: FundShare): string {
           <td>{{ share.name }}</td>
           <td><span class="badge">{{ share.currency === '美元' ? '$ 美元' : '¥ 人民币' }}</span></td>
           <td class="align-right mono">{{ scaleText(share) }}</td>
-          <td class="align-right mono">{{ formatPrice(share.nav ?? share.etf_price) }}</td>
-          <td class="align-right mono" :class="movementClass(share.chg_1m)">{{ formatPercent(share.chg_1m) }}</td>
-          <td class="align-right mono" :class="movementClass(share.chg_3m)">{{ formatPercent(share.chg_3m) }}</td>
-          <td class="align-right mono" :class="movementClass(share.chg_6m)">{{ formatPercent(share.chg_6m) }}</td>
-          <td class="align-right mono" :class="movementClass(share.chg_ytd)">{{ formatPercent(share.chg_ytd) }}</td>
-          <td class="align-right mono" :class="movementClass(share.chg_1y)">{{ formatPercent(share.chg_1y) }}</td>
-          <td class="align-right mono" :class="movementClass(share.chg_3y)">{{ formatPercent(share.chg_3y) }}</td>
-          <td class="align-right mono" :class="movementClass(share.chg_since_inception)">{{ formatPercent(share.chg_since_inception) }}</td>
+          <td class="align-right mono">{{ navDisplay(share) }}</td>
+          <td class="align-right mono" :class="movementClass(share.chg_1m)">{{ performanceDisplay(share.chg_1m, 'chg_1m', share) }}</td>
+          <td class="align-right mono" :class="movementClass(share.chg_3m)">{{ performanceDisplay(share.chg_3m, 'chg_3m', share) }}</td>
+          <td class="align-right mono" :class="movementClass(share.chg_6m)">{{ performanceDisplay(share.chg_6m, 'chg_6m', share) }}</td>
+          <td class="align-right mono" :class="movementClass(share.chg_ytd)">{{ performanceDisplay(share.chg_ytd, 'chg_ytd', share) }}</td>
+          <td class="align-right mono" :class="movementClass(share.chg_1y)">{{ performanceDisplay(share.chg_1y, 'chg_1y', share) }}</td>
+          <td class="align-right mono" :class="movementClass(share.chg_3y)">{{ performanceDisplay(share.chg_3y, 'chg_3y', share) }}</td>
+          <td class="align-right mono" :class="movementClass(share.chg_since_inception)">{{ performanceDisplay(share.chg_since_inception, 'chg_since_inception', share) }}</td>
           <td class="align-center mono">{{ dailyLimitText(share) }}</td>
           <td class="align-center">
             <span

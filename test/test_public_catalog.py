@@ -9,7 +9,7 @@ from core.constants import CATEGORIES
 from pipeline.public_catalog import build_catalog
 
 
-def _write_catalog_fixture(root: Path, *, missing_nav: bool = False):
+def _write_catalog_fixture(root: Path, *, missing_nav: bool = False, closed: bool = False):
     series = []
     for category in CATEGORIES:
         shares = [{
@@ -17,6 +17,7 @@ def _write_catalog_fixture(root: Path, *, missing_nav: bool = False):
             "name": "测试基金",
             "nav": None if missing_nav else 1.23,
             "nav_date": "2026-11-12",
+            "buy_status": "封闭期" if closed else "开放申购",
         }]
         if category == "etf":
             shares[0]["etf_price"] = None if missing_nav else 1.25
@@ -57,4 +58,13 @@ def test_missing_prices_are_reported_as_degraded(tmp_path):
     catalog = build_catalog(data_dir=tmp_path, config={"company_brand": {}})
     assert catalog["status"] == "degraded"
     assert catalog["quality"]["missing_nav"] == len(CATEGORIES)
+    assert catalog["quality"]["expected_no_nav"] == 0
     assert len(catalog["quality"]["warnings"]) == len(CATEGORIES)
+
+
+def test_closed_period_without_nav_is_not_degraded(tmp_path):
+    _write_catalog_fixture(tmp_path, missing_nav=True, closed=True)
+    catalog = build_catalog(data_dir=tmp_path, config={"company_brand": {}})
+    assert catalog["status"] == "ok"
+    assert catalog["quality"]["missing_nav"] == 0
+    assert catalog["quality"]["expected_no_nav"] == len(CATEGORIES)

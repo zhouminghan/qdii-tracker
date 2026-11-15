@@ -301,7 +301,9 @@
           "sell_status": "开放赎回",
           "buy_min": 500.0,
           "free_hold_days": 7,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.3,
+          "chg_2y": 27.0
         },
         {
           "code": "000055",
@@ -374,7 +376,10 @@
           "sell_status": "开放赎回",
           "buy_min": 1.0,
           "free_hold_days": 730,
-          "error": "'declare_rate_table'"
+          "error": "'declare_rate_table'",
+          "chg_1w": 6.27,
+          "chg_2y": 35.1,
+          "chg_3y": 84.26
         },
         {
           "code": "006480",
@@ -428,7 +433,10 @@
           "sell_status": "开放赎回",
           "buy_min": 1.0,
           "free_hold_days": 7,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.27,
+          "chg_2y": 34.57,
+          "chg_3y": 83.15
         }
       ],
       "default_share_code": "270042",
@@ -665,7 +673,9 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 7,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 6.05,
+          "chg_2y": 28.56
         }
       ],
       "default_share_code": "016452",
@@ -917,7 +927,10 @@
           "sell_status": "开放赎回",
           "buy_min": 0.0,
           "free_hold_days": 7,
-          "error": "'declare_rate_table'"
+          "error": "'declare_rate_table'",
+          "chg_1w": 6.21,
+          "chg_2y": 33.88,
+          "chg_3y": 79.27
         },
         {
           "code": "040048",
@@ -982,7 +995,10 @@
           "sell_status": "开放赎回",
           "buy_min": 0.0,
           "free_hold_days": 7,
-          "error": "'declare_rate_table'"
+          "error": "'declare_rate_table'",
+          "chg_1w": 6.21,
+          "chg_2y": 33.88,
+          "chg_3y": 79.27
         }
       ],
       "default_share_code": "040046",
@@ -1495,7 +1511,10 @@
           "sell_status": "开放赎回",
           "buy_min": 100.0,
           "free_hold_days": 90,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 5.72,
+          "chg_2y": 40.12,
+          "chg_3y": 84.35
         },
         {
           "code": "012753",
@@ -1549,7 +1568,10 @@
           "sell_status": "开放赎回",
           "buy_min": 100.0,
           "free_hold_days": 7,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 5.73,
+          "chg_2y": 39.22,
+          "chg_3y": 82.55
         }
       ],
       "default_share_code": "539001",
@@ -1817,7 +1839,9 @@
           "sell_status": "开放赎回",
           "buy_min": 0.1,
           "free_hold_days": 30,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "chg_1w": 5.92,
+          "chg_2y": 23.14
         }
       ],
       "default_share_code": "018043",
@@ -2046,7 +2070,10 @@
           "sell_status": "开放赎回",
           "buy_min": 1.0,
           "free_hold_days": 7,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 5.8,
+          "chg_2y": 36.1,
+          "chg_3y": 72.11
         },
         {
           "code": "019175",
@@ -2100,7 +2127,10 @@
           "sell_status": "开放赎回",
           "buy_min": 1.0,
           "free_hold_days": 7,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 5.8,
+          "chg_2y": 35.87,
+          "chg_3y": 71.35
         }
       ],
       "default_share_code": "019172",
@@ -2760,7 +2790,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 7,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 5.94,
+          "chg_2y": 30.56,
+          "chg_3y": 71.11
         },
         {
           "code": "018969",
@@ -2818,7 +2851,10 @@
           "sell_status": "暂停赎回",
           "buy_min": 1.0,
           "free_hold_days": 7,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 5.95,
+          "chg_2y": 31.36,
+          "chg_3y": 66.24
         }
       ],
       "default_share_code": "018966",
@@ -2900,7 +2936,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 30,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "chg_1w": 5.93,
+          "chg_2y": 28.92,
+          "chg_3y": 68.29
         },
         {
           "code": "016533",
@@ -2957,7 +2996,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 7,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "chg_1w": 5.92,
+          "chg_2y": 28.25,
+          "chg_3y": 66.92
         },
         {
           "code": "021838",
@@ -3011,7 +3053,9 @@
           "sell_status": "开放赎回",
           "buy_min": 1.0,
           "free_hold_days": 7,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 5.93,
+          "chg_2y": 28.47
         },
         {
           "code": "016534",
@@ -3073,7 +3117,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 30,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 5.89,
+          "chg_2y": 36.67,
+          "chg_3y": 79.76
         },
         {
           "code": "016535",
@@ -3127,7 +3174,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 7,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 5.9,
+          "chg_2y": 35.93,
+          "chg_3y": 78.23
         }
       ],
       "default_share_code": "016532",
@@ -3217,7 +3267,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": null,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "chg_1w": 6.01,
+          "chg_2y": 29.29,
+          "chg_3y": 75.11
         },
         {
           "code": "012870",
@@ -3274,7 +3327,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 7,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "chg_1w": 6.0,
+          "chg_2y": 28.49,
+          "chg_3y": 73.46
         },
         {
           "code": "003722",
@@ -3347,7 +3403,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 730,
-          "error": "'declare_rate_table'"
+          "error": "'declare_rate_table'",
+          "chg_1w": 5.97,
+          "chg_2y": 37.01,
+          "chg_3y": 86.97
         },
         {
           "code": "012871",
@@ -3401,7 +3460,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 7,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 5.98,
+          "chg_2y": 36.19,
+          "chg_3y": 85.24
         }
       ],
       "default_share_code": "161130",
@@ -3700,7 +3762,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 7,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "chg_1w": 5.93,
+          "chg_2y": 31.51,
+          "chg_3y": 72.14
         },
         {
           "code": "016057",
@@ -3757,7 +3822,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 7,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "chg_1w": 5.92,
+          "chg_2y": 30.7,
+          "chg_3y": 70.65
         },
         {
           "code": "024237",
@@ -3811,7 +3879,8 @@
           "sell_status": "开放赎回",
           "buy_min": 1.0,
           "free_hold_days": 7,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 5.93
         },
         {
           "code": "016056",
@@ -3869,7 +3938,10 @@
           "sell_status": "开放赎回",
           "buy_min": 100.0,
           "free_hold_days": 7,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 5.87,
+          "chg_2y": 39.33,
+          "chg_3y": 83.82
         },
         {
           "code": "016058",
@@ -3923,7 +3995,10 @@
           "sell_status": "开放赎回",
           "buy_min": 100.0,
           "free_hold_days": 7,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 5.88,
+          "chg_2y": 38.53,
+          "chg_3y": 82.21
         }
       ],
       "default_share_code": "016055",
@@ -4544,7 +4619,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 7,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "chg_1w": 5.91,
+          "chg_2y": 28.03,
+          "chg_3y": 68.97
         },
         {
           "code": "015300",
@@ -4601,7 +4679,10 @@
           "sell_status": "开放赎回",
           "buy_min": 10.0,
           "free_hold_days": 7,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "chg_1w": 5.91,
+          "chg_2y": 27.24,
+          "chg_3y": 67.4
         },
         {
           "code": "015518",
@@ -4663,7 +4744,10 @@
           "sell_status": "开放赎回",
           "buy_min": 1.0,
           "free_hold_days": 7,
-          "error": "'data'"
+          "error": "'data'",
+          "chg_1w": 5.91,
+          "chg_2y": 36.64,
+          "chg_3y": 85.27
         }
       ],
       "default_share_code": "015299",

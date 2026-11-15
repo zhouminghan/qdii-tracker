@@ -21,6 +21,17 @@ test.describe('funds workflow', () => {
     const dShare = dialog.locator('.share-comparison-table tbody tr').filter({ hasText: '022525' })
     await expect(dShare).toContainText('限大额')
     await expect(dShare).toContainText('¥100')
+    await expect(dShare).toContainText('不足3年')
+  })
+
+  test('labels closed-period shares without pretending they have a price', async ({ page }) => {
+    await page.goto('/#/funds')
+    await page.getByLabel('搜索基金目录（跨分类）').fill('019738')
+    await page.locator('.table-action:visible, .fund-mobile-actions button:visible').filter({ hasText: /详情/ }).first().click()
+    const dialog = page.getByRole('dialog')
+    const closedShare = dialog.locator('.share-comparison-table tbody tr').filter({ hasText: '019738' })
+    await expect(closedShare).toContainText('封闭期')
+    await expect(closedShare).not.toContainText('--')
   })
 
   test('shows all share performance, buy fees, and derived sell rules', async ({ page }) => {

@@ -96,6 +96,14 @@
 - 费率页可选择任意份额，秒级比较 A/C/E 和美元份额的买入费、综合费率及卖出规则。
 - 持仓页展示 `all_quarters` 中最新季度相对上一季度的权重变化。
 
+### 净值与区间收益补全
+
+- 新增 `pipeline/performance.py`，按日历区间从历史净值补算 1 周至 3 年、今年来和成立来收益。
+- 优先读取本地 `nav-history/`，仅对无本地历史的非默认份额联网抓取 pingzhongdata。
+- 238 个份额中剩余 2 个无净值份额均为“封闭期”美元份额，线上数据源本身没有净值序列，不伪造。
+- 封闭期份额显示“封闭期”；历史不足的区间显示“不足2年/不足3年”；其余不可计算值显示“数据不足”。
+- GitHub Actions 增加次日 00:30 北京市时间兜底调度，并在历史净值步骤后执行区间收益补算。
+
 ## 后续 Backlog
 
 ### P2
@@ -119,9 +127,9 @@
 
 | 检查 | 结果 |
 |------|------|
-| `npm run test:t0` | 通过；TypeScript、ESLint、Vitest 11 文件 / 34 条 |
+| `npm run test:t0` | 通过；TypeScript、ESLint、Vitest 12 文件 / 35 条 |
 | `npm run build` | 通过 |
-| Chromium T3 | 73 条通过，7 条预期跳过；桌面与移动 |
+| Chromium T3 | 75 条通过，7 条预期跳过；桌面与移动 |
 | axe `wcag2a + wcag2aa` | 四页、浅色/深色、桌面/移动均无 serious/critical |
 | 视觉基准 | 5 张 Chromium 基准逐张检查后更新 |
 | console/page error | 本轮浏览器回归未发现运行时异常 |

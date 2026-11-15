@@ -123,11 +123,21 @@
 | **依赖** | `core.constants`、`core.utils`（间接） |
 | **调用方** | `scripts/checks/build_snapshot.py`；由 `update-data.yml` 每个工作日生成并随 `web/data/` 发布 |
 
+### 14. performance.py — 历史净值收益补算
+
+| 属性 | 内容 |
+|------|------|
+| **职责** | 对仍缺失的区间收益，优先读取本地 `nav-history/{code}.json`，缺失时抓取 pingzhongdata 历史，按日历区间补算 1 周至 3 年、今年来和成立来收益；只填充 `null`，不覆盖已有公开值 |
+| **输入文件** | `web/data/{cat}.json`、`web/data/nav-history/{code}.json`、天天基金 pingzhongdata |
+| **输出文件** | 六个分类 JSON、`web/data/meta.json` |
+| **依赖** | `core.constants`、`core.utils`、`sources.eastmoney_source` |
+| **调用方** | `fundctl.py refresh/sync`、`update-data.yml` |
+
 ---
 
 ## checks/ — 质量门禁 + 诊断 + 辅助
 
-### 14. verify_data.py — 黄金样例校验
+### 15. verify_data.py — 黄金样例校验
 
 | 属性 | 内容 |
 |------|------|
@@ -136,7 +146,7 @@
 | **输出文件** | 无（返回错误列表） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 15. cross_validate.py — 跨源交叉验证
+### 16. cross_validate.py — 跨源交叉验证
 
 | 属性 | 内容 |
 |------|------|
@@ -145,7 +155,7 @@
 | **输出文件** | 无（返回异常列表） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 16. diagnose.py — 诊断引擎
+### 17. diagnose.py — 诊断引擎
 
 | 属性 | 内容 |
 |------|------|
@@ -154,7 +164,7 @@
 | **输出文件** | 无（只输出诊断报告；--auto-fix 时调 `fundctl.py refresh` 修复） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 17. architecture_lint.py — 目录纪律校验
+### 18. architecture_lint.py — 目录纪律校验
 
 | 属性 | 内容 |
 |------|------|
@@ -163,7 +173,7 @@
 | **输出文件** | 无（返回错误列表） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 18. stamp_asset_version.py — 历史版本戳工具
+### 19. stamp_asset_version.py — 历史版本戳工具
 
 | 属性 | 内容 |
 |------|------|
@@ -172,7 +182,7 @@
 | **输出文件** | 同文件覆写 |
 | **依赖** | `core.constants` |
 
-### 19. verify_purchase.py — 申购状态/限额/历史一致性校验
+### 20. verify_purchase.py — 申购状态/限额/历史一致性校验
 
 | 属性 | 内容 |
 |------|------|
@@ -191,6 +201,7 @@
 scan.py ────────► core.constants, core.utils, core.config_loader, sources.akshare_source
 enrich.py ──────► core.constants, core.utils, sources.akshare_source, sources.eastmoney_source, sources.xueqiu_source, sources.ths_source
 fill.py ────────► core.constants, core.utils, sources.eastmoney_source, sources.akshare_source, sources.ths_source
+performance.py ─► core.constants, core.utils, sources.eastmoney_source
 holdings.py ────► core.constants, core.utils, core.config_loader, sources.akshare_source
 reclassify.py ──► core.constants, core.utils, core.config_loader, sources.akshare_source
 public_catalog.py ─► core.constants

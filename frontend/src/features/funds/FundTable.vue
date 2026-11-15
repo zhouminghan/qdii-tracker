@@ -5,6 +5,7 @@ import type { FundSortKey, FundRow } from '@/shared/lib/funds'
 import { buyStatusLabel, classifyBuyStatus, formatDailyLimit, sortFundRows } from '@/shared/lib/funds'
 import FundShareComparisonTable from '@/features/funds/FundShareComparisonTable.vue'
 import { formatDate, formatPercent, formatPrice, movementClass } from '@/shared/lib/format'
+import { performanceDisplay, type PerformanceKey } from '@/shared/lib/performance'
 import { useSettingsStore } from '@/stores/settings'
 import { useDataStore } from '@/stores/data'
 
@@ -96,9 +97,30 @@ function companySuffix(row: FundRow): string {
 }
 
 function dailyLimitText(row: FundRow): string {
+  if (String(row.defaultShare.buy_status || '').includes('封闭')) return '封闭期'
   if (classifyBuyStatus(row.defaultShare) === 'paused') return '—'
   const limit = formatDailyLimit(row.defaultShare.daily_limit, row.defaultShare.currency)
   return limit === '--' ? (row.defaultShare.buy_status?.includes('开放') ? '不限' : '--') : limit
+}
+
+function metricDisplay(row: FundRow, key: PerformanceKey): string {
+  return performanceDisplay(row.defaultShare[key], key, row.defaultShare)
+}
+
+function priceDisplay(row: FundRow): string {
+  if (price(row) === null && String(row.defaultShare.buy_status || '').includes('封闭')) return '封闭期'
+  return formatPrice(price(row), props.tab === 'etf')
+}
+
+function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
+  return [
+    { label: '近 1 月', key: 'chg_1m' },
+    { label: '近 3 月', key: 'chg_3m' },
+    { label: '近 6 月', key: 'chg_6m' },
+    { label: '今年来', key: 'chg_ytd' },
+    { label: '近 2 年', key: 'chg_2y' },
+    { label: '近 3 年', key: 'chg_3y' },
+  ]
 }
 </script>
 
@@ -180,22 +202,22 @@ function dailyLimitText(row: FundRow): string {
             <td class="align-right mono">{{ scaleText(row.series_scale) }}</td>
             <td class="align-right">
               <div class="price-cell">
-                <strong class="mono">{{ formatPrice(price(row), tab === 'etf') }}</strong>
+                <strong class="mono">{{ priceDisplay(row) }}</strong>
                 <span class="mono" :class="movementClass(dailyChange(row))">{{ formatPercent(dailyChange(row)) }}</span>
               </div>
             </td>
             <td v-if="tab === 'etf'" class="align-right mono premium-cell">
               {{ formatPercent(row.defaultShare.etf_premium) }}
             </td>
-            <td class="align-right mono" :class="movementClass(row.defaultShare.chg_1m)">{{ formatPercent(row.defaultShare.chg_1m) }}</td>
-            <td class="align-right mono" :class="movementClass(row.defaultShare.chg_3m)">{{ formatPercent(row.defaultShare.chg_3m) }}</td>
-            <td class="align-right mono" :class="movementClass(row.defaultShare.chg_6m)">{{ formatPercent(row.defaultShare.chg_6m) }}</td>
-            <td class="align-right mono" :class="movementClass(row.defaultShare.chg_ytd)">{{ formatPercent(row.defaultShare.chg_ytd) }}</td>
-            <td class="align-right mono" :class="movementClass(row.defaultShare.chg_1y)">{{ formatPercent(row.defaultShare.chg_1y) }}</td>
-            <td class="align-right mono" :class="movementClass(row.defaultShare.chg_2y)">{{ formatPercent(row.defaultShare.chg_2y) }}</td>
-            <td class="align-right mono" :class="movementClass(row.defaultShare.chg_3y)">{{ formatPercent(row.defaultShare.chg_3y) }}</td>
+            <td class="align-right mono" :class="movementClass(row.defaultShare.chg_1m)">{{ metricDisplay(row, 'chg_1m') }}</td>
+            <td class="align-right mono" :class="movementClass(row.defaultShare.chg_3m)">{{ metricDisplay(row, 'chg_3m') }}</td>
+            <td class="align-right mono" :class="movementClass(row.defaultShare.chg_6m)">{{ metricDisplay(row, 'chg_6m') }}</td>
+            <td class="align-right mono" :class="movementClass(row.defaultShare.chg_ytd)">{{ metricDisplay(row, 'chg_ytd') }}</td>
+            <td class="align-right mono" :class="movementClass(row.defaultShare.chg_1y)">{{ metricDisplay(row, 'chg_1y') }}</td>
+            <td class="align-right mono" :class="movementClass(row.defaultShare.chg_2y)">{{ metricDisplay(row, 'chg_2y') }}</td>
+            <td class="align-right mono" :class="movementClass(row.defaultShare.chg_3y)">{{ metricDisplay(row, 'chg_3y') }}</td>
             <template v-if="tab === 'offshore'">
-              <td class="align-right mono" :class="movementClass(row.defaultShare.chg_since_inception)">{{ formatPercent(row.defaultShare.chg_since_inception) }}</td>
+              <td class="align-right mono" :class="movementClass(row.defaultShare.chg_since_inception)">{{ metricDisplay(row, 'chg_since_inception') }}</td>
               <td class="align-center">
                 <span class="badge" :class="statusClass(row)" :title="row.defaultShare.buy_status || '--'">{{ buyStatusLabel(row.defaultShare) }}</span>
               </td>
@@ -253,26 +275,19 @@ function dailyLimitText(row: FundRow): string {
         </button>
       </div>
       <div class="fund-mobile-metrics">
-        <div><span>最新</span><strong class="mono">{{ formatPrice(price(row), tab === 'etf') }}</strong></div>
+        <div><span>最新</span><strong class="mono">{{ priceDisplay(row) }}</strong></div>
         <div><span>日涨跌</span><strong class="mono" :class="movementClass(dailyChange(row))">{{ formatPercent(dailyChange(row)) }}</strong></div>
         <div v-if="tab === 'etf'"><span>溢价</span><strong class="mono premium-cell">{{ formatPercent(row.defaultShare.etf_premium) }}</strong></div>
         <div v-else><span>申购</span><span class="badge" :class="statusClass(row)" :title="row.defaultShare.buy_status || '--'">{{ buyStatusLabel(row.defaultShare) }}</span></div>
       </div>
       <div class="fund-mobile-performance">
-        <div v-for="item in [
-          ['近 1 月', row.defaultShare.chg_1m],
-          ['近 3 月', row.defaultShare.chg_3m],
-          ['近 6 月', row.defaultShare.chg_6m],
-          ['今年来', row.defaultShare.chg_ytd],
-          ['近 2 年', row.defaultShare.chg_2y],
-          ['近 3 年', row.defaultShare.chg_3y],
-        ]" :key="item[0]">
-          <span>{{ item[0] }}</span>
-          <b class="mono" :class="movementClass(item[1])">{{ formatPercent(item[1]) }}</b>
+        <div v-for="item in mobilePerformance()" :key="item.key">
+          <span>{{ item.label }}</span>
+          <b class="mono" :class="movementClass(row.defaultShare[item.key])">{{ metricDisplay(row, item.key) }}</b>
         </div>
       </div>
       <div class="fund-mobile-foot">
-        <span>近 1 年 <b class="mono" :class="movementClass(row.defaultShare.chg_1y)">{{ formatPercent(row.defaultShare.chg_1y) }}</b></span>
+        <span>近 1 年 <b class="mono" :class="movementClass(row.defaultShare.chg_1y)">{{ metricDisplay(row, 'chg_1y') }}</b></span>
         <span v-if="tab === 'offshore'">日限额 <b class="mono">{{ dailyLimitText(row) }}</b></span>
         <span v-else>规模 <b class="mono">{{ scaleText(row.series_scale) }}</b></span>
         <div class="fund-mobile-actions">

@@ -36,6 +36,7 @@
     "status": "ok | degraded | error",
     "checked_at": "ISO-8601",
     "missing_nav": 0,
+    "expected_no_nav": 0,
     "stale_nav": 0,
     "warnings": [],
     "errors": []
