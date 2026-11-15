@@ -32,4 +32,4 @@ React 同样成熟，但当前团队没有既有 React 业务代码，迁移不�
 - 新增 Node 构建步骤，GitHub Pages 部署前必须执行 `npm ci && npm run build`。
 - 旧 Vanilla UI 在迁移完成后删除，不长期双轨。
 - 首屏图表按页面懒加载，避免 ECharts 进入基础壳包。
-- 版本锁定使用 `package-lock.json`，CI 使用 `npm ci`。
+- 版本锁定使用 `package-lock.json`，本地安装使用 `npm ci`。

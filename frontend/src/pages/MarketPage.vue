@@ -196,13 +196,13 @@ const klineTableRows = computed(() => filteredKline.value.dates.map((date, index
 const klineOption = computed(() => {
   return {
     animationDuration: 320,
-    color: [settings.resolvedTheme === 'dark' ? '#4fd1c5' : '#0f766e'],
-    grid: { left: 16, right: 18, top: 34, bottom: 64, containLabel: true },
+    color: [settings.resolvedTheme === 'dark' ? '#6cb6ff' : '#0b63ce'],
+    grid: { left: 34, right: 20, top: 34, bottom: 70, containLabel: true },
     tooltip: {
       trigger: 'axis',
-      backgroundColor: settings.resolvedTheme === 'dark' ? '#111318' : '#ffffff',
-      borderColor: settings.resolvedTheme === 'dark' ? '#303640' : '#dde0e5',
-      textStyle: { color: settings.resolvedTheme === 'dark' ? '#e6eaf0' : '#202733', fontSize: 12 },
+      backgroundColor: settings.resolvedTheme === 'dark' ? '#181c23' : '#ffffff',
+      borderColor: settings.resolvedTheme === 'dark' ? '#485262' : '#dfe5ee',
+      textStyle: { color: settings.resolvedTheme === 'dark' ? '#f3f6fb' : '#111827', fontSize: 12 },
       extraCssText: 'border-radius: 8px; box-shadow: 0 10px 30px rgb(0 0 0 / 14%);',
       formatter: lineTooltipFormatter(
         filteredKline.value.dates,
@@ -213,18 +213,54 @@ const klineOption = computed(() => {
     },
     axisPointer: {
       type: 'line',
-      lineStyle: { color: settings.resolvedTheme === 'dark' ? '#4fd1c5' : '#0f766e', opacity: 0.55 },
+      lineStyle: { color: settings.resolvedTheme === 'dark' ? '#6cb6ff' : '#0b63ce', opacity: 0.55 },
     },
     dataZoom: [
       { type: 'inside', start: 0, end: 100 },
-      { type: 'slider', height: 18, bottom: 12, borderColor: 'transparent' },
+      {
+        type: 'slider',
+        height: 18,
+        bottom: 12,
+        borderColor: 'transparent',
+        backgroundColor: settings.resolvedTheme === 'dark' ? '#151a21' : '#f1f5fa',
+        fillerColor: settings.resolvedTheme === 'dark' ? 'rgba(108,182,255,.22)' : 'rgba(11,99,206,.14)',
+        handleStyle: { color: settings.resolvedTheme === 'dark' ? '#6cb6ff' : '#0b63ce' },
+        moveHandleStyle: { color: settings.resolvedTheme === 'dark' ? '#6cb6ff' : '#0b63ce' },
+      },
     ],
     xAxis: {
       type: 'category',
+      boundaryGap: false,
       data: filteredKline.value.dates,
-      axisLabel: { hideOverlap: true, formatter: (value: string) => value.slice(2, 7) },
+      axisLabel: {
+        hideOverlap: true,
+        color: settings.resolvedTheme === 'dark' ? '#b1bac7' : '#4b5563',
+        margin: 10,
+        formatter: (value: string) => value.slice(2, 7),
+      },
+      axisTick: {
+        show: true,
+        alignWithLabel: true,
+        lineStyle: { color: settings.resolvedTheme === 'dark' ? '#485262' : '#cbd5e1' },
+      },
+      axisLine: {
+        show: true,
+        lineStyle: { color: settings.resolvedTheme === 'dark' ? '#485262' : '#cbd5e1' },
+      },
     },
-    yAxis: { type: 'value', scale: true, splitLine: { lineStyle: { opacity: 0.18 } } },
+    yAxis: {
+      type: 'value',
+      scale: true,
+      axisLabel: { color: settings.resolvedTheme === 'dark' ? '#b1bac7' : '#4b5563' },
+      axisTick: { show: true, lineStyle: { color: settings.resolvedTheme === 'dark' ? '#485262' : '#cbd5e1' } },
+      axisLine: { show: true, lineStyle: { color: settings.resolvedTheme === 'dark' ? '#485262' : '#cbd5e1' } },
+      splitLine: {
+        lineStyle: {
+          color: settings.resolvedTheme === 'dark' ? '#2d3540' : '#e5eaf1',
+          type: 'dashed',
+        },
+      },
+    },
     series: [{
       type: 'line',
       data: filteredKline.value.values,
@@ -238,8 +274,8 @@ const klineOption = computed(() => {
           x2: 0,
           y2: 1,
           colorStops: [
-            { offset: 0, color: settings.resolvedTheme === 'dark' ? 'rgba(79,209,197,.32)' : 'rgba(15,118,110,.24)' },
-            { offset: 1, color: 'rgba(15,118,110,0)' },
+            { offset: 0, color: settings.resolvedTheme === 'dark' ? 'rgba(108,182,255,.26)' : 'rgba(11,99,206,.2)' },
+            { offset: 1, color: 'rgba(11,99,206,0)' },
           ],
         },
       },

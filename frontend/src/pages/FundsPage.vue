@@ -15,11 +15,13 @@ import { downloadCsv } from '@/shared/lib/csv'
 import { qualityStatusLabel, qualityWarningText } from '@/shared/lib/data-quality'
 import { formatDateTime } from '@/shared/lib/format'
 import { useDataStore } from '@/stores/data'
+import { useSettingsStore } from '@/stores/settings'
 import { useUiStore } from '@/stores/ui'
 import { fetchJson } from '@/shared/infrastructure/http'
 import type { KlineData } from '@/types/data'
 
 const data = useDataStore()
+const settings = useSettingsStore()
 const ui = useUiStore()
 
 const tab = ref<'offshore' | 'etf' | 'southbound'>('offshore')
@@ -292,7 +294,7 @@ async function exportImage(): Promise<void> {
     const dataUrl = await toPng(shareSurface.value, {
       pixelRatio: 2,
       cacheBust: true,
-      backgroundColor: document.documentElement.dataset.theme === 'dark' ? '#111318' : '#f4f5f7',
+      backgroundColor: document.documentElement.dataset.theme === 'dark' ? '#0f1217' : '#f5f7fb',
       filter: (node) => !(node instanceof HTMLElement && node.classList.contains('no-share')),
     })
     const anchor = document.createElement('a')
@@ -321,12 +323,29 @@ const compareOption = computed(() => {
   const dates = compareSeries.value[0]?.dates ?? []
   return {
     animationDuration: 240,
-    color: ['#0f766e', '#d97706', '#2563eb'],
-    grid: { left: 10, right: 12, top: 32, bottom: 28, containLabel: true },
+    color: ['#0b63ce', '#d97706', '#7c3aed'],
+    grid: { left: 38, right: 18, top: 34, bottom: 36, containLabel: true },
     tooltip: { trigger: 'axis', valueFormatter: (value: number) => `${value > 0 ? '+' : ''}${value.toFixed(2)}%` },
     legend: { top: 0, textStyle: { fontSize: 11 } },
-    xAxis: { type: 'category', data: dates, axisLabel: { hideOverlap: true } },
-    yAxis: { type: 'value', axisLabel: { formatter: '{value}%' }, splitLine: { lineStyle: { opacity: 0.18 } } },
+    xAxis: {
+      type: 'category',
+      data: dates,
+      axisLabel: { hideOverlap: true, color: settings.resolvedTheme === 'dark' ? '#b1bac7' : '#4b5563' },
+      axisTick: { show: true, lineStyle: { color: settings.resolvedTheme === 'dark' ? '#485262' : '#cbd5e1' } },
+      axisLine: { show: true, lineStyle: { color: settings.resolvedTheme === 'dark' ? '#485262' : '#cbd5e1' } },
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: { formatter: '{value}%', color: settings.resolvedTheme === 'dark' ? '#b1bac7' : '#4b5563' },
+      axisTick: { show: true, lineStyle: { color: settings.resolvedTheme === 'dark' ? '#485262' : '#cbd5e1' } },
+      axisLine: { show: true, lineStyle: { color: settings.resolvedTheme === 'dark' ? '#485262' : '#cbd5e1' } },
+      splitLine: {
+        lineStyle: {
+          color: settings.resolvedTheme === 'dark' ? '#2d3540' : '#e5eaf1',
+          type: 'dashed',
+        },
+      },
+    },
     series: compareSeries.value.map((series) => ({
       name: series.name,
       type: 'line',

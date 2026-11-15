@@ -71,6 +71,11 @@ test-results/
 playwright-report/
 blob-report/
 playwright/.cache/
+test/e2e/visual.spec.ts-snapshots/
+
+# 测试产物与截图：本地按需生成，不追踪
+docs/evidence/
+docs/test-report.md
 
 # Vite 生成资源由构建产生；HTML 与 data 仍追踪
 web/assets/

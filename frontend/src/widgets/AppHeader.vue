@@ -2,7 +2,6 @@
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
-  Landmark,
   Moon,
   Search,
   Settings,
@@ -50,9 +49,7 @@ function clearSearch(): void {
   <header class="app-header">
     <div class="header-inner">
       <RouterLink class="brand-block" to="/funds" aria-label="QDII Tracker 首页">
-        <span class="brand-symbol" aria-hidden="true">
-          <Landmark :size="17" :stroke-width="2.2" />
-        </span>
+        <img class="brand-symbol" src="/icon.svg" alt="" aria-hidden="true" />
         <span class="brand-copy">
           <strong>QDII Tracker</strong>
           <small>个人基金与笔记终端</small>

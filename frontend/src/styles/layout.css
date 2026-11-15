@@ -25,14 +25,11 @@
 }
 
 .brand-symbol {
-  display: grid;
-  width: 32px;
-  height: 32px;
-  place-items: center;
-  border: 1px solid color-mix(in srgb, var(--color-accent) 42%, var(--color-border));
-  border-radius: var(--radius-md);
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
+  display: block;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 9px;
 }
 
 .brand-copy {

@@ -78,21 +78,36 @@ const allocationOption = computed(() => ({
     radius: ['48%', '70%'],
     center: ['50%', '44%'],
     avoidLabelOverlap: true,
-    itemStyle: { borderWidth: 2, borderColor: settings.resolvedTheme === 'dark' ? '#191c22' : '#ffffff' },
+    itemStyle: { borderWidth: 2, borderColor: settings.resolvedTheme === 'dark' ? '#181c23' : '#ffffff' },
     label: { show: false },
     data: allocation.value,
   }],
 }))
 const trendOption = computed(() => ({
   animationDuration: 240,
-  grid: { left: 10, right: 12, top: 18, bottom: 25, containLabel: true },
+  color: [settings.resolvedTheme === 'dark' ? '#6cb6ff' : '#0b63ce'],
+  grid: { left: 34, right: 16, top: 18, bottom: 32, containLabel: true },
   tooltip: { trigger: 'axis', valueFormatter: (value: number) => `¥${formatNumber(value)}` },
   xAxis: {
     type: 'category',
     data: trendSeries.value.map((item) => item.date),
-    axisLabel: { hideOverlap: true },
+    axisLabel: { hideOverlap: true, color: settings.resolvedTheme === 'dark' ? '#b1bac7' : '#4b5563' },
+    axisTick: { show: true, lineStyle: { color: settings.resolvedTheme === 'dark' ? '#485262' : '#cbd5e1' } },
+    axisLine: { show: true, lineStyle: { color: settings.resolvedTheme === 'dark' ? '#485262' : '#cbd5e1' } },
   },
-  yAxis: { type: 'value', scale: true, splitLine: { lineStyle: { opacity: 0.18 } } },
+  yAxis: {
+    type: 'value',
+    scale: true,
+    axisLabel: { color: settings.resolvedTheme === 'dark' ? '#b1bac7' : '#4b5563' },
+    axisTick: { show: true, lineStyle: { color: settings.resolvedTheme === 'dark' ? '#485262' : '#cbd5e1' } },
+    axisLine: { show: true, lineStyle: { color: settings.resolvedTheme === 'dark' ? '#485262' : '#cbd5e1' } },
+    splitLine: {
+      lineStyle: {
+        color: settings.resolvedTheme === 'dark' ? '#2d3540' : '#e5eaf1',
+        type: 'dashed',
+      },
+    },
+  },
   series: [{
     type: 'line',
     name: '近似收益',

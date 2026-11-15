@@ -1,5 +1,5 @@
 #!/bin/sh
-# 推送前本地门禁：跑单元测试 + 数据/Agent/文档门禁（离线），与 CI 对齐。
+# 推送前本地门禁：跑单元测试 + 数据/Agent/文档门禁（离线）。
 # 启用方式：scripts/setup_hooks.sh（git config core.hooksPath .githooks）
 set -e
 
@@ -14,7 +14,7 @@ fi
 
 echo "🔄 pre-push: 本地门禁（pytest + fundctl check --offline --agent-rules）..."
 
-# 1) 单元测试（未安装 pytest 时提示跳过，避免本地无测试依赖被卡死；CI 仍会强制跑）
+# 1) 单元测试（未安装 pytest 时提示跳过，避免本地无测试依赖被卡死）
 if "$PY" -c "import pytest" >/dev/null 2>&1; then
   "$PY" -m pytest test/ -q
 else

@@ -6,14 +6,6 @@
 
 前端为 Vue 3 + TypeScript + Vite；Python 负责数据采集、丰富与质量门禁。站点保持纯静态部署，无后端、无账号、无云端个人数据同步。
 
-## 界面
-
-![Funds desktop](docs/evidence/funds-desktop-light.png)
-
-| Market dark | Portfolio |
-|-------------|-----------|
-| ![Market dark](docs/evidence/market-desktop-dark.png) | ![Portfolio](docs/evidence/portfolio-desktop-light.png) |
-
 ## 功能
 
 ### Market
@@ -99,16 +91,20 @@ python3 fundctl.py check       # 数据质量门禁
 npm ci
 npm run test:t0       # 类型 + ESLint + Vitest
 npm run test:t1       # 当前变更涉及的 Chromium 桌面交互
-npm run test:t2       # Chromium 桌面集成 + 视觉基准
-npm run test:t3       # Chromium 桌面 + 移动完整回归
+npm run test:t2       # Chromium 桌面集成
+npm run test:t3       # Chromium 桌面 + 移动完整交互回归
+npm run test:e2e:funds    # 只跑基金相关工作流
+npm run test:e2e:research # 只跑笔记与知识库
+npm run test:visual   # 本地视觉基线对比
+npm run test:visual:update # 本地生成视觉基线（不提交）
 npm run build
 python3 -m pytest test/ -q
 cd scripts && python3 fundctl.py check --offline
 ```
 
 浏览器测试只使用本机 Chromium/Chrome；不要求安装 Firefox/WebKit。
-小修改执行 T0，交互修改执行 T0 + T1，公共组件/存储/契约扩大范围，发布前执行 T3。
-完整结果与证据记录在 [docs/test-report.md](./docs/test-report.md)。
+默认只跑 T0 和受影响的 Chromium 用例。T2/T3 在本地发布前按需执行。
+视觉基线、测试报告和截图属于本地测试产物，不提交到仓库。
 
 ## 个人数据
 
@@ -120,8 +116,8 @@ cd scripts && python3 fundctl.py check --offline
 ## Actions 与部署
 
 - `update-data.yml`：工作日更新数据，月度执行完整流水线。
-- `ci.yml`：Python 测试、数据门禁、前端类型/Lint/Vitest/Build，不安装浏览器。
 - `deploy-pages.yml`：`npm ci → npm run build → upload web/ → GitHub Pages`。
+- GitHub Actions 不运行测试；Python/前端测试和 Playwright 只在本机按需执行。
 - Vite 资源使用内容哈希，不再手工维护 `?v=dev`。
 
 ## 数据来源
@@ -162,13 +158,11 @@ qdii-tracker/
 │   └── sw.js
 ├── docs/    # 人读文档 — 踩坑 / 架构
 │   ├── decisions/
-│   ├── evidence/
 │   ├── architecture.md
 │   ├── audit.md
 │   ├── data-contract.md
 │   ├── data-sources.md
 │   ├── gotchas.md
-│   ├── test-report.md
 │   └── ux-audit.md
 ├── test/    # 测试与 UI 回归（pytest + Playwright）
 │   ├── e2e/

@@ -191,6 +191,13 @@
   font-weight: 650;
 }
 
+.drawer-body .echart {
+  padding: 6px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+}
+
 .eyebrow {
   color: var(--color-text-tertiary);
   font-family: var(--font-mono);

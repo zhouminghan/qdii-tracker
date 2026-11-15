@@ -3,8 +3,8 @@
   "short_name": "QDII",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#f4f5f7",
-  "theme_color": "#0f766e",
+  "background_color": "#f5f7fb",
+  "theme_color": "#0b63ce",
   "icons": [
     {
       "src": "./icon.svg",

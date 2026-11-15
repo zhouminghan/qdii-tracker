@@ -33,7 +33,7 @@
 | G027 | 品牌实物金价（水贝/周大福/老凤祥/中国黄金 足金饰品与投资金条）无稳定 API：V2 白皮书模块 3.4 的品牌金价维度暂未接入 | cngold（金投网）页面为 JS 渲染，curl 拿不到数据；`api.jijinhao.com/sQuoteCenter/realTime.htm` 空返回；需浏览器级抓取或付费源 | ✅已接入（证券之星 `salegold.shtml` GBK 表格 → `scripts/pipeline/brand_gold.py`；水贝批发价该源未收录） | 2026-11-06 | 2026-11-06 |
 | G028 | 缺失值在降序排序时跑到顶部 | 缺失比较结果先被方向系数相乘；`null` 被当成最小值参与反向排序 | `frontend/src/shared/lib/funds.ts:sortFundRows()` → 缺失值在方向乘数前直接返回置底 | ✅已修复 | 2026-11-14 | 2026-11-14 |
 | G029 | Vite 开发页把 `web/data/catalog.json` 请求到 `frontend/data/` 并收到 HTML | Vite root 为 `frontend/`，生产 `web/data/` 不在开发静态根内 | `vite.config.ts` → 只读 `/data` 中间件映射 `web/data/` | ✅已修复 | 2026-11-14 | 2026-11-14 |
-| G030 | Playwright Firefox 在 macOS 启动前报 `Could not find profile folder` | Firefox 159 profile 初始化失败，Firefox 150 兼容构建也未建立会话；项目随后明确收敛为 Chromium-only | `docs/test-report.md` → 保留排障记录；浏览器验收只使用 Chromium | ℹ️不适用（策略已收敛） | 2026-11-14 | 2026-11-15 |
+| G030 | Playwright Firefox 在 macOS 启动前报 `Could not find profile folder` | Firefox 159 profile 初始化失败，Firefox 150 兼容构建也未建立会话；项目随后明确收敛为 Chromium-only | 本地排障记录不提交；浏览器验收只使用 Chromium | ℹ️不适用（策略已收敛） | 2026-11-14 | 2026-11-15 |
 
 ## Gotchas 生命周期规则
 - 已修复 → 保留条目，标记 `✅已修复`（不删——后人要知道坑存在过）
