@@ -90,6 +90,12 @@ test.describe('funds workflow', () => {
     await expect(page.locator('.southbound-row').first()).toContainText('EF13')
     await expect(page.locator('.southbound-row').first()).toContainText('建行亚洲')
 
+    await southboundSearch.fill('易方达香港 纳斯达克100指数')
+    await expect(page.locator('.southbound-row')).toHaveCount(3)
+
+    await southboundSearch.fill('众安 纳斯达克100')
+    await expect(page.locator('.southbound-row')).toHaveCount(3)
+
     await southboundSearch.fill('易方达标普500')
     await expect(page.locator('.southbound-row')).toHaveCount(3)
 

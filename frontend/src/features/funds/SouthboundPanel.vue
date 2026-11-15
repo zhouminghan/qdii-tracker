@@ -29,12 +29,23 @@ async function load(): Promise<void> {
 }
 
 function normalized(value: unknown): string {
-  return String(value ?? '').trim().toLowerCase()
+  return String(value ?? '')
+    .toLowerCase()
+    .replace(/[\s（）()【】·•,，。._/\\-]+/g, '')
 }
 
-function shareMatches(share: SouthboundShare, query: string): boolean {
-  if (!query) return true
-  return [
+function queryTokens(query: string): string[] {
+  return String(query ?? '').trim().split(/\s+/).map(normalized).filter(Boolean)
+}
+
+function shareMatches(product: SouthboundProduct, share: SouthboundShare, tokens: string[]): boolean {
+  if (!tokens.length) return true
+  const haystack = normalized([
+    product.name,
+    ...(product.aliases ?? []),
+    product.index_name,
+    product.channel_type,
+    ...product.channels,
     share.code,
     share.bank_code,
     share.bank_name,
@@ -43,21 +54,15 @@ function shareMatches(share: SouthboundShare, query: string): boolean {
     share.currency,
     share.currency_code,
     share.share_class,
-  ].some((value) => normalized(value).includes(query))
+  ].join('|'))
+  return tokens.every((token) => haystack.includes(token))
 }
 
 function productGroups(query: string) {
-  const q = normalized(query)
+  const tokens = queryTokens(query)
   return (payload.value?.products ?? [])
     .map((product) => {
-      const productMatches = [
-        product.name,
-        ...(product.aliases ?? []),
-        product.index_name,
-        product.channel_type,
-        ...product.channels,
-      ].some((value) => normalized(value).includes(q))
-      const shares = product.shares.filter((share) => !q || productMatches || shareMatches(share, q))
+      const shares = product.shares.filter((share) => shareMatches(product, share, tokens))
       return { product, shares }
     })
     .filter((group) => group.shares.length > 0)
