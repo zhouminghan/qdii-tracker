@@ -24,4 +24,22 @@ describe('safe Markdown rendering model', () => {
       { type: 'text', text: '：2026-11-15' },
     ])
   })
+
+  it('parses inline images and rejects unsafe image protocols', () => {
+    expect(parseMarkdownInline('![渠道图](https://img.example.com/a.jpg)')).toEqual([
+      {
+        type: 'image',
+        text: '渠道图',
+        href: 'https://img.example.com/a.jpg',
+      },
+    ])
+    expect(parseMarkdownInline('![危险](javascript:alert(1))')).toEqual([
+      { type: 'text', text: '![危险](javascript:alert(1))' },
+    ])
+    expect(parseMarkdownInline('![本地图](./evidence/chart.jpg)')[0]).toEqual({
+      type: 'image',
+      text: '本地图',
+      href: './evidence/chart.jpg',
+    })
+  })
 })

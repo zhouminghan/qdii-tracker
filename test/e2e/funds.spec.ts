@@ -38,7 +38,10 @@ test.describe('funds workflow', () => {
     await page.getByRole('button', { name: '南向通' }).click()
     await expect(page.getByRole('heading', { name: '易方达（香港）标普500指数基金' })).toBeVisible()
     await expect(page.getByText('83004', { exact: true })).toBeVisible()
-    await expect(page.getByText('香港众安银行 ZA Bank')).toBeVisible()
+    await expect(page.getByText('香港众安银行 ZA Bank').first()).toBeVisible()
+    await expect(page.getByRole('heading', { name: '易方达（香港）纳斯达克100指数基金' })).toBeVisible()
+    await expect(page.getByText('ISIN HK0001026985')).toBeVisible()
+    await expect(page.getByText('EFHNAAU HK', { exact: true }).first()).toBeVisible()
   })
 
   test('labels closed-period shares without pretending they have a price', async ({ page }) => {

@@ -117,6 +117,8 @@
 - 历史不足的收益显示 `-`，封闭期显示“封闭期”。
 - 基金走势增加今年来、2 年、3 年、5 年、10 年和全部区间，图下补充净值明细。
 - 指数走势抽屉增加同样区间筛选、起止日期、日 K 收盘和日涨跌明细。
+- 研究笔记卡片改为摘要预览，新增全文抽屉；支持 Markdown 粗体、外链和内嵌图片。
+- 南向通补充易方达香港纳斯达克100指数基金，展示官方美元份额 ISIN `HK0001026985`、港交所代码 `EFHNAAU HK` 和银行渠道核验状态。
 
 ## 后续 Backlog
 
@@ -141,11 +143,11 @@
 
 | 检查 | 结果 |
 |------|------|
-| `npm run test:t0` | 通过；TypeScript、ESLint、Vitest 13 文件 / 38 条 |
+| `npm run test:t0` | 通过；TypeScript、ESLint、Vitest 13 文件 / 39 条 |
 | `npm run build` | 通过 |
-| Chromium T3 | 83 条通过，9 条预期跳过；桌面与移动 |
+| Chromium T3 | 84 条通过，10 条预期跳过；桌面与移动 |
 | axe `wcag2a + wcag2aa` | 四页、浅色/深色、桌面/移动均无 serious/critical |
-| 视觉基准 | 7 张 Chromium 基准逐张检查后更新 |
+| 视觉基准 | 9 张 Chromium 基准逐张检查后更新 |
 | console/page error | 本轮浏览器回归未发现运行时异常 |
 
 ## 边界

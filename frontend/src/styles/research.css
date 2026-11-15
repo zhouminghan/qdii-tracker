@@ -191,6 +191,47 @@
   text-underline-offset: 2px;
 }
 
+.markdown-note img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 520px;
+  margin: 6px 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  object-fit: contain;
+}
+
+.markdown-image-link {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.note-preview {
+  max-height: 240px;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, #000 76%, transparent);
+}
+
+.note-read-button {
+  justify-self: start;
+}
+
+.note-reader {
+  display: grid;
+  gap: 14px;
+}
+
+.note-reader-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  color: var(--color-text-tertiary);
+  font-size: 0.75rem;
+}
+
 .row-actions {
   display: flex;
   flex-wrap: wrap;

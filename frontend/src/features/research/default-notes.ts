@@ -3,11 +3,11 @@ import type { ResearchNote } from '@/types/local'
 export const DEFAULT_RESEARCH_NOTES: ResearchNote[] = [
   {
     id: 'southbound-2026-11-15-83004',
-    title: '跨境理财通南向通：香港银行购买标普500指数基金',
+    title: '跨境理财通南向通：标普500与纳斯达克100渠道记录',
     fundCode: '83004',
     tags: ['南向通', '香港银行', '标普500', '跨境理财通', '83004'],
     createdAt: '2026-11-15T15:30:00+08:00',
-    updatedAt: '2026-11-15T15:30:00+08:00',
+    updatedAt: '2026-11-15T17:15:00+08:00',
     body: `# 跨境理财通南向通记录
 
 - **记录日期**：2026-11-15
@@ -17,12 +17,22 @@ export const DEFAULT_RESEARCH_NOTES: ResearchNote[] = [
 - **参考近一年收益**：+10.72%
 - **额度**：符合资格的个人最高 300 万元；同时使用银行和券商渠道时，银行、券商各 150 万元
 
+![南向通渠道资料截图](https://images.weserv.nl/?url=pbs.twimg.com/media/HXJIJHnaIAAkxNN%3Fformat%3Djpg%26name%3Dlarge)
+
 ## 核心优势
 
 - 监管认可的跨境投资渠道。
 - 不需要参与内地 QDII 每日申购额度抢购。
 - 不承担场内 ETF 的二级市场高溢价风险。
 - 支持人民币闭环跨境汇款。
+
+## 补充：纳斯达克100产品
+
+- **产品**：易方达（香港）纳斯达克100指数基金
+- **官方美元份额 ISIN**：HK0001026985
+- **港交所代码**：EFHNAAU HK
+- **银行 APP 渠道码**：待众安银行、招商永隆银行人工核验
+- **状态**：官方产品页已确认，银行当日可购名单和费率需在 APP 内核对
 
 ## 使用前必须核对
 

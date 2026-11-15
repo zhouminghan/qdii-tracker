@@ -64,4 +64,17 @@ test.describe('visual baselines', () => {
     await expect(page.getByRole('dialog')).toBeVisible()
     await expect(page).toHaveScreenshot('fund-trend-desktop-light.png')
   })
+
+  test('Southbound note reader desktop light', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 })
+    await page.goto('/#/research')
+    await page.getByRole('tab', { name: /基金笔记/ }).click()
+    const note = page.locator('.research-card').filter({ hasText: '跨境理财通南向通' })
+    await note.getByRole('button', { name: '查看全文' }).click()
+    const reader = page.getByRole('dialog')
+    await expect(reader).toBeVisible()
+    await expect.poll(() => reader.getByRole('img', { name: '南向通渠道资料截图' })
+      .evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
+    await expect(page).toHaveScreenshot('southbound-note-reader-desktop-light.png')
+  })
 })

@@ -34,18 +34,20 @@ onMounted(load)
           <h2>{{ product.name }}</h2>
           <p>{{ product.status }}</p>
         </div>
-        <span class="badge badge-accent">香港代销产品</span>
+        <span class="badge badge-accent">{{ product.channel_type }} · 香港代销</span>
       </header>
 
       <div class="southbound-hero">
         <div class="southbound-code">
-          <span>基金代码</span>
+          <span>{{ product.code === product.ticker ? '港交所代码' : '银行渠道代码' }}</span>
           <strong class="mono">{{ product.code }}</strong>
           <small>{{ product.share_class }} · {{ product.currency }}</small>
+          <small>ISIN {{ product.isin }}</small>
+          <small v-if="product.code !== product.ticker">官方 {{ product.ticker }}</small>
         </div>
         <div class="southbound-return" :class="movementSurfaceClass(product.one_year_return_pct)">
           <span>近一年收益</span>
-          <strong class="mono" :class="movementClass(product.one_year_return_pct)">{{ formatPercent(product.one_year_return_pct) }}</strong>
+          <strong class="mono" :class="movementClass(product.one_year_return_pct)">{{ product.one_year_return_pct == null ? '待核验' : formatPercent(product.one_year_return_pct) }}</strong>
           <small>以渠道页面为准</small>
         </div>
         <div class="southbound-quota">
@@ -79,6 +81,9 @@ onMounted(load)
         <Info :size="15" aria-hidden="true" />
         <span>{{ product.quota_note }} {{ payload?.disclaimer }}</span>
       </div>
+      <a class="button button-secondary southbound-official-link" :href="product.official_url" target="_blank" rel="noreferrer">
+        查看基金公司官方产品页
+      </a>
     </section>
   </DataState>
 </template>

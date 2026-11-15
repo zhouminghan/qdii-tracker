@@ -9,6 +9,17 @@ test.describe('local research workflow', () => {
     await expect(note).toContainText('2026-11-15')
     await expect(note).toContainText('83004')
     await expect(note).toContainText('香港众安银行')
+    await note.getByRole('button', { name: '查看全文' }).click()
+    const reader = page.getByRole('dialog', { name: /跨境理财通南向通/ })
+    await expect(reader).toBeVisible()
+    await expect(reader.getByText('对比内地 QDII、场内 ETF 和南向通三种渠道的综合成本。')).toBeVisible()
+    const image = reader.getByRole('img', { name: '南向通渠道资料截图' })
+    await expect(image).toBeAttached()
+    await expect.poll(() => image.evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
+    await expect(reader.getByRole('link', { name: '南向通渠道资料截图' })).toHaveAttribute(
+      'href',
+      'https://images.weserv.nl/?url=pbs.twimg.com/media/HXJIJHnaIAAkxNN%3Fformat%3Djpg%26name%3Dlarge',
+    )
   })
 
   test('uses contextual actions and collapses knowledge by default', async ({ page }) => {

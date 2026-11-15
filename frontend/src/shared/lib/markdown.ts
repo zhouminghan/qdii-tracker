@@ -1,5 +1,5 @@
 export interface MarkdownToken {
-  type: 'text' | 'link' | 'strong'
+  type: 'text' | 'link' | 'strong' | 'image'
   text: string
   href?: string
 }
@@ -18,18 +18,27 @@ function safeHref(value: string): string | null {
   }
 }
 
+function safeImageHref(value: string): string | null {
+  if (value.startsWith('./') || value.startsWith('../') || value.startsWith('/')) return value
+  return safeHref(value)
+}
+
 export function parseMarkdownInline(value: string): MarkdownToken[] {
   const tokens: MarkdownToken[] = []
-  const pattern = /\[([^\]]+)\]\(((?:https?|mailto):[^)\s]+)\)|(https?:\/\/[^\s<]+)|(\*\*[^*]+\*\*)/g
+  const pattern = /!\[([^\]]*)\]\(((?:https?:[^)\s]+|\.{1,2}\/[^)\s]+|\/[^)\s]+))\)|\[([^\]]+)\]\(((?:https?|mailto):[^)\s]+)\)|(https?:\/\/[^\s<]+)|(\*\*[^*]+\*\*)/g
   let cursor = 0
   for (const match of value.matchAll(pattern)) {
     const index = match.index ?? 0
     if (index > cursor) tokens.push({ type: 'text', text: value.slice(cursor, index) })
-    if (match[4]) {
-      tokens.push({ type: 'strong', text: match[4].slice(2, -2) })
+    if (match[2]) {
+      const href = safeImageHref(match[2])
+      if (href) tokens.push({ type: 'image', text: match[1] || '图片', href })
+      else tokens.push({ type: 'text', text: match[0] })
+    } else if (match[6]) {
+      tokens.push({ type: 'strong', text: match[6].slice(2, -2) })
     } else {
-      const label = match[1] ?? match[3] ?? ''
-      const href = safeHref(match[2] ?? match[3] ?? '')
+      const label = match[3] ?? match[5] ?? ''
+      const href = safeHref(match[4] ?? match[5] ?? '')
       if (href) tokens.push({ type: 'link', text: label, href })
       else tokens.push({ type: 'text', text: match[0] })
     }

@@ -7,8 +7,12 @@
     {
       "code": "83004",
       "name": "易方达（香港）标普500指数基金",
+      "channel_type": "场外基金",
       "share_class": "美元累积类",
       "currency": "美元",
+      "isin": "HK0001050308",
+      "ticker": "EHSPACU HK",
+      "official_url": "https://www.efunds.com.hk/products/40/info",
       "one_year_return_pct": 10.72,
       "channels": [
         "香港众安银行 ZA Bank",
@@ -28,6 +32,36 @@
         "近一年收益不代表未来表现",
         "仍需承担市场回撤、汇率波动和跨境汇款成本",
         "实际费率、代码和额度以银行 APP 页面为准"
+      ]
+    },
+    {
+      "code": "EFHNAAU HK",
+      "name": "易方达（香港）纳斯达克100指数基金",
+      "channel_type": "场外基金",
+      "share_class": "美元累积类",
+      "currency": "美元",
+      "isin": "HK0001026985",
+      "ticker": "EFHNAAU HK",
+      "official_url": "https://www.efunds.com.hk/products/38/info",
+      "one_year_return_pct": null,
+      "channels": [
+        "香港众安银行 ZA Bank",
+        "招商永隆银行 CMB Wing Lung"
+      ],
+      "personal_quota_cny": 3000000,
+      "quota_note": "个人总额度最高 300 万元；同时使用银行和券商渠道时，各 150 万元。",
+      "status": "官方代码已确认；银行 APP 渠道码与可购状态需当日核验",
+      "advantages": [
+        "跟踪纳斯达克100指数",
+        "不需要参与内地 QDII 每日申购额度抢购",
+        "不承担场内 ETF 的二级市场高溢价风险",
+        "支持人民币闭环跨境汇款"
+      ],
+      "risks": [
+        "仅限符合南向通资格的投资者",
+        "科技成长股波动和回撤通常高于标普500",
+        "仍需承担汇率波动和跨境汇款成本",
+        "银行内部产品代码可能不同于官方 ISIN 或港交所代码"
       ]
     }
   ]

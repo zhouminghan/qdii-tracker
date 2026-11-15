@@ -22,8 +22,12 @@ export interface BuyStatusHistory {
 export interface FundShare {
   code: string
   name: string
+  channel_type: string
   share_class: string
   currency: string
+  isin: string
+  ticker: string
+  official_url: string
   nav?: number | null
   nav_cum?: number | null
   nav_date?: string | null

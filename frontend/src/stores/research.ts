@@ -4,14 +4,23 @@ import { db, ensureLegacyMigration } from '@/shared/infrastructure/local-db'
 import { DEFAULT_RESEARCH_NOTES } from '@/features/research/default-notes'
 import type { NoteRevision, ResearchNote, StrategyLog, WatchItem } from '@/types/local'
 
-const SEEDED_NOTES_KEY = 'qdii-default-notes-seeded-v1'
+const SEEDED_NOTES_KEY = 'qdii-default-notes-seeded-v5'
+const LEGACY_SOUTHBOUND_UPDATED_AT = new Set([
+  '2026-11-15T15:30:00+08:00',
+  '2026-11-15T16:45:00+08:00',
+  '2026-11-15T16:55:00+08:00',
+  '2026-11-15T17:05:00+08:00',
+])
 
 async function seedDefaultNotes(): Promise<void> {
   try {
     if (localStorage.getItem(SEEDED_NOTES_KEY)) return
     await db.transaction('rw', db.notes, async () => {
       for (const note of DEFAULT_RESEARCH_NOTES) {
-        if (!await db.notes.get(note.id)) await db.notes.put(note)
+        const existing = await db.notes.get(note.id)
+        if (!existing || LEGACY_SOUTHBOUND_UPDATED_AT.has(existing.updatedAt)) {
+          await db.notes.put(note)
+        }
       }
     })
     localStorage.setItem(SEEDED_NOTES_KEY, '1')

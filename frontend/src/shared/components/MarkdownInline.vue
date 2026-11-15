@@ -13,6 +13,20 @@ defineProps<{ tokens: MarkdownToken[] }>()
       rel="noreferrer"
     >{{ token.text }}</a>
     <strong v-else-if="token.type === 'strong'">{{ token.text }}</strong>
+    <a
+      v-else-if="token.type === 'image'"
+      class="markdown-image-link"
+      :href="token.href"
+      target="_blank"
+      rel="noreferrer"
+    >
+      <img
+        :src="token.href"
+        :alt="token.text"
+        loading="lazy"
+        referrerpolicy="no-referrer"
+      />
+    </a>
     <template v-else>{{ token.text }}</template>
   </template>
 </template>

@@ -38,6 +38,8 @@ const saving = ref(false)
 const importInput = ref<HTMLInputElement | null>(null)
 const historyOpen = ref(false)
 const historyNote = ref<ResearchNote | null>(null)
+const readerOpen = ref(false)
+const readerNote = ref<ResearchNote | null>(null)
 const deleteTarget = ref<{ kind: 'note' | 'watch' | 'strategy'; id: string; title: string } | null>(null)
 const deleting = ref(false)
 
@@ -96,6 +98,11 @@ function openNote(note?: ResearchNote): void {
   }
   formError.value = ''
   editorOpen.value = true
+}
+
+function openReader(note: ResearchNote): void {
+  readerNote.value = note
+  readerOpen.value = true
 }
 
 function openWatch(item?: WatchItem): void {
@@ -298,7 +305,10 @@ onMounted(async () => {
               </div>
               <div class="row-actions"><button class="button button-secondary history-button" type="button" @click="openHistory(note)">历史</button><button class="icon-button" type="button" aria-label="导出 Markdown" title="导出 Markdown" @click="exportNoteMarkdown(note)"><Download :size="14" /></button><button class="icon-button" type="button" aria-label="编辑笔记" @click="openNote(note)"><FileText :size="14" /></button><button class="icon-button" type="button" aria-label="删除笔记" @click="deleteTarget = { kind: 'note', id: note.id, title: note.title }"><Trash2 :size="14" /></button></div>
             </div>
-            <MarkdownNote :text="note.body" />
+            <MarkdownNote :text="note.body" class="note-preview" />
+            <button class="button button-secondary note-read-button" type="button" @click="openReader(note)">
+              <Eye :size="14" aria-hidden="true" />查看全文
+            </button>
             <div class="tag-row"><span v-for="tag in note.tags" :key="tag" class="badge">{{ tag }}</span></div>
           </article>
         </div>
@@ -348,6 +358,35 @@ onMounted(async () => {
       </div>
       <p v-if="formError" class="form-error" role="alert">{{ formError }}</p>
       <template #footer><button class="button button-secondary" type="button" @click="editorOpen = false">取消</button><button class="button button-primary" type="button" :disabled="saving" @click="saveEditor">保存</button></template>
+    </BaseDrawer>
+
+    <BaseDrawer
+      :open="readerOpen"
+      :title="readerNote?.title || '研究笔记'"
+      eyebrow="笔记全文"
+      side="responsive"
+      @close="readerOpen = false"
+    >
+      <article v-if="readerNote" class="note-reader">
+        <div class="note-reader-meta">
+          <time :datetime="noteDate(readerNote.updatedAt)">{{ noteDate(readerNote.updatedAt) }}</time>
+          <span class="mono">{{ readerNote.fundCode || '通用' }}</span>
+          <span v-for="tag in readerNote.tags" :key="tag" class="badge">{{ tag }}</span>
+        </div>
+        <MarkdownNote :text="readerNote.body" />
+      </article>
+      <template #footer>
+        <button class="button button-secondary" type="button" @click="readerNote && exportNoteMarkdown(readerNote)">
+          导出 Markdown
+        </button>
+        <button
+          class="button button-primary"
+          type="button"
+          @click="readerOpen = false; readerNote && openNote(readerNote)"
+        >
+          编辑笔记
+        </button>
+      </template>
     </BaseDrawer>
 
     <BaseDrawer :open="historyOpen" :title="`${historyNote?.title || '笔记'} · 历史`" eyebrow="历史版本" side="bottom" @close="historyOpen = false">
