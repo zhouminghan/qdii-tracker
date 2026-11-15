@@ -336,8 +336,8 @@ onMounted(async () => {
   <div class="page portfolio-page">
     <header class="page-header">
       <div class="page-title-group">
-        <div class="eyebrow">本地组合</div>
-        <h1>投资组合</h1>
+        <div class="eyebrow">本地账户</div>
+        <h1>我的账户</h1>
         <p class="page-subtitle">持仓与交易只保存在当前浏览器。价格来自公共目录，个人数据不会上传。</p>
       </div>
       <div class="page-actions">

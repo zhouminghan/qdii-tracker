@@ -136,6 +136,26 @@
   background: var(--color-surface);
 }
 
+.note-card-clickable {
+  cursor: pointer;
+  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+
+.note-card-clickable:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--color-accent) 32%, var(--color-border));
+  box-shadow: var(--shadow-sm);
+}
+
+.note-card-clickable:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.note-card-clickable .note-preview * {
+  pointer-events: none;
+}
+
 .research-card-head {
   display: flex;
   align-items: flex-start;
@@ -212,10 +232,6 @@
   max-height: 240px;
   overflow: hidden;
   mask-image: linear-gradient(to bottom, #000 76%, transparent);
-}
-
-.note-read-button {
-  justify-self: start;
 }
 
 .note-reader {

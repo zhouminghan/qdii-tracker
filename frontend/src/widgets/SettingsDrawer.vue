@@ -80,7 +80,7 @@ const qualityLabel = computed(() => qualityStatusLabel(data.quality?.status))
         <Database :size="17" aria-hidden="true" />
         <div>
           <h3>个人数据</h3>
-          <p>资产、交易和研究记录不上传。备份操作在组合和研究页面执行。</p>
+          <p>资产、交易和笔记记录不上传。备份操作在账户和笔记页面执行。</p>
         </div>
       </div>
       <div class="button-row">
@@ -88,7 +88,7 @@ const qualityLabel = computed(() => qualityStatusLabel(data.quality?.status))
           <Upload :size="15" aria-hidden="true" /> 打开本地工作区
         </RouterLink>
         <button class="button button-secondary" type="button" disabled>
-          <Download :size="15" aria-hidden="true" /> 全量备份（组合页面内）
+          <Download :size="15" aria-hidden="true" /> 全量备份（账户页面内）
         </button>
       </div>
     </section>

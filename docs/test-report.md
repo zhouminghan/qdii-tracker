@@ -2,7 +2,7 @@
 
 ## 结论
 
-Vue 前端迁移、公共数据契约、本地 IndexedDB、研究历史、PNG 导出和构建部署链路已完成本地验证。
+Vue 前端迁移、公共数据契约、本地 IndexedDB、笔记历史、PNG 导出和构建部署链路已完成本地验证。
 当前兼容性承诺已收敛为 Chromium/Chrome；浏览器自动化只在本机 Chromium 执行。
 Firefox/WebKit 不属于当前支持目标，不参与发布验收。
 
@@ -12,9 +12,9 @@ Firefox/WebKit 不属于当前支持目标，不参与发布验收。
 |------|------|------|
 | TypeScript | 通过 | `npm run typecheck` |
 | ESLint | 通过 | `npm run lint` |
-| Vitest | 8 个文件 / 27 条通过 | `npm test` |
+| Vitest | 13 个文件 / 39 条通过 | `npm test` |
 | Python pytest | 96 条通过 | `pytest test/ -q` |
-| 数据门禁 | Layer 0–6 通过 | `fundctl.py check --offline` |
+| 数据门禁 | Layer 0–6 通过 | `fundctl.py check` |
 | Agent 规则 | 7 层通过 | `fundctl.py check --offline --agent-rules` |
 | 生产构建 | 通过 | `npm run build` |
 | 生产静态 smoke | 4 页通过，0 console/page error | `http://127.0.0.1:8766/` |
@@ -35,14 +35,14 @@ gh run list --repo zhouminghan/qdii-tracker --limit 30
 
 | 引擎/设备 | 结果 | 覆盖 |
 |-----------|------|------|
-| Chromium 桌面 | 通过 | 导航、Funds、Market、Portfolio、Research、实时行情、axe、视觉基准 |
-| Chromium 移动 | 通过 | 底部导航、移动卡片、排序、份额展开、交易、研究、实时行情、axe |
+| Chromium 桌面 | 通过 | 导航、Funds、南向通、Market、Portfolio、Research、实时行情、axe、视觉基准 |
+| Chromium 移动 | 通过 | 顶部导航适配、底部导航、移动卡片、搜索、规则浮窗入口、交易、笔记、实时行情、axe |
 
 历史 Firefox 启动失败证据保留用于排障记录，但在新的 Chromium-only 策略下不构成发布阻塞。
 
-T3 实际发现 40 条：36 条唯一测试通过，4 条移动端视觉重复项按项目规则跳过。
-首次 T3 中 Market 深色视觉基准因纳指标签纠正出现 1 处 1% 像素差异；
-检查 diff 后仅更新该基准，四张 Chromium 视觉基准复跑全部通过。
+T3 实际发现 98 条：88 条通过，10 条按项目规则跳过（移动端视觉重复项与桌面专属抽屉测试）。
+本轮更新了导航命名、顶部基金搜索、南向通分组表头、指标卡语义底色、笔记整卡点击和规则浮窗；
+检查实际截图后更新对应 Chromium 视觉基准，完整 T3 复跑通过。
 
 ## 本轮恢复与 Reviewer 闭环
 
@@ -56,7 +56,7 @@ T3 实际发现 40 条：36 条唯一测试通过，4 条移动端视觉重复�
 | CI 测试过重 | Actions 改为只做静态/单测/构建，不安装浏览器、不跑 Playwright | workflow 审计 |
 | Harness 提交指针滞后 | 改为记录已验证代码提交 `9c0975f`，避免文档提交造成伪滞后 | `harness/state.json` |
 
-Reviewer 未发现 JSONP 永久脚本泄漏或重复监听；确认正常、错误、超时路径都会清理脚本和计时器。
+本轮另完成南向通官方来源核验、银行渠道说明、笔记交互和图表 Tooltip 复验。Reviewer 未发现脚本泄漏或重复监听；确认正常、错误、超时路径都会清理脚本和计时器。
 
 ## 可访问性
 
@@ -64,7 +64,7 @@ Reviewer 未发现 JSONP 永久脚本泄漏或重复监听；确认正常、错�
 - 严重/致命问题：0。
 - 覆盖 Market、Funds、Portfolio、Research。
 - 覆盖 Chromium 桌面和 Chromium 移动。
-- T3 中 Funds/Market/Portfolio/Research 的桌面与移动 axe：8 条通过。
+- T3 中 Funds/南向通/Market/Portfolio/Research 的桌面与移动 axe 全部通过。
 - DCA 横向矩阵在移动端改为可读的纵向布局；桌面矩阵可聚焦。
 
 ## 视觉回归
@@ -75,6 +75,10 @@ Reviewer 未发现 JSONP 永久脚本泄漏或重复监听；确认正常、错�
 - `market-desktop-dark.png`
 - `funds-mobile-light.png`
 - `portfolio-mobile-dark.png`
+- `market-mobile-dark.png`
+- `southbound-desktop-light.png`
+- `fund-trend-desktop-light.png`
+- `southbound-note-reader-desktop-light.png`
 
 基准由人工检查后生成，并非在完整回归中自动接受差异。验收截图位于 `docs/evidence/`。
 
@@ -84,12 +88,12 @@ Reviewer 未发现 JSONP 永久脚本泄漏或重复监听；确认正常、错�
 - 场内/场外切换与溢价显示。
 - 场内 ETF / 指数 Tencent 实时行情覆盖：请求失败时自动回退静态快照；解析器定向单测通过。
 - 实时行情成功、失败、旧值清理与纳指标签：Chromium 桌面/移动定向 E2E。
-- T3 唯一差异是纳指标签变更导致的 Market 深色视觉基准；检查 diff 后仅更新该基准，四张视觉基准复跑通过。
+- 本轮检查 diff 后更新导航、搜索、指标卡、南向通表头和笔记阅读器视觉基准，8 张基准复跑通过。
 - 详情抽屉、历史走势、持仓与费率。
 - CSV 和 PNG（PNG 文件头、大小均验证）。
 - 多基金归一化走势对比。
 - Portfolio 持仓保存、交易新增、修改、删除、刷新持久化。
-- Research 笔记创建、刷新持久化、修改历史。
+- Research 笔记创建、刷新持久化、修改历史；点击笔记卡片任意区域打开全文侧栏。
 - v1/v2 JSON 备份解析与事务回滚测试。
 - localStorage → Dexie 迁移和幂等测试。
 - DCA 规则与 Python 边界一致性。
@@ -100,7 +104,7 @@ Reviewer 未发现 JSONP 永久脚本泄漏或重复监听；确认正常、错�
 - 主应用 gzip 约 52 KB。
 - ECharts 独立懒加载 chunk gzip 约 208 KB。
 - `web/data/`、`web/index.html`、manifest、Service Worker 在生产静态服务器可用。
-- 实时行情覆盖层改动后已做定向 `vue-tsc`、ESLint、Vitest 和生产构建；遵循本轮要求，未重复执行完整浏览器回归。
+- 本轮已执行完整 `vue-tsc`、ESLint、Vitest、生产构建和 Chromium 桌面/移动 T3。
 
 ## 未执行
 

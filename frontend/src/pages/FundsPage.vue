@@ -416,7 +416,7 @@ onBeforeUnmount(() => {
           </span>
         </div>
 
-        <section class="fund-toolbar" aria-label="基金筛选">
+        <section class="fund-toolbar funds-mobile-search" aria-label="基金筛选">
           <label class="inline-search">
             <Search :size="15" aria-hidden="true" />
             <input v-model="search" type="search" placeholder="代码、名称、公司" aria-label="搜索基金目录（跨分类）" />

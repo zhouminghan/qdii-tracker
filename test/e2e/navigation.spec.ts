@@ -9,10 +9,10 @@ test.describe('core navigation', () => {
     await page.getByRole('link', { name: '市场', exact: true }).first().click()
     await expect(page.getByRole('heading', { name: '市场', exact: true })).toBeVisible()
     await expect(page.locator('#main-content')).toBeFocused()
-    await page.getByRole('link', { name: '组合', exact: true }).first().click()
-    await expect(page.getByRole('heading', { name: '投资组合' })).toBeVisible()
-    await page.getByRole('link', { name: '研究', exact: true }).first().click()
-    await expect(page.getByRole('heading', { name: '研究', exact: true })).toBeVisible()
+    await page.getByRole('link', { name: '笔记', exact: true }).first().click()
+    await expect(page.getByRole('heading', { name: '笔记', exact: true })).toBeVisible()
+    await page.getByRole('link', { name: '账户', exact: true }).first().click()
+    await expect(page.getByRole('heading', { name: '我的账户' })).toBeVisible()
   })
 
   test('provides a working skip link without changing the route', async ({ page }) => {
@@ -36,18 +36,20 @@ test.describe('core navigation', () => {
     await expect(page.locator('html')).toHaveAttribute('data-color-mode', 'green-up')
   })
 
-  test('uses the header search cross-site without duplicating it on Funds', async ({ page }, testInfo) => {
+  test('uses one header search across pages', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'chromium-desktop', 'header search is hidden on mobile')
     await page.goto('/#/funds')
-    await expect(page.getByRole('searchbox', { name: '搜索基金代码、名称或公司' })).toHaveCount(0)
-    await expect(page.getByRole('searchbox', { name: '搜索基金目录（跨分类）' })).toBeVisible()
-
-    await page.getByRole('link', { name: '市场', exact: true }).first().click()
     const headerSearch = page.getByRole('searchbox', { name: '搜索基金代码、名称或公司' })
     await expect(headerSearch).toBeVisible()
+    await expect(page.getByRole('searchbox', { name: '搜索基金目录（跨分类）' })).toBeHidden()
     await headerSearch.fill('易方达')
+    await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible').first()).toBeVisible()
+
+    await page.getByRole('link', { name: '市场', exact: true }).first().click()
+    await expect(headerSearch).toBeVisible()
+    await headerSearch.fill('050025')
     await headerSearch.press('Enter')
     await expect(page).toHaveURL(/#\/funds$/)
-    await expect(page.getByRole('searchbox', { name: '搜索基金目录（跨分类）' })).toHaveValue('易方达')
+    await expect(headerSearch).toHaveValue('050025')
   })
 })

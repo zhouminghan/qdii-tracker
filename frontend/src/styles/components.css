@@ -124,23 +124,24 @@
   gap: 4px;
   min-width: 0;
   padding: 11px 12px;
-  border: 1px solid var(--color-border);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 16%, var(--color-border));
   border-radius: var(--radius-md);
-  background: var(--color-surface);
+  background: color-mix(in srgb, var(--color-accent-soft) 44%, var(--color-surface));
 }
 
 .surface-up {
   border-color: color-mix(in srgb, var(--color-positive) 22%, var(--color-border));
-  background: color-mix(in srgb, var(--color-positive-soft) 78%, var(--color-surface));
+  background: color-mix(in srgb, var(--color-positive-soft) 90%, var(--color-surface));
 }
 
 .surface-down {
   border-color: color-mix(in srgb, var(--color-negative) 22%, var(--color-border));
-  background: color-mix(in srgb, var(--color-negative-soft) 78%, var(--color-surface));
+  background: color-mix(in srgb, var(--color-negative-soft) 90%, var(--color-surface));
 }
 
 .surface-flat {
-  background: var(--color-surface-raised);
+  border-color: var(--color-border);
+  background: color-mix(in srgb, var(--color-surface-raised) 82%, var(--color-accent-soft));
 }
 
 .metric-label {
@@ -161,6 +162,33 @@
 .metric-meta {
   color: var(--color-text-tertiary);
   font-size: 0.68rem;
+}
+
+.chart-tooltip {
+  display: grid;
+  min-width: 154px;
+  gap: 5px;
+  color: var(--color-text-secondary);
+  font-size: 0.72rem;
+}
+
+.chart-tooltip-date {
+  color: var(--color-text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+}
+
+.chart-tooltip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.chart-tooltip-row strong {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
 }
 
 .eyebrow {

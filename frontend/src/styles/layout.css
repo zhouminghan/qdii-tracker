@@ -96,7 +96,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  width: min(210px, 18vw);
+  width: min(290px, 26vw);
   height: 34px;
   margin-left: auto;
   padding: 0 9px;
@@ -104,6 +104,23 @@
   border-radius: var(--radius-md);
   background: var(--color-surface-raised);
   color: var(--color-text-tertiary);
+}
+
+.header-search-clear {
+  display: inline-grid;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-tertiary);
+}
+
+.header-search-clear:hover {
+  background: var(--color-surface-muted);
+  color: var(--color-text);
 }
 
 .header-search:focus-within {
@@ -124,10 +141,6 @@
   display: flex;
   align-items: center;
   gap: 5px;
-}
-
-.header-actions-end {
-  margin-left: auto;
 }
 
 .app-main {

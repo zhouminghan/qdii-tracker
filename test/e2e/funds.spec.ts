@@ -1,5 +1,13 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
+
+function fundSearch(page: Page) {
+  return page.locator('input[type="search"]:visible').first()
+}
+
+function clearFundSearch(page: Page) {
+  return page.locator('button[aria-label^="清空"]:visible').first()
+}
 
 test.describe('funds workflow', () => {
   test('restores default favorites and shows the D-class daily limit', async ({ page }) => {
@@ -10,7 +18,7 @@ test.describe('funds workflow', () => {
     await expect(page.getByRole('button', { name: '对比', exact: true })).toBeVisible()
     await expect(page.getByText('当前每日可购买 ¥60（仅 A 类）')).toBeVisible()
 
-    await page.getByLabel('搜索基金目录（跨分类）').fill('022525')
+    await fundSearch(page).fill('022525')
     await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible')).toHaveCount(1)
     await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible')).toContainText('纳指100 指数基金')
     await page
@@ -28,13 +36,13 @@ test.describe('funds workflow', () => {
 
   test('uses distinct company logos and exposes the Southbound category', async ({ page }) => {
     await page.goto('/#/funds')
-    const search = page.getByLabel('搜索基金目录（跨分类）')
+    const search = fundSearch(page)
     await search.fill('华宝')
     await expect(page.locator('.fund-row:visible .fund-logo, .fund-mobile-card:visible .fund-logo').first()).toHaveText('华宝')
     await search.fill('华夏')
     await expect(page.locator('.fund-row:visible .fund-logo, .fund-mobile-card:visible .fund-logo').first()).toHaveText('华夏')
 
-    await page.getByRole('button', { name: '清空搜索' }).click()
+    await clearFundSearch(page).click()
     await page.getByRole('button', { name: '南向通' }).click()
     await expect(page.getByRole('table', { name: '跨境理财通南向通基金份额' })).toBeVisible()
     await expect(page.locator('.southbound-row')).toHaveCount(13)
@@ -57,13 +65,13 @@ test.describe('funds workflow', () => {
     await expect(page.getByRole('heading', { name: '渠道优势' }).first()).toBeVisible()
     await expect(page.locator('.southbound-note-card').filter({ hasText: '恒生标普500指数ETF（非上市类别）' })).toContainText('建行亚洲 HM01')
 
-    const southboundSearch = page.getByLabel('搜索南向通基金代码和份额')
+    const southboundSearch = fundSearch(page)
     await southboundSearch.fill('HK0001027009')
     await expect(page.locator('.southbound-row')).toHaveCount(1)
     await expect(page.locator('.southbound-row')).toContainText('港元')
     await expect(page.locator('.southbound-row')).toContainText('EFHNAAH HK')
 
-    await page.getByRole('button', { name: '清空南向通搜索' }).click()
+    await clearFundSearch(page).click()
     await southboundSearch.fill('83004')
     await expect(page.locator('.southbound-row')).toHaveCount(1)
     await expect(page.locator('.southbound-row')).toContainText('EHSPACU HK')
@@ -79,7 +87,8 @@ test.describe('funds workflow', () => {
 
     await southboundSearch.fill('易方达纳斯达克100')
     await expect(page.locator('.southbound-row')).toHaveCount(3)
-    await expect(page.locator('.southbound-row').first()).toContainText('建行亚洲 EF13')
+    await expect(page.locator('.southbound-row').first()).toContainText('EF13')
+    await expect(page.locator('.southbound-row').first()).toContainText('建行亚洲')
 
     await southboundSearch.fill('易方达标普500')
     await expect(page.locator('.southbound-row')).toHaveCount(3)
@@ -94,7 +103,7 @@ test.describe('funds workflow', () => {
 
   test('labels closed-period shares without pretending they have a price', async ({ page }) => {
     await page.goto('/#/funds')
-    await page.getByLabel('搜索基金目录（跨分类）').fill('019738')
+    await fundSearch(page).fill('019738')
     await page.locator('.table-action:visible, .fund-mobile-actions button:visible').filter({ hasText: /详情/ }).first().click()
     const dialog = page.getByRole('dialog')
     const closedShare = dialog.locator('.share-comparison-table tbody tr').filter({ hasText: '019738' })
@@ -104,7 +113,7 @@ test.describe('funds workflow', () => {
 
   test('shows all share performance, buy fees, and derived sell rules', async ({ page }) => {
     await page.goto('/#/funds')
-    await page.getByLabel('搜索基金目录（跨分类）').fill('050025')
+    await fundSearch(page).fill('050025')
     await page.locator('.table-action:visible, .fund-mobile-actions button:visible').filter({ hasText: /详情/ }).first().click()
 
     const dialog = page.getByRole('dialog')
@@ -130,7 +139,7 @@ test.describe('funds workflow', () => {
       if (message.type() === 'error' && message.text().includes('[ECharts]')) chartErrors.push(message.text())
     })
     await page.goto('/#/funds')
-    await page.getByLabel('搜索基金目录（跨分类）').fill('050025')
+    await fundSearch(page).fill('050025')
     await page.locator('.table-action:visible, .fund-mobile-actions button:visible').filter({ hasText: /详情/ }).first().click()
     const dialog = page.getByRole('dialog')
     await dialog.getByRole('tab', { name: '走势' }).click()
@@ -139,12 +148,18 @@ test.describe('funds workflow', () => {
     await expect(dialog.getByRole('button', { name: '10年' })).toBeVisible()
     await expect(dialog.getByRole('columnheader', { name: '单位净值' })).toBeVisible()
     await expect(dialog.locator('.trend-history-shell tbody tr').first()).toBeVisible()
+    const chart = dialog.locator('.echart').first()
+    await expect(chart).toBeVisible()
+    const box = await chart.boundingBox()
+    if (box) await page.mouse.move(box.x + box.width * 0.62, box.y + box.height * 0.42)
+    await expect(page.locator('.chart-tooltip')).toContainText('日涨幅')
+    await expect(page.locator('.chart-tooltip')).toContainText('区间涨幅')
     expect(chartErrors).toEqual([])
   })
 
   test('compares current holdings with the previous quarter', async ({ page }) => {
     await page.goto('/#/funds')
-    await page.getByLabel('搜索基金目录（跨分类）').fill('096001')
+    await fundSearch(page).fill('096001')
     await page.locator('.table-action:visible, .fund-mobile-actions button:visible').filter({ hasText: /详情/ }).first().click()
     const dialog = page.getByRole('dialog')
     await dialog.getByRole('tab', { name: '持仓' }).click()
@@ -153,12 +168,12 @@ test.describe('funds workflow', () => {
     await expect(dialog.locator('tbody tr').first()).toContainText(/新进|持平|[+-]\d+\.\d{2}pct/)
   })
 
-  test('searches, sorts, expands shares, and opens detail', async ({ page }) => {
+  test('searches, sorts, expands shares, and opens detail', async ({ page }, testInfo) => {
     await page.goto('/#/funds')
     await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible').first()).toBeVisible()
-    await page.getByLabel('搜索基金目录（跨分类）').fill('易方达')
+    await fundSearch(page).fill('易方达')
     await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible').first()).toBeVisible()
-    await page.getByLabel('清空搜索').click()
+    await clearFundSearch(page).click()
     await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible').first()).toBeVisible()
 
     const sortHeader = page.getByRole('button', { name: '近 1 年' }).first()
@@ -168,6 +183,12 @@ test.describe('funds workflow', () => {
     if (await expandButton.count()) await expandButton.click()
     else await page.getByRole('button', { name: '查看份额' }).first().click()
     await expect(page.locator('.shares-row:visible, .fund-mobile-shares:visible')).toBeVisible()
+    if (testInfo.project.name === 'chromium-desktop') {
+      const shareRow = page.locator('.share-comparison-table tbody tr').first()
+      await shareRow.getByRole('button', { name: /买入和卖出规则/ }).last().click()
+      await expect(page.getByRole('tooltip')).toContainText('买入规则')
+      await expect(page.getByRole('tooltip')).toContainText('卖出规则')
+    }
 
     await page.getByRole('button', { name: '详情' }).first().click()
     await expect(page.getByRole('dialog')).toBeVisible()

@@ -5,11 +5,16 @@ import DataState from '@/shared/components/DataState.vue'
 import { fetchJson } from '@/shared/infrastructure/http'
 import { formatDate, formatNumber, formatPercent, movementClass } from '@/shared/lib/format'
 import type { SouthboundData, SouthboundProduct, SouthboundShare } from '@/types/data'
+import { useUiStore } from '@/stores/ui'
 
 const payload = ref<SouthboundData | null>(null)
 const loading = ref(true)
 const error = ref('')
-const search = ref('')
+const ui = useUiStore()
+const search = computed({
+  get: () => ui.quickSearch,
+  set: (value: string) => { ui.quickSearch = value },
+})
 
 async function load(): Promise<void> {
   loading.value = true
@@ -62,12 +67,7 @@ const groups = computed(() => productGroups(search.value))
 const visibleShareCount = computed(() => groups.value.reduce((sum, group) => sum + group.shares.length, 0))
 
 function clearSearch(): void {
-  search.value = ''
-}
-
-function codeLabel(share: SouthboundShare): string {
-  if (share.bank_code) return `${share.bank_name ?? '银行'} ${share.bank_code}`
-  return share.ticker ?? share.code
+  ui.quickSearch = ''
 }
 
 function productSource(product: SouthboundProduct): { label: string; url: string } {
@@ -86,7 +86,16 @@ onMounted(load)
 <template>
   <DataState :loading="loading" :error="error" @retry="load">
     <section v-if="payload" class="southbound-view" aria-labelledby="southbound-title">
-      <div class="fund-toolbar southbound-toolbar">
+      <div class="southbound-meta-row">
+        <div class="southbound-summary">
+          <strong>{{ groups.length }}</strong> 个产品
+          <span>·</span>
+          <strong>{{ visibleShareCount }}</strong> 个份额
+        </div>
+        <button v-if="search" class="text-button" type="button" @click="clearSearch">清除筛选</button>
+      </div>
+
+      <div class="fund-toolbar southbound-toolbar southbound-mobile-search">
         <label class="inline-search">
           <Search :size="15" aria-hidden="true" />
           <input
@@ -99,11 +108,6 @@ onMounted(load)
             <X :size="14" aria-hidden="true" />
           </button>
         </label>
-        <div class="southbound-summary">
-          <strong>{{ groups.length }}</strong> 个产品
-          <span>·</span>
-          <strong>{{ visibleShareCount }}</strong> 个份额
-        </div>
       </div>
 
       <div class="southbound-coverage">
@@ -119,14 +123,18 @@ onMounted(load)
           <caption id="southbound-title">跨境理财通南向通基金份额</caption>
           <thead>
             <tr>
-              <th scope="col">产品 / 份额</th>
-              <th scope="col">币种</th>
-              <th scope="col">代码</th>
+              <th scope="col" rowspan="2">产品 / 份额</th>
+              <th scope="col" rowspan="2">币种</th>
+              <th scope="colgroup" colspan="2">代码</th>
+              <th scope="colgroup" colspan="2" class="align-right">表现</th>
+              <th scope="col" rowspan="2">销售渠道</th>
+              <th scope="col" rowspan="2" class="align-center">来源</th>
+            </tr>
+            <tr>
+              <th scope="col">银行码</th>
+              <th scope="col">官方代码</th>
               <th scope="col" class="align-right">净值</th>
               <th scope="col" class="align-right">近 1 年</th>
-              <th scope="col">销售渠道</th>
-              <th scope="col">核验状态</th>
-              <th scope="col" class="align-center">来源</th>
             </tr>
           </thead>
           <tbody>
@@ -151,13 +159,15 @@ onMounted(load)
                   </span>
                   <small class="southbound-sub">{{ share.share_class }}</small>
                 </td>
+                <td class="southbound-bank-code">
+                  <strong v-if="share.bank_code" class="mono">{{ share.bank_code }}</strong>
+                  <span v-else class="muted">--</span>
+                  <small v-if="share.bank_code" class="southbound-sub">{{ share.bank_name }}</small>
+                </td>
                 <td class="southbound-code-cell">
-                  <strong class="mono">{{ codeLabel(share) }}</strong>
-                  <small v-if="share.bank_code && share.ticker" class="southbound-sub">Bloomberg {{ share.ticker }}</small>
+                  <strong class="mono">{{ share.ticker ?? share.code }}</strong>
                   <small v-if="share.isin" class="southbound-sub">ISIN {{ share.isin }}</small>
-                  <small class="southbound-sub">
-                    {{ share.bank_code ? share.bank_code_status : '银行渠道码待核验' }}
-                  </small>
+                  <small v-else class="southbound-sub">非上市类别 · 无公开 ISIN</small>
                 </td>
                 <td class="align-right">
                   <strong class="mono">{{ formatNumber(share.nav, 4) }}</strong>
@@ -165,15 +175,11 @@ onMounted(load)
                 </td>
                 <td class="align-right mono" :class="movementClass(share.one_year_return_pct)">
                   <strong>{{ share.one_year_return_pct == null ? '--' : formatPercent(share.one_year_return_pct) }}</strong>
-                  <small v-if="share.return_as_of" class="southbound-sub">{{ formatDate(share.return_as_of) }}</small>
                 </td>
                 <td>
                   <div class="southbound-channels">
                     <span v-for="channel in group.product.channels" :key="channel" class="chip">{{ channel }}</span>
                   </div>
-                </td>
-                <td>
-                  <span class="badge badge-warn">{{ group.product.status }}</span>
                 </td>
                 <td class="align-center">
                   <a

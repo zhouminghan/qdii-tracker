@@ -7,6 +7,7 @@ import {
   Search,
   Settings,
   Sun,
+  X,
 } from '@lucide/vue'
 import { useSettingsStore } from '@/stores/settings'
 import { useUiStore } from '@/stores/ui'
@@ -20,14 +21,18 @@ const search = ref(ui.quickSearch)
 const items = [
   { to: '/market', label: '市场' },
   { to: '/funds', label: '基金' },
-  { to: '/portfolio', label: '组合' },
-  { to: '/research', label: '研究' },
+  { to: '/research', label: '笔记' },
+  { to: '/portfolio', label: '账户' },
 ]
 
 const currentPath = computed(() => route.path)
 
 watch(() => ui.quickSearch, (value) => {
   search.value = value
+})
+
+watch(search, (value) => {
+  ui.quickSearch = value.trim()
 })
 
 function applySearch(): void {
@@ -50,7 +55,7 @@ function clearSearch(): void {
         </span>
         <span class="brand-copy">
           <strong>QDII Tracker</strong>
-          <small>个人基金研究终端</small>
+          <small>个人基金与笔记终端</small>
         </span>
       </RouterLink>
 
@@ -66,7 +71,7 @@ function clearSearch(): void {
         </RouterLink>
       </nav>
 
-      <form v-if="currentPath !== '/funds'" class="header-search" role="search" @submit.prevent="applySearch">
+      <form class="header-search" role="search" @submit.prevent="applySearch">
         <Search :size="15" aria-hidden="true" />
         <input
           v-model="search"
@@ -76,9 +81,18 @@ function clearSearch(): void {
           autocomplete="off"
           @keydown.esc="clearSearch"
         />
+        <button
+          v-if="search"
+          class="header-search-clear"
+          type="button"
+          aria-label="清空基金搜索"
+          @click="clearSearch"
+        >
+          <X :size="13" aria-hidden="true" />
+        </button>
       </form>
 
-      <div class="header-actions" :class="{ 'header-actions-end': currentPath === '/funds' }">
+      <div class="header-actions">
         <a
           class="icon-button"
           href="https://github.com/zhouminghan/qdii-tracker"

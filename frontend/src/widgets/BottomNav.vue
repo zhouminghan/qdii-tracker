@@ -11,8 +11,8 @@ const route = useRoute()
 const items = [
   { to: '/market', label: '市场', icon: ChartNoAxesCombined },
   { to: '/funds', label: '基金', icon: Landmark },
-  { to: '/portfolio', label: '组合', icon: WalletCards },
-  { to: '/research', label: '研究', icon: BookOpen },
+  { to: '/research', label: '笔记', icon: BookOpen },
+  { to: '/portfolio', label: '账户', icon: WalletCards },
 ]
 </script>
 

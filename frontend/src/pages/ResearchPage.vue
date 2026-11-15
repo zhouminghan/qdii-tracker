@@ -162,7 +162,7 @@ async function saveEditor(): Promise<void> {
       })
     }
     editorOpen.value = false
-    ui.toast('研究记录已保存', 'success')
+    ui.toast('记录已保存', 'success')
   } catch (reason) {
     formError.value = reason instanceof Error ? reason.message : '保存失败'
   } finally {
@@ -184,7 +184,7 @@ async function confirmDelete(): Promise<void> {
     else if (deleteTarget.value.kind === 'watch') await research.deleteWatchItem(deleteTarget.value.id)
     else await research.deleteStrategy(deleteTarget.value.id)
     deleteTarget.value = null
-    ui.toast('研究记录已删除', 'success')
+    ui.toast('记录已删除', 'success')
   } catch (reason) {
     ui.toast(reason instanceof Error ? reason.message : '删除失败', 'error')
   } finally {
@@ -238,8 +238,8 @@ onMounted(async () => {
   <div class="page research-page">
     <header class="page-header">
       <div class="page-title-group">
-        <div class="eyebrow">个人研究</div>
-        <h1>研究</h1>
+        <div class="eyebrow">个人记录</div>
+        <h1>笔记</h1>
         <p class="page-subtitle">知识库、基金笔记、观察清单和策略复盘。个人记录只保存在 IndexedDB。</p>
       </div>
       <div class="page-actions">
@@ -249,9 +249,9 @@ onMounted(async () => {
       </div>
     </header>
 
-    <div class="research-tabs" role="tablist" aria-label="研究工作区">
+    <div class="research-tabs" role="tablist" aria-label="笔记工作区">
       <button type="button" role="tab" :class="{ active: activeView === 'knowledge' }" :aria-selected="activeView === 'knowledge'" @click="activeView = 'knowledge'"><BookOpen :size="16" />知识库</button>
-      <button type="button" role="tab" :class="{ active: activeView === 'notes' }" :aria-selected="activeView === 'notes'" @click="activeView = 'notes'"><FileText :size="16" />基金笔记 <span>{{ research.notes.length }}</span></button>
+      <button type="button" role="tab" :class="{ active: activeView === 'notes' }" :aria-selected="activeView === 'notes'" @click="activeView = 'notes'"><FileText :size="16" />笔记 <span>{{ research.notes.length }}</span></button>
       <button type="button" role="tab" :class="{ active: activeView === 'watchlist' }" :aria-selected="activeView === 'watchlist'" @click="activeView = 'watchlist'"><Eye :size="16" />观察清单 <span>{{ research.watchlist.length }}</span></button>
       <button type="button" role="tab" :class="{ active: activeView === 'strategies' }" :aria-selected="activeView === 'strategies'" @click="activeView = 'strategies'"><ShieldCheck :size="16" />策略记录 <span>{{ research.strategyLogs.length }}</span></button>
     </div>
@@ -281,7 +281,7 @@ onMounted(async () => {
 
       <section v-else-if="activeView === 'notes'" class="research-workspace">
         <div class="research-toolbar">
-          <label class="inline-search"><Search :size="15" /><input v-model="noteSearch" type="search" placeholder="搜索标题、正文、代码或标签" aria-label="搜索研究笔记" /></label>
+          <label class="inline-search"><Search :size="15" /><input v-model="noteSearch" type="search" placeholder="搜索标题、正文、代码或标签" aria-label="搜索笔记" /></label>
           <button class="button button-primary" type="button" @click="openNote()"><Plus :size="15" />新建笔记</button>
         </div>
         <div v-if="!filteredNotes.length" class="page-state">
@@ -291,10 +291,19 @@ onMounted(async () => {
             <p>换一个关键词，或清空搜索查看全部笔记。</p>
             <button class="button button-secondary" type="button" @click="noteSearch = ''">清空搜索</button>
           </div>
-          <div v-else><strong>暂无研究笔记</strong><p>记录基金逻辑、风险点和后续验证条件。</p></div>
+          <div v-else><strong>暂无笔记</strong><p>记录基金逻辑、风险点和后续验证条件。</p></div>
         </div>
         <div v-else class="research-card-grid">
-          <article v-for="note in filteredNotes" :key="note.id" class="research-card">
+          <article
+            v-for="note in filteredNotes"
+            :key="note.id"
+            class="research-card note-card-clickable"
+            tabindex="0"
+            :aria-label="`查看笔记全文：${note.title}`"
+            @click="openReader(note)"
+            @keydown.enter.self="openReader(note)"
+            @keydown.space.self.prevent="openReader(note)"
+          >
             <div class="research-card-head">
               <div>
                 <span class="eyebrow">
@@ -303,12 +312,9 @@ onMounted(async () => {
                 </span>
                 <h3>{{ note.title }}</h3>
               </div>
-              <div class="row-actions"><button class="button button-secondary history-button" type="button" @click="openHistory(note)">历史</button><button class="icon-button" type="button" aria-label="导出 Markdown" title="导出 Markdown" @click="exportNoteMarkdown(note)"><Download :size="14" /></button><button class="icon-button" type="button" aria-label="编辑笔记" @click="openNote(note)"><FileText :size="14" /></button><button class="icon-button" type="button" aria-label="删除笔记" @click="deleteTarget = { kind: 'note', id: note.id, title: note.title }"><Trash2 :size="14" /></button></div>
+              <div class="row-actions"><button class="button button-secondary history-button" type="button" @click.stop="openHistory(note)">历史</button><button class="icon-button" type="button" aria-label="导出 Markdown" title="导出 Markdown" @click.stop="exportNoteMarkdown(note)"><Download :size="14" /></button><button class="icon-button" type="button" aria-label="编辑笔记" @click.stop="openNote(note)"><FileText :size="14" /></button><button class="icon-button" type="button" aria-label="删除笔记" @click.stop="deleteTarget = { kind: 'note', id: note.id, title: note.title }"><Trash2 :size="14" /></button></div>
             </div>
             <MarkdownNote :text="note.body" class="note-preview" />
-            <button class="button button-secondary note-read-button" type="button" @click="openReader(note)">
-              <Eye :size="14" aria-hidden="true" />查看全文
-            </button>
             <div class="tag-row"><span v-for="tag in note.tags" :key="tag" class="badge">{{ tag }}</span></div>
           </article>
         </div>
@@ -338,7 +344,7 @@ onMounted(async () => {
       </section>
     </DataState>
 
-    <BaseDrawer :open="editorOpen" :title="editorType === 'note' ? '研究笔记' : editorType === 'watch' ? '观察标的' : '策略记录'" eyebrow="本地研究" side="responsive" @close="editorOpen = false">
+    <BaseDrawer :open="editorOpen" :title="editorType === 'note' ? '笔记' : editorType === 'watch' ? '观察标的' : '策略记录'" eyebrow="本地记录" side="responsive" @close="editorOpen = false">
       <div v-if="editorType === 'note'" class="form-grid">
         <label class="field span-2"><span>标题</span><input v-model="noteForm.title" class="input" /></label>
         <label class="field"><span>基金代码</span><input v-model="noteForm.fundCode" class="input" placeholder="可选" /></label>
@@ -362,9 +368,10 @@ onMounted(async () => {
 
     <BaseDrawer
       :open="readerOpen"
-      :title="readerNote?.title || '研究笔记'"
+      :title="readerNote?.title || '笔记'"
       eyebrow="笔记全文"
       side="responsive"
+      width="min(720px, 100vw)"
       @close="readerOpen = false"
     >
       <article v-if="readerNote" class="note-reader">
@@ -399,7 +406,7 @@ onMounted(async () => {
       </div>
     </BaseDrawer>
 
-    <BaseDrawer :open="Boolean(deleteTarget)" title="删除研究记录" eyebrow="不可撤销操作" side="responsive" @close="deleteTarget = null">
+    <BaseDrawer :open="Boolean(deleteTarget)" title="删除记录" eyebrow="不可撤销操作" side="responsive" @close="deleteTarget = null">
       <div class="notice notice-danger">
         <CircleAlert :size="16" aria-hidden="true" />
         删除后无法在当前设备恢复。需要保留时请先导出备份。

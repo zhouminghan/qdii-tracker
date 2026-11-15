@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import type { FundShare } from '@/types/data'
-import { buyStatusLabel, classifyBuyStatus } from '@/shared/lib/funds'
+import { buyStatusLabel, classifyBuyStatus, formatDailyLimit } from '@/shared/lib/funds'
 import {
+  cleanRuleCondition,
   formatHoldPeriod,
   formatRuleRate,
   freeHoldDays,
+  sellRuleLabel,
   totalAnnualFee,
 } from '@/shared/lib/fund-rules'
 import { formatPrice, movementClass } from '@/shared/lib/format'
@@ -56,6 +58,54 @@ function sellRule(share: FundShare): string {
   const firstRate = share.sell_rules?.[0]?.rate
   return firstRate == null ? '--' : `${firstRate}%起`
 }
+
+const ruleShare = ref<FundShare | null>(null)
+const ruleStyle = ref<Record<string, string>>({})
+let hideTimer: number | null = null
+
+function cancelRuleHide(): void {
+  if (hideTimer !== null) window.clearTimeout(hideTimer)
+  hideTimer = null
+}
+
+function hideRulesSoon(): void {
+  cancelRuleHide()
+  hideTimer = window.setTimeout(() => {
+    ruleShare.value = null
+  }, 140)
+}
+
+function showRules(share: FundShare, event: Event): void {
+  cancelRuleHide()
+  const trigger = event.currentTarget as HTMLElement
+  const rect = trigger.getBoundingClientRect()
+  const width = Math.min(360, window.innerWidth - 24)
+  const left = Math.max(12, Math.min(rect.right - width, window.innerWidth - width - 12))
+  const top = Math.min(rect.bottom + 8, window.innerHeight - 300)
+  ruleStyle.value = {
+    left: `${left}px`,
+    top: `${Math.max(12, top)}px`,
+    width: `${width}px`,
+  }
+  ruleShare.value = share
+}
+
+function toggleRules(share: FundShare, event: Event): void {
+  if (ruleShare.value?.code === share.code) hideRulesSoon()
+  else showRules(share, event)
+}
+
+function ruleStatusClass(share: FundShare): string {
+  const status = classifyBuyStatus(share)
+  return status === 'paused' ? 'badge-danger' : status === 'limited' ? 'badge-warn' : 'badge-accent'
+}
+
+function ruleLimit(share: FundShare): string {
+  if (share.daily_limit) return `单日 ${formatDailyLimit(share.daily_limit, share.currency)}`
+  return share.buy_status || '开放状态未披露'
+}
+
+onBeforeUnmount(cancelRuleHide)
 </script>
 
 <template>
@@ -102,11 +152,73 @@ function sellRule(share: FundShare): string {
               :title="share.buy_status || '--'"
             >{{ buyStatusLabel(share) }}</span>
           </td>
-          <td class="align-right mono">{{ buyFee(share) }}</td>
+          <td class="align-right rule-anchor-cell">
+            <button
+              class="rule-hover-trigger mono"
+              type="button"
+              :aria-label="`查看 ${share.code} 买入和卖出规则`"
+              @mouseenter="showRules(share, $event)"
+              @mouseleave="hideRulesSoon"
+              @focus="showRules(share, $event)"
+              @blur="hideRulesSoon"
+              @click="toggleRules(share, $event)"
+            >
+              {{ buyFee(share) }}
+            </button>
+          </td>
           <td class="align-right mono">{{ annualFee(share) }}</td>
-          <td class="align-right">{{ sellRule(share) }}</td>
+          <td class="align-right rule-anchor-cell">
+            <button
+              class="rule-hover-trigger"
+              type="button"
+              :aria-label="`查看 ${share.code} 买入和卖出规则`"
+              @mouseenter="showRules(share, $event)"
+              @mouseleave="hideRulesSoon"
+              @focus="showRules(share, $event)"
+              @blur="hideRulesSoon"
+              @click="toggleRules(share, $event)"
+            >
+              {{ sellRule(share) }}
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
+
+  <Teleport to="body">
+    <div
+      v-if="ruleShare"
+      class="rule-floating-popover"
+      :style="ruleStyle"
+      role="tooltip"
+      @mouseenter="cancelRuleHide"
+      @mouseleave="hideRulesSoon"
+    >
+      <div class="rule-popover-head">
+        <strong>{{ ruleShare.share_class }}</strong>
+        <span class="mono">{{ ruleShare.code }} · {{ ruleShare.currency }}</span>
+      </div>
+      <div class="rule-popover-status">
+        <span class="badge" :class="ruleStatusClass(ruleShare)">{{ buyStatusLabel(ruleShare) }}</span>
+        <span>{{ ruleLimit(ruleShare) }}</span>
+      </div>
+      <section class="rule-popover-section">
+        <h4>买入规则</h4>
+        <div v-for="rule in ruleShare.buy_rules ?? []" :key="rule.condition" class="rule-popover-row">
+          <span>{{ cleanRuleCondition(rule.condition) }}</span>
+          <strong class="mono">{{ formatRuleRate(rule.rate, true) }}</strong>
+        </div>
+        <p v-if="!ruleShare.buy_rules?.length" class="muted">暂无公开买入规则。</p>
+      </section>
+      <section class="rule-popover-section">
+        <h4>卖出规则</h4>
+        <div v-for="rule in ruleShare.sell_rules ?? []" :key="rule.condition" class="rule-popover-row">
+          <span>{{ cleanRuleCondition(rule.condition) }}</span>
+          <strong class="mono">{{ sellRuleLabel(rule) }}</strong>
+        </div>
+        <p v-if="!ruleShare.sell_rules?.length" class="muted">场内交易无申赎规则。</p>
+      </section>
+    </div>
+  </Teleport>
 </template>

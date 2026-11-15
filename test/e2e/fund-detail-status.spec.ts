@@ -32,7 +32,7 @@ function findShare(catalog: CatalogData, code: string): CatalogShare {
 }
 
 async function openFundDetail(page: Page, code: string): Promise<void> {
-  await page.getByLabel('搜索基金目录（跨分类）').fill(code)
+  await page.locator('input[type="search"]:visible').first().fill(code)
   await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible')).toHaveCount(1)
   await page
     .locator('.table-action:visible, .fund-mobile-actions button:visible')

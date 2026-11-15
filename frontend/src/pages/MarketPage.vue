@@ -19,6 +19,7 @@ import { useSettingsStore } from '@/stores/settings'
 import { useUiStore } from '@/stores/ui'
 import type { FearGreedData, KlineData, NasdaqHistory } from '@/types/data'
 import { DCA_BANDS, strategyOf } from '@/shared/lib/dca'
+import { lineTooltipFormatter } from '@/shared/lib/chart-tooltip'
 import { dailyChange, filterTimeSeries, TIME_RANGES, type TimeRange } from '@/shared/lib/time-series'
 
 const data = useDataStore()
@@ -199,7 +200,20 @@ const klineOption = computed(() => {
     grid: { left: 16, right: 18, top: 34, bottom: 64, containLabel: true },
     tooltip: {
       trigger: 'axis',
-      valueFormatter: (value: number) => formatNumber(value),
+      backgroundColor: settings.resolvedTheme === 'dark' ? '#111318' : '#ffffff',
+      borderColor: settings.resolvedTheme === 'dark' ? '#303640' : '#dde0e5',
+      textStyle: { color: settings.resolvedTheme === 'dark' ? '#e6eaf0' : '#202733', fontSize: 12 },
+      extraCssText: 'border-radius: 8px; box-shadow: 0 10px 30px rgb(0 0 0 / 14%);',
+      formatter: lineTooltipFormatter(
+        filteredKline.value.dates,
+        filteredKline.value.values,
+        (value) => formatNumber(value),
+        '收盘',
+      ),
+    },
+    axisPointer: {
+      type: 'line',
+      lineStyle: { color: settings.resolvedTheme === 'dark' ? '#4fd1c5' : '#0f766e', opacity: 0.55 },
     },
     dataZoom: [
       { type: 'inside', start: 0, end: 100 },

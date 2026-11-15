@@ -5,6 +5,7 @@ import BaseDrawer from '@/shared/components/BaseDrawer.vue'
 import EChart from '@/shared/components/EChart.vue'
 import FundShareComparisonTable from '@/features/funds/FundShareComparisonTable.vue'
 import { buyStatusLabel, type FundRow } from '@/shared/lib/funds'
+import { lineTooltipFormatter } from '@/shared/lib/chart-tooltip'
 import { asNumber, daysSince, formatDate, formatPercent, formatPrice, movementClass, movementSurfaceClass } from '@/shared/lib/format'
 import { annualFeeDetail, cleanRuleCondition, formatHoldPeriod, formatRuleRate, freeHoldDays, sellRuleLabel, totalAnnualFee } from '@/shared/lib/fund-rules'
 import { performanceDisplay, type PerformanceKey } from '@/shared/lib/performance'
@@ -119,7 +120,20 @@ const trendOption = computed(() => ({
   grid: { left: 16, right: 18, top: 34, bottom: 62, containLabel: true },
   tooltip: {
     trigger: 'axis',
-    valueFormatter: (value: number) => value?.toFixed(4),
+    backgroundColor: settings.resolvedTheme === 'dark' ? '#111318' : '#ffffff',
+    borderColor: settings.resolvedTheme === 'dark' ? '#303640' : '#dde0e5',
+    textStyle: { color: settings.resolvedTheme === 'dark' ? '#e6eaf0' : '#202733', fontSize: 12 },
+    extraCssText: 'border-radius: 8px; box-shadow: 0 10px 30px rgb(0 0 0 / 14%);',
+    formatter: lineTooltipFormatter(
+      filteredSeries.value.dates,
+      filteredSeries.value.values,
+      (value) => value.toFixed(4),
+      '单位净值',
+    ),
+  },
+  axisPointer: {
+    type: 'line',
+    lineStyle: { color: settings.resolvedTheme === 'dark' ? '#4fd1c5' : '#0f766e', opacity: 0.55 },
   },
   dataZoom: [
     { type: 'inside', start: 0, end: 100 },
