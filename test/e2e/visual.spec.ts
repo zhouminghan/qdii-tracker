@@ -104,6 +104,7 @@ test.describe('visual baselines', () => {
   test('Research knowledge desktop light', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 })
     await page.goto('/#/research')
+    await page.getByRole('tab', { name: /知识库/ }).click()
     await expect(page.locator('.knowledge-card')).toHaveCount(14)
     await expect(page).toHaveScreenshot('research-knowledge-desktop-light.png')
   })

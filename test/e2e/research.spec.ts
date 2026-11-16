@@ -25,6 +25,7 @@ test.describe('local research workflow', () => {
 
   test('shows knowledge articles expanded with contextual actions', async ({ page }) => {
     await page.goto('/#/research')
+    await page.getByRole('tab', { name: /知识库/ }).click()
     await expect(page.getByRole('button', { name: '新建笔记' })).toBeVisible()
     await expect(page.locator('.knowledge-card')).toHaveCount(14)
     await expect(page.locator('details.knowledge-card')).toHaveCount(0)

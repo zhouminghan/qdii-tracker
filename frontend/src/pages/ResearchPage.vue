@@ -27,7 +27,7 @@ const data = useDataStore()
 const research = useResearchStore()
 const ui = useUiStore()
 
-const activeView = ref<'knowledge' | 'notes' | 'watchlist' | 'strategies'>('knowledge')
+const activeView = ref<'knowledge' | 'notes' | 'watchlist' | 'strategies'>('notes')
 const knowledgeFilter = ref('all')
 const noteSearch = ref('')
 const editorOpen = ref(false)
@@ -239,7 +239,7 @@ onMounted(async () => {
       <div class="page-title-group">
         <div class="eyebrow">个人记录</div>
         <h1>笔记</h1>
-        <p class="page-subtitle">知识库、基金笔记、观察清单和策略复盘。个人记录只保存在 IndexedDB。</p>
+        <p class="page-subtitle">基金笔记、知识库、观察清单和策略复盘。个人记录只保存在 IndexedDB。</p>
       </div>
       <div class="page-actions">
         <button class="button button-secondary" type="button" @click="exportBackup"><Download :size="15" aria-hidden="true" />备份</button>
@@ -249,39 +249,14 @@ onMounted(async () => {
     </header>
 
     <div class="research-tabs" role="tablist" aria-label="笔记工作区">
-      <button type="button" role="tab" :class="{ active: activeView === 'knowledge' }" :aria-selected="activeView === 'knowledge'" @click="activeView = 'knowledge'"><BookOpen :size="16" />知识库</button>
       <button type="button" role="tab" :class="{ active: activeView === 'notes' }" :aria-selected="activeView === 'notes'" @click="activeView = 'notes'"><FileText :size="16" />笔记 <span>{{ research.notes.length }}</span></button>
+      <button type="button" role="tab" :class="{ active: activeView === 'knowledge' }" :aria-selected="activeView === 'knowledge'" @click="activeView = 'knowledge'"><BookOpen :size="16" />知识库</button>
       <button type="button" role="tab" :class="{ active: activeView === 'watchlist' }" :aria-selected="activeView === 'watchlist'" @click="activeView = 'watchlist'"><Eye :size="16" />观察清单 <span>{{ research.watchlist.length }}</span></button>
       <button type="button" role="tab" :class="{ active: activeView === 'strategies' }" :aria-selected="activeView === 'strategies'" @click="activeView = 'strategies'"><ShieldCheck :size="16" />策略记录 <span>{{ research.strategyLogs.length }}</span></button>
     </div>
 
     <DataState :loading="research.loading" :error="research.error" @retry="research.load">
-      <section v-if="activeView === 'knowledge'" class="knowledge-section">
-        <div class="research-toolbar">
-          <div><strong>知识库</strong><p>{{ filteredArticles.length }} 篇 · 全部展开，按主题阅读关键概念</p></div>
-          <button class="button button-primary" type="button" @click="openNote()"><Plus :size="15" aria-hidden="true" />新建笔记</button>
-        </div>
-        <div class="chip-row" role="group" aria-label="知识分类">
-          <button v-for="category in KNOWLEDGE_CATEGORIES" :key="category.key" class="chip" :class="{ active: knowledgeFilter === category.key }" type="button" :aria-pressed="knowledgeFilter === category.key" @click="knowledgeFilter = category.key">{{ category.label }}</button>
-        </div>
-        <div class="knowledge-grid">
-          <article v-for="article in filteredArticles" :key="article.id" class="knowledge-card">
-            <div class="knowledge-card-head">
-              <span class="eyebrow">{{ knowledgeCategoryLabel(article.category) }}</span>
-              <h2>{{ article.title }}</h2>
-            </div>
-            <p class="knowledge-summary">{{ article.summary }}</p>
-            <div class="knowledge-body">
-              <p v-for="paragraph in article.body" :key="paragraph">{{ paragraph }}</p>
-            </div>
-            <ul>
-              <li v-for="point in article.points" :key="point">{{ point }}</li>
-            </ul>
-          </article>
-        </div>
-      </section>
-
-      <section v-else-if="activeView === 'notes'" class="research-workspace">
+      <section v-if="activeView === 'notes'" class="research-workspace">
         <div class="research-toolbar">
           <label class="inline-search"><Search :size="15" /><input v-model="noteSearch" type="search" placeholder="搜索标题、正文、代码或标签" aria-label="搜索笔记" /></label>
           <button class="button button-primary" type="button" @click="openNote()"><Plus :size="15" />新建笔记</button>
@@ -318,6 +293,31 @@ onMounted(async () => {
             </div>
             <MarkdownNote :text="note.body" class="note-preview" />
             <div class="tag-row"><span v-for="tag in note.tags" :key="tag" class="badge">{{ tag }}</span></div>
+          </article>
+        </div>
+      </section>
+
+      <section v-else-if="activeView === 'knowledge'" class="knowledge-section">
+        <div class="research-toolbar">
+          <div><strong>知识库</strong><p>{{ filteredArticles.length }} 篇 · 全部展开，按主题阅读关键概念</p></div>
+          <button class="button button-primary" type="button" @click="openNote()"><Plus :size="15" aria-hidden="true" />新建笔记</button>
+        </div>
+        <div class="chip-row" role="group" aria-label="知识分类">
+          <button v-for="category in KNOWLEDGE_CATEGORIES" :key="category.key" class="chip" :class="{ active: knowledgeFilter === category.key }" type="button" :aria-pressed="knowledgeFilter === category.key" @click="knowledgeFilter = category.key">{{ category.label }}</button>
+        </div>
+        <div class="knowledge-grid">
+          <article v-for="article in filteredArticles" :key="article.id" class="knowledge-card">
+            <div class="knowledge-card-head">
+              <span class="eyebrow">{{ knowledgeCategoryLabel(article.category) }}</span>
+              <h2>{{ article.title }}</h2>
+            </div>
+            <p class="knowledge-summary">{{ article.summary }}</p>
+            <div class="knowledge-body">
+              <p v-for="paragraph in article.body" :key="paragraph">{{ paragraph }}</p>
+            </div>
+            <ul>
+              <li v-for="point in article.points" :key="point">{{ point }}</li>
+            </ul>
           </article>
         </div>
       </section>
