@@ -1,14 +1,42 @@
 import { expect, test, type Page, type Route } from '@playwright/test'
 
-function quotePayload(price: number, change: number, nav: number): string {
+function quotePayload(price: number, change: number, nav: number, stamp = ''): string {
   const fields = Array.from({ length: 83 }, () => '')
   fields[3] = String(price)
   fields[32] = String(change)
   fields[78] = String(nav)
+  fields[30] = stamp
   return fields.join('~')
 }
 
-async function fulfillQuotes(route: Route, prices: Record<string, [number, number, number]>) {
+function shanghaiParts(date: Date): Record<string, string> {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(date)
+  return Object.fromEntries(parts.map((part) => [part.type, part.value]))
+}
+
+function shanghaiStamp(date: Date): string {
+  const p = shanghaiParts(date)
+  return `${p.year}${p.month}${p.day}${p.hour}${p.minute}${p.second}`
+}
+
+function shanghaiMonthDay(date: Date): string {
+  const p = shanghaiParts(date)
+  return `${p.month}/${p.day}`
+}
+
+async function fulfillQuotes(
+  route: Route,
+  prices: Record<string, [number, number, number, string?]>,
+) {
   const url = new URL(route.request().url())
   const symbols = decodeURIComponent(url.pathname.replace(/^\/q=/, '').split('&')[0])
     .split(',')
@@ -67,18 +95,19 @@ test('ETF live quote refresh applies and falls back to static on failure', async
 })
 
 test('index live refresh uses the correct Nasdaq labels', async ({ page }) => {
+  const stamp = shanghaiStamp(new Date())
   await page.route('https://qt.gtimg.cn/**', (route) => fulfillQuotes(route, {
-    usDJI: [52000, 0.1, 0],
-    usINX: [7500, 0.2, 0],
-    usIXIC: [22222, 0.3, 0],
-    usNDX: [25555, 0.4, 0],
-    sh000001: [3600, 0.5, 0],
-    sh000300: [4000, 0.6, 0],
-    sh000688: [1200, 0.7, 0],
+    usDJI: [52000, 0.1, 0, stamp],
+    usINX: [7500, 0.2, 0, stamp],
+    usIXIC: [22222, 0.3, 0, stamp],
+    usNDX: [25555, 0.4, 0, stamp],
+    sh000001: [3600, 0.5, 0, stamp],
+    sh000300: [4000, 0.6, 0, stamp],
+    sh000688: [1200, 0.7, 0, stamp],
   }))
   await page.goto('/#/market')
-  await page.getByRole('button', { name: '实时指数' }).click()
-  await expect(page.getByText('指数实时行情已刷新')).toBeVisible()
+  await page.getByRole('button', { name: '刷新行情' }).click()
+  await expect(page.getByText('指数行情已刷新')).toBeVisible()
   const pulse = page.locator('.pulse-card').first()
   await expect(pulse).toContainText('纳斯达克100')
   await expect(pulse).toContainText('25,555.00')
@@ -86,4 +115,20 @@ test('index live refresh uses the correct Nasdaq labels', async ({ page }) => {
   await expect(pulse.getByText('实时', { exact: true })).toBeVisible()
   await expect(page.locator('.index-card').filter({ hasText: '纳指综合' })).toContainText('22,222.00')
   await expect(page.locator('.index-card').filter({ hasText: '纳斯达克100' })).toContainText('25,555.00')
+})
+
+test('uses the quote timestamp instead of fetch time for stale US indices', async ({ page }) => {
+  const old = new Date(Date.now() - 2 * 86_400_000)
+  await page.route('https://qt.gtimg.cn/**', (route) => fulfillQuotes(route, {
+    usNDX: [25555, 0.4, 0, shanghaiStamp(old)],
+  }))
+  await page.goto('/#/market')
+  await page.getByRole('button', { name: '刷新行情' }).click()
+  await expect(page.getByText('指数行情已刷新')).toBeVisible()
+
+  const pulse = page.locator('.pulse-card').first()
+  await expect(pulse).toContainText('25,555.00')
+  await expect(pulse).toContainText(shanghaiMonthDay(old))
+  await expect(pulse.locator('.freshness-badge')).toHaveText('最新收盘')
+  await expect(pulse.getByText('实时', { exact: true })).toHaveCount(0)
 })

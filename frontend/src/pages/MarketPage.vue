@@ -16,7 +16,8 @@ import {
   movementSurfaceClass,
 } from '@/shared/lib/format'
 import { fxLabel } from '@/shared/lib/market'
-import { marketFreshness, type FreshnessKind } from '@/shared/lib/market-freshness'
+import { marketFreshness, quoteFreshness, type FreshnessKind } from '@/shared/lib/market-freshness'
+import { TENCENT_INDEX_SYMBOLS } from '@/shared/lib/realtime'
 import { useDataStore } from '@/stores/data'
 import { useSettingsStore } from '@/stores/settings'
 import { useUiStore } from '@/stores/ui'
@@ -50,7 +51,7 @@ function quoteFor(key: string) {
   const live = data.liveIndices[key]
   if (!base) return undefined
   return live
-    ? { ...base, price: live.price, change_pct: live.changePct, as_of: data.indexLiveUpdatedAt.slice(0, 10) || base.as_of }
+    ? { ...base, price: live.price, change_pct: live.changePct, as_of: live.asOf ?? base.as_of }
     : base
 }
 
@@ -61,9 +62,14 @@ const indexItems = computed(() => Object.entries(market.value?.market_indices.it
         ...quote,
         price: data.liveIndices[key].price,
         change_pct: data.liveIndices[key].changePct,
-        as_of: data.indexLiveUpdatedAt.slice(0, 10) || quote.as_of,
+        as_of: data.liveIndices[key].asOf ?? quote.as_of,
       }
     : quote] as const))
+const liveIndexCoverage = Object.keys(TENCENT_INDEX_SYMBOLS).length
+function indexFreshness(key: string, fallbackAsOf: string | null | undefined) {
+  const live = data.liveIndices[key]
+  return live?.asOf ? quoteFreshness(live, 'index') : marketFreshness(fallbackAsOf, 'index')
+}
 const techItems = computed(() => Object.entries(market.value?.big_tech.items ?? {}))
 const fxItems = computed(() => ['fxUSDCNY', 'fxUSDJPY', 'fxCNYHKD', 'fxUSDHKD']
   .map((key) => [key, market.value?.fx.items[key]] as const)
@@ -89,7 +95,7 @@ const pulseCards = computed<PulseCard[]>(() => {
   const snapshot = market.value
   if (!snapshot) return []
   const ndx = quoteFor('100.NDX100')
-  const ndxLive = Boolean(data.liveIndices['100.NDX100'])
+  const ndxLive = data.liveIndices['100.NDX100']
   return [
     {
       key: 'ndx',
@@ -100,7 +106,7 @@ const pulseCards = computed<PulseCard[]>(() => {
       change: ndx?.change_pct ?? null,
       hasChange: ndx?.change_pct !== null && ndx?.change_pct !== undefined,
       surface: movementSurfaceClass(ndx?.change_pct),
-      freshness: marketFreshness(ndx?.as_of, 'index', ndxLive),
+      freshness: ndxLive?.asOf ? quoteFreshness(ndxLive, 'index') : marketFreshness(ndx?.as_of, 'index'),
     },
     {
       key: 'vix',
@@ -277,7 +283,7 @@ function heatCellStyle(value: unknown): Record<string, string> {
 async function refreshLive(): Promise<void> {
   await data.refreshIndexQuotes()
   if (data.indexLiveError) ui.toast(data.indexLiveError, 'error')
-  else ui.toast('指数实时行情已刷新', 'success')
+  else ui.toast('指数行情已刷新', 'success')
 }
 
 const filteredKline = computed(() => kline.value
@@ -430,10 +436,10 @@ onBeforeUnmount(() => {
       </div>
       <div class="page-actions">
         <span v-if="market" class="data-stamp">快照 {{ formatDateTime(market.generated_at) }}</span>
-        <span v-if="data.indexLiveError" class="live-status is-error" role="status">实时失败 · 已回退快照</span>
-        <span v-else-if="data.indexLiveUpdatedAt" class="live-status" role="status">实时 {{ formatDateTime(data.indexLiveUpdatedAt) }}</span>
+        <span v-if="data.indexLiveError" class="live-status is-error" role="status">刷新失败 · 已回退快照</span>
+        <span v-else-if="data.indexLiveUpdatedAt" class="live-status" role="status">行情刷新于 {{ formatDateTime(data.indexLiveUpdatedAt) }}</span>
         <button class="button button-secondary" type="button" :disabled="data.indexLiveLoading" @click="refreshLive">
-          <Radio :size="15" :class="{ spin: data.indexLiveLoading }" aria-hidden="true" /> 实时指数
+          <Radio :size="15" :class="{ spin: data.indexLiveLoading }" aria-hidden="true" /> 刷新行情
         </button>
       </div>
     </header>
@@ -464,7 +470,7 @@ onBeforeUnmount(() => {
               <strong class="mono">{{ card.value }}{{ card.suffix }}</strong>
               <div class="pulse-meta">
                 <small v-if="card.hasChange" class="mono" :class="movementClass(card.change)">{{ formatPercent(card.change) }}</small>
-                <small v-else class="mono muted">{{ formatDate(card.as_of) }}</small>
+                <small class="mono muted">{{ formatDate(card.as_of) }}</small>
                 <span class="freshness-badge" :class="`is-${card.freshness.tone}`">{{ card.freshness.label }}</span>
               </div>
             </article>
@@ -476,9 +482,9 @@ onBeforeUnmount(() => {
             <div>
               <div class="eyebrow">全球指数</div>
               <h2>全球市场</h2>
-              <p>点击指数查看多区间历史走势和每日收盘明细。</p>
+              <p>点击指数查看多区间历史走势和每日收盘明细。{{ liveIndexCoverage }} 个支持盘中刷新，其余为收盘快照。</p>
             </div>
-            <span class="badge">{{ indexItems.length }} 个指数</span>
+            <span class="badge" :title="`${liveIndexCoverage} 个指数支持盘中刷新`">{{ indexItems.length }} 个指数 · {{ liveIndexCoverage }} 个支持实时</span>
           </div>
           <div class="index-grid">
             <button
@@ -494,8 +500,8 @@ onBeforeUnmount(() => {
               <span class="mono" :class="movementClass(quote.change_pct)">{{ formatPercent(quote.change_pct) }}</span>
               <small class="index-meta">
                 <span>{{ formatDate(quote.as_of) }}</span>
-                <span class="freshness-badge" :class="`is-${marketFreshness(quote.as_of, 'index', Boolean(data.liveIndices[key])).tone}`">
-                  {{ marketFreshness(quote.as_of, 'index', Boolean(data.liveIndices[key])).label }}
+                <span class="freshness-badge" :class="`is-${indexFreshness(key, quote.as_of).tone}`">
+                  {{ indexFreshness(key, quote.as_of).label }}
                 </span>
               </small>
             </button>

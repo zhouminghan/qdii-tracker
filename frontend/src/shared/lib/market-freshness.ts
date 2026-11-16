@@ -1,4 +1,5 @@
 import { daysSince } from './format'
+import { isRecentQuote } from './realtime'
 
 export type FreshnessKind = 'index' | 'fx' | 'macro' | 'monthly' | 'gold'
 export type FreshnessTone = 'ok' | 'warn' | 'muted' | 'accent'
@@ -35,4 +36,20 @@ export function marketFreshness(
   if (days <= limits.close) return { key: 'close', label: '最新收盘', tone: 'ok', days }
   if (days <= limits.delayed) return { key: 'delayed', label: '延迟', tone: 'warn', days }
   return { key: 'stale', label: '陈旧', tone: 'warn', days }
+}
+
+// Freshness for live quote overlays must use the exchange timestamp, never the fetch time.
+export function quoteFreshness(
+  quote: { asOf: string | null; updatedAt: string | null } | null | undefined,
+  kind: FreshnessKind,
+  now = new Date(),
+): MarketFreshness {
+  if (!quote) return marketFreshness(undefined, kind, false, now)
+  if (isRecentQuote(quote, now.getTime())) {
+    return { key: 'realtime', label: '实时', tone: 'accent', days: 0 }
+  }
+  if (daysSince(quote.asOf, now) === 0) {
+    return { key: 'delayed', label: '延迟', tone: 'warn', days: 0 }
+  }
+  return marketFreshness(quote.asOf, kind, false, now)
 }

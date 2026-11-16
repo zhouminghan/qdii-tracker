@@ -32,6 +32,8 @@ export const useDataStore = defineStore('data', () => {
   const liveIndices = ref<Record<string, {
     price: number
     changePct: number | null
+    asOf: string | null
+    updatedAt: string | null
   }>>({})
   let loadPromise: Promise<void> | null = null
   let etfLivePromise: Promise<void> | null = null
@@ -173,6 +175,8 @@ export const useDataStore = defineStore('data', () => {
               result[TENCENT_INDEX_SYMBOLS[symbol]] = {
                 price: quote.price,
                 changePct: quote.changePct,
+                asOf: quote.asOf,
+                updatedAt: quote.updatedAt,
               }
             }
             return result
