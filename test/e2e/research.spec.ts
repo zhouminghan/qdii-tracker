@@ -47,11 +47,9 @@ test.describe('local research workflow', () => {
     const activeFundNote = page.locator('.research-card').filter({ hasText: '主动基金亏损案例' })
     await activeFundNote.click()
     const reader = page.getByRole('dialog')
-    await expect(reader.getByRole('link', { name: '原帖截图 1' })).toHaveAttribute(
-      'href',
-      'https://pbs.twimg.com/media/HXKxEU-bYAA0ODz?format=jpg&name=large',
-    )
-    await expect(reader.locator('img')).toHaveCount(0)
+    await expect(reader.locator('img')).toHaveCount(5)
+    await expect.poll(() => reader.locator('img').first()
+      .evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
   })
 
   test('creates a note and keeps it after refresh', async ({ page }) => {

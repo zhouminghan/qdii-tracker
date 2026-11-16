@@ -97,7 +97,6 @@ export const DEFAULT_RESEARCH_NOTES: ResearchNote[] = [
 - **记录日期**：2026-11-15
 - **数据日期**：2026-11-13
 - **统计口径**：年初至今总回报
-- **来源**：[X 原帖](https://x.com/qtdevlop/status/2121926183461814653)
 
 ## 收益数据
 
@@ -117,15 +116,17 @@ export const DEFAULT_RESEARCH_NOTES: ResearchNote[] = [
 - 原帖强调：事前判断哪家公司会胜出很难，事后看结果不等于当时能重仓押中。
 - 单一年份的相对表现不能直接外推为长期结论。
 
+## 原帖观点
+
+- “七巨头，五家跑输指数！”
+- “天天研究财报、分析估值、猜美联储，折腾大半年，还不如买个 QQQ 躺着。”
+- 苹果和亚马逊表现突出，但年初是否能重仓押中仍是另一回事。
+
 ## 观察框架
 
 - 比较个股与指数时，应统一时间区间、总回报口径和货币单位。
 - 个股集中度高，收益弹性大，也承担更大的单一公司风险。
-- 宽基指数通过分散降低单一公司对组合的影响，但仍会承受市场整体回撤。
-
-## 来源说明
-
-以上收益数据按原帖整理，未在笔记中重复计算。`,
+- 宽基指数通过分散降低单一公司对组合的影响，但仍会承受市场整体回撤。`,
   },
   {
     id: 'active-fund-risk-2026-11-15',
@@ -137,8 +138,6 @@ export const DEFAULT_RESEARCH_NOTES: ResearchNote[] = [
     body: `# 主动基金亏损案例与指数定投讨论
 
 - **记录日期**：2026-11-15
-- **来源**：[X 原帖](https://x.com/qtdevlop/status/2121962673739116921)
-- **内容性质**：个人观点与个例记录，不代表全部主动基金表现
 
 ## 原帖引用的个案数据
 
@@ -152,20 +151,32 @@ export const DEFAULT_RESEARCH_NOTES: ResearchNote[] = [
 - 认为研究基金经理调仓的难度高，长期结果未必优于简单指数定投。
 - 更倾向定投纳指等宽基指数，作为省心的长期配置方式。
 
+## 原帖原话
+
+> 主动基金这玩意，99% 的人买了就是纯纯在给基金经理打工。
+>
+> 一年折腾下来，收益跑不赢银行定存的一抓一大把。
+>
+> 有这精力研究基金经理的调仓，真不如直接无脑定投纳指。
+
+## 截图
+
+![主动基金亏损截图 1](https://pbs.twimg.com/media/HXKxEU-bYAA0ODz?format=jpg&name=large)
+
+![主动基金亏损截图 2](https://pbs.twimg.com/media/HXKxEVEboAA3Lxw?format=jpg&name=large)
+
+![主动基金亏损截图 3](https://pbs.twimg.com/media/HXKxEVCbkAAxZsj?format=jpg&name=large)
+
+![主动基金亏损截图 4](https://pbs.twimg.com/media/HXIHmp6bgAAkf3N?format=jpg&name=large)
+
+![主动基金亏损截图 5](https://pbs.twimg.com/media/HXIHmqCasAAJapM?format=jpg&name=large)
+
 ## 需要区分的边界
 
 - 上述亏损数据来自个人帖子引用，应结合基金代码、份额类别、时间区间和分红口径复核。
 - 单只主动基金的大幅亏损，不能直接推导所有主动基金都会长期跑输。
 - 主动基金可能存在经理变更、风格漂移、规模变化和费用偏高等风险。
 - 指数定投同样会经历市场回撤，不代表短期保本。
-
-## 图片链接
-
-- [原帖截图 1](https://pbs.twimg.com/media/HXKxEU-bYAA0ODz?format=jpg&name=large)
-- [原帖截图 2](https://pbs.twimg.com/media/HXKxEVEboAA3Lxw?format=jpg&name=large)
-- [原帖截图 3](https://pbs.twimg.com/media/HXKxEVCbkAAxZsj?format=jpg&name=large)
-- [原帖截图 4](https://pbs.twimg.com/media/HXIHmp6bgAAkf3N?format=jpg&name=large)
-- [原帖截图 5](https://pbs.twimg.com/media/HXIHmqCasAAJapM?format=jpg&name=large)
 
 ## 结论记录
 

@@ -4,13 +4,15 @@ import { db, ensureLegacyMigration } from '@/shared/infrastructure/local-db'
 import { DEFAULT_RESEARCH_NOTES } from '@/features/research/default-notes'
 import type { NoteRevision, ResearchNote, StrategyLog, WatchItem } from '@/types/local'
 
-const SEEDED_NOTES_KEY = 'qdii-default-notes-seeded-v7'
+const SEEDED_NOTES_KEY = 'qdii-default-notes-seeded-v9'
 const LEGACY_SOUTHBOUND_UPDATED_AT = new Set([
   '2026-11-15T15:30:00+08:00',
   '2026-11-15T16:45:00+08:00',
   '2026-11-15T16:55:00+08:00',
   '2026-11-15T17:05:00+08:00',
   '2026-11-15T20:00:00+08:00',
+  '2026-11-15T19:20:00+08:00',
+  '2026-11-15T21:45:00+08:00',
 ])
 
 async function seedDefaultNotes(): Promise<void> {
