@@ -605,15 +605,6 @@
   font-size: 0.64rem;
 }
 
-.rule-popover-status {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 7px;
-  color: var(--color-text-tertiary);
-  font-size: 0.68rem;
-}
-
 .rule-popover-section {
   display: grid;
   gap: 5px;

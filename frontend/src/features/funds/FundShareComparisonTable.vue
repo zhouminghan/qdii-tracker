@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
 import type { FundShare } from '@/types/data'
-import { buyStatusLabel, classifyBuyStatus, formatDailyLimit } from '@/shared/lib/funds'
+import { buyStatusLabel, classifyBuyStatus } from '@/shared/lib/funds'
 import {
   annualFeeDetail,
   cleanRuleCondition,
@@ -93,16 +93,6 @@ function showRules(share: FundShare, event: Event, mode: RuleMode): void {
   }
   ruleShare.value = share
   ruleMode.value = mode
-}
-
-function ruleStatusClass(share: FundShare): string {
-  const status = classifyBuyStatus(share)
-  return status === 'paused' ? 'badge-danger' : status === 'limited' ? 'badge-warn' : 'badge-accent'
-}
-
-function ruleLimit(share: FundShare): string {
-  if (share.daily_limit) return `单日 ${formatDailyLimit(share.daily_limit, share.currency)}`
-  return share.buy_status || '开放状态未披露'
 }
 
 onBeforeUnmount(cancelRuleHide)
@@ -211,10 +201,6 @@ onBeforeUnmount(cancelRuleHide)
       <div class="rule-popover-head">
         <strong>{{ ruleShare.share_class }}</strong>
         <span class="mono">{{ ruleShare.code }} · {{ ruleShare.currency }}</span>
-      </div>
-      <div v-if="ruleMode === 'buy'" class="rule-popover-status">
-        <span class="badge" :class="ruleStatusClass(ruleShare)">{{ buyStatusLabel(ruleShare) }}</span>
-        <span>{{ ruleLimit(ruleShare) }}</span>
       </div>
       <section v-if="ruleMode === 'fee'" class="rule-popover-section">
         <h4>综合费率</h4>
