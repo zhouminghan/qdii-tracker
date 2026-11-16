@@ -37,6 +37,23 @@ test.describe('local research workflow', () => {
     await expect(page.getByRole('button', { name: '记录策略' })).toBeVisible()
   })
 
+  test('seeds dated market notes with external image links', async ({ page }) => {
+    await page.goto('/#/research')
+    await page.getByRole('tab', { name: /笔记/ }).click()
+    await expect(page.locator('.research-card')).toHaveCount(3)
+    await expect(page.getByText('2026-11-15 · 七巨头与 QQQ 年内收益对比')).toBeVisible()
+    await expect(page.getByText('2026-11-15 · 主动基金亏损案例与指数定投讨论')).toBeVisible()
+
+    const activeFundNote = page.locator('.research-card').filter({ hasText: '主动基金亏损案例' })
+    await activeFundNote.click()
+    const reader = page.getByRole('dialog')
+    await expect(reader.getByRole('link', { name: '原帖截图 1' })).toHaveAttribute(
+      'href',
+      'https://pbs.twimg.com/media/HXKxEU-bYAA0ODz?format=jpg&name=large',
+    )
+    await expect(reader.locator('img')).toHaveCount(0)
+  })
+
   test('creates a note and keeps it after refresh', async ({ page }) => {
     await page.goto('/#/research')
     await page.getByRole('button', { name: '新建笔记' }).click()

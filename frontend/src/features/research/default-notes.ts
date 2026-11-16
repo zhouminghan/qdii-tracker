@@ -85,4 +85,91 @@ export const DEFAULT_RESEARCH_NOTES: ResearchNote[] = [
 - [建行亚洲南向通基金筛选器](https://online.asia.ccb.com/PersonalHKWeb/pubmutualfund/webForm/PMF_FundSearchController.jpf?lang=chinese&linkFrom=pubmutualfund)
 - [渣打香港南向通规则](https://www.sc.com/hk/zh/gba-sc/cross-boundary-wealth-management-connect/south-bound/)`,
   },
+  {
+    id: 'market-seven-vs-qqq-2026-11-15',
+    title: '2026-11-15 · 七巨头与 QQQ 年内收益对比',
+    fundCode: 'QQQ',
+    tags: ['美股', 'QQQ', '七巨头', '收益对比', '科技股'],
+    createdAt: '2026-11-15T19:20:00+08:00',
+    updatedAt: '2026-11-15T19:20:00+08:00',
+    body: `# 七巨头与 QQQ 年内收益对比
+
+- **记录日期**：2026-11-15
+- **数据日期**：2026-11-13
+- **统计口径**：年初至今总回报
+- **来源**：[X 原帖](https://x.com/qtdevlop/status/2121926183461814653)
+
+## 收益数据
+
+- QQQ：+11.05%
+- 苹果：+31.51%
+- 亚马逊：+15.53%
+- 微软：+9.01%
+- Meta：-2.54%
+- 谷歌：-5.32%
+- 英伟达：-12.48%
+- 特斯拉：-13.23%
+
+## 记录要点
+
+- 七巨头中有五家年内收益跑输 QQQ。
+- 苹果和亚马逊是七巨头中相对突出的两家。
+- 原帖强调：事前判断哪家公司会胜出很难，事后看结果不等于当时能重仓押中。
+- 单一年份的相对表现不能直接外推为长期结论。
+
+## 观察框架
+
+- 比较个股与指数时，应统一时间区间、总回报口径和货币单位。
+- 个股集中度高，收益弹性大，也承担更大的单一公司风险。
+- 宽基指数通过分散降低单一公司对组合的影响，但仍会承受市场整体回撤。
+
+## 来源说明
+
+以上收益数据按原帖整理，未在笔记中重复计算。`,
+  },
+  {
+    id: 'active-fund-risk-2026-11-15',
+    title: '2026-11-15 · 主动基金亏损案例与指数定投讨论',
+    fundCode: '',
+    tags: ['主动基金', '基金风险', '亏损案例', '指数定投', '纳指'],
+    createdAt: '2026-11-15T21:45:00+08:00',
+    updatedAt: '2026-11-15T21:45:00+08:00',
+    body: `# 主动基金亏损案例与指数定投讨论
+
+- **记录日期**：2026-11-15
+- **来源**：[X 原帖](https://x.com/qtdevlop/status/2121962673739116921)
+- **内容性质**：个人观点与个例记录，不代表全部主动基金表现
+
+## 原帖引用的个案数据
+
+- 华夏核心成长混合 C：-50.34%
+- 华夏全球科技先锋混合：-48.15%
+- 帖子作者称账户持有收益亏损 7.6 万元，累计亏损 6.8 万元。
+
+## 原帖观点
+
+- 不认同普通投资者重仓主动基金。
+- 认为研究基金经理调仓的难度高，长期结果未必优于简单指数定投。
+- 更倾向定投纳指等宽基指数，作为省心的长期配置方式。
+
+## 需要区分的边界
+
+- 上述亏损数据来自个人帖子引用，应结合基金代码、份额类别、时间区间和分红口径复核。
+- 单只主动基金的大幅亏损，不能直接推导所有主动基金都会长期跑输。
+- 主动基金可能存在经理变更、风格漂移、规模变化和费用偏高等风险。
+- 指数定投同样会经历市场回撤，不代表短期保本。
+
+## 图片链接
+
+- [原帖截图 1](https://pbs.twimg.com/media/HXKxEU-bYAA0ODz?format=jpg&name=large)
+- [原帖截图 2](https://pbs.twimg.com/media/HXKxEVEboAA3Lxw?format=jpg&name=large)
+- [原帖截图 3](https://pbs.twimg.com/media/HXKxEVCbkAAxZsj?format=jpg&name=large)
+- [原帖截图 4](https://pbs.twimg.com/media/HXIHmp6bgAAkf3N?format=jpg&name=large)
+- [原帖截图 5](https://pbs.twimg.com/media/HXIHmqCasAAJapM?format=jpg&name=large)
+
+## 结论记录
+
+- 主动基金不能只看历史高收益，需要同时评估经理、策略、规模、费用和回撤。
+- 是否选择指数定投，应结合投资目标、持有期限和风险承受能力。`,
+  },
 ]
