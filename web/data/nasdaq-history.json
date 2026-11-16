@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14T04:52:59.472558+08:00",
+  "generated_at": "2026-11-17T07:14:40.669579+08:00",
   "schema_version": 1,
   "index": {
     "symbol": "^NDX",
@@ -334,9 +334,9 @@
     },
     {
       "year": 2026,
-      "close": 27974.99,
-      "return_pct": 10.79,
-      "max_drawdown_pct": -8.0,
+      "close": 27197.15,
+      "return_pct": 7.71,
+      "max_drawdown_pct": -10.56,
       "peak_month": 9,
       "trough_month": 11
     }
@@ -842,7 +842,7 @@
         4.18,
         3.23,
         -6.65,
-        -1.44,
+        -4.18,
         null
       ]
     ]
@@ -857,7 +857,7 @@
       },
       {
         "month": 11,
-        "avg_pct": 3.66,
+        "avg_pct": 3.11,
         "positive_ratio": 60.0,
         "n": 5
       },
@@ -931,7 +931,7 @@
       },
       {
         "month": 11,
-        "avg_pct": 3.67,
+        "avg_pct": 3.39,
         "positive_ratio": 70.0,
         "n": 10
       },
@@ -999,7 +999,7 @@
     "full": [
       {
         "month": 11,
-        "avg_pct": 2.93,
+        "avg_pct": 2.83,
         "positive_ratio": 73.1,
         "n": 26
       },
