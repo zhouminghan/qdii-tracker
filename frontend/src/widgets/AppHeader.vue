@@ -71,6 +71,8 @@ function clearSearch(): void {
       <form class="header-search" role="search" @submit.prevent="applySearch">
         <Search :size="15" aria-hidden="true" />
         <input
+          id="header-fund-search"
+          name="fund-search"
           v-model="search"
           type="search"
           aria-label="搜索基金代码、名称或公司"
