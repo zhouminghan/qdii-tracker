@@ -108,17 +108,17 @@
 
 | 属性 | 内容 |
 |------|------|
-| **职责** | 抓取美国国债 2/10/30 年收益率最新值，写入宏观利率数据 |
-| **输入文件** | 东方财富（akshare `bond_zh_us_rate`；失败时复用旧快照） |
+| **职责** | 抓取美国国债 2/10/30 年收益率最新值，写入宏观利率数据；优先美国财政部官方 CSV，回退 FRED，再回退东方财富 |
+| **输入文件** | 美国财政部 daily_treasury_yield_curve CSV、FRED DGS2/DGS10/DGS30、akshare `bond_zh_us_rate`（全部失败时复用旧快照） |
 | **输出文件** | `web/data/macro-rates.json` |
-| **依赖** | `core.constants`、`core.utils`、`akshare` |
+| **依赖** | `core.constants`、`core.utils`、`requests`、`akshare` |
 
 ### 13. market_snapshot.py — 首屏行情本地快照
 
 | 属性 | 内容 |
 |------|------|
-| **职责** | 纯离线汇总指数、科技股、外汇、黄金、宏观、温度、ETF 溢价与场外净值，生成首屏可直接渲染的本地快照；不联网、不伪造实时值，缺失字段写 `null`；`gold.xau` 由 `au9999 * 31.1034768 / USDCNH` 反算，标记 `derived: true` 且不用于计算国内溢价 |
-| **输入文件** | `web/data/meta.json`、`web/data/*.json`、`web/data/index-kline/*.json`、`web/data/fx-kline/*.json`、`web/data/etf-premium-history.json` |
+| **职责** | 纯离线汇总指数、科技股、外汇、黄金、宏观、温度、ETF 溢价与场外净值，生成首屏可直接渲染的本地快照；不联网、不伪造实时值，缺失字段写 `null`；优先读取 `fx-spot.json` / `gold-spot.json` 的独立实时报价，缺失时回退 K 线与 `au9999 * 31.1034768 / USDCNH` 折算；只有独立 XAU 存在时才计算国内溢价 |
+| **输入文件** | `web/data/meta.json`、`web/data/*.json`、`web/data/fx-spot.json`、`web/data/gold-spot.json`、`web/data/index-kline/*.json`、`web/data/fx-kline/*.json`、`web/data/etf-premium-history.json` |
 | **输出文件** | `web/data/market-snapshot.json` |
 | **依赖** | `core.constants`、`core.utils`（间接） |
 | **调用方** | `scripts/checks/build_snapshot.py`；由 `update-data.yml` 每个工作日生成并随 `web/data/` 发布 |
@@ -132,6 +132,26 @@
 | **输出文件** | 六个分类 JSON、`web/data/meta.json` |
 | **依赖** | `core.constants`、`core.utils`、`sources.eastmoney_source` |
 | **调用方** | `fundctl.py refresh/sync`、`update-data.yml` |
+
+### 16. fx_spot.py — 实时汇率快照
+
+| 属性 | 内容 |
+|------|------|
+| **职责** | 从新浪财经外汇报价抓取 USD/CNY、USD/CNH、USD/JPY、USD/HKD、CNY/HKD 即期报价，写入 `fx-spot.json`；免密钥，失败保留旧快照 |
+| **输入文件** | 新浪财经 `hq.sinajs.cn`（需 Referer，GBK 解码） |
+| **输出文件** | `web/data/fx-spot.json` |
+| **依赖** | `core.constants`、`core.utils`、`requests` |
+| **调用方** | `update-data.yml`；`market_snapshot.py` 读取 |
+
+### 17. gold_spot.py — 现货黄金与上海金实时快照
+
+| 属性 | 内容 |
+|------|------|
+| **职责** | 从金投网 `JO_71` 抓取上海金 Au9999（元/克），从新浪 `hf_XAU` 抓取伦敦金现货 XAU/USD；写入 `gold-spot.json`，失败保留旧快照 |
+| **输入文件** | 金投网 `api.jijinhao.com`、新浪财经 `hq.sinajs.cn` |
+| **输出文件** | `web/data/gold-spot.json` |
+| **依赖** | `core.constants`、`core.utils`、`requests` |
+| **调用方** | `update-data.yml`；`market_snapshot.py` 读取 |
 
 ---
 
@@ -205,12 +225,14 @@ performance.py ─► core.constants, core.utils, sources.eastmoney_source
 holdings.py ────► core.constants, core.utils, core.config_loader, sources.akshare_source
 reclassify.py ──► core.constants, core.utils, core.config_loader, sources.akshare_source
 public_catalog.py ─► core.constants
-market_temperature.py ► core.constants, core.utils, akshare, requests
+market_temperature.py ► core.constants, core.utils, akshare, requests, pipeline.macro_rates
 nasdaq_history.py ► core.constants, core.utils, requests, akshare
 cnn_sentiment.py ► core.constants, core.utils, requests
 brand_gold.py ► core.constants, core.utils, requests
+fx_spot.py ► core.constants, core.utils, requests
+gold_spot.py ► core.constants, core.utils, requests
 ndx_pe.py ► core.constants, core.utils, requests
-macro_rates.py ► core.constants, core.utils, akshare
+macro_rates.py ► core.constants, core.utils, akshare, requests
 market_snapshot.py ► core.constants, core.utils
 ```
 

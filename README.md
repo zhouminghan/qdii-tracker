@@ -14,7 +14,8 @@
 - 券商行情终端风格的红绿涨跌色块卡，遵循设置中的红涨绿跌 / 绿涨红跌。
 - 按数据类型区分新鲜度：实时、最新收盘、延迟、月度、陈旧、暂无数据。
 - 指数实时行情按交易所时间戳判断；标普、纳指、A 股、港股共 9 个指数支持盘中刷新，其余保留收盘快照。
-- 黄金独立行情与本地折算参考分开标注；缺失溢价不伪造成 0。
+- 黄金与汇率优先使用独立实时公开源；美债优先美国财政部官方数据，失败回退 FRED / 东方财富。
+- 黄金独立行情与本地折算参考分开标注；只有独立 XAU 存在时才计算国内溢价。
 - 美债 2/10/30 年、VIX、美元指数、纳指 PE。
 - 纳指年度收益、回撤、月度热力图和情绪历史。
 - 市场温度与 VIX/PE 阶梯定投观察；恐慌贪婪缺失时不生成常态定投建议。
@@ -175,8 +176,11 @@ qdii-tracker/
 │   ├── test_classify.py
 │   ├── test_cnn_sentiment.py
 │   ├── test_dca_strategy.py
+│   ├── test_fx_spot.py
 │   ├── test_gold.py
+│   ├── test_gold_spot.py
 │   ├── test_kline_history.py
+│   ├── test_macro_rates.py
 │   ├── test_market_temperature.py
 │   ├── test_nasdaq_history.py
 │   ├── test_nav_history.py

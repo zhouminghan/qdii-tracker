@@ -260,6 +260,10 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.gold-market-grid.has-premium {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .gold-market-grid > div {
   display: grid;
   gap: 3px;
@@ -730,6 +734,10 @@
   }
 
   .gold-market-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .gold-market-grid.has-premium {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 

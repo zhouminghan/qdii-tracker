@@ -217,6 +217,16 @@ def fetch_nasdaq_trend():
 
 
 def fetch_treasury_10y():
+    # 与 macro_rates 共用官方财政部 → FRED → 东方财富回退链。
+    try:
+        from pipeline.macro_rates import fetch_treasury
+
+        treasury, _ = fetch_treasury()
+        if treasury and treasury.get("y10") is not None:
+            return {"value": round(treasury["y10"], 2), "date": treasury["date"], "source": "美国财政部/FRED"}
+    except Exception:  # noqa: BLE001
+        pass
+
     import akshare as ak
     from core.utils import beijing_now
 
@@ -227,7 +237,7 @@ def fetch_treasury_10y():
     value = _to_float(df.iloc[-1].get("美国国债收益率10年"))
     if value is None:
         return None
-    return {"value": round(value, 2), "date": str(df.iloc[-1]["日期"])[:10]}
+    return {"value": round(value, 2), "date": str(df.iloc[-1]["日期"])[:10], "source": "东方财富"}
 
 
 def fetch_dxy():
@@ -242,7 +252,7 @@ def fetch_dxy():
     return {"value": round(value, 2), "date": str(df.iloc[-1]["日期"])[:10]}
 
 
-def fetch_vix():
+def _fetch_vix_yahoo():
     url = "https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?range=1y&interval=1d"
     r = requests.get(url, timeout=15, headers=YAHOO_UA)
     r.raise_for_status()
@@ -258,7 +268,49 @@ def fetch_vix():
             date = datetime.utcfromtimestamp(ts).strftime("%Y-%m-%d")
     if value is None:
         return None
-    return {"value": round(value, 2), "date": date}
+    return {"value": round(value, 2), "date": date, "source": "Yahoo Finance"}
+
+
+def parse_fred_series(text):
+    """解析 FRED CSV（DATE,VALUE），返回 [(date, value|None), ...]。"""
+    out = []
+    for line in text.strip().splitlines()[1:]:
+        parts = line.split(",")
+        if len(parts) < 2:
+            continue
+        out.append((parts[0].strip(), _to_float(parts[1])))
+    return out
+
+
+def _fetch_vix_fred():
+    from core.utils import beijing_now
+    from datetime import timedelta
+
+    start = (beijing_now() - timedelta(days=60)).strftime("%Y-%m-%d")
+    r = requests.get(
+        f"https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS&cosd={start}",
+        timeout=15,
+        headers=YAHOO_UA,
+    )
+    r.raise_for_status()
+    rows = parse_fred_series(r.text)
+    for date, value in reversed(rows):
+        if value is not None:
+            return {"value": round(value, 2), "date": date, "source": "FRED VIXCLS"}
+    return None
+
+
+def fetch_vix():
+    """Yahoo 优先；被限流/失败时回退 FRED VIXCLS。"""
+    for fetcher in (_fetch_vix_yahoo, _fetch_vix_fred):
+        try:
+            quote = fetcher()
+        except Exception as e:  # noqa: BLE001
+            print(f"  ⚠ VIX 数据源失败: {e}")
+            quote = None
+        if quote:
+            return quote
+    return None
 
 
 FETCHERS = [
@@ -278,6 +330,7 @@ def build():
     prev_indicators = prev.get("indicators", {})
 
     raw = {}
+    sources = {}
     fresh_count = 0
     for key, fn, _source in FETCHERS:
         raw[key] = None
@@ -287,7 +340,9 @@ def build():
             print(f"  ⚠ 市场温度[{key}] 抓取失败: {e}")
             fresh = None
         if fresh is not None:
+            source_value = fresh.pop("source", None) if isinstance(fresh, dict) else None
             raw[key] = fresh
+            sources[key] = source_value or _source
             fresh_count += 1
         elif key in prev_indicators and prev_indicators[key].get("raw"):
             raw[key] = prev_indicators[key]["raw"]
@@ -312,7 +367,7 @@ def build():
             "label": info["label"],
             "raw": raw.get(key),
             "note": notes.get(key, "数据暂缺。"),
-            "source": source,
+            "source": sources.get(key, source),
             "stale": raw.get(key) is None,
         }
 
@@ -338,7 +393,7 @@ def main():
         print("❌ 市场温度：全部数据源失败且无历史快照，跳过写入")
         raise SystemExit(1)
     write_json(OUTPUT_FP, payload)
-    print(f"✅ 市场温度：{payload['score']} 分 · {payload['verdict']}（{fresh_count}/4 项新鲜）")
+    print(f"✅ 市场温度：{payload['score']} 分 · {payload['verdict']}（{fresh_count}/4 项抓取成功）")
 
 
 if __name__ == "__main__":

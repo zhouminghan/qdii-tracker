@@ -21,7 +21,7 @@ import { TENCENT_INDEX_SYMBOLS } from '@/shared/lib/realtime'
 import { useDataStore } from '@/stores/data'
 import { useSettingsStore } from '@/stores/settings'
 import { useUiStore } from '@/stores/ui'
-import type { FearGreedData, KlineData, NasdaqHistory } from '@/types/data'
+import type { FearGreedData, KlineData, MarketQuote, NasdaqHistory } from '@/types/data'
 import { DCA_BANDS, strategyOf } from '@/shared/lib/dca'
 import { lineTooltipFormatter } from '@/shared/lib/chart-tooltip'
 import { dailyChange, filterTimeSeries, TIME_RANGES, type TimeRange } from '@/shared/lib/time-series'
@@ -42,6 +42,7 @@ const heatmapMode = ref<'year' | 'month'>('year')
 let liveTimer: number | null = null
 let liveBootTimer: number | null = null
 let sectionObserver: IntersectionObserver | null = null
+let sectionClickLock = 0
 
 const positiveColor = computed(() => settings.colorMode === 'green-up' ? '#067647' : '#d92d20')
 const negativeColor = computed(() => settings.colorMode === 'green-up' ? '#d92d20' : '#067647')
@@ -70,14 +71,21 @@ function indexFreshness(key: string, fallbackAsOf: string | null | undefined) {
   const live = data.liveIndices[key]
   return live?.asOf ? quoteFreshness(live, 'index') : marketFreshness(fallbackAsOf, 'index')
 }
+function quoteMarketFreshness(quote: MarketQuote | undefined, kind: FreshnessKind) {
+  if (!quote) return marketFreshness(undefined, kind)
+  return quoteFreshness({ asOf: quote.as_of, updatedAt: quote.source_updated_at ?? null }, kind)
+}
 const techItems = computed(() => Object.entries(market.value?.big_tech.items ?? {}))
 const fxItems = computed(() => ['fxUSDCNY', 'fxUSDJPY', 'fxCNYHKD', 'fxUSDHKD']
   .map((key) => [key, market.value?.fx.items[key]] as const)
   .filter(([, item]) => Boolean(item)))
 const techFreshness = computed(() => marketFreshness(market.value?.big_tech.as_of, 'index'))
 const brandFreshness = computed(() => marketFreshness(market.value?.brand_gold.as_of, 'gold'))
-const goldAuFreshness = computed(() => marketFreshness(market.value?.gold.au9999.as_of, 'gold'))
-const goldXauFreshness = computed(() => marketFreshness(market.value?.gold.xau.as_of, 'gold'))
+const goldAuFreshness = computed(() => quoteMarketFreshness(market.value?.gold.au9999, 'gold'))
+const goldXauFreshness = computed(() => quoteMarketFreshness(market.value?.gold.xau, 'gold'))
+const goldHasPremium = computed(() => market.value?.gold.xau.derived === false
+  && market.value?.gold.converted_cny_per_gram.value !== null
+  && market.value?.gold.premium_pct.value !== null)
 
 interface PulseCard {
   key: string
@@ -271,6 +279,8 @@ async function openIndex(key: string): Promise<void> {
 
 function scrollToSection(id: string): void {
   activeMarketSection.value = id
+  // 点击锚点后短暂锁定，避免 IntersectionObserver 在滚动完成前抢回上一个分区。
+  sectionClickLock = Date.now() + 800
   document.getElementById(id)?.scrollIntoView({ block: 'start' })
 }
 
@@ -410,6 +420,7 @@ watch(market, async (value) => {
     .filter((section): section is HTMLElement => Boolean(section))
   if (!sections.length) return
   sectionObserver = new IntersectionObserver((entries) => {
+    if (Date.now() < sectionClickLock) return
     const visible = entries
       .filter((entry) => entry.isIntersecting)
       .sort((left, right) => right.intersectionRatio - left.intersectionRatio)[0]
@@ -435,7 +446,7 @@ onBeforeUnmount(() => {
         <p class="page-subtitle">全球指数、宏观利率、黄金与纳指历史。数据来自本地收盘快照，展示实际日期与来源状态。</p>
       </div>
       <div class="page-actions">
-        <span v-if="market" class="data-stamp">快照 {{ formatDateTime(market.generated_at) }}</span>
+        <span v-if="market" class="data-stamp">基金快照 {{ formatDateTime(market.generated_at) }}</span>
         <span v-if="data.indexLiveError" class="live-status is-error" role="status">刷新失败 · 已回退快照</span>
         <span v-else-if="data.indexLiveUpdatedAt" class="live-status" role="status">行情刷新于 {{ formatDateTime(data.indexLiveUpdatedAt) }}</span>
         <button class="button button-secondary" type="button" :disabled="data.indexLiveLoading" @click="refreshLive">
@@ -561,7 +572,7 @@ onBeforeUnmount(() => {
               </div>
               <Landmark :size="17" aria-hidden="true" />
             </header>
-            <div class="gold-market-grid">
+            <div class="gold-market-grid" :class="{ 'has-premium': goldHasPremium }">
               <div class="gold-market-cell" :class="movementSurfaceClass(market.gold.au9999.change_pct)">
                 <span class="source-tag is-independent">独立来源</span>
                 <span>上海金 au9999</span>
@@ -570,19 +581,37 @@ onBeforeUnmount(() => {
                 <span class="freshness-badge" :class="`is-${goldAuFreshness.tone}`">{{ goldAuFreshness.label }}</span>
               </div>
               <div class="gold-market-cell" :class="movementSurfaceClass(market.gold.xau.change_pct)">
-                <span class="source-tag is-derived">折算参考</span>
+                <span class="source-tag" :class="market.gold.xau.derived ? 'is-derived' : 'is-independent'">
+                  {{ market.gold.xau.derived ? '折算参考' : '独立来源' }}
+                </span>
                 <span>XAU / USD</span>
                 <strong class="mono">{{ formatNumber(market.gold.xau.price) }}</strong>
-                <small><span :class="movementClass(market.gold.xau.change_pct)">{{ formatPercent(market.gold.xau.change_pct) }}</span> · 非独立伦敦金</small>
-                <small class="gold-formula">上海金 × 31.1034768 ÷ USDCNH</small>
+                <small><span :class="movementClass(market.gold.xau.change_pct)">{{ formatPercent(market.gold.xau.change_pct) }}</span> · {{ market.gold.xau.derived ? '非独立伦敦金' : '伦敦金现货' }}</small>
+                <small v-if="market.gold.xau.derived" class="gold-formula">上海金 × 31.1034768 ÷ USDCNH</small>
+                <small v-else class="gold-formula">{{ market.gold.xau.source || '独立行情' }}</small>
                 <span class="freshness-badge" :class="`is-${goldXauFreshness.tone}`">{{ goldXauFreshness.label }}</span>
               </div>
+              <template v-if="goldHasPremium">
+                <div class="gold-market-cell">
+                  <span class="source-tag is-derived">折算</span>
+                  <span>折合国内价</span>
+                  <strong class="mono">{{ formatNumber(market.gold.converted_cny_per_gram.value) }}</strong>
+                  <small class="muted">元 / 克 · {{ formatDate(market.gold.converted_cny_per_gram.as_of) }}</small>
+                </div>
+                <div class="gold-market-cell">
+                  <span class="source-tag is-derived">价差</span>
+                  <span>国内溢价</span>
+                  <strong class="mono" :class="movementClass(market.gold.premium_pct.value)">{{ formatPercent(market.gold.premium_pct.value) }}</strong>
+                  <small class="muted">
+                    {{ market.gold.premium_cny.value === null ? '--' : `${formatNumber(market.gold.premium_cny.value)} 元 / 克` }} · {{ formatDate(market.gold.premium_pct.as_of) }}
+                  </small>
+                </div>
+              </template>
             </div>
-            <p class="gold-footnote">
-              <span v-if="market.gold.premium_pct.value === null" class="source-tag is-missing">暂缺</span>
+            <p v-if="!goldHasPremium" class="gold-footnote">
+              <span class="source-tag is-missing">暂缺</span>
               <span>国内溢价：</span>
-              <span v-if="market.gold.premium_pct.value === null">无独立伦敦金报价，暂不计算。</span>
-              <span v-else>{{ formatPercent(market.gold.premium_pct.value) }}（{{ formatDate(market.gold.premium_pct.as_of) }}）</span>
+              <span>无独立伦敦金报价，暂不计算。</span>
             </p>
           </article>
         </section>
@@ -615,8 +644,8 @@ onBeforeUnmount(() => {
               <div class="fx-meta">
                 <small class="muted">{{ formatDate(item?.as_of) }}</small>
                 <span class="move-chip mono" :class="movementClass(item?.change_pct)">{{ formatPercent(item?.change_pct) }}</span>
-                <span class="freshness-badge" :class="`is-${marketFreshness(item?.as_of, 'fx').tone}`">
-                  {{ marketFreshness(item?.as_of, 'fx').label }}
+                <span class="freshness-badge" :class="`is-${quoteMarketFreshness(item, 'fx').tone}`">
+                  {{ quoteMarketFreshness(item, 'fx').label }}
                 </span>
               </div>
             </div>

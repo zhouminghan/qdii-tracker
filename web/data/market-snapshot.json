@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14T04:46:21.358999+08:00",
+  "generated_at": "2026-11-15T15:13:55.710099+08:00",
   "schema_version": 1,
   "source": "local data files (offline close snapshot)",
   "market_indices": {
@@ -193,56 +193,52 @@
     }
   },
   "fx": {
-    "as_of": "2026-11-13",
+    "as_of": "2026-11-16",
     "items": {
       "usdcnh": {
-        "price": 6.7156,
-        "change": -0.0024,
-        "change_pct": -0.035725,
-        "as_of": "2026-11-06",
-        "source_updated_at": "2026-11-06T05:03:05.969095+08:00",
-        "source": "fx-kline/133.USDCNH.json",
+        "price": 6.6709,
+        "change": -0.0037,
+        "change_pct": -0.06,
+        "as_of": "2026-11-16",
+        "source_updated_at": "2026-11-16T14:39:35+08:00",
+        "source": "新浪财经 fx_susdcnh",
         "derived": false
       },
       "fxUSDCNY": {
-        "price": 6.6736,
-        "change": -0.0455,
-        "change_pct": -0.677174,
-        "as_of": "2026-11-13",
-        "source_updated_at": "2026-11-14T04:48:14.710597+08:00",
-        "source": "fx-kline/fxUSDCNY.json",
+        "price": 6.6704,
+        "change": -0.0022,
+        "change_pct": -0.033,
+        "as_of": "2026-11-16",
+        "source_updated_at": "2026-11-16T14:39:01+08:00",
+        "source": "新浪财经 fx_susdcny",
         "derived": false
       },
       "fxUSDJPY": {
-        "price": 159.8278,
-        "change": 0.90493,
-        "change_pct": 0.569415,
-        "as_of": "2026-11-13",
-        "source_updated_at": "2026-11-14T04:52:01.792680+08:00",
-        "source": "fx-kline/fxUSDJPY.json",
+        "price": 159.57,
+        "change": -0.09,
+        "change_pct": -0.06,
+        "as_of": "2026-11-16",
+        "source_updated_at": "2026-11-16T14:39:32+08:00",
+        "source": "新浪财经 fx_susdjpy",
         "derived": false
       },
       "fxCNYHKD": {
-        "price": 1.168224,
-        "change": 0.000273,
-        "change_pct": 0.023364,
-        "as_of": "2026-11-06",
-        "source_updated_at": "2026-11-06T05:03:14.409305+08:00",
-        "source": "fx-kline/fxCNYHKD.json",
+        "price": 1.17615,
+        "change": 0.00035,
+        "change_pct": 0.03,
+        "as_of": "2026-11-16",
+        "source_updated_at": "2026-11-16T14:39:35+08:00",
+        "source": "新浪财经 fx_scnyhkd",
         "derived": false
       },
       "fxUSDHKD": {
-        "price": 7.846729,
-        "change": 0.003234,
-        "change_pct": 0.041238,
-        "as_of": "2026-11-06",
-        "source_updated_at": null,
-        "source": "derived:fxUSDCNY*fxCNYHKD",
-        "derived": true,
-        "derived_from": [
-          "fxUSDCNY",
-          "fxCNYHKD"
-        ]
+        "price": 7.8454,
+        "change": -0.0001,
+        "change_pct": -0.01,
+        "as_of": "2026-11-16",
+        "source_updated_at": "2026-11-16T14:39:34+08:00",
+        "source": "新浪财经 fx_susdhkd",
+        "derived": false
       },
       "fxCNYJPY": {
         "price": 23.949263,
@@ -297,14 +293,14 @@
     }
   },
   "gold": {
-    "as_of": "2026-11-06",
+    "as_of": "2026-11-16",
     "au9999": {
-      "price": 868.57,
-      "change": -15.52,
-      "change_pct": -1.755477,
-      "as_of": "2026-11-06",
-      "source_updated_at": "2026-11-06T08:11:44.072806+00:00",
-      "source": "index-kline/au9999.json",
+      "price": 837.55,
+      "change": -11.700012,
+      "change_pct": -1.396933,
+      "as_of": "2026-11-16",
+      "source_updated_at": "2026-11-16T14:45:24+08:00",
+      "source": "金投网 Au9999",
       "derived": false
     },
     "comex": {
@@ -317,44 +313,40 @@
       "derived": false
     },
     "xau": {
-      "price": 4022.804641,
-      "change": -70.418462,
-      "change_pct": -1.720367,
-      "as_of": "2026-11-06",
-      "source_updated_at": null,
-      "source": "derived:au9999*31.1034768/USDCNH",
-      "derived": true,
-      "derived_from": [
-        "au9999",
-        "133.USDCNH"
-      ]
+      "price": 3842.88,
+      "change": -37.04,
+      "change_pct": -0.955,
+      "as_of": "2026-11-16",
+      "source_updated_at": "2026-11-16T14:45:00+08:00",
+      "source": "新浪财经 hf_XAU",
+      "derived": false
     },
     "usdcnh": {
-      "price": 6.7156,
-      "change": -0.0024,
-      "change_pct": -0.035725,
-      "as_of": "2026-11-06",
-      "source_updated_at": "2026-11-06T05:03:05.969095+08:00",
-      "source": "fx-kline/133.USDCNH.json",
+      "price": 6.6709,
+      "change": -0.0037,
+      "change_pct": -0.06,
+      "as_of": "2026-11-16",
+      "source_updated_at": "2026-11-16T14:39:35+08:00",
+      "source": "新浪财经 fx_susdcnh",
       "derived": false
     },
     "converted_cny_per_gram": {
-      "value": 868.57,
-      "as_of": "2026-11-06",
-      "source": "derived:au9999/USDCNH",
+      "value": 824.199441,
+      "as_of": "2026-11-16",
+      "source": "derived:XAU*USDCNH",
       "derived": true
     },
     "premium_cny": {
-      "value": null,
-      "as_of": null,
-      "source": "本地快照无独立伦敦金报价",
-      "derived": false
+      "value": 13.350559,
+      "as_of": "2026-11-16",
+      "source": "computed:au9999-converted",
+      "derived": true
     },
     "premium_pct": {
-      "value": null,
-      "as_of": null,
-      "source": "本地快照无独立伦敦金报价",
-      "derived": false
+      "value": 1.619821,
+      "as_of": "2026-11-16",
+      "source": "computed:(au9999-converted)/converted",
+      "derived": true
     }
   },
   "brand_gold": {
@@ -426,7 +418,7 @@
   },
   "macro": {
     "vix": {
-      "value": 19.21,
+      "value": 19.3,
       "as_of": "2026-11-13",
       "source": "market-temperature.json",
       "derived": false
@@ -438,20 +430,20 @@
       "derived": false
     },
     "treasury_2y": {
-      "value": 4.73,
-      "as_of": "2026-11-10",
+      "value": 4.88,
+      "as_of": "2026-11-13",
       "source": "macro-rates.json",
       "derived": false
     },
     "treasury_10y": {
-      "value": 4.98,
-      "as_of": "2026-11-10",
+      "value": 5.15,
+      "as_of": "2026-11-13",
       "source": "macro-rates.json",
       "derived": false
     },
     "treasury_30y": {
-      "value": 5.35,
-      "as_of": "2026-11-10",
+      "value": 5.47,
+      "as_of": "2026-11-13",
       "source": "macro-rates.json",
       "derived": false
     },
@@ -462,19 +454,19 @@
       "derived": false
     },
     "nasdaq_trend": {
-      "price": 28289.19,
-      "ma200": 28029.04,
-      "pct_above_ma": 0.93,
-      "as_of": "2026-11-12",
+      "price": 27943.74,
+      "ma200": 28039.34,
+      "pct_above_ma": -0.34,
+      "as_of": "2026-11-13",
       "source": "market-temperature.json",
       "derived": false
     },
     "as_of": "2026-11-13"
   },
   "temperature": {
-    "generated_at": "2026-11-14T04:52:45.302993+08:00",
+    "generated_at": "2026-11-16T14:42:21.480037+08:00",
     "schema_version": 1,
-    "score": 55,
+    "score": 49,
     "band": "yellow",
     "verdict": "黄灯 · 中性区间",
     "summary": "市场处于合理区间，适合定投或谨慎操作。",
@@ -486,15 +478,15 @@
     },
     "indicators": {
       "nasdaq_trend": {
-        "score": 55,
+        "score": 48,
         "label": "趋势中性",
         "raw": {
-          "price": 28289.19,
-          "ma200": 28029.04,
-          "pct_above_ma": 0.93,
-          "date": "2026-11-12"
+          "price": 27943.74,
+          "ma200": 28039.34,
+          "pct_above_ma": -0.34,
+          "date": "2026-11-13"
         },
-        "note": "纳指 100 位于 200 日线上方 0.9%。",
+        "note": "纳指 100 位于 200 日线下方 0.3%。",
         "source": "新浪",
         "stale": false
       },
@@ -502,22 +494,22 @@
         "score": 65,
         "label": "情绪偏紧",
         "raw": {
-          "value": 19.21,
+          "value": 19.3,
           "date": "2026-11-13"
         },
-        "note": "VIX 19.2，恐慌情绪中性。",
+        "note": "VIX 19.3，恐慌情绪中性。",
         "source": "Yahoo Finance",
         "stale": false
       },
       "treasury_10y": {
-        "score": 45,
-        "label": "利率中性",
+        "score": 30,
+        "label": "利率压制",
         "raw": {
-          "value": 4.88,
-          "date": "2026-11-09"
+          "value": 5.15,
+          "date": "2026-11-13"
         },
-        "note": "10 年期美债收益率 4.88%。",
-        "source": "东方财富",
+        "note": "10 年期美债收益率 5.15%。",
+        "source": "美国财政部/FRED",
         "stale": false
       },
       "dxy": {
@@ -536,13 +528,13 @@
       "暂无显著利好因子，指标整体中性。"
     ],
     "risks": [
-      "暂无显著风险因子，保持关注仓位节奏。"
+      "10 年期美债收益率 5.15%，压制高估值资产。"
     ],
     "disclaimer": "本评分仅为基于公开数据的量化情绪参考，不构成投资建议。权重与阈值可调，历史表现不代表未来。",
-    "as_of": "2026-11-14T04:52:45.302993+08:00"
+    "as_of": "2026-11-16T14:42:21.480037+08:00"
   },
   "etf_premium": {
-    "generated_at": "2026-11-14T04:46:21.358999+08:00",
+    "generated_at": "2026-11-15T15:13:55.710099+08:00",
     "as_of": "2026-11-13",
     "count": 21,
     "items": {
@@ -822,7 +814,7 @@
     }
   },
   "offshore_live_nav": {
-    "generated_at": "2026-11-14T04:46:21.358999+08:00",
+    "generated_at": "2026-11-15T15:13:55.710099+08:00",
     "as_of": "2026-11-13",
     "count": 70,
     "items": {

@@ -158,6 +158,18 @@ jobs:
           echo "=== pipeline.brand_gold（周大福/老凤祥/中国黄金等挂牌价）==="
           python -m pipeline.brand_gold
 
+      - name: 💱 实时汇率快照
+        run: |
+          cd scripts
+          echo "=== pipeline.fx_spot（新浪财经即期汇率）==="
+          python -m pipeline.fx_spot
+
+      - name: 🥇 黄金实时快照
+        run: |
+          cd scripts
+          echo "=== pipeline.gold_spot（金投网 Au9999 + 新浪伦敦金）==="
+          python -m pipeline.gold_spot
+
       - name: 📐 纳指 100 PE
         run: |
           cd scripts

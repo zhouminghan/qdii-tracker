@@ -167,6 +167,7 @@ export interface MarketQuote {
   change_pct: number | null
   as_of: string | null
   source?: string
+  source_updated_at?: string | null
   derived?: boolean
 }
 
@@ -180,10 +181,12 @@ export interface MarketSnapshot {
   gold: {
     as_of: string
     au9999: MarketQuote
+    comex?: MarketQuote
     xau: MarketQuote
     usdcnh: MarketQuote
-    converted_cny_per_gram: { value: number | null; as_of?: string | null }
-    premium_pct: { value: number | null; as_of?: string | null }
+    converted_cny_per_gram: { value: number | null; as_of?: string | null; source?: string | null; derived?: boolean }
+    premium_cny: { value: number | null; as_of?: string | null; source?: string | null; derived?: boolean }
+    premium_pct: { value: number | null; as_of?: string | null; source?: string | null; derived?: boolean }
   }
   brand_gold: {
     generated_at: string

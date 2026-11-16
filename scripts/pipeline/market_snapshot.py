@@ -147,6 +147,25 @@ def _quote_from_file(relative: str) -> dict[str, Any]:
     return _quote_from_points(series["points"], relative, series["updated_at"])
 
 
+def _live_quote(item: Any, fallback_source: str | None = None) -> dict[str, Any] | None:
+    """把 fx-spot.json / gold-spot.json 的单条实时报价转为标准 quote。"""
+    if not isinstance(item, dict):
+        return None
+    price = _finite(item.get("price"))
+    if price is None or price <= 0:
+        return None
+    quote = _empty_quote(item.get("source") or fallback_source, bool(item.get("derived")))
+    quote["price"] = _round(price)
+    change = _finite(item.get("change"))
+    change_pct = _finite(item.get("change_pct"))
+    quote["change"] = _round(change) if change is not None else None
+    quote["change_pct"] = _round(change_pct) if change_pct is not None else None
+    as_of = item.get("as_of")
+    quote["as_of"] = str(as_of)[:10] if as_of else None
+    quote["source_updated_at"] = item.get("source_updated_at")
+    return quote
+
+
 def _derived_quote(
     terms: list[tuple[dict[str, Any], float, str]],
     source: str,
@@ -189,6 +208,17 @@ def _latest_asof(values: Any) -> str | None:
     return max(dates) if dates else None
 
 
+def _oldest_asof(values: Any) -> str | None:
+    dates = []
+    for item in values:
+        if not isinstance(item, dict):
+            continue
+        date = item.get("as_of") or item.get("date") or item.get("generated_at")
+        if date:
+            dates.append(str(date)[:10])
+    return min(dates) if dates else None
+
+
 def _scalar(value: Any, as_of: Any, source: str | None, derived: bool = False) -> dict[str, Any]:
     number = _finite(value)
     return {
@@ -205,12 +235,18 @@ def _quote_section(files: dict[str, str]) -> dict[str, Any]:
 
 
 def _build_fx() -> dict[str, Any]:
-    items = {key: _quote_from_file(relative) for key, relative in FX_DIRECT_FILES.items()}
+    spot = _read_json(DATA_DIR / "fx-spot.json") or {}
+    spot_items = spot.get("items") or {}
+    items = {
+        key: _live_quote(spot_items.get(key), "新浪财经外汇") or _quote_from_file(relative)
+        for key, relative in FX_DIRECT_FILES.items()
+    }
     usd_cny = _series(DATA_DIR / FX_DIRECT_FILES["fxUSDCNY"])
     cny_hkd = _series(DATA_DIR / FX_DIRECT_FILES["fxCNYHKD"])
     usd_jpy = _series(DATA_DIR / FX_DIRECT_FILES["fxUSDJPY"])
 
-    items["fxUSDHKD"] = _derived_quote(
+    live_usd_hkd = _live_quote(spot_items.get("fxUSDHKD"), "新浪财经外汇")
+    items["fxUSDHKD"] = live_usd_hkd or _derived_quote(
         [(usd_cny, 1.0, "fxUSDCNY"), (cny_hkd, 1.0, "fxCNYHKD")],
         "derived:fxUSDCNY*fxCNYHKD",
     )
@@ -234,24 +270,47 @@ def _build_fx() -> dict[str, Any]:
 
 
 def _build_gold(fx: dict[str, Any]) -> dict[str, Any]:
-    au = _quote_from_file(INDEX_FILES["au9999"])
+    spot = _read_json(DATA_DIR / "gold-spot.json") or {}
+    au = _live_quote(spot.get("au9999"), "金投网 Au9999") or _quote_from_file(INDEX_FILES["au9999"])
     cnh = fx["items"]["usdcnh"]
     au_series = _series(DATA_DIR / INDEX_FILES["au9999"])
     cnh_series = _series(DATA_DIR / FX_DIRECT_FILES["usdcnh"])
 
-    # 本地没有独立的伦敦金 / COMEX 日 K。伦敦金仅按上海金与 USDCNH 反推，
-    # 并在前端标注为折算值；由该折算价再反推出的境内溢价恒为 0，故不计算。
-    xau = _derived_quote(
-        [(au_series, 1.0, "au9999"), (cnh_series, -1.0, "133.USDCNH")],
-        "derived:au9999*31.1034768/USDCNH",
-        OZ_TO_GRAM,
-    )
+    # 优先使用独立伦敦金现货；没有时回退到上海金 × USDCNH 的折算值。
+    live_xau = _live_quote(spot.get("xau"), "新浪财经 hf_XAU")
+    if live_xau:
+        xau = live_xau
+    elif au["price"] is not None and cnh["price"] is not None and cnh["price"] > 0:
+        xau = _quote_from_points(
+            [(_oldest_asof([au, cnh]), au["price"] * cnh["price"] / OZ_TO_GRAM)],
+            "derived:au9999*USDCNH",
+            derived=True,
+            derived_from=["au9999", "usdcnh"],
+        )
+    else:
+        xau = _derived_quote(
+            [(au_series, 1.0, "au9999"), (cnh_series, -1.0, "133.USDCNH")],
+            "derived:au9999*31.1034768/USDCNH",
+            OZ_TO_GRAM,
+        )
     converted_value = None
     if xau["price"] is not None and cnh["price"] is not None:
         converted_value = xau["price"] * cnh["price"] / OZ_TO_GRAM
-    converted = _scalar(converted_value, xau["as_of"], "derived:au9999/USDCNH", True)
-    premium_cny = _empty_value("本地快照无独立伦敦金报价")
-    premium_pct = _empty_value("本地快照无独立伦敦金报价")
+    converted_as_of = _oldest_asof([xau, cnh])
+    converted = _scalar(converted_value, converted_as_of, "derived:XAU*USDCNH", True)
+
+    if live_xau and converted_value is not None and au["price"] is not None and converted_value > 0:
+        premium_as_of = _oldest_asof([au, xau, cnh])
+        premium_cny = _scalar(au["price"] - converted_value, premium_as_of, "computed:au9999-converted", True)
+        premium_pct = _scalar(
+            (au["price"] - converted_value) / converted_value * 100,
+            premium_as_of,
+            "computed:(au9999-converted)/converted",
+            True,
+        )
+    else:
+        premium_cny = _empty_value("本地快照无独立伦敦金报价")
+        premium_pct = _empty_value("本地快照无独立伦敦金报价")
     comex = _empty_quote("本地 K 线未收录 COMEX")
     return {
         "as_of": _latest_asof([au, cnh, xau]),

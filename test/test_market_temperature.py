@@ -10,6 +10,7 @@ from pipeline.market_temperature import (
     compute_scores,
     weighted_score,
     band_of,
+    parse_fred_series,
     WEIGHTS,
 )
 
@@ -77,3 +78,11 @@ def test_compute_scores_missing_raw():
     for key in WEIGHTS:
         assert scores[key]["score"] is None
         assert scores[key]["label"] == "暂无数据"
+
+
+def test_parses_fred_vix_csv_with_missing_points():
+    text = "DATE,VIXCLS\n2026-11-11,\n2026-11-12,18.70\n"
+    assert parse_fred_series(text) == [
+        ("2026-11-11", None),
+        ("2026-11-12", 18.70),
+    ]

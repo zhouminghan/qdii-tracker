@@ -3,7 +3,7 @@ scripts/pipeline/kline_history.py — 生成指数 / 场内 ETF 的历史日 K
 
 数据源：东财 push2his 日 K（klt=101，fqt=0 不复权）。
 输出：
-  web/data/index-kline/{card_symbol}.json  （8 个指数）
+  web/data/index-kline/{card_symbol}.json  （指数 + 上海金 Au9999）
   web/data/etf-kline/{code}.json            （场内 ETF）
 
 扁平数组格式：dates / open / high / low / close / volume。
@@ -41,6 +41,7 @@ INDEX_TARGETS = [
     ("100.HSI", "100.HSI"),       # 恒生指数
     ("124.HSTECH", "124.HSTECH"), # 恒生科技
     ("100.KS11", "100.KS11"),     # 韩国 KOSPI
+    ("au9999", "118.au9999"),     # 上海金 Au9999（元/克）
 ]
 
 # Sina / akshare 回退映射：key -> (symbol, kind)

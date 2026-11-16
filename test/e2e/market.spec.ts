@@ -51,18 +51,17 @@ test('uses broker-style movement surfaces on index and pulse cards', async ({ pa
   await expect(vix).toHaveClass(/surface-flat/)
 })
 
-test('labels FX pairs and separates derived gold references from independent quotes', async ({ page }) => {
+test('shows independent gold with live premium and correct FX labels', async ({ page }) => {
   await page.goto('/#/market')
   await expect(page.getByText('USD / CNY', { exact: true })).toBeVisible()
   await expect(page.getByText('CNY / HKD', { exact: true })).toBeVisible()
 
   const goldPanel = page.locator('.gold-market-panel')
-  await expect(goldPanel.locator('.source-tag.is-independent')).toHaveText('独立来源')
-  await expect(goldPanel.locator('.source-tag.is-derived').first()).toHaveText('折算参考')
-  await expect(goldPanel).toContainText('非独立伦敦金')
-  await expect(goldPanel).toContainText('无独立伦敦金报价')
-  // 折合国内价由反向折算得出，恒等于上海金，不再单独占位。
-  await expect(goldPanel).not.toContainText('折合国内价')
+  // 独立 Au9999 与伦敦金现货都存在时，折合国内价/溢价才有意义。
+  await expect(goldPanel.locator('.source-tag.is-independent')).toHaveCount(2)
+  await expect(goldPanel).toContainText('伦敦金现货')
+  await expect(goldPanel).toContainText('折合国内价')
+  await expect(goldPanel).toContainText('国内溢价')
 })
 
 test('shows explicit brand gold column headings', async ({ page }) => {

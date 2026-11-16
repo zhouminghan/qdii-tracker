@@ -59,7 +59,9 @@
 
 ## 其他公共 JSON
 
-- `market-snapshot.json`：首屏市场快照，含 `schema_version`、`generated_at`、`source`。指数、科技股、外汇、黄金与宏观字段均保留原始 `as_of`；`change_pct` 使用百分数单位（如 `-0.54` 表示 -0.54%）。黄金 `gold.xau` 为 `au9999 * 31.1034768 / USDCNH` 的本地折算参考，带 `derived: true` 与 `derived_from`，不得当作独立伦敦金行情；无独立伦敦金来源时 `gold.premium_pct` 保持 `null`，前端显示“暂无/暂缺”而不是 0。
+- `market-snapshot.json`：首屏市场快照，含 `schema_version`、`generated_at`、`source`。指数、科技股、外汇、黄金与宏观字段均保留原始 `as_of`；`change_pct` 使用百分数单位（如 `-0.54` 表示 -0.54%）。黄金优先使用 `gold-spot.json` 的独立 Au9999 / XAU 报价，此时 `gold.xau.derived = false` 且 `gold.premium_pct` 可计算；没有独立 XAU 时才回退 `au9999 * 31.1034768 / USDCNH` 折算并标记 `derived: true`，此时不计算国内溢价。
+- `fx-spot.json`：新浪财经即期汇率快照，`items` 包含 `fxUSDCNY`、`usdcnh`、`fxUSDJPY`、`fxUSDHKD`、`fxCNYHKD`，每条保留 `price`、`change`、`change_pct`、`as_of`、`source`、`source_updated_at`。`market-snapshot.json` 优先使用它，失败时回退 `fx-kline/`。
+- `gold-spot.json`：独立黄金快照，`au9999` 为金投网上海金（元/克），`xau` 为新浪伦敦金现货（USD/盎司）；两者都带 `derived: false`。抓取失败时保留上一次成功值。
 - `nasdaq-history.json`：纳指年度序列、月度热力图与排行。
 - `cnn-fear-greed.json`：当前值、分档和历史序列。
 - `nav-history/{code}.json`：日期与净值/收盘序列。
