@@ -60,7 +60,10 @@ function sellRule(share: FundShare): string {
   return firstRate == null ? '--' : `${firstRate}%起`
 }
 
+type RuleMode = 'buy' | 'fee' | 'sell'
+
 const ruleShare = ref<FundShare | null>(null)
+const ruleMode = ref<RuleMode>('buy')
 const ruleStyle = ref<Record<string, string>>({})
 let hideTimer: number | null = null
 
@@ -76,7 +79,7 @@ function hideRulesSoon(): void {
   }, 140)
 }
 
-function showRules(share: FundShare, event: Event): void {
+function showRules(share: FundShare, event: Event, mode: RuleMode): void {
   cancelRuleHide()
   const trigger = event.currentTarget as HTMLElement
   const rect = trigger.getBoundingClientRect()
@@ -89,6 +92,7 @@ function showRules(share: FundShare, event: Event): void {
     width: `${width}px`,
   }
   ruleShare.value = share
+  ruleMode.value = mode
 }
 
 function ruleStatusClass(share: FundShare): string {
@@ -152,12 +156,12 @@ onBeforeUnmount(cancelRuleHide)
             <button
               class="rule-hover-trigger mono"
               type="button"
-              :aria-label="`查看 ${share.code} 买入和卖出规则`"
-              @mouseenter="showRules(share, $event)"
+              :aria-label="`查看 ${share.code} 买入规则`"
+              @mouseenter="showRules(share, $event, 'buy')"
               @mouseleave="hideRulesSoon"
-              @focus="showRules(share, $event)"
+              @focus="showRules(share, $event, 'buy')"
               @blur="hideRulesSoon"
-              @click="showRules(share, $event)"
+              @click="showRules(share, $event, 'buy')"
             >
               {{ buyFee(share) }}
             </button>
@@ -167,11 +171,11 @@ onBeforeUnmount(cancelRuleHide)
               class="rule-hover-trigger mono"
               type="button"
               :aria-label="`查看 ${share.code} 综合费率构成`"
-              @mouseenter="showRules(share, $event)"
+              @mouseenter="showRules(share, $event, 'fee')"
               @mouseleave="hideRulesSoon"
-              @focus="showRules(share, $event)"
+              @focus="showRules(share, $event, 'fee')"
               @blur="hideRulesSoon"
-              @click="showRules(share, $event)"
+              @click="showRules(share, $event, 'fee')"
             >
               {{ annualFee(share) }}
             </button>
@@ -180,12 +184,12 @@ onBeforeUnmount(cancelRuleHide)
             <button
               class="rule-hover-trigger"
               type="button"
-              :aria-label="`查看 ${share.code} 买入和卖出规则`"
-              @mouseenter="showRules(share, $event)"
+              :aria-label="`查看 ${share.code} 卖出规则`"
+              @mouseenter="showRules(share, $event, 'sell')"
               @mouseleave="hideRulesSoon"
-              @focus="showRules(share, $event)"
+              @focus="showRules(share, $event, 'sell')"
               @blur="hideRulesSoon"
-              @click="showRules(share, $event)"
+              @click="showRules(share, $event, 'sell')"
             >
               {{ sellRule(share) }}
             </button>
@@ -208,11 +212,11 @@ onBeforeUnmount(cancelRuleHide)
         <strong>{{ ruleShare.share_class }}</strong>
         <span class="mono">{{ ruleShare.code }} · {{ ruleShare.currency }}</span>
       </div>
-      <div class="rule-popover-status">
+      <div v-if="ruleMode === 'buy'" class="rule-popover-status">
         <span class="badge" :class="ruleStatusClass(ruleShare)">{{ buyStatusLabel(ruleShare) }}</span>
         <span>{{ ruleLimit(ruleShare) }}</span>
       </div>
-      <section class="rule-popover-section">
+      <section v-if="ruleMode === 'fee'" class="rule-popover-section">
         <h4>综合费率</h4>
         <div class="rule-popover-row">
           <span>合计</span>
@@ -220,7 +224,7 @@ onBeforeUnmount(cancelRuleHide)
         </div>
         <p class="rule-popover-note">{{ annualFeeDetail(ruleShare) }}</p>
       </section>
-      <section class="rule-popover-section">
+      <section v-if="ruleMode === 'buy'" class="rule-popover-section">
         <h4>买入规则</h4>
         <div v-for="rule in ruleShare.buy_rules ?? []" :key="rule.condition" class="rule-popover-row">
           <span>{{ cleanRuleCondition(rule.condition) }}</span>
@@ -228,7 +232,7 @@ onBeforeUnmount(cancelRuleHide)
         </div>
         <p v-if="!ruleShare.buy_rules?.length" class="muted">暂无公开买入规则。</p>
       </section>
-      <section class="rule-popover-section">
+      <section v-if="ruleMode === 'sell'" class="rule-popover-section">
         <h4>卖出规则</h4>
         <div v-for="rule in ruleShare.sell_rules ?? []" :key="rule.condition" class="rule-popover-row">
           <span>{{ cleanRuleCondition(rule.condition) }}</span>

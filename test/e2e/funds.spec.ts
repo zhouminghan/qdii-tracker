@@ -191,12 +191,19 @@ test.describe('funds workflow', () => {
     await expect(page.locator('.shares-row:visible, .fund-mobile-shares:visible')).toBeVisible()
     if (testInfo.project.name === 'chromium-desktop') {
       const shareRow = page.locator('.share-comparison-table tbody tr').first()
-      await shareRow.getByRole('button', { name: /买入和卖出规则/ }).last().click()
+      await shareRow.getByRole('button', { name: /买入规则/ }).first().click()
       await expect(page.getByRole('tooltip')).toContainText('买入规则')
-      await expect(page.getByRole('tooltip')).toContainText('卖出规则')
+      await expect(page.getByRole('tooltip')).not.toContainText('卖出规则')
+      await expect(page.getByRole('tooltip')).not.toContainText('综合费率')
       await shareRow.getByRole('button', { name: /综合费率构成/ }).click()
       await expect(page.getByRole('tooltip')).toContainText('综合费率')
       await expect(page.getByRole('tooltip')).toContainText('管理费')
+      await expect(page.getByRole('tooltip')).not.toContainText('买入规则')
+      await expect(page.getByRole('tooltip')).not.toContainText('卖出规则')
+      await shareRow.getByRole('button', { name: /卖出规则/ }).last().click()
+      await expect(page.getByRole('tooltip')).toContainText('卖出规则')
+      await expect(page.getByRole('tooltip')).not.toContainText('买入规则')
+      await expect(page.getByRole('tooltip')).not.toContainText('综合费率')
     }
 
     await page.getByRole('button', { name: '详情' }).first().click()
