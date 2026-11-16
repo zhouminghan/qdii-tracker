@@ -59,7 +59,7 @@
 
 ## 其他公共 JSON
 
-- `market-snapshot.json`：首屏市场快照，含 `schema_version`、`generated_at`、`source`。
+- `market-snapshot.json`：首屏市场快照，含 `schema_version`、`generated_at`、`source`。指数、科技股、外汇、黄金与宏观字段均保留原始 `as_of`；`change_pct` 使用百分数单位（如 `-0.54` 表示 -0.54%）。黄金 `gold.xau` 为 `au9999 * 31.1034768 / USDCNH` 的本地折算参考，带 `derived: true` 与 `derived_from`，不得当作独立伦敦金行情；无独立伦敦金来源时 `gold.premium_pct` 保持 `null`，前端显示“暂无/暂缺”而不是 0。
 - `nasdaq-history.json`：纳指年度序列、月度热力图与排行。
 - `cnn-fear-greed.json`：当前值、分档和历史序列。
 - `nav-history/{code}.json`：日期与净值/收盘序列。

@@ -104,9 +104,9 @@
   gap: 4px;
   min-width: 0;
   padding: 11px;
-  border: 1px solid var(--color-border);
+  border-width: 1px;
+  border-style: solid;
   border-radius: var(--radius-md);
-  background: var(--color-surface);
 }
 
 .pulse-card > span:first-child {
@@ -128,6 +128,67 @@
   font-size: 0.64rem;
 }
 
+.pulse-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  min-width: 0;
+}
+
+.freshness-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-text-secondary);
+  font-size: 0.62rem;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.freshness-badge.is-ok {
+  border-color: color-mix(in srgb, var(--color-text-tertiary) 26%, var(--color-border));
+  color: var(--color-text-secondary);
+}
+
+.freshness-badge.is-muted {
+  color: var(--color-text-tertiary);
+}
+
+.freshness-badge.is-warn {
+  border-color: color-mix(in srgb, var(--color-warn) 38%, var(--color-border));
+  color: var(--color-warn);
+}
+
+.freshness-badge.is-accent {
+  border-color: color-mix(in srgb, var(--color-accent) 38%, var(--color-border));
+  color: var(--color-accent);
+}
+
+.market-breadth {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  color: var(--color-text-secondary);
+  font-size: 0.72rem;
+}
+
+.breadth-stat strong {
+  margin-left: 3px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+}
+
 .index-grid {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -139,9 +200,9 @@
   gap: 3px;
   min-width: 0;
   padding: 10px;
-  border: 1px solid var(--color-border);
+  border-width: 1px;
+  border-style: solid;
   border-radius: var(--radius-md);
-  background: var(--color-surface);
   text-align: left;
 }
 
@@ -172,6 +233,35 @@
 .index-card small {
   color: var(--color-text-tertiary);
   font-size: 0.62rem;
+}
+
+.index-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+}
+
+.move-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1px 7px;
+  border: 1px solid color-mix(in srgb, currentColor 26%, var(--color-border));
+  border-radius: 999px;
+  background: var(--color-surface);
+  font-size: 0.66rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+/* Light-theme semantic cards use a slightly deeper movement color for WCAG AA contrast. */
+:root[data-theme='light'] .surface-up .is-up {
+  color: color-mix(in srgb, var(--color-positive) 86%, var(--color-text));
+}
+
+:root[data-theme='light'] .surface-down .is-down {
+  color: color-mix(in srgb, var(--color-negative) 86%, var(--color-text));
 }
 
 .market-split-grid,
@@ -210,6 +300,46 @@
 
 .gold-market-grid strong {
   font-size: 0.84rem;
+}
+
+.gold-market-cell {
+  align-content: start;
+}
+
+.source-tag {
+  display: inline-flex;
+  width: fit-content;
+  padding: 1px 6px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.source-tag.is-independent {
+  border-color: color-mix(in srgb, var(--color-text-tertiary) 24%, var(--color-border));
+  background: var(--color-surface-raised);
+  color: var(--color-text-secondary);
+}
+
+.source-tag.is-derived {
+  border-color: color-mix(in srgb, var(--color-accent) 34%, var(--color-border));
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.source-tag.is-missing {
+  border-color: color-mix(in srgb, var(--color-warn) 34%, var(--color-border));
+  background: var(--color-warn-soft);
+  color: var(--color-warn);
+}
+
+.gold-formula {
+  color: var(--color-text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
 }
 
 .market-list {
@@ -252,6 +382,16 @@
   grid-template-columns: minmax(0, 1fr) 90px 72px;
 }
 
+.gold-head {
+  color: var(--color-text-tertiary);
+  font-size: 0.64rem;
+  font-weight: 650;
+}
+
+.gold-head span {
+  font-size: 0.64rem;
+}
+
 .macro-grid {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -285,6 +425,23 @@
 
 .fx-item strong {
   font-size: 0.84rem;
+}
+
+.fx-item .fx-label {
+  color: var(--color-text-secondary);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.fx-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+}
+
+.fx-meta .move-chip {
+  justify-content: flex-start;
 }
 
 .chart-panel {
@@ -446,6 +603,10 @@
   border-color: color-mix(in srgb, var(--color-negative) 35%, var(--color-border));
   background: var(--color-negative-soft);
   color: var(--color-negative);
+}
+
+:root[data-theme='light'] .dca-green {
+  color: color-mix(in srgb, var(--color-negative) 86%, var(--color-text));
 }
 
 .dca-amber {
@@ -627,6 +788,10 @@
   .heatmap-summary,
   .annual-heat-cell > span,
   .annual-heat-cell small,
+  .freshness-badge,
+  .source-tag,
+  .move-chip,
+  .market-breadth,
   .monthly-heat-table {
     font-size: 0.75rem;
   }

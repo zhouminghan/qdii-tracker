@@ -82,6 +82,8 @@ test('index live refresh uses the correct Nasdaq labels', async ({ page }) => {
   const pulse = page.locator('.pulse-card').first()
   await expect(pulse).toContainText('纳斯达克100')
   await expect(pulse).toContainText('25,555.00')
+  await expect(pulse).toHaveClass(/surface-up/)
+  await expect(pulse.getByText('实时', { exact: true })).toBeVisible()
   await expect(page.locator('.index-card').filter({ hasText: '纳指综合' })).toContainText('22,222.00')
   await expect(page.locator('.index-card').filter({ hasText: '纳斯达克100' })).toContainText('25,555.00')
 })

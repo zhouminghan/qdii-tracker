@@ -6,6 +6,7 @@ import {
   formatPercent,
   formatPrice,
   movementClass,
+  movementSurfaceClass,
 } from '@/shared/lib/format'
 
 describe('format helpers', () => {
@@ -22,6 +23,12 @@ describe('format helpers', () => {
     expect(movementClass(1)).toBe('is-up')
     expect(movementClass(-1)).toBe('is-down')
     expect(movementClass(null)).toBe('is-flat')
+    expect(movementSurfaceClass(1)).toBe('surface-up')
+    expect(movementSurfaceClass(-1)).toBe('surface-down')
+    expect(movementSurfaceClass(0)).toBe('surface-flat')
+    expect(movementSurfaceClass(null)).toBe('surface-flat')
+    expect(movementSurfaceClass(undefined)).toBe('surface-flat')
+    expect(movementSurfaceClass(Number.NaN)).toBe('surface-flat')
   })
 
   it('uses different precision for OTC funds and ETFs', () => {

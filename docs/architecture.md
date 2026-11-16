@@ -117,7 +117,7 @@
 
 | 属性 | 内容 |
 |------|------|
-| **职责** | 纯离线汇总指数、科技股、外汇、黄金、宏观、温度、ETF 溢价与场外净值，生成首屏可直接渲染的本地快照；不联网、不伪造实时值，缺失字段写 `null` |
+| **职责** | 纯离线汇总指数、科技股、外汇、黄金、宏观、温度、ETF 溢价与场外净值，生成首屏可直接渲染的本地快照；不联网、不伪造实时值，缺失字段写 `null`；`gold.xau` 由 `au9999 * 31.1034768 / USDCNH` 反算，标记 `derived: true` 且不用于计算国内溢价 |
 | **输入文件** | `web/data/meta.json`、`web/data/*.json`、`web/data/index-kline/*.json`、`web/data/fx-kline/*.json`、`web/data/etf-premium-history.json` |
 | **输出文件** | `web/data/market-snapshot.json` |
 | **依赖** | `core.constants`、`core.utils`（间接） |

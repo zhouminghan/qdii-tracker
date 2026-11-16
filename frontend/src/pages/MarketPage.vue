@@ -13,7 +13,10 @@ import {
   formatNumber,
   formatPercent,
   movementClass,
+  movementSurfaceClass,
 } from '@/shared/lib/format'
+import { fxLabel, marketBreadth } from '@/shared/lib/market'
+import { marketFreshness, type FreshnessKind } from '@/shared/lib/market-freshness'
 import { useDataStore } from '@/stores/data'
 import { useSettingsStore } from '@/stores/settings'
 import { useUiStore } from '@/stores/ui'
@@ -54,12 +57,111 @@ function quoteFor(key: string) {
 const indexItems = computed(() => Object.entries(market.value?.market_indices.items ?? {})
   .filter(([key]) => key !== 'au9999')
   .map(([key, quote]) => [key, data.liveIndices[key]
-    ? { ...quote, price: data.liveIndices[key].price, change_pct: data.liveIndices[key].changePct }
+    ? {
+        ...quote,
+        price: data.liveIndices[key].price,
+        change_pct: data.liveIndices[key].changePct,
+        as_of: data.indexLiveUpdatedAt.slice(0, 10) || quote.as_of,
+      }
     : quote] as const))
 const techItems = computed(() => Object.entries(market.value?.big_tech.items ?? {}))
 const fxItems = computed(() => ['fxUSDCNY', 'fxUSDJPY', 'fxCNYHKD', 'fxUSDHKD']
   .map((key) => [key, market.value?.fx.items[key]] as const)
   .filter(([, item]) => Boolean(item)))
+const breadth = computed(() => marketBreadth(indexItems.value.map(([, quote]) => quote?.change_pct)))
+const techFreshness = computed(() => marketFreshness(market.value?.big_tech.as_of, 'index'))
+const brandFreshness = computed(() => marketFreshness(market.value?.brand_gold.as_of, 'gold'))
+const goldAuFreshness = computed(() => marketFreshness(market.value?.gold.au9999.as_of, 'gold'))
+const goldXauFreshness = computed(() => marketFreshness(market.value?.gold.xau.as_of, 'gold'))
+
+interface PulseCard {
+  key: string
+  label: string
+  value: string
+  suffix: string
+  as_of: string | null
+  change: number | null
+  hasChange: boolean
+  surface: string
+  freshness: ReturnType<typeof marketFreshness>
+}
+
+const pulseCards = computed<PulseCard[]>(() => {
+  const snapshot = market.value
+  if (!snapshot) return []
+  const ndx = quoteFor('100.NDX100')
+  const ndxLive = Boolean(data.liveIndices['100.NDX100'])
+  return [
+    {
+      key: 'ndx',
+      label: '纳斯达克100',
+      value: formatNumber(ndx?.price),
+      suffix: '',
+      as_of: ndx?.as_of ?? null,
+      change: ndx?.change_pct ?? null,
+      hasChange: ndx?.change_pct !== null && ndx?.change_pct !== undefined,
+      surface: movementSurfaceClass(ndx?.change_pct),
+      freshness: marketFreshness(ndx?.as_of, 'index', ndxLive),
+    },
+    {
+      key: 'vix',
+      label: 'VIX',
+      value: formatNumber(snapshot.macro.vix.value),
+      suffix: '',
+      as_of: snapshot.macro.vix.as_of,
+      change: null,
+      hasChange: false,
+      surface: 'surface-flat',
+      freshness: marketFreshness(snapshot.macro.vix.as_of, 'macro'),
+    },
+    {
+      key: 'treasury_10y',
+      label: '美国 10 年',
+      value: formatNumber(snapshot.macro.treasury_10y.value),
+      suffix: '%',
+      as_of: snapshot.macro.treasury_10y.as_of,
+      change: null,
+      hasChange: false,
+      surface: 'surface-flat',
+      freshness: marketFreshness(snapshot.macro.treasury_10y.as_of, 'macro'),
+    },
+    {
+      key: 'ndx_pe',
+      label: '纳指 PE',
+      value: formatNumber(snapshot.macro.ndx_pe.value),
+      suffix: '',
+      as_of: snapshot.macro.ndx_pe.as_of,
+      change: null,
+      hasChange: false,
+      surface: 'surface-flat',
+      freshness: marketFreshness(snapshot.macro.ndx_pe.as_of, 'monthly'),
+    },
+  ]
+})
+
+interface MacroCard {
+  key: string
+  label: string
+  value: string
+  suffix: string
+  as_of: string | null
+  freshness: ReturnType<typeof marketFreshness>
+}
+
+const macroCards = computed<MacroCard[]>(() => {
+  const snapshot = market.value
+  if (!snapshot) return []
+  const rows: Array<{ key: string; label: string; value: string; suffix: string; as_of: string | null; kind: FreshnessKind }> = [
+    { key: 'treasury_2y', label: '美国 2 年', value: formatNumber(snapshot.macro.treasury_2y.value), suffix: '%', as_of: snapshot.macro.treasury_2y.as_of, kind: 'macro' },
+    { key: 'treasury_10y', label: '美国 10 年', value: formatNumber(snapshot.macro.treasury_10y.value), suffix: '%', as_of: snapshot.macro.treasury_10y.as_of, kind: 'macro' },
+    { key: 'treasury_30y', label: '美国 30 年', value: formatNumber(snapshot.macro.treasury_30y.value), suffix: '%', as_of: snapshot.macro.treasury_30y.as_of, kind: 'macro' },
+    { key: 'dxy', label: '美元指数', value: formatNumber(snapshot.macro.dxy.value), suffix: '', as_of: snapshot.macro.dxy.as_of, kind: 'macro' },
+    { key: 'vix', label: 'VIX', value: formatNumber(snapshot.macro.vix.value), suffix: '', as_of: snapshot.macro.vix.as_of, kind: 'macro' },
+    { key: 'ndx_pe', label: '纳指 PE', value: formatNumber(snapshot.macro.ndx_pe.value), suffix: '', as_of: snapshot.macro.ndx_pe.as_of, kind: 'monthly' },
+  ]
+  return rows.map((row) => ({ ...row, freshness: marketFreshness(row.as_of, row.kind) }))
+})
+
 const fearBand = computed(() => fearGreed.value?.band ?? 'neutral')
 const dca = computed(() => strategyOf(
   fearGreed.value?.score,
@@ -360,27 +462,14 @@ onBeforeUnmount(() => {
             </div>
           </div>
           <div class="market-pulse-grid">
-            <article class="pulse-card">
-              <span>纳斯达克100</span>
-              <strong class="mono">{{ formatNumber(quoteFor('100.NDX100')?.price) }}</strong>
-              <small :class="movementClass(quoteFor('100.NDX100')?.change_pct)">
-                {{ formatPercent(quoteFor('100.NDX100')?.change_pct) }}
-              </small>
-            </article>
-            <article class="pulse-card">
-              <span>VIX</span>
-              <strong class="mono">{{ formatNumber(market.macro.vix.value) }}</strong>
-              <small>{{ formatDate(market.macro.vix.as_of) }}</small>
-            </article>
-            <article class="pulse-card">
-              <span>美国 10 年</span>
-              <strong class="mono">{{ formatNumber(market.macro.treasury_10y.value) }}%</strong>
-              <small>{{ formatDate(market.macro.treasury_10y.as_of) }}</small>
-            </article>
-            <article class="pulse-card">
-              <span>纳指 PE</span>
-              <strong class="mono">{{ formatNumber(market.macro.ndx_pe.value) }}</strong>
-              <small>{{ formatDate(market.macro.ndx_pe.as_of) }}</small>
+            <article v-for="card in pulseCards" :key="card.key" class="pulse-card" :class="card.surface">
+              <span>{{ card.label }}</span>
+              <strong class="mono">{{ card.value }}{{ card.suffix }}</strong>
+              <div class="pulse-meta">
+                <small v-if="card.hasChange" class="mono" :class="movementClass(card.change)">{{ formatPercent(card.change) }}</small>
+                <small v-else class="mono muted">{{ formatDate(card.as_of) }}</small>
+                <span class="freshness-badge" :class="`is-${card.freshness.tone}`">{{ card.freshness.label }}</span>
+              </div>
             </article>
           </div>
         </section>
@@ -394,18 +483,31 @@ onBeforeUnmount(() => {
             </div>
             <span class="badge">{{ indexItems.length }} 个指数</span>
           </div>
+          <div v-if="breadth.sample" class="market-breadth" role="group" aria-label="市场广度摘要">
+            <span class="breadth-stat">上涨 <strong :class="movementClass(1)">{{ breadth.up }}</strong></span>
+            <span class="breadth-stat">下跌 <strong :class="movementClass(-1)">{{ breadth.down }}</strong></span>
+            <span class="breadth-stat">持平 <strong>{{ breadth.flat }}</strong></span>
+            <span class="breadth-stat">样本 <strong>{{ breadth.sample }}</strong></span>
+            <span class="breadth-stat">平均 <strong :class="movementClass(breadth.average)">{{ formatPercent(breadth.average) }}</strong></span>
+          </div>
           <div class="index-grid">
             <button
               v-for="[key, quote] in indexItems"
               :key="key"
               class="index-card"
+              :class="movementSurfaceClass(quote.change_pct)"
               type="button"
               @click="openIndex(key)"
             >
               <span class="index-name">{{ MARKET_INDEX_LABELS[key] || key }} <ChevronRight :size="13" aria-hidden="true" /></span>
-              <strong class="mono">{{ formatNumber(quote.price) }}</strong>
+              <strong class="mono">{{ quote.price === null ? '暂无数据' : formatNumber(quote.price) }}</strong>
               <span class="mono" :class="movementClass(quote.change_pct)">{{ formatPercent(quote.change_pct) }}</span>
-              <small>{{ formatDate(quote.as_of) }}</small>
+              <small class="index-meta">
+                <span>{{ formatDate(quote.as_of) }}</span>
+                <span class="freshness-badge" :class="`is-${marketFreshness(quote.as_of, 'index', Boolean(data.liveIndices[key])).tone}`">
+                  {{ marketFreshness(quote.as_of, 'index', Boolean(data.liveIndices[key])).label }}
+                </span>
+              </small>
             </button>
           </div>
         </section>
@@ -413,41 +515,84 @@ onBeforeUnmount(() => {
         <section class="market-split-grid">
           <article class="panel">
             <header class="panel-header">
-              <div><h3>科技七姐妹</h3><p class="inline-note">最近收盘快照</p></div>
+              <div>
+                <h3>科技七姐妹</h3>
+                <p class="inline-note">
+                  {{ formatDate(market.big_tech.as_of) }}
+                  <span class="freshness-badge" :class="`is-${techFreshness.tone}`">{{ techFreshness.label }}</span>
+                </p>
+              </div>
               <Activity :size="17" aria-hidden="true" />
             </header>
             <div class="market-list">
               <div v-for="[key, quote] in techItems" :key="key" class="market-list-row">
                 <div><strong>{{ TECH_LABELS[key] || key }}</strong><span class="mono">{{ key.replace('us', '') }}</span></div>
                 <span class="mono">{{ formatNumber(quote.price) }}</span>
-                <span class="mono" :class="movementClass(quote.change_pct)">{{ formatPercent(quote.change_pct) }}</span>
+                <span class="move-chip mono" :class="movementClass(quote.change_pct)">{{ formatPercent(quote.change_pct) }}</span>
               </div>
             </div>
           </article>
 
           <article class="panel">
             <header class="panel-header">
-              <div><h3>品牌金价</h3><p class="inline-note">{{ market.brand_gold.as_of }}</p></div>
+              <div>
+                <h3>品牌金价</h3>
+                <p class="inline-note">
+                  {{ formatDate(market.brand_gold.as_of) }}
+                  <span class="freshness-badge" :class="`is-${brandFreshness.tone}`">{{ brandFreshness.label }}</span>
+                </p>
+              </div>
               <Landmark :size="17" aria-hidden="true" />
             </header>
-            <div class="market-list">
-              <div v-for="item in market.brand_gold.brands.slice(0, 7)" :key="item.brand" class="market-list-row gold-row">
-                <strong>{{ item.brand }}</strong>
-                <span class="mono">{{ formatNumber(item.ornament, 0) }}</span>
-                <span class="mono muted">{{ formatNumber(item.investment_bar, 0) }}</span>
+            <div class="market-list brand-gold-list" role="table" aria-label="品牌金价">
+              <div class="market-list-row gold-row gold-head" role="row">
+                <span role="columnheader">品牌</span>
+                <span role="columnheader">足金饰品</span>
+                <span role="columnheader">投资金条</span>
+              </div>
+              <div v-for="item in market.brand_gold.brands.slice(0, 7)" :key="item.brand" class="market-list-row gold-row" role="row">
+                <strong role="cell">{{ item.brand }}</strong>
+                <span role="cell" class="mono">{{ formatNumber(item.ornament, 0) }}</span>
+                <span role="cell" class="mono muted">{{ formatNumber(item.investment_bar, 0) }}</span>
               </div>
             </div>
           </article>
           <article class="panel gold-market-panel">
             <header class="panel-header">
-              <div><h3>黄金多市场</h3><p class="inline-note">{{ market.gold.as_of }}</p></div>
+              <div>
+                <h3>黄金多市场</h3>
+                <p class="inline-note">{{ formatDate(market.gold.as_of) }} · 独立行情与本地折算参考分开标注</p>
+              </div>
               <Landmark :size="17" aria-hidden="true" />
             </header>
             <div class="gold-market-grid">
-              <div><span>上海金 au9999</span><strong class="mono">{{ formatNumber(market.gold.au9999.price) }}</strong><small>元 / 克</small></div>
-              <div><span>XAU / USD</span><strong class="mono">{{ formatNumber(market.gold.xau.price) }}</strong><small :class="movementClass(market.gold.xau.change_pct)">{{ formatPercent(market.gold.xau.change_pct) }}</small></div>
-              <div><span>折合国内价</span><strong class="mono">{{ formatNumber(market.gold.converted_cny_per_gram.value) }}</strong><small>元 / 克</small></div>
-              <div><span>国内溢价</span><strong class="mono">{{ formatPercent(market.gold.premium_pct.value) }}</strong><small>{{ market.gold.premium_pct.as_of || '源数据缺失' }}</small></div>
+              <div class="gold-market-cell" :class="movementSurfaceClass(market.gold.au9999.change_pct)">
+                <span class="source-tag is-independent">独立来源</span>
+                <span>上海金 au9999</span>
+                <strong class="mono">{{ formatNumber(market.gold.au9999.price) }}</strong>
+                <small><span :class="movementClass(market.gold.au9999.change_pct)">{{ formatPercent(market.gold.au9999.change_pct) }}</span> · 元 / 克</small>
+                <span class="freshness-badge" :class="`is-${goldAuFreshness.tone}`">{{ goldAuFreshness.label }}</span>
+              </div>
+              <div class="gold-market-cell" :class="movementSurfaceClass(market.gold.xau.change_pct)">
+                <span class="source-tag is-derived">折算参考</span>
+                <span>XAU / USD</span>
+                <strong class="mono">{{ formatNumber(market.gold.xau.price) }}</strong>
+                <small><span :class="movementClass(market.gold.xau.change_pct)">{{ formatPercent(market.gold.xau.change_pct) }}</span> · 非独立伦敦金</small>
+                <small class="gold-formula">上海金 × 31.1034768 ÷ USDCNH</small>
+                <span class="freshness-badge" :class="`is-${goldXauFreshness.tone}`">{{ goldXauFreshness.label }}</span>
+              </div>
+              <div class="gold-market-cell">
+                <span class="source-tag is-derived">折算</span>
+                <span>折合国内价</span>
+                <strong class="mono">{{ formatNumber(market.gold.converted_cny_per_gram.value) }}</strong>
+                <small class="muted">元 / 克</small>
+              </div>
+              <div class="gold-market-cell">
+                <span class="source-tag is-missing">暂缺</span>
+                <span>国内溢价</span>
+                <strong class="mono">{{ market.gold.premium_pct.value === null ? '--' : formatPercent(market.gold.premium_pct.value) }}</strong>
+                <small class="muted">{{ market.gold.premium_pct.value === null ? '无独立伦敦金报价' : formatDate(market.gold.premium_pct.as_of) }}</small>
+              </div>
             </div>
           </article>
         </section>
@@ -461,24 +606,29 @@ onBeforeUnmount(() => {
             </div>
           </div>
           <div class="macro-grid">
-            <article v-for="item in [
-              ['美国 2 年', market.macro.treasury_2y, '%'],
-              ['美国 10 年', market.macro.treasury_10y, '%'],
-              ['美国 30 年', market.macro.treasury_30y, '%'],
-              ['美元指数', market.macro.dxy, ''],
-              ['VIX', market.macro.vix, ''],
-              ['纳指 PE', market.macro.ndx_pe, ''],
-            ]" :key="item[0]" class="metric-card">
-              <span class="metric-label">{{ item[0] }}</span>
-              <strong class="metric-value">{{ formatNumber(item[1].value) }}{{ item[2] }}</strong>
-              <span class="metric-meta">{{ formatDate(item[1].as_of) }}</span>
+            <article v-for="item in macroCards" :key="item.key" class="metric-card">
+              <span class="metric-label">{{ item.label }}</span>
+              <strong class="metric-value">{{ item.value }}{{ item.suffix }}</strong>
+              <span class="metric-meta">
+                {{ formatDate(item.as_of) }}
+                <span class="freshness-badge" :class="`is-${item.freshness.tone}`">{{ item.freshness.label }}</span>
+              </span>
             </article>
           </div>
           <div class="fx-strip">
             <div v-for="[key, item] in fxItems" :key="key" class="fx-item">
-              <span>{{ key.replace('fx', '').replace('USD', 'USD / ').replace('CNY', 'CNY') }}</span>
+              <span class="fx-label">
+                {{ fxLabel(key) }}
+                <span v-if="item?.derived" class="source-tag is-derived">折算</span>
+              </span>
               <strong class="mono">{{ formatNumber(item?.price, 4) }}</strong>
-              <small class="mono" :class="movementClass(item?.change_pct)">{{ formatPercent(item?.change_pct) }}</small>
+              <div class="fx-meta">
+                <small class="muted">{{ formatDate(item?.as_of) }}</small>
+                <span class="move-chip mono" :class="movementClass(item?.change_pct)">{{ formatPercent(item?.change_pct) }}</span>
+                <span class="freshness-badge" :class="`is-${marketFreshness(item?.as_of, 'fx').tone}`">
+                  {{ marketFreshness(item?.as_of, 'fx').label }}
+                </span>
+              </div>
             </div>
           </div>
         </section>
@@ -584,23 +734,34 @@ onBeforeUnmount(() => {
             </div>
             <article class="panel dca-panel">
               <header class="panel-header">
-                <div><h3>VIX &amp; PE 阶梯定投</h3><p class="inline-note">使用当前恐慌贪婪、VIX 与纳指 PE 读数</p></div>
-                <span class="badge" :class="`dca-${dca.band.tone}`">{{ dca.band.label }}</span>
+                <div>
+                  <h3>VIX &amp; PE 阶梯定投</h3>
+                  <p class="inline-note">恐慌贪婪指数决定档位，VIX 校验波动状态，纳指 PE 补充估值参考</p>
+                </div>
+                <span v-if="dca.band" class="badge" :class="`dca-${dca.band.tone}`">{{ dca.band.label }}</span>
+                <span v-else class="badge badge-warn">数据不足</span>
               </header>
               <div class="panel-body dca-body">
                 <div class="dca-verdict">
                   <span class="eyebrow">当前动作</span>
-                  <h3>{{ dca.band.action }}</h3>
-                  <p>{{ dca.band.strategy }}</p>
+                  <template v-if="dca.band">
+                    <h3>{{ dca.band.action }}</h3>
+                    <p>{{ dca.band.strategy }}</p>
+                  </template>
+                  <template v-else>
+                    <h3>无法生成有效策略</h3>
+                    <p>恐慌贪婪指数缺失，暂不给出定投动作。</p>
+                  </template>
                   <div class="dca-checks">
-                    <span class="badge" :class="dca.matched ? 'badge-accent' : 'badge-warn'">{{ dca.matched ? 'VIX 匹配' : 'VIX 偏离' }} · {{ dca.band.vixText }}</span>
+                    <span v-if="dca.band" class="badge" :class="dca.matched ? 'badge-accent' : 'badge-warn'">{{ dca.matched ? 'VIX 匹配' : 'VIX 偏离' }} · {{ dca.band.vixText }}</span>
+                    <span v-else class="badge badge-warn">{{ dca.vix === null ? 'VIX 缺失' : `VIX ${formatNumber(dca.vix, 1)}` }}</span>
                     <span class="badge">{{ dca.peLabel }}</span>
                   </div>
                   <p v-if="dca.note" class="inline-note">{{ dca.note }}</p>
                 </div>
                 <div class="dca-matrix" role="table" aria-label="VIX 与 PE 阶梯定投矩阵" tabindex="0">
                   <div class="dca-matrix-row dca-matrix-head" role="row"><span role="columnheader">情绪区间</span><span role="columnheader">状态</span><span role="columnheader">动作</span><span role="columnheader">策略</span></div>
-                  <div v-for="band in DCA_BANDS" :key="band.key" class="dca-matrix-row" :class="{ active: dca.band.key === band.key }" role="row">
+                  <div v-for="band in DCA_BANDS" :key="band.key" class="dca-matrix-row" :class="{ active: dca.band?.key === band.key }" role="row">
                     <span class="mono" role="cell">{{ band.lo }}–{{ band.hi }}</span>
                     <span role="cell">{{ band.label }}</span>
                     <span role="cell">{{ band.action }}</span>

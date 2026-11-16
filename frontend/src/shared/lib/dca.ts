@@ -29,21 +29,46 @@ export function peLabel(pe: unknown): string {
   return '估值偏低，长期赔率改善'
 }
 
-export function bandOf(fearGreed: unknown): DcaBand {
-  const raw = asNumber(fearGreed) ?? 50
+export function bandOf(fearGreed: unknown): DcaBand | null {
+  const raw = asNumber(fearGreed)
+  // 缺失或异常值不得默认成 50 再给出常态定投建议。
+  if (raw === null) return null
   const value = Math.max(0, Math.min(100, raw))
   return DCA_BANDS.find((band, index) => value >= band.lo && (index === DCA_BANDS.length - 1 || value < band.hi))
-    ?? DCA_BANDS[DCA_BANDS.length - 1]
+    ?? null
 }
 
-export function strategyOf(fearGreed: unknown, vix: unknown, pe: unknown): {
-  band: DcaBand
+export interface DcaStrategy {
+  band: DcaBand | null
   matched: boolean
   note: string
   peLabel: string
-} {
-  const band = bandOf(fearGreed)
+  fearGreed: number | null
+  vix: number | null
+  pe: number | null
+  available: boolean
+}
+
+export function strategyOf(fearGreed: unknown, vix: unknown, pe: unknown): DcaStrategy {
+  const fearGreedValue = asNumber(fearGreed)
   const vixValue = asNumber(vix)
+  const peValue = asNumber(pe)
+  const peText = peLabel(pe)
+  const band = bandOf(fearGreedValue)
+
+  if (!band) {
+    return {
+      band: null,
+      matched: false,
+      note: '恐慌贪婪指数缺失，无法生成有效定投策略。',
+      peLabel: peText,
+      fearGreed: fearGreedValue,
+      vix: vixValue,
+      pe: peValue,
+      available: false,
+    }
+  }
+
   let matched = true
   let note = ''
   if (vixValue === null) {
@@ -56,5 +81,14 @@ export function strategyOf(fearGreed: unknown, vix: unknown, pe: unknown): {
     matched = false
     note = `VIX ${vixValue.toFixed(1)} 高于该阶梯的 ${band.vixText}，波动风险偏高。`
   }
-  return { band, matched, note, peLabel: peLabel(pe) }
+  return {
+    band,
+    matched,
+    note,
+    peLabel: peText,
+    fearGreed: fearGreedValue,
+    vix: vixValue,
+    pe: peValue,
+    available: true,
+  }
 }

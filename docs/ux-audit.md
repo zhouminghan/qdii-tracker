@@ -69,6 +69,19 @@
 
 验证：`test/e2e/navigation.spec.ts`、`test/e2e/market.spec.ts`
 
+### Market 行情终端专项
+
+- 全球指数与纳斯达克 100 pulse 卡改用语义涨跌底色（`surface-up` / `surface-down` / `surface-flat`），随「红涨绿跌 / 绿涨红跌」设置与深浅主题切换。
+- VIX、美国 10 年、纳指 PE 等无直接涨跌方向的指标保持中性底色，避免误套红绿。
+- 全球指数新增市场广度摘要：上涨、下跌、持平、样本数和平均涨跌幅，均排除缺失值。
+- 指标卡按数据类型显示新鲜度：实时、最新收盘、延迟、月度、陈旧、暂无数据；保留原始 `as_of`，未改写日期。
+- 货币对使用明确映射（USD / CNY、USD / JPY、CNY / HKD、USD / HKD），不再字符串拼接。
+- 黄金多市场区分独立来源与折算参考：XAU / USD 明确标注由「上海金 × 31.1034768 ÷ USDCNH」折算，国内溢价缺失显示“暂无”。
+- 品牌金价补充「品牌 / 足金饰品 / 投资金条」列标题。
+- DCA 文案改为「恐慌贪婪指数决定档位，VIX 校验波动，纳指 PE 补充估值参考」；恐慌贪婪缺失时显示「无法生成有效策略」，不再默认 50 后给出常态定投建议。
+
+验证：`test/e2e/market.spec.ts`、`test/e2e/realtime.spec.ts`、`test/e2e/accessibility.spec.ts`、`test/frontend/dca.spec.ts`、`test/frontend/market.spec.ts`、`test/frontend/market-freshness.spec.ts`
+
 ### 与线上旧版的功能对齐
 
 - 恢复 7 只默认自选，并兼容旧版 `qdii-favs` / `qdii-favs-hidden` 本地键。
