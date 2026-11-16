@@ -35,8 +35,6 @@ const editorType = ref<'note' | 'watch' | 'strategy'>('note')
 const formError = ref('')
 const saving = ref(false)
 const importInput = ref<HTMLInputElement | null>(null)
-const historyOpen = ref(false)
-const historyNote = ref<ResearchNote | null>(null)
 const readerOpen = ref(false)
 const readerNote = ref<ResearchNote | null>(null)
 const deleteTarget = ref<{ kind: 'note' | 'watch' | 'strategy'; id: string; title: string } | null>(null)
@@ -169,12 +167,6 @@ async function saveEditor(): Promise<void> {
   }
 }
 
-async function openHistory(note: ResearchNote): Promise<void> {
-  historyNote.value = note
-  await research.loadNoteHistory(note.id)
-  historyOpen.value = true
-}
-
 async function confirmDelete(): Promise<void> {
   if (!deleteTarget.value) return
   deleting.value = true
@@ -289,7 +281,7 @@ onMounted(async () => {
                 </span>
                 <h3>{{ note.title }}</h3>
               </div>
-              <div class="row-actions"><button class="button button-secondary history-button" type="button" @click.stop="openHistory(note)">历史</button><button class="icon-button" type="button" aria-label="导出 Markdown" title="导出 Markdown" @click.stop="exportNoteMarkdown(note)"><Download :size="14" /></button><button class="icon-button" type="button" aria-label="编辑笔记" @click.stop="openNote(note)"><FileText :size="14" /></button><button class="icon-button" type="button" aria-label="删除笔记" @click.stop="deleteTarget = { kind: 'note', id: note.id, title: note.title }"><Trash2 :size="14" /></button></div>
+              <div class="row-actions"><button class="icon-button" type="button" aria-label="导出 Markdown" title="导出 Markdown" @click.stop="exportNoteMarkdown(note)"><Download :size="14" /></button><button class="icon-button" type="button" aria-label="编辑笔记" @click.stop="openNote(note)"><FileText :size="14" /></button><button class="icon-button" type="button" aria-label="删除笔记" @click.stop="deleteTarget = { kind: 'note', id: note.id, title: note.title }"><Trash2 :size="14" /></button></div>
             </div>
             <MarkdownNote :text="note.body" class="note-preview" />
             <div class="tag-row"><span v-for="tag in note.tags" :key="tag" class="badge">{{ tag }}</span></div>
@@ -396,16 +388,6 @@ onMounted(async () => {
           编辑笔记
         </button>
       </template>
-    </BaseDrawer>
-
-    <BaseDrawer :open="historyOpen" :title="`${historyNote?.title || '笔记'} · 历史`" eyebrow="历史版本" side="bottom" @close="historyOpen = false">
-      <div v-if="!research.noteHistory.length" class="page-state">暂无历史版本。修改笔记后会保留修改前内容。</div>
-      <div v-else class="revision-list">
-        <article v-for="revision in research.noteHistory" :key="revision.id" class="revision-card">
-          <div><strong>{{ revision.title }}</strong><time>{{ revision.createdAt.slice(0, 16).replace('T', ' ') }}</time></div>
-          <MarkdownNote :text="revision.body" />
-        </article>
-      </div>
     </BaseDrawer>
 
     <BaseDrawer :open="Boolean(deleteTarget)" title="删除记录" eyebrow="不可撤销操作" side="responsive" @close="deleteTarget = null">

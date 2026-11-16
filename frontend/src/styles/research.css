@@ -246,12 +246,6 @@
   height: 28px;
 }
 
-.history-button {
-  min-height: 28px;
-  padding: 0 7px;
-  font-size: 0.67rem;
-}
-
 .tag-row {
   display: flex;
   flex-wrap: wrap;
@@ -261,38 +255,6 @@
 .strategy-list {
   display: grid;
   gap: 10px;
-}
-
-.revision-list {
-  display: grid;
-  gap: 8px;
-}
-
-.revision-card {
-  display: grid;
-  gap: 7px;
-  padding: 10px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-raised);
-}
-
-.revision-card > div {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.revision-card time {
-  color: var(--color-text-tertiary);
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-}
-
-.revision-card p {
-  color: var(--color-text-secondary);
-  font-size: 0.72rem;
-  white-space: pre-wrap;
 }
 
 .strategy-flow {
@@ -343,8 +305,6 @@
   .knowledge-body p,
   .knowledge-card ul,
   .research-card > p,
-  .history-button,
-  .revision-card time,
   .strategy-flow span {
     font-size: 0.75rem;
   }

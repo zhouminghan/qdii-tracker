@@ -240,7 +240,7 @@ stores/
   data           -> 公共 JSON 唯一加载入口
   settings       -> 主题、涨跌配色、收藏
   portfolio      -> 持仓/交易计算与持久化
-  research       -> 笔记/观察/策略/历史版本
+  research       -> 笔记/观察/策略
 ```
 
 依赖方向固定为 `pages → features/widgets/stores → shared/infrastructure/lib/components`。

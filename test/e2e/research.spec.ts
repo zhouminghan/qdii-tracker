@@ -99,21 +99,6 @@ test.describe('local research workflow', () => {
     expect(content).toContain('[纳斯达克官网](https://www.nasdaq.com/)')
   })
 
-  test('keeps the previous note version as history', async ({ page }) => {
-    await page.goto('/#/research')
-    await page.getByRole('button', { name: '新建笔记' }).click()
-    await page.getByLabel('标题').fill('历史版本测试')
-    await page.getByRole('textbox', { name: '正文' }).fill('第一版内容')
-    await page.getByRole('button', { name: '保存', exact: true }).click()
-    await page.getByRole('tab', { name: /笔记/ }).click()
-    const note = page.locator('.research-card').filter({ hasText: '历史版本测试' })
-    await note.getByRole('button', { name: '编辑笔记' }).click()
-    await page.getByRole('textbox', { name: '正文' }).fill('第二版内容')
-    await page.getByRole('button', { name: '保存', exact: true }).click()
-    await note.getByRole('button', { name: '历史' }).click()
-    await expect(page.getByText('第一版内容')).toBeVisible()
-  })
-
   test('confirms before deleting a research record', async ({ page }) => {
     await page.goto('/#/research')
     await page.getByRole('button', { name: '新建笔记' }).click()
