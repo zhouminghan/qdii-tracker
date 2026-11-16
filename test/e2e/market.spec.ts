@@ -45,8 +45,12 @@ test('uses broker-style movement surfaces on index and pulse cards', async ({ pa
   // 宏观区不再重复顶部已展示的 VIX / 纳指 PE。
   await expect(page.locator('#market-macro .metric-card')).toHaveCount(4)
 
-  const pulse = page.locator('.pulse-card').filter({ hasText: '纳斯达克100' })
-  await expect(pulse).toHaveClass(/surface-(up|down)/)
+  // 纳斯达克100 只在全球指数列表出现一次；10 年期美债只在收益率曲线出现一次。
+  await expect(page.locator('.index-card').filter({ hasText: '纳斯达克100' })).toHaveCount(1)
+  await expect(page.locator('.pulse-card').filter({ hasText: '纳斯达克100' })).toHaveCount(0)
+  await expect(page.locator('.pulse-card')).toHaveCount(2)
+  await expect(page.locator('.pulse-card').filter({ hasText: '美国 10 年' })).toHaveCount(0)
+  await expect(page.locator('#market-macro .metric-card').filter({ hasText: '美国 10 年' })).toHaveCount(1)
   const vix = page.locator('.pulse-card').filter({ hasText: 'VIX' })
   await expect(vix).toHaveClass(/surface-flat/)
 })

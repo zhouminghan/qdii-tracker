@@ -47,14 +47,6 @@ let sectionClickLock = 0
 const positiveColor = computed(() => settings.colorMode === 'green-up' ? '#067647' : '#d92d20')
 const negativeColor = computed(() => settings.colorMode === 'green-up' ? '#d92d20' : '#067647')
 const market = computed(() => data.market)
-function quoteFor(key: string) {
-  const base = market.value?.market_indices.items[key]
-  const live = data.liveIndices[key]
-  if (!base) return undefined
-  return live
-    ? { ...base, price: live.price, change_pct: live.changePct, as_of: live.asOf ?? base.as_of }
-    : base
-}
 
 const indexItems = computed(() => Object.entries(market.value?.market_indices.items ?? {})
   .filter(([key]) => key !== 'au9999')
@@ -93,50 +85,20 @@ interface PulseCard {
   value: string
   suffix: string
   as_of: string | null
-  change: number | null
-  hasChange: boolean
-  surface: string
   freshness: ReturnType<typeof marketFreshness>
 }
 
 const pulseCards = computed<PulseCard[]>(() => {
   const snapshot = market.value
   if (!snapshot) return []
-  const ndx = quoteFor('100.NDX100')
-  const ndxLive = data.liveIndices['100.NDX100']
   return [
-    {
-      key: 'ndx',
-      label: '纳斯达克100',
-      value: formatNumber(ndx?.price),
-      suffix: '',
-      as_of: ndx?.as_of ?? null,
-      change: ndx?.change_pct ?? null,
-      hasChange: ndx?.change_pct !== null && ndx?.change_pct !== undefined,
-      surface: movementSurfaceClass(ndx?.change_pct),
-      freshness: ndxLive?.asOf ? quoteFreshness(ndxLive, 'index') : marketFreshness(ndx?.as_of, 'index'),
-    },
     {
       key: 'vix',
       label: 'VIX',
       value: formatNumber(snapshot.macro.vix.value),
       suffix: '',
       as_of: snapshot.macro.vix.as_of,
-      change: null,
-      hasChange: false,
-      surface: 'surface-flat',
       freshness: marketFreshness(snapshot.macro.vix.as_of, 'macro'),
-    },
-    {
-      key: 'treasury_10y',
-      label: '美国 10 年',
-      value: formatNumber(snapshot.macro.treasury_10y.value),
-      suffix: '%',
-      as_of: snapshot.macro.treasury_10y.as_of,
-      change: null,
-      hasChange: false,
-      surface: 'surface-flat',
-      freshness: marketFreshness(snapshot.macro.treasury_10y.as_of, 'macro'),
     },
     {
       key: 'ndx_pe',
@@ -144,9 +106,6 @@ const pulseCards = computed<PulseCard[]>(() => {
       value: formatNumber(snapshot.macro.ndx_pe.value),
       suffix: '',
       as_of: snapshot.macro.ndx_pe.as_of,
-      change: null,
-      hasChange: false,
-      surface: 'surface-flat',
       freshness: marketFreshness(snapshot.macro.ndx_pe.as_of, 'monthly'),
     },
   ]
@@ -476,11 +435,10 @@ onBeforeUnmount(() => {
             </div>
           </div>
           <div class="market-pulse-grid">
-            <article v-for="card in pulseCards" :key="card.key" class="pulse-card" :class="card.surface">
+            <article v-for="card in pulseCards" :key="card.key" class="pulse-card surface-flat">
               <span>{{ card.label }}</span>
               <strong class="mono">{{ card.value }}{{ card.suffix }}</strong>
               <div class="pulse-meta">
-                <small v-if="card.hasChange" class="mono" :class="movementClass(card.change)">{{ formatPercent(card.change) }}</small>
                 <small class="mono muted">{{ formatDate(card.as_of) }}</small>
                 <span class="freshness-badge" :class="`is-${card.freshness.tone}`">{{ card.freshness.label }}</span>
               </div>
