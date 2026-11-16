@@ -35,16 +35,15 @@ test('opens an index history drawer and closes it with Escape', async ({ page })
   await expect(dialog).toBeHidden()
 })
 
-test('uses broker-style movement surfaces and a market breadth summary', async ({ page }) => {
+test('uses broker-style movement surfaces on index and pulse cards', async ({ page }) => {
   await page.goto('/#/market')
   await expect(page.locator('.index-card.surface-up').first()).toBeVisible()
   await expect(page.locator('.index-card.surface-down').first()).toBeVisible()
 
-  const breadth = page.getByRole('group', { name: '市场广度摘要' })
-  await expect(breadth).toBeVisible()
-  await expect(breadth).toContainText('上涨')
-  await expect(breadth).toContainText('下跌')
-  await expect(breadth).toContainText('平均')
+  // 指数彼此独立，不再给出合计涨跌家数或平均涨跌幅。
+  await expect(page.getByRole('group', { name: '市场广度摘要' })).toHaveCount(0)
+  // 宏观区不再重复顶部已展示的 VIX / 纳指 PE。
+  await expect(page.locator('#market-macro .metric-card')).toHaveCount(4)
 
   const pulse = page.locator('.pulse-card').filter({ hasText: '纳斯达克100' })
   await expect(pulse).toHaveClass(/surface-(up|down)/)
@@ -62,6 +61,8 @@ test('labels FX pairs and separates derived gold references from independent quo
   await expect(goldPanel.locator('.source-tag.is-derived').first()).toHaveText('折算参考')
   await expect(goldPanel).toContainText('非独立伦敦金')
   await expect(goldPanel).toContainText('无独立伦敦金报价')
+  // 折合国内价由反向折算得出，恒等于上海金，不再单独占位。
+  await expect(goldPanel).not.toContainText('折合国内价')
 })
 
 test('shows explicit brand gold column headings', async ({ page }) => {

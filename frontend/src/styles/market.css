@@ -168,27 +168,6 @@
   color: var(--color-accent);
 }
 
-.market-breadth {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 16px;
-  margin-bottom: 10px;
-  padding: 8px 12px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-raised);
-  color: var(--color-text-secondary);
-  font-size: 0.72rem;
-}
-
-.breadth-stat strong {
-  margin-left: 3px;
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  font-weight: 650;
-}
-
 .index-grid {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -278,7 +257,7 @@
 
 .gold-market-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .gold-market-grid > div {
@@ -300,6 +279,17 @@
 
 .gold-market-grid strong {
   font-size: 0.84rem;
+}
+
+.gold-footnote {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-tertiary);
+  font-size: 0.68rem;
 }
 
 .gold-market-cell {
@@ -394,7 +384,7 @@
 
 .macro-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -791,7 +781,7 @@
   .freshness-badge,
   .source-tag,
   .move-chip,
-  .market-breadth,
+  .gold-footnote,
   .monthly-heat-table {
     font-size: 0.75rem;
   }

@@ -15,7 +15,7 @@ import {
   movementClass,
   movementSurfaceClass,
 } from '@/shared/lib/format'
-import { fxLabel, marketBreadth } from '@/shared/lib/market'
+import { fxLabel } from '@/shared/lib/market'
 import { marketFreshness, type FreshnessKind } from '@/shared/lib/market-freshness'
 import { useDataStore } from '@/stores/data'
 import { useSettingsStore } from '@/stores/settings'
@@ -68,7 +68,6 @@ const techItems = computed(() => Object.entries(market.value?.big_tech.items ?? 
 const fxItems = computed(() => ['fxUSDCNY', 'fxUSDJPY', 'fxCNYHKD', 'fxUSDHKD']
   .map((key) => [key, market.value?.fx.items[key]] as const)
   .filter(([, item]) => Boolean(item)))
-const breadth = computed(() => marketBreadth(indexItems.value.map(([, quote]) => quote?.change_pct)))
 const techFreshness = computed(() => marketFreshness(market.value?.big_tech.as_of, 'index'))
 const brandFreshness = computed(() => marketFreshness(market.value?.brand_gold.as_of, 'gold'))
 const goldAuFreshness = computed(() => marketFreshness(market.value?.gold.au9999.as_of, 'gold'))
@@ -156,8 +155,6 @@ const macroCards = computed<MacroCard[]>(() => {
     { key: 'treasury_10y', label: '美国 10 年', value: formatNumber(snapshot.macro.treasury_10y.value), suffix: '%', as_of: snapshot.macro.treasury_10y.as_of, kind: 'macro' },
     { key: 'treasury_30y', label: '美国 30 年', value: formatNumber(snapshot.macro.treasury_30y.value), suffix: '%', as_of: snapshot.macro.treasury_30y.as_of, kind: 'macro' },
     { key: 'dxy', label: '美元指数', value: formatNumber(snapshot.macro.dxy.value), suffix: '', as_of: snapshot.macro.dxy.as_of, kind: 'macro' },
-    { key: 'vix', label: 'VIX', value: formatNumber(snapshot.macro.vix.value), suffix: '', as_of: snapshot.macro.vix.as_of, kind: 'macro' },
-    { key: 'ndx_pe', label: '纳指 PE', value: formatNumber(snapshot.macro.ndx_pe.value), suffix: '', as_of: snapshot.macro.ndx_pe.as_of, kind: 'monthly' },
   ]
   return rows.map((row) => ({ ...row, freshness: marketFreshness(row.as_of, row.kind) }))
 })
@@ -483,13 +480,6 @@ onBeforeUnmount(() => {
             </div>
             <span class="badge">{{ indexItems.length }} 个指数</span>
           </div>
-          <div v-if="breadth.sample" class="market-breadth" role="group" aria-label="市场广度摘要">
-            <span class="breadth-stat">上涨 <strong :class="movementClass(1)">{{ breadth.up }}</strong></span>
-            <span class="breadth-stat">下跌 <strong :class="movementClass(-1)">{{ breadth.down }}</strong></span>
-            <span class="breadth-stat">持平 <strong>{{ breadth.flat }}</strong></span>
-            <span class="breadth-stat">样本 <strong>{{ breadth.sample }}</strong></span>
-            <span class="breadth-stat">平均 <strong :class="movementClass(breadth.average)">{{ formatPercent(breadth.average) }}</strong></span>
-          </div>
           <div class="index-grid">
             <button
               v-for="[key, quote] in indexItems"
@@ -581,19 +571,13 @@ onBeforeUnmount(() => {
                 <small class="gold-formula">上海金 × 31.1034768 ÷ USDCNH</small>
                 <span class="freshness-badge" :class="`is-${goldXauFreshness.tone}`">{{ goldXauFreshness.label }}</span>
               </div>
-              <div class="gold-market-cell">
-                <span class="source-tag is-derived">折算</span>
-                <span>折合国内价</span>
-                <strong class="mono">{{ formatNumber(market.gold.converted_cny_per_gram.value) }}</strong>
-                <small class="muted">元 / 克</small>
-              </div>
-              <div class="gold-market-cell">
-                <span class="source-tag is-missing">暂缺</span>
-                <span>国内溢价</span>
-                <strong class="mono">{{ market.gold.premium_pct.value === null ? '--' : formatPercent(market.gold.premium_pct.value) }}</strong>
-                <small class="muted">{{ market.gold.premium_pct.value === null ? '无独立伦敦金报价' : formatDate(market.gold.premium_pct.as_of) }}</small>
-              </div>
             </div>
+            <p class="gold-footnote">
+              <span v-if="market.gold.premium_pct.value === null" class="source-tag is-missing">暂缺</span>
+              <span>国内溢价：</span>
+              <span v-if="market.gold.premium_pct.value === null">无独立伦敦金报价，暂不计算。</span>
+              <span v-else>{{ formatPercent(market.gold.premium_pct.value) }}（{{ formatDate(market.gold.premium_pct.as_of) }}）</span>
+            </p>
           </article>
         </section>
 
