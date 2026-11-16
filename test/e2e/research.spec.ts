@@ -44,6 +44,14 @@ test.describe('local research workflow', () => {
     await expect(page.getByText('2026-11-15 · 七巨头与 QQQ 年内收益对比')).toBeVisible()
     await expect(page.getByText('2026-11-15 · 主动基金亏损案例与指数定投讨论')).toBeVisible()
 
+    const sevenNote = page.locator('.research-card').filter({ hasText: '七巨头与 QQQ' })
+    await sevenNote.click()
+    const sevenReader = page.getByRole('dialog')
+    await expect(sevenReader.locator('img')).toHaveCount(1)
+    await expect.poll(() => sevenReader.locator('img').first()
+      .evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
+    await page.keyboard.press('Escape')
+
     const activeFundNote = page.locator('.research-card').filter({ hasText: '主动基金亏损案例' })
     await activeFundNote.click()
     const reader = page.getByRole('dialog')

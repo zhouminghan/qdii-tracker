@@ -89,7 +89,7 @@ export const DEFAULT_RESEARCH_NOTES: ResearchNote[] = [
     id: 'market-seven-vs-qqq-2026-11-15',
     title: '2026-11-15 · 七巨头与 QQQ 年内收益对比',
     fundCode: 'QQQ',
-    tags: ['美股', 'QQQ', '七巨头', '收益对比', '科技股'],
+    tags: ['美股', 'QQQ', '七巨头', '七姐妹', '收益对比', '科技股'],
     createdAt: '2026-11-15T19:20:00+08:00',
     updatedAt: '2026-11-15T19:20:00+08:00',
     body: `# 七巨头与 QQQ 年内收益对比
@@ -97,6 +97,9 @@ export const DEFAULT_RESEARCH_NOTES: ResearchNote[] = [
 - **记录日期**：2026-11-15
 - **数据日期**：2026-11-13
 - **统计口径**：年初至今总回报
+- **名称说明**：七巨头与“七姐妹”指同一组美股科技龙头，市场叫法不同
+
+![美股七巨头与 QQQ 年内收益对比](https://pbs.twimg.com/media/HXH68Iua8AA7_BW.jpg?name=orig)
 
 ## 收益数据
 
@@ -113,10 +116,10 @@ export const DEFAULT_RESEARCH_NOTES: ResearchNote[] = [
 
 - 七巨头中有五家年内收益跑输 QQQ。
 - 苹果和亚马逊是七巨头中相对突出的两家。
-- 原帖强调：事前判断哪家公司会胜出很难，事后看结果不等于当时能重仓押中。
+- 事前判断哪家公司会胜出很难，事后看结果不等于当时能重仓押中。
 - 单一年份的相对表现不能直接外推为长期结论。
 
-## 原帖观点
+## 观点摘录
 
 - “七巨头，五家跑输指数！”
 - “天天研究财报、分析估值、猜美联储，折腾大半年，还不如买个 QQQ 躺着。”
@@ -139,19 +142,19 @@ export const DEFAULT_RESEARCH_NOTES: ResearchNote[] = [
 
 - **记录日期**：2026-11-15
 
-## 原帖引用的个案数据
+## 个案数据
 
 - 华夏核心成长混合 C：-50.34%
 - 华夏全球科技先锋混合：-48.15%
-- 帖子作者称账户持有收益亏损 7.6 万元，累计亏损 6.8 万元。
+- 案例记录：账户持有收益亏损 7.6 万元，累计亏损 6.8 万元。
 
-## 原帖观点
+## 观点
 
 - 不认同普通投资者重仓主动基金。
 - 认为研究基金经理调仓的难度高，长期结果未必优于简单指数定投。
 - 更倾向定投纳指等宽基指数，作为省心的长期配置方式。
 
-## 原帖原话
+## 原话
 
 > 主动基金这玩意，99% 的人买了就是纯纯在给基金经理打工。
 >
@@ -159,21 +162,19 @@ export const DEFAULT_RESEARCH_NOTES: ResearchNote[] = [
 >
 > 有这精力研究基金经理的调仓，真不如直接无脑定投纳指。
 
-## 截图
+![账户亏损记录 1](https://pbs.twimg.com/media/HXKxEU-bYAA0ODz?format=jpg&name=large)
 
-![主动基金亏损截图 1](https://pbs.twimg.com/media/HXKxEU-bYAA0ODz?format=jpg&name=large)
+![账户亏损记录 2](https://pbs.twimg.com/media/HXKxEVEboAA3Lxw?format=jpg&name=large)
 
-![主动基金亏损截图 2](https://pbs.twimg.com/media/HXKxEVEboAA3Lxw?format=jpg&name=large)
+![账户亏损记录 3](https://pbs.twimg.com/media/HXKxEVCbkAAxZsj?format=jpg&name=large)
 
-![主动基金亏损截图 3](https://pbs.twimg.com/media/HXKxEVCbkAAxZsj?format=jpg&name=large)
+![账户亏损记录 4](https://pbs.twimg.com/media/HXIHmp6bgAAkf3N?format=jpg&name=large)
 
-![主动基金亏损截图 4](https://pbs.twimg.com/media/HXIHmp6bgAAkf3N?format=jpg&name=large)
-
-![主动基金亏损截图 5](https://pbs.twimg.com/media/HXIHmqCasAAJapM?format=jpg&name=large)
+![账户亏损记录 5](https://pbs.twimg.com/media/HXIHmqCasAAJapM?format=jpg&name=large)
 
 ## 需要区分的边界
 
-- 上述亏损数据来自个人帖子引用，应结合基金代码、份额类别、时间区间和分红口径复核。
+- 上述为个人案例记录，应结合基金代码、份额类别、时间区间和分红口径复核。
 - 单只主动基金的大幅亏损，不能直接推导所有主动基金都会长期跑输。
 - 主动基金可能存在经理变更、风格漂移、规模变化和费用偏高等风险。
 - 指数定投同样会经历市场回撤，不代表短期保本。
