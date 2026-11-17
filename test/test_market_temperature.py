@@ -86,3 +86,18 @@ def test_parses_fred_vix_csv_with_missing_points():
         ("2026-11-11", None),
         ("2026-11-12", 18.70),
     ]
+
+
+def test_build_marks_degraded_when_one_source_is_missing(monkeypatch, tmp_path):
+    import pipeline.market_temperature as mt
+
+    monkeypatch.setattr(mt, "OUTPUT_FP", tmp_path / "market-temperature.json")
+    monkeypatch.setattr(mt, "FETCHERS", [
+        ("nasdaq_trend", lambda: {"price": 100, "ma200": 95, "pct_above_ma": 5.0, "date": "2026-11-13"}, "test"),
+        ("vix", lambda: {"value": 20, "date": "2026-11-13"}, "test"),
+        ("treasury_10y", lambda: {"value": 5.0, "date": "2026-11-13"}, "test"),
+        ("dxy", lambda: None, "test"),
+    ])
+    payload, fresh = mt.build()
+    assert fresh == 3
+    assert payload["coverage"] == {"fresh": 3, "total": 4, "degraded": True}

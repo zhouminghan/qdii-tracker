@@ -1,8 +1,13 @@
 {
-  "generated_at": "2026-11-14T04:53:03.042969+08:00",
+  "generated_at": "2026-11-17T13:57:13.461090+08:00",
   "schema_version": 1,
   "pe": 35.09,
   "date": "2026-09-30",
+  "index": "Nasdaq-100",
+  "index_symbol": "^NDX",
+  "pe_type": "TTM",
   "source": "Siblis Research",
-  "note": "免费档为月末快照，非实时 PE。"
+  "frequency": "monthly",
+  "observation_period": "month_end",
+  "note": "纳斯达克 100 TTM PE；Siblis Research 免费档为月末快照，非实时 PE。"
 }

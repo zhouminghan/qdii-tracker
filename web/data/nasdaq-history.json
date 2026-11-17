@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14T04:52:59.472558+08:00",
+  "generated_at": "2026-11-17T13:57:05.636720+08:00",
   "schema_version": 1,
   "index": {
     "symbol": "^NDX",
@@ -7,6 +7,8 @@
     "currency": "USD"
   },
   "source": "Yahoo Finance",
+  "as_of": "2026-11-16",
+  "drawdown_basis": "daily_close",
   "range": {
     "first_year": 1986,
     "last_year": 2026
@@ -16,329 +18,411 @@
       "year": 1986,
       "close": 141.4,
       "return_pct": 6.89,
-      "max_drawdown_pct": -15.73,
-      "peak_month": 5,
-      "trough_month": 9
+      "max_drawdown_pct": -17.98,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 7,
+      "trough_month": 9,
+      "is_ytd": false
     },
     {
       "year": 1987,
       "close": 156.25,
       "return_pct": 10.5,
-      "max_drawdown_pct": -34.57,
-      "peak_month": 8,
-      "trough_month": 11
+      "max_drawdown_pct": -39.93,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 10,
+      "trough_month": 10,
+      "is_ytd": false
     },
     {
       "year": 1988,
       "close": 177.41,
       "return_pct": 13.54,
-      "max_drawdown_pct": -10.5,
-      "peak_month": 6,
-      "trough_month": 11
+      "max_drawdown_pct": -14.64,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 7,
+      "trough_month": 11,
+      "is_ytd": false
     },
     {
       "year": 1989,
       "close": 223.84,
       "return_pct": 26.17,
-      "max_drawdown_pct": -4.64,
-      "peak_month": 5,
-      "trough_month": 6
+      "max_drawdown_pct": -10.95,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 10,
+      "trough_month": 12,
+      "is_ytd": false
     },
     {
       "year": 1990,
       "close": 200.53,
       "return_pct": -10.41,
-      "max_drawdown_pct": -27.64,
-      "peak_month": 6,
-      "trough_month": 10
+      "max_drawdown_pct": -32.9,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 7,
+      "trough_month": 10,
+      "is_ytd": false
     },
     {
       "year": 1991,
       "close": 330.86,
       "return_pct": 64.99,
-      "max_drawdown_pct": -8.89,
-      "peak_month": 5,
-      "trough_month": 6
+      "max_drawdown_pct": -11.47,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 4,
+      "trough_month": 6,
+      "is_ytd": false
     },
     {
       "year": 1992,
       "close": 360.18,
       "return_pct": 8.86,
-      "max_drawdown_pct": -13.48,
+      "max_drawdown_pct": -18.53,
+      "max_drawdown_basis": "daily_close",
       "peak_month": 2,
-      "trough_month": 8
+      "trough_month": 6,
+      "is_ytd": false
     },
     {
       "year": 1993,
       "close": 398.28,
       "return_pct": 10.58,
-      "max_drawdown_pct": -8.26,
+      "max_drawdown_pct": -14.18,
+      "max_drawdown_basis": "daily_close",
       "peak_month": 1,
-      "trough_month": 4
+      "trough_month": 4,
+      "is_ytd": false
     },
     {
       "year": 1994,
       "close": 404.27,
       "return_pct": 1.5,
-      "max_drawdown_pct": -12.97,
-      "peak_month": 1,
-      "trough_month": 6
+      "max_drawdown_pct": -15.94,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 3,
+      "trough_month": 6,
+      "is_ytd": false
     },
     {
       "year": 1995,
       "close": 576.23,
       "return_pct": 42.54,
-      "max_drawdown_pct": -3.77,
-      "peak_month": 10,
-      "trough_month": 12
+      "max_drawdown_pct": -11.85,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 11,
+      "trough_month": 12,
+      "is_ytd": false
     },
     {
       "year": 1996,
       "close": 821.36,
       "return_pct": 42.54,
-      "max_drawdown_pct": -8.14,
-      "peak_month": 5,
-      "trough_month": 7
+      "max_drawdown_pct": -14.44,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 6,
+      "trough_month": 7,
+      "is_ytd": false
     },
     {
       "year": 1997,
       "close": 990.83,
       "return_pct": 20.63,
-      "max_drawdown_pct": -13.51,
-      "peak_month": 1,
-      "trough_month": 3
+      "max_drawdown_pct": -18.22,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 10,
+      "trough_month": 12,
+      "is_ytd": false
     },
     {
       "year": 1998,
       "close": 1836.01,
       "return_pct": 85.3,
-      "max_drawdown_pct": -17.2,
+      "max_drawdown_pct": -22.99,
+      "max_drawdown_basis": "daily_close",
       "peak_month": 7,
-      "trough_month": 8
+      "trough_month": 10,
+      "is_ytd": false
     },
     {
       "year": 1999,
       "close": 3707.83,
       "return_pct": 101.95,
-      "max_drawdown_pct": -9.49,
-      "peak_month": 1,
-      "trough_month": 2
+      "max_drawdown_pct": -12.02,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 7,
+      "trough_month": 8,
+      "is_ytd": false
     },
     {
       "year": 2000,
       "close": 2341.7,
       "return_pct": -36.84,
-      "max_drawdown_pct": -46.75,
+      "max_drawdown_pct": -53.02,
+      "max_drawdown_basis": "daily_close",
       "peak_month": 3,
-      "trough_month": 12
+      "trough_month": 12,
+      "is_ytd": false
     },
     {
       "year": 2001,
       "close": 1577.05,
       "return_pct": -32.65,
-      "max_drawdown_pct": -54.94,
+      "max_drawdown_pct": -58.72,
+      "max_drawdown_basis": "daily_close",
       "peak_month": 1,
-      "trough_month": 9
+      "trough_month": 9,
+      "is_ytd": false
     },
     {
       "year": 2002,
       "close": 984.37,
       "return_pct": -37.58,
-      "max_drawdown_pct": -46.29,
+      "max_drawdown_pct": -51.96,
+      "max_drawdown_basis": "daily_close",
       "peak_month": 1,
-      "trough_month": 9
+      "trough_month": 10,
+      "is_ytd": false
     },
     {
       "year": 2003,
       "close": 1467.92,
       "return_pct": 49.12,
-      "max_drawdown_pct": -2.8,
-      "peak_month": 8,
-      "trough_month": 9
+      "max_drawdown_pct": -13.06,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 1,
+      "trough_month": 2,
+      "is_ytd": false
     },
     {
       "year": 2004,
       "close": 1621.12,
       "return_pct": 10.44,
-      "max_drawdown_pct": -9.76,
-      "peak_month": 6,
-      "trough_month": 8
+      "max_drawdown_pct": -16.04,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 1,
+      "trough_month": 8,
+      "is_ytd": false
     },
     {
       "year": 2005,
       "close": 1645.2,
       "return_pct": 1.49,
-      "max_drawdown_pct": -6.5,
+      "max_drawdown_pct": -12.26,
+      "max_drawdown_basis": "daily_close",
       "peak_month": 1,
-      "trough_month": 4
+      "trough_month": 4,
+      "is_ytd": false
     },
     {
       "year": 2006,
       "close": 1756.9,
       "return_pct": 6.79,
-      "max_drawdown_pct": -11.77,
+      "max_drawdown_pct": -17.42,
+      "max_drawdown_basis": "daily_close",
       "peak_month": 1,
-      "trough_month": 7
+      "trough_month": 7,
+      "is_ytd": false
     },
     {
       "year": 2007,
       "close": 2084.93,
       "return_pct": 18.67,
-      "max_drawdown_pct": -6.88,
+      "max_drawdown_pct": -11.47,
+      "max_drawdown_basis": "daily_close",
       "peak_month": 10,
-      "trough_month": 12
+      "trough_month": 11,
+      "is_ytd": false
     },
     {
       "year": 2008,
       "close": 1211.65,
       "return_pct": -41.89,
-      "max_drawdown_pct": -41.66,
-      "peak_month": 5,
-      "trough_month": 11
+      "max_drawdown_pct": -49.56,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 6,
+      "trough_month": 11,
+      "is_ytd": false
     },
     {
       "year": 2009,
       "close": 1860.31,
       "return_pct": 53.54,
-      "max_drawdown_pct": -5.36,
-      "peak_month": 1,
-      "trough_month": 2
+      "max_drawdown_pct": -18.55,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 2,
+      "trough_month": 3,
+      "is_ytd": false
     },
     {
       "year": 2010,
       "close": 2217.86,
       "return_pct": 19.22,
-      "max_drawdown_pct": -13.07,
+      "max_drawdown_pct": -15.91,
+      "max_drawdown_basis": "daily_close",
       "peak_month": 4,
-      "trough_month": 6
+      "trough_month": 7,
+      "is_ytd": false
     },
     {
       "year": 2011,
       "close": 2277.83,
       "return_pct": 2.7,
-      "max_drawdown_pct": -11.02,
-      "peak_month": 4,
-      "trough_month": 9
+      "max_drawdown_pct": -16.11,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 7,
+      "trough_month": 8,
+      "is_ytd": false
     },
     {
       "year": 2012,
       "close": 2660.93,
       "return_pct": 16.82,
-      "max_drawdown_pct": -8.36,
-      "peak_month": 3,
-      "trough_month": 5
+      "max_drawdown_pct": -11.86,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 9,
+      "trough_month": 11,
+      "is_ytd": false
     },
     {
       "year": 2013,
       "close": 3592.0,
       "return_pct": 34.99,
-      "max_drawdown_pct": -2.42,
+      "max_drawdown_pct": -5.97,
+      "max_drawdown_basis": "daily_close",
       "peak_month": 5,
-      "trough_month": 6
+      "trough_month": 6,
+      "is_ytd": false
     },
     {
       "year": 2014,
       "close": 4236.28,
       "return_pct": 17.94,
-      "max_drawdown_pct": -3.09,
-      "peak_month": 2,
-      "trough_month": 4
+      "max_drawdown_pct": -8.23,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 9,
+      "trough_month": 10,
+      "is_ytd": false
     },
     {
       "year": 2015,
       "close": 4593.27,
       "return_pct": 8.43,
-      "max_drawdown_pct": -8.89,
+      "max_drawdown_pct": -14.18,
+      "max_drawdown_basis": "daily_close",
       "peak_month": 7,
-      "trough_month": 9
+      "trough_month": 8,
+      "is_ytd": false
     },
     {
       "year": 2016,
       "close": 4863.62,
       "return_pct": 5.89,
-      "max_drawdown_pct": -3.18,
-      "peak_month": 3,
-      "trough_month": 4
+      "max_drawdown_pct": -12.23,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 1,
+      "trough_month": 2,
+      "is_ytd": false
     },
     {
       "year": 2017,
       "close": 6396.42,
       "return_pct": 31.52,
-      "max_drawdown_pct": -2.45,
-      "peak_month": 5,
-      "trough_month": 6
+      "max_drawdown_pct": -4.9,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 6,
+      "trough_month": 7,
+      "is_ytd": false
     },
     {
       "year": 2018,
       "close": 6329.97,
       "return_pct": -1.04,
-      "max_drawdown_pct": -17.3,
+      "max_drawdown_pct": -22.99,
+      "max_drawdown_basis": "daily_close",
       "peak_month": 8,
-      "trough_month": 12
+      "trough_month": 12,
+      "is_ytd": false
     },
     {
       "year": 2019,
       "close": 8733.07,
       "return_pct": 37.96,
-      "max_drawdown_pct": -8.4,
-      "peak_month": 4,
-      "trough_month": 5
+      "max_drawdown_pct": -11.06,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 5,
+      "trough_month": 6,
+      "is_ytd": false
     },
     {
       "year": 2020,
       "close": 12888.28,
       "return_pct": 47.58,
-      "max_drawdown_pct": -13.1,
-      "peak_month": 1,
-      "trough_month": 3
+      "max_drawdown_pct": -28.03,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 2,
+      "trough_month": 3,
+      "is_ytd": false
     },
     {
       "year": 2021,
       "close": 16320.08,
       "return_pct": 26.63,
-      "max_drawdown_pct": -5.73,
-      "peak_month": 8,
-      "trough_month": 9
+      "max_drawdown_pct": -10.93,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 2,
+      "trough_month": 3,
+      "is_ytd": false
     },
     {
       "year": 2022,
       "close": 10939.76,
       "return_pct": -32.97,
-      "max_drawdown_pct": -26.73,
+      "max_drawdown_pct": -35.28,
+      "max_drawdown_basis": "daily_close",
       "peak_month": 1,
-      "trough_month": 12
+      "trough_month": 12,
+      "is_ytd": false
     },
     {
       "year": 2023,
       "close": 16825.93,
       "return_pct": 53.81,
-      "max_drawdown_pct": -8.55,
+      "max_drawdown_pct": -10.93,
+      "max_drawdown_basis": "daily_close",
       "peak_month": 7,
-      "trough_month": 10
+      "trough_month": 10,
+      "is_ytd": false
     },
     {
       "year": 2024,
       "close": 21012.17,
       "return_pct": 24.88,
-      "max_drawdown_pct": -4.46,
-      "peak_month": 3,
-      "trough_month": 4
+      "max_drawdown_pct": -13.58,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 7,
+      "trough_month": 8,
+      "is_ytd": false
     },
     {
       "year": 2025,
       "close": 25249.85,
       "return_pct": 20.17,
-      "max_drawdown_pct": -10.24,
-      "peak_month": 1,
-      "trough_month": 3
+      "max_drawdown_pct": -22.93,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 2,
+      "trough_month": 4,
+      "is_ytd": false
     },
     {
       "year": 2026,
-      "close": 27974.99,
-      "return_pct": 10.79,
-      "max_drawdown_pct": -8.0,
-      "peak_month": 9,
-      "trough_month": 11
+      "close": 27197.15,
+      "return_pct": 7.71,
+      "max_drawdown_pct": -14.71,
+      "max_drawdown_basis": "daily_close",
+      "peak_month": 10,
+      "trough_month": 11,
+      "is_ytd": true
     }
   ],
   "drawdown_histogram": [
@@ -356,31 +440,31 @@
     },
     {
       "month": 4,
-      "count": 5
-    },
-    {
-      "month": 5,
-      "count": 2
-    },
-    {
-      "month": 6,
-      "count": 6
-    },
-    {
-      "month": 7,
-      "count": 2
-    },
-    {
-      "month": 8,
       "count": 3
     },
     {
+      "month": 5,
+      "count": 0
+    },
+    {
+      "month": 6,
+      "count": 5
+    },
+    {
+      "month": 7,
+      "count": 4
+    },
+    {
+      "month": 8,
+      "count": 5
+    },
+    {
       "month": 9,
-      "count": 7
+      "count": 2
     },
     {
       "month": 10,
-      "count": 2
+      "count": 6
     },
     {
       "month": 11,
@@ -388,7 +472,7 @@
     },
     {
       "month": 12,
-      "count": 5
+      "count": 6
     }
   ],
   "heatmap": {
@@ -842,10 +926,11 @@
         4.18,
         3.23,
         -6.65,
-        -1.44,
+        -4.18,
         null
       ]
-    ]
+    ],
+    "partial_year": 2026
   },
   "ranking": {
     "5y": [
@@ -857,9 +942,9 @@
       },
       {
         "month": 11,
-        "avg_pct": 3.66,
-        "positive_ratio": 60.0,
-        "n": 5
+        "avg_pct": 4.94,
+        "positive_ratio": 75.0,
+        "n": 4
       },
       {
         "month": 7,
@@ -924,14 +1009,14 @@
     ],
     "10y": [
       {
-        "month": 5,
-        "avg_pct": 3.74,
-        "positive_ratio": 70.0,
-        "n": 10
+        "month": 11,
+        "avg_pct": 4.23,
+        "positive_ratio": 77.8,
+        "n": 9
       },
       {
-        "month": 11,
-        "avg_pct": 3.67,
+        "month": 5,
+        "avg_pct": 3.74,
         "positive_ratio": 70.0,
         "n": 10
       },
@@ -996,12 +1081,86 @@
         "n": 10
       }
     ],
+    "20y": [
+      {
+        "month": 7,
+        "avg_pct": 3.38,
+        "positive_ratio": 85.0,
+        "n": 20
+      },
+      {
+        "month": 4,
+        "avg_pct": 2.98,
+        "positive_ratio": 75.0,
+        "n": 20
+      },
+      {
+        "month": 5,
+        "avg_pct": 2.38,
+        "positive_ratio": 70.0,
+        "n": 20
+      },
+      {
+        "month": 11,
+        "avg_pct": 1.71,
+        "positive_ratio": 68.4,
+        "n": 19
+      },
+      {
+        "month": 3,
+        "avg_pct": 1.41,
+        "positive_ratio": 65.0,
+        "n": 20
+      },
+      {
+        "month": 10,
+        "avg_pct": 1.02,
+        "positive_ratio": 55.0,
+        "n": 20
+      },
+      {
+        "month": 8,
+        "avg_pct": 0.93,
+        "positive_ratio": 65.0,
+        "n": 20
+      },
+      {
+        "month": 1,
+        "avg_pct": 0.9,
+        "positive_ratio": 65.0,
+        "n": 20
+      },
+      {
+        "month": 6,
+        "avg_pct": 0.67,
+        "positive_ratio": 55.0,
+        "n": 20
+      },
+      {
+        "month": 12,
+        "avg_pct": 0.45,
+        "positive_ratio": 57.9,
+        "n": 19
+      },
+      {
+        "month": 2,
+        "avg_pct": 0.33,
+        "positive_ratio": 45.0,
+        "n": 20
+      },
+      {
+        "month": 9,
+        "avg_pct": -0.32,
+        "positive_ratio": 50.0,
+        "n": 20
+      }
+    ],
     "full": [
       {
         "month": 11,
-        "avg_pct": 2.93,
-        "positive_ratio": 73.1,
-        "n": 26
+        "avg_pct": 3.11,
+        "positive_ratio": 76.0,
+        "n": 25
       },
       {
         "month": 10,

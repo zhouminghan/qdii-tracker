@@ -362,13 +362,20 @@ def _build_macro() -> tuple[dict[str, Any], dict[str, Any]]:
     dxy_raw = raw("dxy")
     ndx_raw = raw("nasdaq_trend")
     treasury_date = treasury.get("date")
+    ndx_pe = _scalar(pe.get("pe"), pe.get("date"), "ndx-pe.json")
+    ndx_pe.update({
+        "index": pe.get("index") or "Nasdaq-100",
+        "pe_type": pe.get("pe_type") or "TTM",
+        "frequency": pe.get("frequency") or "monthly",
+        "observation_period": pe.get("observation_period") or "month_end",
+    })
     macro = {
         "vix": _scalar(vix_raw.get("value"), vix_raw.get("date"), "market-temperature.json"),
         "dxy": _scalar(dxy_raw.get("value"), dxy_raw.get("date"), "market-temperature.json"),
         "treasury_2y": _scalar(treasury.get("y2"), treasury_date, "macro-rates.json"),
         "treasury_10y": _scalar(treasury.get("y10"), treasury_date, "macro-rates.json"),
         "treasury_30y": _scalar(treasury.get("y30"), treasury_date, "macro-rates.json"),
-        "ndx_pe": _scalar(pe.get("pe"), pe.get("date"), "ndx-pe.json"),
+        "ndx_pe": ndx_pe,
         "nasdaq_trend": {
             "price": _finite(ndx_raw.get("price")),
             "ma200": _finite(ndx_raw.get("ma200")),

@@ -1,17 +1,23 @@
 """nasdaq_history 纯计算逻辑单测。"""
+import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from pipeline.nasdaq_history import (
+    INDEX_NAME,
+    SYMBOL,
     annual_stats,
     build_heatmap,
     build_summary,
+    complete_monthly_returns,
+    ranking_windows,
     monthly_returns,
     rank_months,
     trough_histogram,
 )
+import pipeline.nasdaq_history as nasdaq_history
 
 
 def _series(years):
@@ -46,6 +52,47 @@ def test_annual_stats_drawdown_and_return():
     assert a["trough_month"] == 3
     assert a["close"] == 110.0
     assert a["return_pct"] == 37.5  # 110 / 80 - 1
+    assert a["is_ytd"] is False
+
+
+def test_annual_stats_uses_daily_close_drawdown():
+    monthly = [(2020, 1, 100), (2020, 2, 90), (2020, 3, 110)]
+    daily = [
+        (2020, 1, 2, 100),
+        (2020, 1, 15, 140),
+        (2020, 2, 3, 80),
+        (2020, 3, 2, 110),
+    ]
+    annual = annual_stats(monthly, daily=daily, start_year=2020)
+    a = annual[0]
+    assert a["max_drawdown_pct"] == round((80 / 140 - 1) * 100, 2)
+    assert a["max_drawdown_basis"] == "daily_close"
+    assert a["peak_month"] == 1
+    assert a["trough_month"] == 2
+
+
+def test_annual_stats_marks_monthly_fallback():
+    monthly = [(2020, 1, 100), (2020, 2, 90), (2020, 3, 110)]
+    annual = annual_stats(monthly, start_year=2020)
+    assert annual[0]["max_drawdown_basis"] == "monthly_close"
+
+
+def test_annual_stats_marks_current_year_as_ytd():
+    monthly = [(2025, 11, 95), (2025, 12, 100), (2026, 1, 110), (2026, 2, 120)]
+    annual = annual_stats(monthly, start_year=2025, current_year=2026)
+    assert annual[0]["is_ytd"] is False
+    assert annual[1]["is_ytd"] is True
+
+
+def test_annual_stats_does_not_mark_stale_year_as_ytd():
+    monthly = [(2025, 11, 95), (2025, 12, 100)]
+    annual = annual_stats(monthly, start_year=2025, current_year=None)
+    assert annual[0]["is_ytd"] is False
+
+
+def test_complete_monthly_returns_excludes_current_month():
+    returns = {(2026, 10): 3.0, (2026, 11): -2.0}
+    assert complete_monthly_returns(returns, year=2026, month=11) == {(2026, 10): 3.0}
 
 
 def test_trough_histogram_counts():
@@ -69,6 +116,7 @@ def test_build_heatmap_filters_start_year():
     assert hm["rows"][0][0] == 2.0
     assert hm["rows"][1][1] == 3.0
     assert hm["rows"][1][0] is None
+    assert hm["partial_year"] is None
 
 
 def test_rank_months_descending_with_empty_tail():
@@ -91,6 +139,7 @@ def test_build_summary_consistent_across_windows():
     ranking = {
         "5y": [month_rank(11, 3.0), month_rank(10, 2.0), month_rank(9, -2.0)],
         "10y": [month_rank(11, 2.5), month_rank(10, 1.5), month_rank(9, -1.5)],
+        "20y": [month_rank(11, 2.2), month_rank(10, 1.2), month_rank(9, -1.2)],
         "full": [month_rank(11, 2.0), month_rank(10, 1.0), month_rank(9, -1.0)],
     }
     s = build_summary(ranking)
@@ -98,6 +147,47 @@ def test_build_summary_consistent_across_windows():
     assert s["worst_month"] == 9
     assert "11月 三组口径均最强" in s["text"]
     assert "9月 三组口径均垫底" in s["text"]
+
+
+def test_ranking_windows_include_5_10_20_and_full():
+    returns = {}
+    for y in range(2001, 2027):
+        for m in range(1, 13):
+            returns[(y, m)] = float(m)
+    ranking = ranking_windows(returns)
+    assert set(ranking) == {"5y", "10y", "20y", "full"}
+    assert sum(row["n"] for row in ranking["20y"]) == 240
+    assert sum(row["n"] for row in ranking["5y"]) == 60
+
+
+def test_index_identity_is_nasdaq_100():
+    assert SYMBOL == "^NDX"
+    assert "100" in INDEX_NAME
+
+
+def test_build_keeps_previous_snapshot_when_source_date_regresses(monkeypatch, tmp_path):
+    output = tmp_path / "nasdaq-history.json"
+    previous = {
+        "annual": [{"year": 2026}],
+        "as_of": "2026-11-16",
+        "index": {"symbol": "^NDX"},
+    }
+    output.write_text(json.dumps(previous), encoding="utf-8")
+    monkeypatch.setattr(nasdaq_history, "OUTPUT_FP", output)
+    daily = []
+    close = 20000.0
+    for year in (2024, 2025, 2026):
+        for month in range(1, 13):
+            close += 10.0
+            daily.append((year, month, 14 if year == 2026 and month == 11 else 28, close))
+            if year == 2026 and month == 11:
+                break
+    monkeypatch.setattr(
+        nasdaq_history,
+        "fetch_daily",
+        lambda: ("Yahoo Finance", daily),
+    )
+    assert nasdaq_history.build() == previous
 
 
 def test_series_length_and_monotonicity():

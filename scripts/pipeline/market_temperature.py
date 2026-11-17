@@ -351,6 +351,8 @@ def build():
         if not prev:
             return None, 0
         print("  ⚠ 市场温度：全部数据源失败，保留历史快照")
+        prev = dict(prev)
+        prev["coverage"] = {"fresh": 0, "total": len(FETCHERS), "degraded": True}
         return prev, 0
 
     scores = compute_scores(raw)
@@ -379,6 +381,11 @@ def build():
         "verdict": verdict,
         "summary": summary,
         "weights": WEIGHTS,
+        "coverage": {
+            "fresh": fresh_count,
+            "total": len(FETCHERS),
+            "degraded": fresh_count < len(FETCHERS),
+        },
         "indicators": indicators,
         "positives": positives,
         "risks": risks,

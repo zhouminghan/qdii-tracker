@@ -22,11 +22,29 @@ def fetch_latest():
     if not data:
         return None
     last = data[-1]
+    value = float(last["value"])
+    if value <= 0:
+        raise ValueError("Siblis returned a non-positive PE value")
     return {
-        "pe": round(float(last["value"]), 2),
+        "pe": round(value, 2),
         "date": str(last["trading_day (EOD)"]),
-        "frequency": payload.get("frequency"),
     }
+
+
+def _with_contract(payload):
+    """统一历史快照的新口径字段，避免旧文件继续显示模糊的“纳指 PE”。"""
+    result = dict(payload)
+    result.update({
+        "index": "Nasdaq-100",
+        "index_symbol": "^NDX",
+        "pe_type": "TTM",
+        "source": result.get("source") or "Siblis Research",
+        "frequency": "monthly",
+        "observation_period": "month_end",
+        "note": "纳斯达克 100 TTM PE；Siblis Research 免费档为月末快照，非实时 PE。",
+    })
+    result.pop("source_frequency", None)
+    return result
 
 
 def build():
@@ -41,17 +59,15 @@ def build():
         prev = read_json(OUTPUT_FP) if OUTPUT_FP.exists() else {}
         if prev.get("pe") is not None:
             print("  ⚠ 纳指 PE：数据源失败，保留历史快照")
-            return prev
+            return _with_contract(prev)
         return None
 
-    return {
+    return _with_contract({
         "generated_at": beijing_now_iso(),
         "schema_version": 1,
         "pe": latest["pe"],
         "date": latest["date"],
-        "source": "Siblis Research",
-        "note": "免费档为月末快照，非实时 PE。",
-    }
+    })
 
 
 def main():
