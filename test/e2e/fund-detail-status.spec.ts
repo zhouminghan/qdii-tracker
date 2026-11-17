@@ -73,7 +73,9 @@ test.describe('fund purchase-status history', () => {
 
     const section = page.getByRole('region', { name: '申购状态变化' })
     await expect(section).toBeVisible()
-    await expect(section.getByText('默认份额 · 人民币 · 由新到旧')).toBeVisible()
+    await expect(section).toContainText('默认份额 · 人民币')
+    await expect(section).toContainText('单日限购')
+    await expect(section).toContainText('由新到旧')
     expect(await section.evaluate((element) => element.scrollWidth <= element.clientWidth + 1)).toBeTruthy()
 
     const items = section.getByRole('listitem')

@@ -113,6 +113,7 @@ test('mobile navigation, filters, search, and forms meet the 44px target', async
 
   await page.goto('/#/research')
   await expectMinimumTouchTarget(page.locator('.research-tabs button').first())
+  await page.getByRole('tab', { name: /知识库/ }).click()
   await expectMinimumTouchTarget(page.locator('.chip').first())
 
   await page.goto('/#/market')
