@@ -5,7 +5,6 @@ import type { FundSortKey, FundRow } from '@/shared/lib/funds'
 import {
   buyStatusLabel,
   classifyBuyStatus,
-  dailyLimitDisplay,
   dailyLimitTitle,
   limitScopeShort,
   sortFundRows,
@@ -55,7 +54,7 @@ const columns = computed<Array<{ key: FundSortKey | null; label: string; align?:
   { key: 'chg_3y', label: '近 3 年', align: 'right' },
   ...(props.tab === 'offshore' ? [
     { key: 'chg_since_inception' as const, label: '成立来', align: 'right' as const },
-    { key: 'daily_limit' as const, label: '申购', align: 'center' as const, sub: '按每日限购' },
+    { key: 'daily_limit' as const, label: '申购', align: 'center' as const },
   ] : []),
   { key: null, label: '操作', align: 'center' },
 ])
@@ -72,10 +71,9 @@ function statusClass(row: FundRow): string {
   return status === 'paused' ? 'badge-danger' : status === 'limited' ? 'badge-warn' : 'badge-accent'
 }
 
-function purchaseLimitText(row: FundRow): string {
-  const amount = dailyLimitDisplay(row.defaultShare)
+function purchaseTitle(row: FundRow): string {
   const scope = limitScopeShort(row.defaultShare, row.shares)
-  return [amount === '--' ? '' : amount, scope].filter(Boolean).join(' · ')
+  return [dailyLimitTitle(row.defaultShare), scope].filter(Boolean).join(' · ')
 }
 
 function scaleText(value: number | null | undefined): string {
@@ -229,16 +227,8 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
             <template v-if="tab === 'offshore'">
               <td class="align-right mono" :class="movementClass(row.defaultShare.chg_since_inception)">{{ metricDisplay(row, 'chg_since_inception') }}</td>
               <td class="align-center">
-                <div class="purchase-cell" :title="dailyLimitTitle(row.defaultShare)">
+                <div class="purchase-cell" :title="purchaseTitle(row)">
                   <span class="badge" :class="statusClass(row)">{{ buyStatusLabel(row.defaultShare) }}</span>
-                  <div v-if="purchaseLimitText(row)" class="limit-cell purchase-limit">
-                    <span class="mono">{{ dailyLimitDisplay(row.defaultShare) }}</span>
-                    <span
-                      v-if="limitScopeShort(row.defaultShare, row.shares)"
-                      class="limit-scope"
-                      :class="{ shared: row.defaultShare.limit_scope === 'series_shared' }"
-                    >{{ limitScopeShort(row.defaultShare, row.shares) }}</span>
-                  </div>
                 </div>
               </td>
             </template>
@@ -294,10 +284,7 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
         <div v-if="tab === 'etf'"><span>溢价</span><strong class="mono premium-cell">{{ formatPercent(row.defaultShare.etf_premium) }}</strong></div>
         <div v-else>
           <span>申购</span>
-          <span class="badge" :class="statusClass(row)" :title="row.defaultShare.buy_status || '--'">{{ buyStatusLabel(row.defaultShare) }}</span>
-          <small v-if="purchaseLimitText(row)" class="mobile-limit" :title="dailyLimitTitle(row.defaultShare)">
-            {{ purchaseLimitText(row) }}
-          </small>
+          <span class="badge" :class="statusClass(row)" :title="purchaseTitle(row)">{{ buyStatusLabel(row.defaultShare) }}</span>
         </div>
       </div>
       <div class="fund-mobile-performance">

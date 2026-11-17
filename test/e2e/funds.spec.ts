@@ -259,11 +259,11 @@ test.describe('funds workflow', () => {
     const activeChip = page.getByRole('button', { name: /主动基金/ })
     await activeChip.click()
     await expect(activeChip).toHaveAttribute('aria-pressed', 'true')
-    await expect(page.locator('.fund-row:visible').first().locator('.limit-cell .mono')).toHaveText('¥10/日')
+    await expect(page.locator('.fund-row:visible').first().locator('.purchase-cell .badge')).toHaveText('限 ¥10')
 
     await sortButton.click()
     await expect(header).toHaveAttribute('aria-sort', 'descending')
-    await expect(page.locator('.fund-row:visible').first().locator('.limit-cell .mono')).toHaveText('¥50万/日')
+    await expect(page.locator('.fund-row:visible').first().locator('.purchase-cell .badge')).toHaveText('限 ¥50万')
 
     await fundSearch(page).fill('005698')
     await expect(page.locator('.fund-row:visible')).toHaveCount(1)
@@ -278,9 +278,9 @@ test.describe('funds workflow', () => {
     await activeChip.click()
     await expect(activeChip).toHaveAttribute('aria-pressed', 'true')
     await page.getByLabel('排序方式').selectOption('daily_limit:asc')
-    await expect(page.locator('.fund-mobile-card:visible').first().locator('.mobile-limit')).toContainText('¥10/日')
+    await expect(page.locator('.fund-mobile-card:visible').first().locator('.fund-mobile-metrics .badge')).toContainText('限 ¥10')
     await page.getByLabel('排序方式').selectOption('daily_limit:desc')
-    await expect(page.locator('.fund-mobile-card:visible').first().locator('.mobile-limit')).toContainText('¥50万/日')
+    await expect(page.locator('.fund-mobile-card:visible').first().locator('.fund-mobile-metrics .badge')).toContainText('限 ¥50万')
   })
 
   test('supports daily-limit sorting at 375, 390, and 768 widths', async ({ page }, testInfo) => {
@@ -292,12 +292,12 @@ test.describe('funds workflow', () => {
       const mobileCard = page.locator('.fund-mobile-card:visible').first()
       if (await mobileCard.count()) {
         await page.getByLabel('排序方式').selectOption('daily_limit:asc')
-        await expect(mobileCard.locator('.mobile-limit')).toContainText('¥10/日')
+        await expect(mobileCard.locator('.fund-mobile-metrics .badge')).toContainText('限 ¥10')
       } else {
         const header = page.getByRole('columnheader', { name: /^申购/ })
         await header.getByRole('button').click()
         await expect(header).toHaveAttribute('aria-sort', 'descending')
-        await expect(page.locator('.fund-row:visible').first().locator('.limit-cell .mono')).toContainText('/日')
+        await expect(page.locator('.fund-row:visible').first().locator('.purchase-cell .badge')).toContainText('限 ¥')
       }
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
       expect(overflow).toBeLessThanOrEqual(1)
@@ -310,8 +310,9 @@ test.describe('funds workflow', () => {
     await fundSearch(page).fill('019524')
     const row = page.locator('.fund-row:visible')
     await expect(row).toHaveCount(1)
-    await expect(row).toContainText('A/C/I 共用')
-    await expect(row).toContainText('¥5/日')
+    const badge = row.locator('.purchase-cell .badge')
+    await expect(badge).toHaveText('限 ¥5')
+    await expect(row.locator('.purchase-cell')).toHaveAttribute('title', /A\/C\/I 共用/)
     await expect(page.getByRole('columnheader', { name: '每日限购', exact: true })).toHaveCount(0)
     await expect(page.getByRole('columnheader', { name: /^申购/ })).toBeVisible()
   })

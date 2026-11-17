@@ -84,7 +84,7 @@ const sortOptions = computed(() => {
   const fields: Array<{ key: FundSortKey; label: string }> = [
     { key: 'series_scale', label: '规模' },
     { key: 'price', label: '价格' },
-    { key: 'daily_limit', label: '申购 / 每日限购' },
+    { key: 'daily_limit', label: '申购' },
     { key: 'chg_1m', label: '近 1 月' },
     { key: 'chg_3m', label: '近 3 月' },
     { key: 'chg_6m', label: '近 6 月' },

@@ -4,7 +4,6 @@ import type { FundShare } from '@/types/data'
 import {
   buyStatusLabel,
   classifyBuyStatus,
-  dailyLimitDisplay,
   dailyLimitTitle,
   limitScopeShort,
 } from '@/shared/lib/funds'
@@ -39,10 +38,9 @@ const headerDate = computed(() => {
   return props.shares.find((share) => share.nav_date)?.nav_date ?? ''
 })
 
-function purchaseLimitText(share: FundShare): string {
-  const amount = dailyLimitDisplay(share)
+function purchaseTitle(share: FundShare): string {
   const scope = limitScopeShort(share, props.shares)
-  return [amount === '--' ? '' : amount, scope].filter(Boolean).join(' · ')
+  return [dailyLimitTitle(share), scope].filter(Boolean).join(' · ')
 }
 
 function scaleText(share: FundShare): string {
@@ -148,19 +146,11 @@ onBeforeUnmount(cancelRuleHide)
           <td class="align-right mono" :class="movementClass(share.chg_3y)">{{ performanceDisplay(share.chg_3y, 'chg_3y', share) }}</td>
           <td class="align-right mono" :class="movementClass(share.chg_since_inception)">{{ performanceDisplay(share.chg_since_inception, 'chg_since_inception', share) }}</td>
           <td class="align-center">
-            <div class="purchase-cell" :title="dailyLimitTitle(share)">
+            <div class="purchase-cell" :title="purchaseTitle(share)">
               <span
                 class="badge"
                 :class="classifyBuyStatus(share) === 'paused' ? 'badge-danger' : classifyBuyStatus(share) === 'limited' ? 'badge-warn' : 'badge-accent'"
               >{{ buyStatusLabel(share) }}</span>
-              <div v-if="purchaseLimitText(share)" class="limit-cell purchase-limit">
-                <span class="mono">{{ dailyLimitDisplay(share) }}</span>
-                <span
-                  v-if="limitScopeShort(share, props.shares)"
-                  class="limit-scope"
-                  :class="{ shared: share.limit_scope === 'series_shared' }"
-                >{{ limitScopeShort(share, props.shares) }}</span>
-              </div>
             </div>
           </td>
           <td class="align-right rule-anchor-cell">

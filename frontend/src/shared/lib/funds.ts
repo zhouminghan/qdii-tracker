@@ -213,6 +213,11 @@ export function buyStatusLabel(share: FundShare): string {
   const kind = classifyBuyStatus(share)
   if (kind === 'none') return '--'
   if (kind === 'paused') return '暂停'
-  if (kind === 'limited') return share.buy_status || '限购'
+  if (kind === 'limited') {
+    const limit = confirmedDailyLimit(share)
+    return limit === null
+      ? (share.buy_status || '限购')
+      : `限 ${formatDailyLimit(limit, limitCurrency(share))}`
+  }
   return share.buy_status || '开放'
 }
