@@ -39,6 +39,9 @@ CLASS_RE = re.compile(r"([A-Z])\s*类(?:基金份额)?")
 CLASS_GROUP_RE = re.compile(r"([A-Z](?:\s*[、,/，和]\s*[A-Z])+)\s*(?:类)?(?:基金)?份额")
 CODE_RE = re.compile(r"(?<!\d)(\d{6})(?!\d)")
 DATE_RE = re.compile(r"(20\d{2})\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日")
+SEPARATE_SHARES_RE = re.compile(
+    r"(不同份额(?:的申请)?将单独计算限额|各类基金份额的申请金额每类单独计算)"
+)
 
 
 def _parse_jsonp(text: str) -> dict[str, Any]:
@@ -274,6 +277,10 @@ def _candidate_notices(notices: list[dict[str, Any]], cutoff: date) -> list[dict
     return out
 
 
+def _declares_separate_share_limits(text: str) -> bool:
+    return bool(SEPARATE_SHARES_RE.search(text))
+
+
 def scan_series(series: dict[str, Any], cutoff: date) -> list[dict[str, Any]]:
     shares = series.get("shares") or []
     if len(shares) < 2:
@@ -303,6 +310,8 @@ def scan_series(series: dict[str, Any], cutoff: date) -> list[dict[str, Any]]:
         try:
             text = fetch_notice_text(used_code, notice_id)
         except Exception:  # noqa: BLE001
+            continue
+        if _declares_separate_share_limits(text):
             continue
         codes, channels, ambiguous = extract_shared_evidence(text, shares, notice["_published"])
         if not channels or len(codes) < 2:

@@ -8,6 +8,7 @@ from datetime import date
 
 from pipeline.limit_notices import (
     _candidate_notices,
+    _declares_separate_share_limits,
     extract_shared_evidence,
 )
 
@@ -68,6 +69,13 @@ def test_ignores_separate_class_limits_and_non_shared_channel_wording():
     codes, channels, _ambiguous = extract_shared_evidence(text, shares, date(2026, 10, 21))
     assert codes == []
     assert channels == []
+
+
+def test_detects_notice_wide_disclaimer_that_shares_are_separate():
+    assert _declares_separate_share_limits("不同份额的申请将单独计算限额。") is True
+    assert _declares_separate_share_limits(
+        "A类、C类基金份额的合计金额超过500元。"
+    ) is False
 
 
 def test_selects_only_the_currency_named_by_the_amount():
