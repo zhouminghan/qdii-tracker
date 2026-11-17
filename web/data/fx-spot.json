@@ -1,52 +1,52 @@
 {
-  "generated_at": "2026-11-18T06:04:08.584436+08:00",
+  "generated_at": "2026-11-18T07:42:05.978914+08:00",
   "schema_version": 1,
   "source": "新浪财经外汇",
   "as_of": "2026-11-18",
   "items": {
     "fxUSDCNY": {
       "price": 6.6663,
-      "change": -0.0001,
-      "change_pct": -0.0015,
+      "change": 0.0,
+      "change_pct": 0.0,
       "as_of": "2026-11-18",
       "source": "新浪财经 fx_susdcny",
       "source_updated_at": "2026-11-18T03:00:01+08:00",
       "derived": false
     },
     "usdcnh": {
-      "price": 6.6669,
-      "change": -0.0001,
-      "change_pct": 0.04,
+      "price": 6.6665,
+      "change": -0.0005,
+      "change_pct": -0.01,
       "as_of": "2026-11-18",
       "source": "新浪财经 fx_susdcnh",
-      "source_updated_at": "2026-11-18T06:03:39+08:00",
+      "source_updated_at": "2026-11-18T07:41:49+08:00",
       "derived": false
     },
     "fxUSDJPY": {
-      "price": 159.38,
-      "change": 0.03,
-      "change_pct": 0.02,
+      "price": 159.51,
+      "change": 0.16,
+      "change_pct": 0.1,
       "as_of": "2026-11-18",
       "source": "新浪财经 fx_susdjpy",
-      "source_updated_at": "2026-11-18T06:03:32+08:00",
+      "source_updated_at": "2026-11-18T07:41:57+08:00",
       "derived": false
     },
     "fxUSDHKD": {
-      "price": 7.8461,
-      "change": -0.0001,
+      "price": 7.8462,
+      "change": -0.0002,
       "change_pct": -0.01,
       "as_of": "2026-11-18",
       "source": "新浪财经 fx_susdhkd",
-      "source_updated_at": "2026-11-18T06:03:41+08:00",
+      "source_updated_at": "2026-11-18T07:41:55+08:00",
       "derived": false
     },
     "fxCNYHKD": {
-      "price": 1.17695,
-      "change": -3e-05,
+      "price": 1.17697,
+      "change": -1e-05,
       "change_pct": -0.0,
       "as_of": "2026-11-18",
       "source": "新浪财经 fx_scnyhkd",
-      "source_updated_at": "2026-11-18T06:03:41+08:00",
+      "source_updated_at": "2026-11-18T07:41:56+08:00",
       "derived": false
     }
   }

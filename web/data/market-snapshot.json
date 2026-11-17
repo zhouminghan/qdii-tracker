@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-18T06:01:44.242834+08:00",
+  "generated_at": "2026-11-18T07:38:32.938363+08:00",
   "schema_version": 1,
   "source": "local data files (offline close snapshot)",
   "market_indices": {
@@ -196,55 +196,55 @@
     "as_of": "2026-11-18",
     "items": {
       "usdcnh": {
-        "price": 6.6669,
-        "change": -0.0001,
-        "change_pct": 0.04,
+        "price": 6.6665,
+        "change": -0.0005,
+        "change_pct": -0.01,
         "as_of": "2026-11-18",
-        "source_updated_at": "2026-11-18T06:03:39+08:00",
+        "source_updated_at": "2026-11-18T07:41:49+08:00",
         "source": "新浪财经 fx_susdcnh",
         "derived": false
       },
       "fxUSDCNY": {
         "price": 6.6663,
-        "change": -0.0001,
-        "change_pct": -0.0015,
+        "change": 0.0,
+        "change_pct": 0.0,
         "as_of": "2026-11-18",
         "source_updated_at": "2026-11-18T03:00:01+08:00",
         "source": "新浪财经 fx_susdcny",
         "derived": false
       },
       "fxUSDJPY": {
-        "price": 159.38,
-        "change": 0.03,
-        "change_pct": 0.02,
+        "price": 159.51,
+        "change": 0.16,
+        "change_pct": 0.1,
         "as_of": "2026-11-18",
-        "source_updated_at": "2026-11-18T06:03:32+08:00",
+        "source_updated_at": "2026-11-18T07:41:57+08:00",
         "source": "新浪财经 fx_susdjpy",
         "derived": false
       },
       "fxCNYHKD": {
-        "price": 1.17695,
-        "change": -3e-05,
+        "price": 1.17697,
+        "change": -1e-05,
         "change_pct": -0.0,
         "as_of": "2026-11-18",
-        "source_updated_at": "2026-11-18T06:03:41+08:00",
+        "source_updated_at": "2026-11-18T07:41:56+08:00",
         "source": "新浪财经 fx_scnyhkd",
         "derived": false
       },
       "fxUSDHKD": {
-        "price": 7.8461,
-        "change": -0.0001,
+        "price": 7.8462,
+        "change": -0.0002,
         "change_pct": -0.01,
         "as_of": "2026-11-18",
-        "source_updated_at": "2026-11-18T06:03:41+08:00",
+        "source_updated_at": "2026-11-18T07:41:55+08:00",
         "source": "新浪财经 fx_susdhkd",
         "derived": false
       },
       "fxCNYJPY": {
-        "price": 23.854738,
-        "change": -0.066894,
-        "change_pct": -0.279636,
-        "as_of": "2026-11-17",
+        "price": 23.928679,
+        "change": 0.07394,
+        "change_pct": 0.309961,
+        "as_of": "2026-11-18",
         "source_updated_at": null,
         "source": "derived:fxUSDJPY/fxUSDCNY",
         "derived": true,
@@ -313,44 +313,44 @@
       "derived": false
     },
     "xau": {
-      "price": 3849.17,
-      "change": -7.07,
-      "change_pct": -0.183,
+      "price": 3848.11,
+      "change": -1.06,
+      "change_pct": -0.028,
       "as_of": "2026-11-18",
-      "source_updated_at": "2026-11-18T05:58:00+08:00",
+      "source_updated_at": "2026-11-18T07:42:00+08:00",
       "source": "新浪财经 hf_XAU",
       "derived": false
     },
     "usdcnh": {
-      "price": 6.6669,
-      "change": -0.0001,
-      "change_pct": 0.04,
+      "price": 6.6665,
+      "change": -0.0005,
+      "change_pct": -0.01,
       "as_of": "2026-11-18",
-      "source_updated_at": "2026-11-18T06:03:39+08:00",
+      "source_updated_at": "2026-11-18T07:41:49+08:00",
       "source": "新浪财经 fx_susdcnh",
       "derived": false
     },
     "converted_cny_per_gram": {
-      "value": 825.05347,
+      "value": 824.776776,
       "as_of": "2026-11-18",
       "source": "derived:XAU*USDCNH",
       "derived": true
     },
     "premium_cny": {
-      "value": 7.44653,
+      "value": 7.723224,
       "as_of": "2026-11-18",
       "source": "computed:au9999-converted",
       "derived": true
     },
     "premium_pct": {
-      "value": 0.902551,
+      "value": 0.936402,
       "as_of": "2026-11-18",
       "source": "computed:(au9999-converted)/converted",
       "derived": true
     }
   },
   "brand_gold": {
-    "generated_at": "2026-11-18T06:04:07.829262+08:00",
+    "generated_at": "2026-11-18T07:42:03.840566+08:00",
     "as_of": "2026-11-18",
     "source": "证券之星",
     "brands": [
@@ -424,7 +424,7 @@
       "derived": false
     },
     "dxy": {
-      "value": 103.56,
+      "value": 103.62,
       "as_of": "2026-11-18",
       "source": "market-temperature.json",
       "derived": false
@@ -468,7 +468,7 @@
     "as_of": "2026-11-18"
   },
   "temperature": {
-    "generated_at": "2026-11-18T06:03:53.723443+08:00",
+    "generated_at": "2026-11-18T07:41:48.449356+08:00",
     "schema_version": 1,
     "score": 38,
     "band": "red",
@@ -525,7 +525,7 @@
         "score": 55,
         "label": "美元中性",
         "raw": {
-          "value": 103.56,
+          "value": 103.62,
           "date": "2026-11-18"
         },
         "note": "美元指数 103.6。",
@@ -542,10 +542,10 @@
       "10 年期美债收益率 5.10%，压制高估值资产。"
     ],
     "disclaimer": "本评分仅为基于公开数据的量化情绪参考，不构成投资建议。权重与阈值可调，历史表现不代表未来。",
-    "as_of": "2026-11-18T06:03:53.723443+08:00"
+    "as_of": "2026-11-18T07:41:48.449356+08:00"
   },
   "etf_premium": {
-    "generated_at": "2026-11-18T06:01:44.242834+08:00",
+    "generated_at": "2026-11-18T07:38:32.938363+08:00",
     "as_of": "2026-11-17",
     "count": 21,
     "items": {
@@ -825,7 +825,7 @@
     }
   },
   "offshore_live_nav": {
-    "generated_at": "2026-11-18T06:01:44.242834+08:00",
+    "generated_at": "2026-11-18T07:38:32.938363+08:00",
     "as_of": "2026-11-17",
     "count": 70,
     "items": {
