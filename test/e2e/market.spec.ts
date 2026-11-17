@@ -3,8 +3,8 @@ import { expect, test } from '@playwright/test'
 test('renders market charts and the DCA strategy matrix', async ({ page }) => {
   await page.goto('/#/market')
   await expect(page.getByRole('heading', { name: '市场', exact: true })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'VIX & PE 阶梯定投' })).toBeVisible()
-  await expect(page.getByRole('table', { name: 'VIX 与 PE 阶梯定投矩阵' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'VIX & 纳指100 TTM PE 阶梯定投' })).toBeVisible()
+  await expect(page.getByRole('table', { name: 'VIX 与纳指100 TTM PE 阶梯定投矩阵' })).toBeVisible()
   await expect(page.locator('canvas').first()).toBeVisible()
   await expect(page.locator('.annual-heat-cell').first()).toContainText('%')
   await page.getByRole('button', { name: '月度', exact: true }).click()
@@ -42,7 +42,7 @@ test('uses broker-style movement surfaces on index and pulse cards', async ({ pa
 
   // 指数彼此独立，不再给出合计涨跌家数或平均涨跌幅。
   await expect(page.getByRole('group', { name: '市场广度摘要' })).toHaveCount(0)
-  // 宏观区不再重复顶部已展示的 VIX / 纳指 PE。
+  // 宏观区不再重复顶部已展示的 VIX / 纳指100 TTM PE。
   await expect(page.locator('#market-macro .metric-card')).toHaveCount(4)
 
   // 纳斯达克100 只在全球指数列表出现一次；10 年期美债只在收益率曲线出现一次。
@@ -83,6 +83,18 @@ test('shows a freshness badge for dated market metrics', async ({ page }) => {
   await expect(page.locator('#market-macro .freshness-badge').first()).toBeVisible()
 })
 
+test('marks market temperature as degraded when coverage is partial', async ({ page }) => {
+  await page.route('**/data/market-snapshot.json', async (route) => {
+    const response = await route.fetch()
+    const payload = await response.json()
+    payload.temperature.coverage = { fresh: 3, total: 4, degraded: true }
+    await route.fulfill({ response, json: payload })
+  })
+  await page.goto('/#/market')
+  await expect(page.getByText('数据降级')).toBeVisible()
+  await expect(page.getByText('3/4 项数据本次更新成功')).toBeVisible()
+})
+
 test('does not fabricate a DCA strategy when fear-greed is missing', async ({ page }) => {
   await page.route('**/data/cnn-fear-greed.json', (route) => route.fulfill({
     json: { score: null, band: 'neutral', label: '--', history: [] },
@@ -91,6 +103,63 @@ test('does not fabricate a DCA strategy when fear-greed is missing', async ({ pa
   await expect(page.getByText('无法生成有效策略')).toBeVisible()
   await expect(page.getByText('数据不足')).toBeVisible()
   await expect(page.getByText('估值偏高，注意回撤风险')).toBeVisible()
+})
+
+test('labels YTD, daily drawdown, and TTM PE explicitly', async ({ page }) => {
+  await page.goto('/#/market')
+  await expect(page.locator('.pulse-card').filter({ hasText: '纳指100 TTM PE' })).toBeVisible()
+  await expect(page.locator('#market-nasdaq .badge').first()).toContainText('完整年度')
+
+  const ytdCell = page.locator('.annual-heat-cell').filter({ hasText: 'YTD' })
+  await expect(ytdCell).toContainText('日线回撤')
+
+  await page.getByRole('button', { name: '月度', exact: true }).click()
+  const ytdRow = page.locator('.monthly-heat-table tbody tr').filter({ hasText: '2026' })
+  await expect(ytdRow).toContainText('进行中')
+})
+
+test('shows complete-month seasonality with real sample counts', async ({ page }) => {
+  await page.goto('/#/market')
+  const panel = page.locator('.seasonality-panel')
+  await expect(panel).toBeVisible()
+  await expect(panel).toContainText('近 5 年')
+  await expect(panel).toContainText('近 10 年')
+  await expect(panel).toContainText('近 20 年')
+  await expect(panel).toContainText('n=')
+  await expect(panel).not.toContainText('11月 进行中')
+})
+
+test('opens metric knowledge for indices, VIX, TTM PE, and gold', async ({ page }) => {
+  await page.goto('/#/market')
+  await page.getByRole('button', { name: '指数说明' }).click()
+  const dialog = page.getByRole('dialog')
+  await expect(dialog).toBeVisible()
+  await expect(dialog).toContainText('纳斯达克综合指数')
+  await expect(dialog).toContainText('纳斯达克 100 指数')
+  await expect(dialog).toContainText('罗素 2000')
+  await page.keyboard.press('Escape')
+  await expect(dialog).toBeHidden()
+
+  await page.getByRole('button', { name: '了解 VIX' }).click()
+  await expect(dialog).toContainText('CBOE')
+  await expect(dialog).toContainText('不预测涨跌方向')
+  await page.keyboard.press('Escape')
+
+  await page.getByRole('button', { name: '了解 纳指100 TTM PE' }).click()
+  await expect(dialog).toContainText('Siblis')
+  await expect(dialog).toContainText('不是 Forward PE')
+  await page.keyboard.press('Escape')
+
+  await page.getByRole('button', { name: '了解 估值指标 PE' }).click()
+  await expect(dialog).toContainText('Forward PE / 预期市盈率')
+  await expect(dialog).toContainText('CAPE / 周期调整市盈率')
+  await page.keyboard.press('Escape')
+
+  await page.getByRole('button', { name: '了解 伦敦金 XAU/USD' }).click()
+  await expect(dialog).toContainText('折算参考')
+  await expect(dialog).toContainText('USD/CNH')
+  await page.keyboard.press('Escape')
+  await expect(dialog).toBeHidden()
 })
 
 test('recolors movement surfaces across theme and color preference', async ({ page }, testInfo) => {
@@ -111,4 +180,23 @@ test('recolors movement surfaces across theme and color preference', async ({ pa
   expect(greenUpBackground).not.toBe(redUpBackground)
   await expect(page.locator('.index-card.surface-up').first()).toBeVisible()
   await expect(page.locator('.index-card.surface-down').first()).toBeVisible()
+})
+
+test('keeps Market metrics and knowledge usable at 375, 390, and 768 widths', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'chromium-desktop', 'exact responsive widths are covered once')
+  for (const [width, height] of [[375, 812], [390, 844], [768, 1024]] as const) {
+    await page.setViewportSize({ width, height })
+    await page.goto('/#/market')
+    await expect(page.locator('.seasonality-panel')).toBeVisible()
+    await expect(page.getByRole('button', { name: '指数说明' })).toBeVisible()
+    await page.getByRole('button', { name: '了解 VIX' }).click()
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toBeVisible()
+    const box = await dialog.boundingBox()
+    expect(box).not.toBeNull()
+    expect(box!.width).toBeLessThanOrEqual(width + 1)
+    await page.keyboard.press('Escape')
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
+    expect(overflow).toBeLessThanOrEqual(1)
+  }
 })

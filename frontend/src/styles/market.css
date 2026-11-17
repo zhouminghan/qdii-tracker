@@ -63,6 +63,54 @@
   font-size: 0.76rem;
 }
 
+.temperature-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.section-header-actions,
+.panel-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.metric-info-button {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text-tertiary);
+}
+
+.metric-info-button:hover {
+  border-color: var(--color-border);
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+}
+
+.metric-info-button:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.temperature-degraded {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  color: var(--color-warn);
+  font-size: 0.68rem;
+}
+
 .temperature-orbit {
   display: grid;
   width: 78px;
@@ -109,7 +157,15 @@
   border-radius: var(--radius-md);
 }
 
-.pulse-card > span:first-child {
+.pulse-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  min-width: 0;
+}
+
+.pulse-label > span {
   overflow: hidden;
   color: var(--color-text-tertiary);
   font-size: 0.68rem;
@@ -494,6 +550,85 @@
   font-size: 0.8rem;
 }
 
+.annual-heat-cell.is-ytd {
+  border-style: dashed;
+}
+
+.seasonality-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.seasonality-window {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+}
+
+.seasonality-window > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 8px;
+  margin-bottom: 8px;
+}
+
+.seasonality-window h4 {
+  font-size: 0.78rem;
+}
+
+.seasonality-window header small {
+  color: var(--color-text-tertiary);
+  font-size: 0.62rem;
+}
+
+.seasonality-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.66rem;
+}
+
+.seasonality-table th,
+.seasonality-table td {
+  padding: 5px 3px;
+  border-bottom: 1px solid var(--color-border);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.seasonality-table th:first-child,
+.seasonality-table td:first-child {
+  text-align: left;
+}
+
+.seasonality-table th {
+  color: var(--color-text-tertiary);
+  font-weight: 550;
+}
+
+.seasonality-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.seasonality-table .badge {
+  padding: 1px 4px;
+  font-size: 0.56rem;
+}
+
+.ytd-tag {
+  padding: 0 4px;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 34%, var(--color-border));
+  border-radius: 999px;
+  color: var(--color-accent);
+  font-family: var(--font-sans);
+  font-size: 0.56rem;
+  font-weight: 650;
+}
+
 .heat-up {
   --heat-color: var(--color-positive);
 }
@@ -696,6 +831,64 @@
   border-left: 2px solid var(--color-danger);
 }
 
+.metric-knowledge-list {
+  display: grid;
+  gap: 10px;
+}
+
+.metric-knowledge {
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+}
+
+.metric-knowledge summary {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  cursor: pointer;
+  list-style-position: inside;
+}
+
+.metric-knowledge summary p {
+  color: var(--color-text-secondary);
+  font-size: 0.74rem;
+  line-height: 1.55;
+}
+
+.metric-knowledge-body {
+  display: grid;
+  gap: 13px;
+  padding: 0 12px 14px;
+}
+
+.metric-knowledge-body h4 {
+  margin-bottom: 4px;
+  color: var(--color-text);
+  font-size: 0.74rem;
+}
+
+.metric-knowledge-body p,
+.metric-knowledge-body li {
+  color: var(--color-text-secondary);
+  font-size: 0.72rem;
+  line-height: 1.65;
+}
+
+.metric-knowledge-body ul {
+  display: grid;
+  gap: 4px;
+  padding-left: 18px;
+}
+
+.metric-knowledge-source {
+  padding-top: 7px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-tertiary) !important;
+  font-size: 0.68rem !important;
+}
+
 .section {
   scroll-margin-top: 112px;
 }
@@ -773,6 +966,7 @@
   }
 
   .pulse-card > span:first-child,
+  .pulse-label > span,
   .pulse-card small,
   .index-name,
   .index-card > span:nth-child(3),
@@ -796,6 +990,31 @@
 
   .temperature-panel {
     align-items: flex-start;
+  }
+
+  .metric-info-button {
+    width: 32px;
+    height: 32px;
+  }
+
+  .section-header-actions {
+    justify-content: flex-start;
+  }
+
+  .seasonality-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .seasonality-window h4 {
+    font-size: 0.82rem;
+  }
+
+  .seasonality-table {
+    font-size: 0.72rem;
+  }
+
+  .seasonality-table .badge {
+    font-size: 0.62rem;
   }
 
   .temperature-orbit {

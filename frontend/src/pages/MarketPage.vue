@@ -4,6 +4,9 @@ import { Activity, ChevronRight, CircleAlert, Gauge, Landmark, Radio, TrendingUp
 import DataState from '@/shared/components/DataState.vue'
 import EChart from '@/shared/components/EChart.vue'
 import BaseDrawer from '@/shared/components/BaseDrawer.vue'
+import MetricInfoButton from '@/features/market/MetricInfoButton.vue'
+import MetricKnowledgeDrawer from '@/features/market/MetricKnowledgeDrawer.vue'
+import { MARKET_INDEX_KNOWLEDGE_IDS, MARKET_MACRO_KNOWLEDGE_IDS } from '@/features/market/metricKnowledge'
 import { MARKET_INDEX_LABELS, TECH_LABELS } from '@/shared/constants/funds'
 import { fetchJson } from '@/shared/infrastructure/http'
 import {
@@ -39,6 +42,8 @@ const klineLoading = ref(false)
 const indexRange = ref<TimeRange>('all')
 const activeMarketSection = ref('market-overview')
 const heatmapMode = ref<'year' | 'month'>('year')
+const selectedKnowledge = ref<string[]>([])
+const knowledgeTitle = ref('指标说明')
 let liveTimer: number | null = null
 let liveBootTimer: number | null = null
 let sectionObserver: IntersectionObserver | null = null
@@ -102,7 +107,7 @@ const pulseCards = computed<PulseCard[]>(() => {
     },
     {
       key: 'ndx_pe',
-      label: '纳指 PE',
+      label: '纳指100 TTM PE',
       value: formatNumber(snapshot.macro.ndx_pe.value),
       suffix: '',
       as_of: snapshot.macro.ndx_pe.as_of,
@@ -153,7 +158,10 @@ const annualOption = computed(() => ({
     type: 'bar',
     data: nasdaq.value?.annual.map((item) => ({
       value: item.return_pct,
-      itemStyle: { color: item.return_pct >= 0 ? positiveColor.value : negativeColor.value },
+      itemStyle: {
+        color: item.return_pct >= 0 ? positiveColor.value : negativeColor.value,
+        opacity: item.is_ytd ? 0.55 : 1,
+      },
     })) ?? [],
     barMaxWidth: 12,
   }],
@@ -162,7 +170,7 @@ const annualOption = computed(() => ({
 const monthLabels = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
 const annualHeatSummary = computed(() => {
   const rows = nasdaq.value?.annual ?? []
-  const valid = rows.filter((item) => Number.isFinite(item.return_pct))
+  const valid = rows.filter((item) => !item.is_ytd && Number.isFinite(item.return_pct))
   if (!valid.length) return null
   const average = valid.reduce((sum, item) => sum + item.return_pct, 0) / valid.length
   const best = valid.reduce((left, right) => right.return_pct > left.return_pct ? right : left)
@@ -175,6 +183,28 @@ const annualHeatSummary = computed(() => {
     worst,
   }
 })
+const annualYtd = computed(() => nasdaq.value?.annual.find((item) => item.is_ytd) ?? null)
+const fullYearCount = computed(() => nasdaq.value?.annual.filter((item) => !item.is_ytd).length ?? 0)
+const seasonalityWindows = computed(() => [
+  { key: '5y', label: '近 5 年' },
+  { key: '10y', label: '近 10 年' },
+  { key: '20y', label: '近 20 年' },
+].map((window) => {
+  const rows = (nasdaq.value?.ranking[window.key] ?? [])
+    .filter((item) => Number.isFinite(item.avg_pct))
+  return {
+    ...window,
+    top: rows.slice(0, 3),
+    bottom: rows.slice(-3).reverse(),
+    complete: rows.length === 12,
+  }
+}))
+function monthName(month: number): string {
+  return `${month}月`
+}
+function sampleLabel(sample: number): string {
+  return sample < 3 ? `样本不足 (${sample})` : `n=${sample}`
+}
 
 const fearOption = computed(() => ({
   animationDuration: 260,
@@ -241,6 +271,19 @@ function scrollToSection(id: string): void {
   // 点击锚点后短暂锁定，避免 IntersectionObserver 在滚动完成前抢回上一个分区。
   sectionClickLock = Date.now() + 800
   document.getElementById(id)?.scrollIntoView({ block: 'start' })
+}
+
+function openKnowledge(ids: string[], title = '指标说明'): void {
+  selectedKnowledge.value = ids
+  knowledgeTitle.value = title
+}
+
+function openIndexKnowledge(): void {
+  openKnowledge([...MARKET_INDEX_KNOWLEDGE_IDS], '指数知识')
+}
+
+function openMacroKnowledge(): void {
+  openKnowledge([...MARKET_MACRO_KNOWLEDGE_IDS, 'fx'], '宏观与汇率指标')
 }
 
 function heatCellStyle(value: unknown): Record<string, string> {
@@ -429,14 +472,27 @@ onBeforeUnmount(() => {
               <span>{{ market.temperature.score }}</span>
             </div>
             <div>
-              <div class="eyebrow">市场温度</div>
+              <div class="temperature-label">
+                <div class="eyebrow">市场温度</div>
+                <MetricInfoButton label="市场温度" @open="openKnowledge(['market-temperature'], '市场温度')" />
+              </div>
               <h2>{{ market.temperature.verdict }}</h2>
               <p>{{ market.temperature.summary }}</p>
+              <div v-if="market.temperature.coverage?.degraded" class="temperature-degraded">
+                <span class="badge badge-warn">数据降级</span>
+                <small>{{ market.temperature.coverage.fresh }}/{{ market.temperature.coverage.total }} 项数据本次更新成功</small>
+              </div>
             </div>
           </div>
           <div class="market-pulse-grid">
             <article v-for="card in pulseCards" :key="card.key" class="pulse-card surface-flat">
-              <span>{{ card.label }}</span>
+              <div class="pulse-label">
+                <span>{{ card.label }}</span>
+                <MetricInfoButton
+                  :label="card.label"
+                  @open="openKnowledge([card.key === 'vix' ? 'vix' : 'ttm-pe'], card.label)"
+                />
+              </div>
               <strong class="mono">{{ card.value }}{{ card.suffix }}</strong>
               <div class="pulse-meta">
                 <small class="mono muted">{{ formatDate(card.as_of) }}</small>
@@ -453,7 +509,10 @@ onBeforeUnmount(() => {
               <h2>全球市场</h2>
               <p>点击指数查看多区间历史走势和每日收盘明细。{{ liveIndexCoverage }} 个支持盘中刷新，其余为收盘快照。</p>
             </div>
-            <span class="badge" :title="`${liveIndexCoverage} 个指数支持盘中刷新`">{{ indexItems.length }} 个指数 · {{ liveIndexCoverage }} 个支持实时</span>
+            <div class="section-header-actions">
+              <button class="button button-secondary" type="button" @click="openIndexKnowledge">指数说明</button>
+              <span class="badge" :title="`${liveIndexCoverage} 个指数支持盘中刷新`">{{ indexItems.length }} 个指数 · {{ liveIndexCoverage }} 个支持实时</span>
+            </div>
           </div>
           <div class="index-grid">
             <button
@@ -528,7 +587,10 @@ onBeforeUnmount(() => {
                 <h3>黄金多市场</h3>
                 <p class="inline-note">{{ formatDate(market.gold.as_of) }} · 独立行情与本地折算参考分开标注</p>
               </div>
-              <Landmark :size="17" aria-hidden="true" />
+              <div class="panel-header-actions">
+                <MetricInfoButton label="伦敦金 XAU/USD" @open="openKnowledge(['xau-usd'], '伦敦金 XAU/USD')" />
+                <Landmark :size="17" aria-hidden="true" />
+              </div>
             </header>
             <div class="gold-market-grid" :class="{ 'has-premium': goldHasPremium }">
               <div class="gold-market-cell" :class="movementSurfaceClass(market.gold.au9999.change_pct)">
@@ -581,6 +643,9 @@ onBeforeUnmount(() => {
               <h2>宏观与汇率</h2>
               <p>利率与汇率读数用于理解 QDII 的估值和汇率敞口。</p>
             </div>
+            <div class="section-header-actions">
+              <button class="button button-secondary" type="button" @click="openMacroKnowledge">指标说明</button>
+            </div>
           </div>
           <div class="macro-grid">
             <article v-for="item in macroCards" :key="item.key" class="metric-card">
@@ -615,9 +680,15 @@ onBeforeUnmount(() => {
             <div>
               <div class="eyebrow">纳指 100 历史</div>
               <h2>纳指分析</h2>
-              <p v-if="nasdaq">年度涨跌与月历热力图覆盖 {{ nasdaq.range.first_year }}–{{ nasdaq.range.last_year }}。</p>
+              <p v-if="nasdaq">
+                年度涨跌覆盖 {{ nasdaq.range.first_year }}–{{ nasdaq.range.last_year }}；月度热力图覆盖
+                {{ nasdaq.heatmap.years[0] ?? nasdaq.range.first_year }}–{{ nasdaq.range.last_year }}。
+                当前年份为 YTD，未结束月份不参与完整年度/季节性统计。
+              </p>
             </div>
-            <span v-if="nasdaq" class="badge">{{ nasdaq.annual.length }} 年</span>
+            <span v-if="nasdaq" class="badge">
+              {{ fullYearCount }} 个完整年度<template v-if="annualYtd"> + {{ annualYtd.year }} YTD</template>
+            </span>
           </div>
 
           <div v-if="extraLoading" class="page-state">正在加载历史图谱...</div>
@@ -651,19 +722,20 @@ onBeforeUnmount(() => {
                     <span>均值 <strong :class="movementClass(annualHeatSummary.average)">{{ formatPercent(annualHeatSummary.average) }}</strong></span>
                     <span>最佳 <strong>{{ annualHeatSummary.best.year }} · {{ formatPercent(annualHeatSummary.best.return_pct) }}</strong></span>
                     <span>最差 <strong>{{ annualHeatSummary.worst.year }} · {{ formatPercent(annualHeatSummary.worst.return_pct) }}</strong></span>
+                    <span v-if="annualYtd">YTD <strong :class="movementClass(annualYtd.return_pct)">{{ annualYtd.year }} · {{ formatPercent(annualYtd.return_pct) }}</strong></span>
                   </div>
                   <div v-if="heatmapMode === 'year'" class="annual-heat-grid" role="list" aria-label="纳指年度涨跌热力图">
                     <article
                       v-for="item in nasdaq.annual"
                       :key="item.year"
                       class="annual-heat-cell"
-                      :class="item.return_pct > 0 ? 'heat-up' : item.return_pct < 0 ? 'heat-down' : 'heat-flat'"
+                      :class="[item.return_pct > 0 ? 'heat-up' : item.return_pct < 0 ? 'heat-down' : 'heat-flat', item.is_ytd ? 'is-ytd' : '']"
                       :style="heatCellStyle(item.return_pct)"
                       role="listitem"
                     >
-                      <span>{{ item.year }}</span>
+                      <span>{{ item.year }} <small v-if="item.is_ytd" class="ytd-tag">YTD</small></span>
                       <strong>{{ formatPercent(item.return_pct) }}</strong>
-                      <small>回撤 {{ formatPercent(item.max_drawdown_pct) }}</small>
+                      <small>日线回撤 {{ formatPercent(item.max_drawdown_pct) }}</small>
                     </article>
                   </div>
                   <div v-else class="monthly-heat-scroll" role="region" tabindex="0" aria-label="纳指月度涨跌热力图，可横向滚动">
@@ -676,7 +748,10 @@ onBeforeUnmount(() => {
                       </thead>
                       <tbody>
                         <tr v-for="(row, rowIndex) in nasdaq.heatmap.rows" :key="nasdaq.heatmap.years[rowIndex]">
-                          <th scope="row">{{ nasdaq.heatmap.years[rowIndex] }}</th>
+                          <th scope="row">
+                            {{ nasdaq.heatmap.years[rowIndex] }}
+                            <small v-if="nasdaq.heatmap.years[rowIndex] === nasdaq.heatmap.partial_year" class="ytd-tag">进行中</small>
+                          </th>
                           <td
                             v-for="(value, monthIndex) in row"
                             :key="`${rowIndex}-${monthIndex}`"
@@ -694,7 +769,10 @@ onBeforeUnmount(() => {
               <article class="panel">
                 <header class="panel-header">
                   <div><h3>情绪与风险</h3><p class="inline-note">CNN 恐慌贪婪指数</p></div>
-                  <Gauge :size="17" aria-hidden="true" />
+                  <div class="panel-header-actions">
+                    <MetricInfoButton label="CNN 恐慌贪婪指数" @open="openKnowledge(['fear-greed'], 'CNN 恐慌贪婪指数')" />
+                    <Gauge :size="17" aria-hidden="true" />
+                  </div>
                 </header>
                 <div class="panel-body fear-greed-summary">
                   <div class="fear-score" :class="fearBand">
@@ -709,12 +787,54 @@ onBeforeUnmount(() => {
                 </div>
               </article>
             </div>
+            <article v-if="nasdaq" class="panel seasonality-panel">
+              <header class="panel-header">
+                <div>
+                  <h3>月份季节性</h3>
+                  <p class="inline-note">仅使用完整自然月；当前未结束月份不进入均值、上涨比例和样本数。</p>
+                </div>
+                <span class="badge">样本数按年</span>
+              </header>
+              <div class="panel-body seasonality-grid">
+                <section v-for="window in seasonalityWindows" :key="window.key" class="seasonality-window">
+                  <header>
+                    <h4>{{ window.label }}</h4>
+                    <small>{{ window.complete ? '12 个月均有样本' : '部分月份样本不足' }}</small>
+                  </header>
+                  <table class="seasonality-table">
+                    <thead>
+                      <tr><th scope="col">区间</th><th scope="col">月份</th><th scope="col">均值</th><th scope="col">上涨占比</th><th scope="col">样本</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="row in window.top" :key="`${window.key}-top-${row.month}`">
+                        <td><span class="badge">最强</span></td>
+                        <td>{{ monthName(row.month) }}</td>
+                        <td class="mono" :class="movementClass(row.avg_pct)">{{ formatPercent(row.avg_pct) }}</td>
+                        <td class="mono">{{ formatPercent(row.positive_ratio) }}</td>
+                        <td class="mono">{{ sampleLabel(row.n) }}</td>
+                      </tr>
+                      <tr v-for="row in window.bottom" :key="`${window.key}-bottom-${row.month}`">
+                        <td><span class="badge badge-warn">最弱</span></td>
+                        <td>{{ monthName(row.month) }}</td>
+                        <td class="mono" :class="movementClass(row.avg_pct)">{{ formatPercent(row.avg_pct) }}</td>
+                        <td class="mono">{{ formatPercent(row.positive_ratio) }}</td>
+                        <td class="mono">{{ sampleLabel(row.n) }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </section>
+              </div>
+            </article>
             <article class="panel dca-panel">
               <header class="panel-header">
                 <div>
-                  <h3>VIX &amp; PE 阶梯定投</h3>
-                  <p class="inline-note">恐慌贪婪指数决定档位，VIX 校验波动状态，纳指 PE 补充估值参考</p>
+                  <h3>VIX &amp; 纳指100 TTM PE 阶梯定投</h3>
+                  <p class="inline-note">恐慌贪婪指数决定档位，VIX 校验波动状态，纳指100 TTM PE 补充估值参考</p>
                 </div>
+                <MetricInfoButton
+                  label="估值指标 PE"
+                  @open="openKnowledge(['pe', 'ttm-pe', 'forward-pe', 'cape'], '估值指标')"
+                />
                 <span v-if="dca.band" class="badge" :class="`dca-${dca.band.tone}`">{{ dca.band.label }}</span>
                 <span v-else class="badge badge-warn">数据不足</span>
               </header>
@@ -736,7 +856,7 @@ onBeforeUnmount(() => {
                   </div>
                   <p v-if="dca.note" class="inline-note">{{ dca.note }}</p>
                 </div>
-                <div class="dca-matrix" role="table" aria-label="VIX 与 PE 阶梯定投矩阵" tabindex="0">
+                <div class="dca-matrix" role="table" aria-label="VIX 与纳指100 TTM PE 阶梯定投矩阵" tabindex="0">
                   <div class="dca-matrix-row dca-matrix-head" role="row"><span role="columnheader">情绪区间</span><span role="columnheader">状态</span><span role="columnheader">动作</span><span role="columnheader">策略</span></div>
                   <div v-for="band in DCA_BANDS" :key="band.key" class="dca-matrix-row" :class="{ active: dca.band?.key === band.key }" role="row">
                     <span class="mono" role="cell">{{ band.lo }}–{{ band.hi }}</span>
@@ -797,5 +917,12 @@ onBeforeUnmount(() => {
       </template>
       <div v-else class="page-state">暂无该指数历史走势数据。</div>
     </BaseDrawer>
+
+    <MetricKnowledgeDrawer
+      :open="selectedKnowledge.length > 0"
+      :metric-ids="selectedKnowledge"
+      :title="knowledgeTitle"
+      @close="selectedKnowledge = []"
+    />
   </div>
 </template>
