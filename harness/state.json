@@ -5,7 +5,7 @@
   "current_task": "",
   "run_id": "run-2026-11-17-01",
   "base_sha": "e1537c1308a9f844885b3f3abc671c7a5a294bde",
-  "updated_at": "2026-11-17T14:16:00+08:00",
+  "updated_at": "2026-11-17T14:22:00+08:00",
   "tasks": [
     {
       "task_id": "T01",
@@ -63,7 +63,7 @@
         "scripts/pipeline/public_catalog.py",
         "frontend/src/types/data.ts"
       ],
-      "test_results": ["shared, independent, single-share, invalid-scope and unknown fixtures pass"],
+      "test_results": ["shared, independent, single-share, only-A/only-C, invalid-scope, expired and unknown fixtures pass"],
       "commit_sha": ""
     },
     {
@@ -99,7 +99,7 @@
       "verification_status": "PASS",
       "blockers": [],
       "changed_files": ["scripts/pipeline/nasdaq_history.py", "frontend/src/pages/MarketPage.vue", "test/test_nasdaq_history.py"],
-      "test_results": ["1986-2026 annual data", "2026 YTD marked", "5y/10y/20y sample counts present", "daily-close drawdown marked per year"],
+      "test_results": ["1986-2026 annual data", "2026 YTD marked", "5y/10y/20y sample counts present", "daily-close drawdown marked per year", "duplicate daily rows are de-duplicated"],
       "commit_sha": ""
     },
     {
@@ -231,13 +231,13 @@
       "blockers": [],
       "changed_files": ["README.md", "docs/decisions/0004-limit-nasdaq-market-knowledge.md", "harness/state.json"],
       "test_results": [
-        "Python 125 passed",
+        "Python 128 passed",
         "Vitest 62 passed",
         "T3 Chromium 109 passed / 7 intentional skips",
         "build pass",
         "seven-layer data gate pass"
       ],
-      "commit_sha": "1bbce4f"
+      "commit_sha": "a6437c9"
     }
   ],
   "gates": {
@@ -263,7 +263,7 @@
     ]
   },
   "test_results": {
-    "python": "125 passed",
+    "python": "128 passed",
     "vitest": "62 passed",
     "typecheck": "pass",
     "lint": "pass with 1 pre-existing AppHeader warning",
@@ -272,5 +272,5 @@
     "axe": "pass",
     "data_check": "7 layered checks pass; Layer 6 cross-source unavailable (0 compared)"
   },
-  "commit_sha": "1bbce4f"
+  "commit_sha": "a6437c9"
 }
