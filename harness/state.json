@@ -284,7 +284,7 @@
         "shared purchase badge shows A/C or A/C/I 共用",
         "138 Python, 64 Vitest and focused Chromium tests pass"
       ],
-      "commit_sha": ""
+      "commit_sha": "de0a290"
     }
   ],
   "gates": {
@@ -319,5 +319,5 @@
     "axe": "pass",
     "data_check": "7 layered checks pass; Layer 6 cross-source unavailable (0 compared)"
   },
-  "commit_sha": "0656ec1"
+  "commit_sha": "de0a290"
 }
