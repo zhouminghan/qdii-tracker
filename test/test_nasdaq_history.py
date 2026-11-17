@@ -12,6 +12,7 @@ from pipeline.nasdaq_history import (
     build_heatmap,
     build_summary,
     complete_monthly_returns,
+    _dedupe_daily,
     ranking_windows,
     monthly_returns,
     rank_months,
@@ -163,6 +164,19 @@ def test_ranking_windows_include_5_10_20_and_full():
 def test_index_identity_is_nasdaq_100():
     assert SYMBOL == "^NDX"
     assert "100" in INDEX_NAME
+
+
+def test_daily_duplicates_keep_last_value_and_sort_dates():
+    points = [
+        (2026, 11, 16, 100),
+        (2026, 11, 14, 99),
+        (2026, 11, 16, 101),
+        (2026, 11, 15, float("nan")),
+    ]
+    assert _dedupe_daily(points) == [
+        (2026, 11, 14, 99),
+        (2026, 11, 16, 101),
+    ]
 
 
 def test_build_keeps_previous_snapshot_when_source_date_regresses(monkeypatch, tmp_path):

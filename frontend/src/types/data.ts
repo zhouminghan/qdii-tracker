@@ -53,8 +53,10 @@ export interface FundShare {
   limit_source?: string | null
   limit_source_url?: string | null
   limit_effective_date?: string | null
+  limit_expires_at?: string | null
   limit_verified_at?: string | null
   limit_confidence?: 'official' | 'verified' | 'unverified' | null
+  limit_status?: 'active' | 'expired' | 'unverified' | 'unknown' | null
   buy_status_history?: BuyStatusHistory[]
   buy_rules?: FundRule[]
   sell_rules?: FundRule[]

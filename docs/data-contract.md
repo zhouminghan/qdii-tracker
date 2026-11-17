@@ -60,8 +60,10 @@
 | `limit_group_id` | 人工核验的共同额度组 ID；仅同一真实额度组使用相同值 |
 | `limit_currency` | 额度币种，缺失时回退 share 的 `currency` |
 | `limit_source` / `limit_source_url` | 基金公司公告或可靠来源及链接 |
-| `limit_effective_date` / `limit_verified_at` | 公告生效日与人工核验日 |
+| `limit_effective_date` / `limit_expires_at` | 公告生效日与可选失效日；过期记录降级为 `unknown` + `expired` |
+| `limit_verified_at` | 人工核验日 |
 | `limit_confidence` | `official`、`verified` 或 `unverified` |
+| `limit_status` | `active`、`expired`、`unverified` 或 `unknown` |
 
 `daily_limit` 仍是原始数值，不允许把展示字符串写回数据。暂停申购、开放申购和
 额度缺失不能互相冒充：暂停不是 0 元限购；开放申购即使残留数字也不参与限购排序。

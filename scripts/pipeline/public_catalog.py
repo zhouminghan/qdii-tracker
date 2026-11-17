@@ -32,8 +32,10 @@ LIMIT_SCOPE_FIELDS = (
     "limit_source",
     "limit_source_url",
     "limit_effective_date",
+    "limit_expires_at",
     "limit_verified_at",
     "limit_confidence",
+    "limit_status",
 )
 
 
@@ -78,6 +80,7 @@ def _apply_limit_scope(
     series: dict[str, Any],
     overrides: dict[str, dict[str, Any]],
     warnings: list[str],
+    reference_date: date,
 ) -> str | None:
     """给份额补充额度适用范围；没有可靠公告时保持 unknown。"""
     code = str(share.get("code") or "")
@@ -96,11 +99,25 @@ def _apply_limit_scope(
         for field in LIMIT_SCOPE_FIELDS:
             if field in entry:
                 share[field] = entry[field]
+        expires_at = entry.get("limit_expires_at")
+        if expires_at:
+            try:
+                expired = date.fromisoformat(str(expires_at)[:10]) < reference_date
+            except ValueError:
+                expired = True
+                warnings.append(f"{code}: 额度核验记录的 limit_expires_at 无效，按失效处理")
+            if expired:
+                share["limit_scope"] = "unknown"
+                share["limit_status"] = "expired"
+                warnings.append(f"{code}: 额度核验记录已失效，等待新公告复核")
+                return None
         share["limit_scope"] = scope
+        share["limit_status"] = entry.get("limit_status") or "active"
         share["limit_currency"] = entry.get("limit_currency") or share.get("currency")
         return scope if has_limit else None
 
     share["limit_scope"] = "share" if has_limit and len(series.get("shares") or []) == 1 else "unknown"
+    share["limit_status"] = "unverified" if has_limit else "unknown"
     share["limit_currency"] = share.get("currency")
     return share["limit_scope"] if has_limit else None
 
@@ -161,7 +178,7 @@ def build_catalog(
                 shares = []
             total_shares += len(shares)
             for share in shares:
-                scope = _apply_limit_scope(share, item, limit_overrides, warnings)
+                scope = _apply_limit_scope(share, item, limit_overrides, warnings, reference_date)
                 if scope:
                     limit_scope_counts[scope] += 1
                 is_etf = category == "etf"

@@ -204,3 +204,40 @@ def test_invalid_limit_scope_is_downgraded_with_warning(tmp_path):
     shares = catalog["data"]["categories"]["sp500"]["series"][0]["shares"]
     assert shares[0]["limit_scope"] == "unknown"
     assert any("limit_scope 无效" in warning for warning in catalog["quality"]["warnings"])
+
+
+def test_limit_scope_can_mark_only_c_share(tmp_path):
+    _write_limit_fixture(tmp_path)
+    catalog = build_catalog(
+        data_dir=tmp_path,
+        config={"company_brand": {}},
+        limit_config={"entries": [{
+            "series_id": "series-a-c",
+            "share_codes": ["000002"],
+            "limit_scope": "share",
+        }]},
+    )
+    shares = catalog["data"]["categories"]["sp500"]["series"][0]["shares"]
+    assert [share["limit_scope"] for share in shares] == ["unknown", "share"]
+
+
+def test_expired_limit_evidence_is_downgraded(tmp_path):
+    _write_limit_fixture(tmp_path)
+    catalog = build_catalog(
+        data_dir=tmp_path,
+        config={"company_brand": {}},
+        generated_at="2026-11-17T00:00:00+08:00",
+        limit_config={"entries": [{
+            "series_id": "series-a-c",
+            "share_codes": ["000001", "000002"],
+            "limit_scope": "series_shared",
+            "limit_effective_date": "2026-10-01",
+            "limit_expires_at": "2026-10-31",
+            "limit_verified_at": "2026-10-01",
+        }]},
+    )
+    shares = catalog["data"]["categories"]["sp500"]["series"][0]["shares"]
+    assert all(share["limit_scope"] == "unknown" for share in shares)
+    assert all(share["limit_status"] == "expired" for share in shares)
+    assert catalog["quality"]["limit_scope"]["series_shared"] == 0
+    assert any("额度核验记录已失效" in warning for warning in catalog["quality"]["warnings"])

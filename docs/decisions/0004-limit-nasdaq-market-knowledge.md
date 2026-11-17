@@ -20,6 +20,8 @@
   `limit_currency`、来源、生效日、核验日与置信度。
 - 人工核验记录放在 `config/limit-scopes.json`，`public_catalog.py` 只消费记录，
   不从名称/代码/金额自动推断共同额度。
+- 核验记录支持 `limit_expires_at`；过期或因新公告被替代时降级为
+  `limit_scope=unknown`、`limit_status=expired`，保留原始证据并等待复核。
 - 没有核验记录的多份额系列标记 `unknown`；单份额且有有效额度的系列标记 `share`。
 - 表格增加“每日限购”列。收藏始终置顶；金额只与同币种比较；缺失、暂停和开放置底。
 - 系列父行明确使用默认份额口径；详情份额表逐份额展示。共享额度只展示一次含义，

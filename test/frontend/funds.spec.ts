@@ -5,6 +5,7 @@ import {
   compareMissingLast,
   confirmedDailyLimit,
   dailyLimitDisplay,
+  dailyLimitTitle,
   limitScopeShort,
   matchesFundQuery,
   sortFundRows,
@@ -164,5 +165,9 @@ describe('fund view-model helpers', () => {
     expect(limitScopeShort(unknown.defaultShare)).toBe('待核验')
     expect(dailyLimitDisplay(open.defaultShare)).toBe('不限额')
     expect(buyStatusLabel(shared.defaultShare)).toBe('限大额')
+    shared.defaultShare.limit_status = 'active'
+    shared.defaultShare.limit_expires_at = '2026-12-31'
+    expect(dailyLimitTitle(shared.defaultShare)).toContain('核验有效')
+    expect(dailyLimitTitle(shared.defaultShare)).toContain('失效：2026-12-31')
   })
 })

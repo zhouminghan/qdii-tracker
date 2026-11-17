@@ -104,9 +104,13 @@ export function dailyLimitDisplay(share: FundShare): string {
 
 export function dailyLimitTitle(share: FundShare): string {
   const parts = [limitScopeLabel(share)]
+  if (share.limit_status === 'active') parts.push('核验有效')
+  if (share.limit_status === 'expired') parts.push('公告已失效')
+  if (share.limit_status === 'unverified') parts.push('待核验')
   if (share.limit_source) parts.push(`来源：${share.limit_source}`)
   if (share.limit_confidence) parts.push(`置信度：${share.limit_confidence}`)
   if (share.limit_effective_date) parts.push(`生效：${share.limit_effective_date}`)
+  if (share.limit_expires_at) parts.push(`失效：${share.limit_expires_at}`)
   if (share.limit_verified_at) parts.push(`核验：${share.limit_verified_at}`)
   if (share.limit_source_url) parts.push(share.limit_source_url)
   return parts.join(' · ')

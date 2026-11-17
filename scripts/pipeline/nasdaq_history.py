@@ -68,8 +68,9 @@ def _dedupe_daily(points):
     """把 [(year, month, day, close)] 按日去重（后值覆盖），返回升序列表。"""
     seen = {}
     for y, m, d, c in points:
-        if c is not None:
-            seen[(int(y), int(m), int(d))] = c
+        value = _to_float(c)
+        if value is not None:
+            seen[(int(y), int(m), int(d))] = value
     return [(y, m, d, c) for (y, m, d), c in sorted(seen.items())]
 
 
