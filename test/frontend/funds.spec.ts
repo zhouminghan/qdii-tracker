@@ -6,6 +6,7 @@ import {
   confirmedDailyLimit,
   dailyLimitDisplay,
   dailyLimitTitle,
+  limitChannelSummary,
   limitScopeShort,
   matchesFundQuery,
   sortFundRows,
@@ -180,6 +181,10 @@ describe('fund view-model helpers', () => {
       { ...shared.defaultShare, share_class: 'I', code: '022664' },
     ]
     expect(limitScopeShort(shared.defaultShare, shared.shares)).toBe('A/C/I 共用')
+    shared.defaultShare.limit_channels = [
+      { channel: '代销机构', amount: 500, currency: '人民币', includes_installment: true },
+    ]
+    expect(limitChannelSummary(shared.defaultShare)).toBe('代销机构 ¥500/日（含定投）')
   })
 
   it('uses daily-limit ordering for purchase-status sorting', () => {

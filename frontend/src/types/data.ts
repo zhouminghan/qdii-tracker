@@ -19,6 +19,14 @@ export interface BuyStatusHistory {
   daily_limit: number | null
 }
 
+export interface FundLimitChannel {
+  channel: string
+  amount: number
+  currency: string
+  includes_installment: boolean
+  effective_date?: string | null
+}
+
 export interface FundShare {
   code: string
   name: string
@@ -57,6 +65,8 @@ export interface FundShare {
   limit_verified_at?: string | null
   limit_confidence?: 'official' | 'verified' | 'unverified' | null
   limit_status?: 'active' | 'expired' | 'unverified' | 'unknown' | null
+  limit_channels?: FundLimitChannel[] | null
+  limit_notice_title?: string | null
   buy_status_history?: BuyStatusHistory[]
   buy_rules?: FundRule[]
   sell_rules?: FundRule[]

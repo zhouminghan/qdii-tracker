@@ -10,7 +10,7 @@ import FundDetailDrawer from '@/features/funds/FundDetailDrawer.vue'
 import SouthboundPanel from '@/features/funds/SouthboundPanel.vue'
 import { ETF_GROUPS, OFFSHORE_CATEGORIES } from '@/shared/constants/funds'
 import type { FundSortKey, FundRow } from '@/shared/lib/funds'
-import { matchesFundQuery } from '@/shared/lib/funds'
+import { formatDailyLimit, matchesFundQuery } from '@/shared/lib/funds'
 import { downloadCsv } from '@/shared/lib/csv'
 import { qualityStatusLabel, qualityWarningText } from '@/shared/lib/data-quality'
 import { formatDateTime } from '@/shared/lib/format'
@@ -18,7 +18,7 @@ import { useDataStore } from '@/stores/data'
 import { useSettingsStore } from '@/stores/settings'
 import { useUiStore } from '@/stores/ui'
 import { fetchJson } from '@/shared/infrastructure/http'
-import type { KlineData } from '@/types/data'
+import type { FundLimitChannel, KlineData } from '@/types/data'
 
 const data = useDataStore()
 const settings = useSettingsStore()
@@ -46,6 +46,7 @@ const compareOpen = ref(false)
 const compareLoading = ref(false)
 const compareSeries = ref<Array<{ name: string; values: number[]; dates: string[] }>>([])
 const compareError = ref('')
+const limitBoardOpen = ref(false)
 let liveTimer: number | null = null
 let liveBootTimer: number | null = null
 
@@ -151,6 +152,42 @@ const groupPurchaseSummary = computed(() => {
   if (unknown) parts.push(`${unknown} 只额度待核验`)
   return `${parts.join(' · ')}；额度请按份额逐只查看`
 })
+interface SharedLimitGroup {
+  key: string
+  name: string
+  shareCodes: string[]
+  shareClasses: string[]
+  channels: FundLimitChannel[]
+  effectiveDate: string | null
+  source: string | null
+  sourceUrl: string | null
+}
+const sharedLimitGroups = computed<SharedLimitGroup[]>(() => {
+  const groups = new Map<string, SharedLimitGroup>()
+  for (const row of data.allRows) {
+    const shared = row.shares.filter((share) => (
+      share.limit_scope === 'series_shared' && share.limit_group_id
+    ))
+    if (!shared.length) continue
+    const first = shared[0]
+    const key = first.limit_group_id as string
+    if (groups.has(key)) continue
+    groups.set(key, {
+      key,
+      name: row.display_name,
+      shareCodes: shared.map((share) => share.code),
+      shareClasses: [...new Set(shared.map((share) => share.share_class))],
+      channels: first.limit_channels ?? [],
+      effectiveDate: first.limit_effective_date ?? null,
+      source: first.limit_source ?? null,
+      sourceUrl: first.limit_source_url ?? null,
+    })
+  }
+  return [...groups.values()].sort((left, right) => left.name.localeCompare(right.name, 'zh-CN'))
+})
+function channelAmount(channel: FundLimitChannel): string {
+  return `${formatDailyLimit(channel.amount, channel.currency)}/日`
+}
 
 watch(() => ui.quickSearch, (value) => {
   search.value = value
@@ -409,6 +446,14 @@ onBeforeUnmount(() => {
             <ImageDown :size="15" :class="{ spin: sharing }" aria-hidden="true" /> 分享 PNG
           </button>
           <button
+            v-if="sharedLimitGroups.length"
+            class="button button-secondary"
+            type="button"
+            @click="limitBoardOpen = true"
+          >
+            <Info :size="15" aria-hidden="true" /> 共用额度 {{ sharedLimitGroups.length }}
+          </button>
+          <button
             class="button"
             :class="compareRows.length ? 'button-primary' : 'button-secondary'"
             type="button"
@@ -549,6 +594,51 @@ onBeforeUnmount(() => {
       <div v-else-if="compareLoading" class="page-state">正在加载对比数据...</div>
       <div v-else-if="compareError" class="notice notice-danger">{{ compareError }}</div>
       <EChart v-else-if="compareSeries.length" :option="compareOption" label="多基金归一化收益对比图" height="420px" />
+    </BaseDrawer>
+
+    <BaseDrawer
+      :open="limitBoardOpen"
+      title="共用额度看板"
+      eyebrow="公告口径"
+      width="min(760px, 100vw)"
+      @close="limitBoardOpen = false"
+    >
+      <p class="inline-note">
+        仅展示公募基金公告正文明确写明“多份额合计”或“合并计算”的记录；同金额、同系列不会自动认定。
+      </p>
+      <div v-if="sharedLimitGroups.length" class="limit-board-list">
+        <article v-for="group in sharedLimitGroups" :key="group.key" class="limit-board-item">
+          <header>
+            <div>
+              <h3>{{ group.name }}</h3>
+              <p>{{ group.shareClasses.join(' / ') }} 共用 · {{ group.shareCodes.join(' · ') }}</p>
+            </div>
+            <span class="badge badge-accent">公告已核验</span>
+          </header>
+          <div class="limit-channel-grid">
+            <div v-for="channel in group.channels" :key="`${group.key}-${channel.channel}-${channel.amount}`" class="limit-channel">
+              <span>{{ channel.channel }}</span>
+              <strong class="mono">{{ channelAmount(channel) }}</strong>
+              <small>{{ channel.includes_installment ? '申购与定投合计' : '仅申购' }}</small>
+            </div>
+            <div v-if="!group.channels.length" class="limit-channel">
+              <span>公告口径</span>
+              <strong>见详情</strong>
+              <small>未解析出单渠道金额</small>
+            </div>
+          </div>
+          <footer>
+            <span>
+              {{ group.effectiveDate ? `生效 ${group.effectiveDate}` : '生效日期见公告' }}
+              <template v-if="group.source"> · {{ group.source }}</template>
+            </span>
+            <a v-if="group.sourceUrl" :href="group.sourceUrl" target="_blank" rel="noreferrer">
+              查看公告 {{ '↗' }}
+            </a>
+          </footer>
+        </article>
+      </div>
+      <div v-else class="page-state">暂无已核验的共用额度公告。</div>
     </BaseDrawer>
   </div>
 </template>

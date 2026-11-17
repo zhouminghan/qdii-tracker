@@ -8,6 +8,7 @@ import {
   buyStatusLabel,
   dailyLimitDisplay,
   dailyLimitTitle,
+  limitChannelSummary,
   limitScopeLabel,
   type FundRow,
 } from '@/shared/lib/funds'
@@ -397,6 +398,12 @@ function holdingChangeClass(item: HoldingItem): string {
               </p>
             </div>
             <span class="badge" :class="statusTone()">{{ defaultShare.buy_status || '--' }}</span>
+          </div>
+          <div v-if="!isEtf && limitChannelSummary(defaultShare)" class="limit-evidence-note">
+            <span>{{ limitChannelSummary(defaultShare) }}</span>
+            <a v-if="defaultShare.limit_source_url" :href="defaultShare.limit_source_url" target="_blank" rel="noreferrer">
+              查看公告 <ExternalLink :size="12" aria-hidden="true" />
+            </a>
           </div>
           <ol
             v-if="buyStatusHistory.length"

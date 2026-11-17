@@ -110,6 +110,15 @@ export function dailyLimitDisplay(share: FundShare): string {
   return `${formatDailyLimit(limit, limitCurrency(share))}/日`
 }
 
+export function limitChannelSummary(share: FundShare): string {
+  return (share.limit_channels ?? [])
+    .map((item) => {
+      const suffix = item.includes_installment ? '（含定投）' : ''
+      return `${item.channel} ${formatDailyLimit(item.amount, item.currency)}/日${suffix}`
+    })
+    .join(' · ')
+}
+
 export function dailyLimitTitle(share: FundShare): string {
   const parts = [limitScopeLabel(share)]
   if (share.limit_status === 'active') parts.push('核验有效')
@@ -120,6 +129,9 @@ export function dailyLimitTitle(share: FundShare): string {
   if (share.limit_effective_date) parts.push(`生效：${share.limit_effective_date}`)
   if (share.limit_expires_at) parts.push(`失效：${share.limit_expires_at}`)
   if (share.limit_verified_at) parts.push(`核验：${share.limit_verified_at}`)
+  const channels = limitChannelSummary(share)
+  if (channels) parts.push(channels)
+  if (share.limit_notice_title) parts.push(`公告：${share.limit_notice_title}`)
   if (share.limit_source_url) parts.push(share.limit_source_url)
   return parts.join(' · ')
 }
