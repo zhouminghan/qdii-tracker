@@ -19,27 +19,19 @@ import {
   sellRuleLabel,
   totalAnnualFee,
 } from '@/shared/lib/fund-rules'
-import { formatPrice, movementClass } from '@/shared/lib/format'
+import { formatDate, formatPrice, movementClass } from '@/shared/lib/format'
 import { performanceDisplay } from '@/shared/lib/performance'
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
   shares: FundShare[]
   defaultCode: string
-  navDate?: string | null
-}>(), {
-  navDate: null,
-})
+}>()
 
 const orderedShares = computed(() => [...props.shares].sort((left, right) => {
   const currency = (left.currency === '人民币' ? 0 : 1) - (right.currency === '人民币' ? 0 : 1)
   if (currency) return currency
   return left.share_class.localeCompare(right.share_class, 'zh-CN')
 }))
-
-const headerDate = computed(() => {
-  if (props.navDate) return props.navDate
-  return props.shares.find((share) => share.nav_date)?.nav_date ?? ''
-})
 
 function purchaseTitle(share: FundShare): string {
   const scope = limitScopeShort(share, props.shares)
@@ -140,7 +132,7 @@ onBeforeUnmount(cancelRuleHide)
           <th>份额名称</th>
           <th>币种</th>
           <th class="align-right">规模</th>
-          <th class="align-right">净值<small>{{ headerDate }}</small></th>
+          <th class="align-right">净值</th>
           <th class="align-right">近 1 月</th>
           <th class="align-right">近 3 月</th>
           <th class="align-right">近 6 月</th>
@@ -160,7 +152,12 @@ onBeforeUnmount(cancelRuleHide)
           <td>{{ share.name }}</td>
           <td><span class="badge">{{ share.currency === '美元' ? '$ 美元' : '¥ 人民币' }}</span></td>
           <td class="align-right mono">{{ scaleText(share) }}</td>
-          <td class="align-right mono">{{ navDisplay(share) }}</td>
+          <td class="align-right">
+            <div class="price-value-row">
+              <span class="mono">{{ navDisplay(share) }}</span>
+              <small v-if="share.nav_date" class="mono">{{ formatDate(share.nav_date) }}</small>
+            </div>
+          </td>
           <td class="align-right mono" :class="movementClass(share.chg_1m)">{{ performanceDisplay(share.chg_1m, 'chg_1m', share) }}</td>
           <td class="align-right mono" :class="movementClass(share.chg_3m)">{{ performanceDisplay(share.chg_3m, 'chg_3m', share) }}</td>
           <td class="align-right mono" :class="movementClass(share.chg_6m)">{{ performanceDisplay(share.chg_6m, 'chg_6m', share) }}</td>

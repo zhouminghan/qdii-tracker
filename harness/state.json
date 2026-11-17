@@ -334,7 +334,7 @@
     },
     {
       "task_id": "T21",
-      "task_goal": "修正混合净值日期的表头与行级日期提示",
+      "task_goal": "在净值列逐行展示每个份额自己的净值日期",
       "status": "COMPLETED",
       "dependencies": ["T20"],
       "attempt_count": 1,
@@ -343,15 +343,16 @@
       "changed_files": [
         "frontend/src/pages/FundsPage.vue",
         "frontend/src/features/funds/FundTable.vue",
+        "frontend/src/features/funds/FundShareComparisonTable.vue",
         "test/e2e/funds.spec.ts",
         "docs/ux-audit.md"
       ],
       "test_results": [
-        "Nasdaq group header displays 日期不一 for 11/13 and 11/16 mix",
-        "022525 price cell title shows its own 11/13 NAV date",
+        "main table shows 11/13 directly beside 022525 while other shares show their own dates",
+        "share detail table shows a date in every NAV cell",
         "140 Python, 64 Vitest and focused Chromium tests pass"
       ],
-      "commit_sha": "3ac7714"
+      "commit_sha": ""
     }
   ],
   "gates": {

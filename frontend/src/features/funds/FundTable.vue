@@ -21,8 +21,6 @@ const props = defineProps<{
   sortKey: FundSortKey
   sortDirection: 'asc' | 'desc'
   totalScale: number
-  navDate: string | null
-  navDateMixed: boolean
   categoryLabel: (row: FundRow) => string
   showCategory: boolean
 }>()
@@ -43,7 +41,6 @@ const columns = computed<Array<{ key: FundSortKey | null; label: string; align?:
     key: 'price',
     label: props.tab === 'etf' ? '最新价' : '净值',
     align: 'right',
-    sub: props.navDateMixed ? '日期不一' : (props.navDate ? formatDate(props.navDate) : ''),
   },
   ...(props.tab === 'etf' ? [{ key: 'premium' as const, label: '溢价率', align: 'right' as const }] : []),
   { key: 'chg_1m', label: '近 1 月', align: 'right' },
@@ -221,7 +218,10 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
                 class="price-cell"
                 :title="row.defaultShare.nav_date ? `净值日期 ${formatDate(row.defaultShare.nav_date)}` : '净值日期未知'"
               >
-                <strong class="mono">{{ priceDisplay(row) }}</strong>
+                <div class="price-value-row">
+                  <strong class="mono">{{ priceDisplay(row) }}</strong>
+                  <small v-if="row.defaultShare.nav_date" class="mono">{{ formatDate(row.defaultShare.nav_date) }}</small>
+                </div>
                 <span class="mono" :class="movementClass(dailyChange(row))">{{ formatPercent(dailyChange(row)) }}</span>
               </div>
             </td>
@@ -256,7 +256,6 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
                 <FundShareComparisonTable
                   :shares="row.shares"
                   :default-code="row.default_share_code"
-                  :nav-date="row.defaultShare.nav_date"
                 />
               </div>
             </td>
@@ -290,7 +289,11 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
         </button>
       </div>
       <div class="fund-mobile-metrics">
-        <div><span>最新</span><strong class="mono">{{ priceDisplay(row) }}</strong></div>
+        <div>
+          <span>最新</span>
+          <strong class="mono">{{ priceDisplay(row) }}</strong>
+          <small v-if="row.defaultShare.nav_date" class="mobile-price-date">{{ formatDate(row.defaultShare.nav_date) }}</small>
+        </div>
         <div><span>日涨跌</span><strong class="mono" :class="movementClass(dailyChange(row))">{{ formatPercent(dailyChange(row)) }}</strong></div>
         <div v-if="tab === 'etf'"><span>溢价</span><strong class="mono premium-cell">{{ formatPercent(row.defaultShare.etf_premium) }}</strong></div>
         <div v-else>
@@ -329,7 +332,6 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
         <FundShareComparisonTable
           :shares="row.shares"
           :default-code="row.default_share_code"
-          :nav-date="row.defaultShare.nav_date"
         />
       </div>
     </article>

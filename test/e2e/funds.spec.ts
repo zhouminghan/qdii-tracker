@@ -323,13 +323,16 @@ test.describe('funds workflow', () => {
     await page.goto('/#/funds')
     await page.getByRole('button', { name: /纳指100 指数基金/ }).click()
     await expect(page.locator('.group-brief')).toContainText('A 类每日限购合计 ¥60')
-    await expect(page.getByRole('columnheader', { name: /净值/ })).toContainText('日期不一')
+    const navHeader = page.getByRole('columnheader', { name: /净值/ })
+    await expect(navHeader).toContainText('净值')
+    await expect(navHeader).not.toContainText('日期不一')
 
     await fundSearch(page).fill('022525')
     const row = page.locator('.fund-row:visible')
     await expect(row).toHaveCount(1)
     await expect(row.locator('.purchase-cell .badge')).toContainText('暂停')
     await expect(row.locator('.price-cell')).toHaveAttribute('title', /11\/13/)
+    await expect(row.locator('.price-cell')).toContainText('11/13')
 
     await row.getByRole('button', { name: '详情' }).click()
     const dialog = page.getByRole('dialog')
@@ -338,6 +341,7 @@ test.describe('funds workflow', () => {
     await expect(dialog).toContainText('暂停买入与定投')
 
     const dRow = dialog.locator('.share-comparison-table tbody tr').filter({ hasText: '022525' })
+    await expect(dRow).toContainText('11/13')
     await dRow.locator('.limit-hover-trigger').hover({ force: true })
     const tooltip = page.getByRole('tooltip')
     await expect(tooltip).toContainText('申购与限额历史')
