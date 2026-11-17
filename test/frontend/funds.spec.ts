@@ -170,4 +170,24 @@ describe('fund view-model helpers', () => {
     expect(dailyLimitTitle(shared.defaultShare)).toContain('核验有效')
     expect(dailyLimitTitle(shared.defaultShare)).toContain('失效：2026-12-31')
   })
+
+  it('labels shared limits with the actual share classes', () => {
+    const shared = series('shared', 'Shared', '019524', 10, 1, 5, '人民币', '限大额', 'series_shared')
+    shared.defaultShare.limit_group_id = 'group-aci'
+    shared.shares = [
+      { ...shared.defaultShare, share_class: 'A', code: '019524' },
+      { ...shared.defaultShare, share_class: 'C', code: '019525' },
+      { ...shared.defaultShare, share_class: 'I', code: '022664' },
+    ]
+    expect(limitScopeShort(shared.defaultShare, shared.shares)).toBe('A/C/I 共用')
+  })
+
+  it('uses daily-limit ordering for purchase-status sorting', () => {
+    const rows = [
+      series('a', 'Apple', '000001', 20, 4, 100),
+      series('b', 'Bank', '000002', 100, 2, 10),
+    ]
+    expect(sortFundRows(rows, 'buy_status', 'asc').map((row) => row.series_id))
+      .toEqual(['b', 'a'])
+  })
 })

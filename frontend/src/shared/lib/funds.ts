@@ -84,8 +84,16 @@ export function limitScopeLabel(share: FundShare): string {
   return '额度范围待核验'
 }
 
-export function limitScopeShort(share: FundShare): string {
-  if (share.limit_scope === 'series_shared') return '共享'
+export function limitScopeShort(share: FundShare, shares?: FundShare[]): string {
+  if (share.limit_scope === 'series_shared') {
+    const group = (shares ?? [share]).filter((item) => (
+      !share.limit_group_id || item.limit_group_id === share.limit_group_id
+    ))
+    const classes = [...new Set(group
+      .map((item) => String(item.share_class || '').trim())
+      .filter(Boolean))]
+    return classes.length > 1 ? `${classes.join('/')} 共用` : '共享'
+  }
   if (share.limit_scope === 'unknown' && confirmedDailyLimit(share) !== null) return '待核验'
   return ''
 }
@@ -136,7 +144,7 @@ export function sortFundRows(
       case 'chg_3y': return asNumber(share.chg_3y)
       case 'chg_since_inception': return asNumber(share.chg_since_inception)
       case 'daily_limit': return confirmedDailyLimit(share)
-      case 'buy_status': return share.buy_status ?? ''
+      case 'buy_status': return confirmedDailyLimit(share)
     }
   }
 
@@ -144,7 +152,7 @@ export function sortFundRows(
   const byName = (a: FundRow, b: FundRow) => a.display_name.localeCompare(b.display_name, 'zh-CN')
   return [...rows].sort((a, b) => {
     if (a.starred !== b.starred) return a.starred ? -1 : 1
-    if (key === 'daily_limit') {
+    if (key === 'daily_limit' || key === 'buy_status') {
       const left = confirmedDailyLimit(a.defaultShare)
       const right = confirmedDailyLimit(b.defaultShare)
       if (left === null && right === null) return byName(a, b)

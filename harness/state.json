@@ -5,7 +5,7 @@
   "current_task": "",
   "run_id": "run-2026-11-17-01",
   "base_sha": "e1537c1308a9f844885b3f3abc671c7a5a294bde",
-  "updated_at": "2026-11-17T14:22:00+08:00",
+  "updated_at": "2026-11-17T14:30:00+08:00",
   "tasks": [
     {
       "task_id": "T01",
@@ -28,7 +28,7 @@
       "verification_status": "PASS",
       "blockers": ["没有基金公司公告证据，不能把同金额 A/C 自动标为共享额度"],
       "changed_files": ["docs/decisions/0004-limit-nasdaq-market-knowledge.md"],
-      "test_results": ["catalog contains 119 limited shares with unknown scope and 0 confirmed series_shared"],
+      "test_results": ["catalog contains 116 limited shares with unknown scope and 3 verified series_shared shares"],
       "commit_sha": ""
     },
     {
@@ -57,7 +57,7 @@
       "dependencies": ["T02"],
       "attempt_count": 1,
       "verification_status": "PASS",
-      "blockers": ["series_shared remains 0 until official announcements are manually verified"],
+      "blockers": ["116 limited shares remain unknown; Huatai-Pinebridge A/C/I are now manually verified"],
       "changed_files": [
         "config/limit-scopes.json",
         "scripts/pipeline/public_catalog.py",
@@ -75,7 +75,7 @@
       "verification_status": "PASS",
       "blockers": [],
       "changed_files": ["test/frontend/funds.spec.ts", "test/test_public_catalog.py", "test/e2e/funds.spec.ts"],
-      "test_results": ["62 Vitest tests pass", "125 Python tests pass", "Chromium desktop/mobile funds suites pass"],
+      "test_results": ["64 Vitest tests pass", "128 Python tests pass", "focused Chromium funds/detail suite: 28 passed / 4 intentional skips"],
       "commit_sha": ""
     },
     {
@@ -232,7 +232,7 @@
       "changed_files": ["README.md", "docs/decisions/0004-limit-nasdaq-market-knowledge.md", "harness/state.json"],
       "test_results": [
         "Python 128 passed",
-        "Vitest 62 passed",
+        "Vitest 64 passed",
         "T3 Chromium 109 passed / 7 intentional skips",
         "build pass",
         "seven-layer data gate pass"
@@ -259,12 +259,12 @@
     "residual_risks": [
       "Layer 6 cross-source validation reported 0 compared shares because lsjz/pzd were unavailable during the online gate.",
       "Siblis PE is a month-end snapshot and may lag the current month.",
-      "119 limited shares remain limit_scope=unknown until official announcements are manually verified."
+      "116 limited shares remain limit_scope=unknown until official announcements are manually verified."
     ]
   },
   "test_results": {
     "python": "128 passed",
-    "vitest": "62 passed",
+    "vitest": "64 passed",
     "typecheck": "pass",
     "lint": "pass with 1 pre-existing AppHeader warning",
     "build": "pass",

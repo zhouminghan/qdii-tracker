@@ -39,6 +39,12 @@ const headerDate = computed(() => {
   return props.shares.find((share) => share.nav_date)?.nav_date ?? ''
 })
 
+function purchaseLimitText(share: FundShare): string {
+  const amount = dailyLimitDisplay(share)
+  const scope = limitScopeShort(share, props.shares)
+  return [amount === '--' ? '' : amount, scope].filter(Boolean).join(' · ')
+}
+
 function scaleText(share: FundShare): string {
   if (share.scale_raw) return share.scale_raw
   return share.scale ? `${share.scale.toFixed(2)}亿` : '--'
@@ -122,7 +128,6 @@ onBeforeUnmount(cancelRuleHide)
           <th class="align-right">近 3 年</th>
           <th class="align-right">成立来</th>
           <th class="align-center">申购</th>
-          <th class="align-right">每日限购</th>
           <th class="align-right">买入费</th>
           <th class="align-right">综合费率</th>
           <th class="align-right">卖出规则</th>
@@ -143,16 +148,19 @@ onBeforeUnmount(cancelRuleHide)
           <td class="align-right mono" :class="movementClass(share.chg_3y)">{{ performanceDisplay(share.chg_3y, 'chg_3y', share) }}</td>
           <td class="align-right mono" :class="movementClass(share.chg_since_inception)">{{ performanceDisplay(share.chg_since_inception, 'chg_since_inception', share) }}</td>
           <td class="align-center">
-            <span
-              class="badge"
-              :class="classifyBuyStatus(share) === 'paused' ? 'badge-danger' : classifyBuyStatus(share) === 'limited' ? 'badge-warn' : 'badge-accent'"
-              :title="share.buy_status || '--'"
-            >{{ buyStatusLabel(share) }}</span>
-          </td>
-          <td class="align-right">
-            <div class="limit-cell" :title="dailyLimitTitle(share)">
-              <span class="mono">{{ dailyLimitDisplay(share) }}</span>
-              <span v-if="limitScopeShort(share)" class="limit-scope" :class="{ shared: share.limit_scope === 'series_shared' }">{{ limitScopeShort(share) }}</span>
+            <div class="purchase-cell" :title="dailyLimitTitle(share)">
+              <span
+                class="badge"
+                :class="classifyBuyStatus(share) === 'paused' ? 'badge-danger' : classifyBuyStatus(share) === 'limited' ? 'badge-warn' : 'badge-accent'"
+              >{{ buyStatusLabel(share) }}</span>
+              <div v-if="purchaseLimitText(share)" class="limit-cell purchase-limit">
+                <span class="mono">{{ dailyLimitDisplay(share) }}</span>
+                <span
+                  v-if="limitScopeShort(share, props.shares)"
+                  class="limit-scope"
+                  :class="{ shared: share.limit_scope === 'series_shared' }"
+                >{{ limitScopeShort(share, props.shares) }}</span>
+              </div>
             </div>
           </td>
           <td class="align-right rule-anchor-cell">

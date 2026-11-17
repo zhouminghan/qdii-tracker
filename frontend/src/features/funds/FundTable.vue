@@ -55,8 +55,7 @@ const columns = computed<Array<{ key: FundSortKey | null; label: string; align?:
   { key: 'chg_3y', label: '近 3 年', align: 'right' },
   ...(props.tab === 'offshore' ? [
     { key: 'chg_since_inception' as const, label: '成立来', align: 'right' as const },
-    { key: 'daily_limit' as const, label: '每日限购', align: 'right' as const, sub: '默认份额' },
-    { key: 'buy_status' as const, label: '申购', align: 'center' as const },
+    { key: 'daily_limit' as const, label: '申购', align: 'center' as const, sub: '按每日限购' },
   ] : []),
   { key: null, label: '操作', align: 'center' },
 ])
@@ -71,6 +70,12 @@ function toggle(code: string): void {
 function statusClass(row: FundRow): string {
   const status = classifyBuyStatus(row.defaultShare)
   return status === 'paused' ? 'badge-danger' : status === 'limited' ? 'badge-warn' : 'badge-accent'
+}
+
+function purchaseLimitText(row: FundRow): string {
+  const amount = dailyLimitDisplay(row.defaultShare)
+  const scope = limitScopeShort(row.defaultShare, row.shares)
+  return [amount === '--' ? '' : amount, scope].filter(Boolean).join(' · ')
 }
 
 function scaleText(value: number | null | undefined): string {
@@ -223,18 +228,18 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
             <td class="align-right mono" :class="movementClass(row.defaultShare.chg_3y)">{{ metricDisplay(row, 'chg_3y') }}</td>
             <template v-if="tab === 'offshore'">
               <td class="align-right mono" :class="movementClass(row.defaultShare.chg_since_inception)">{{ metricDisplay(row, 'chg_since_inception') }}</td>
-              <td class="align-right">
-                <div class="limit-cell" :title="dailyLimitTitle(row.defaultShare)">
-                  <span class="mono">{{ dailyLimitDisplay(row.defaultShare) }}</span>
-                  <span
-                    v-if="limitScopeShort(row.defaultShare)"
-                    class="limit-scope"
-                    :class="{ shared: row.defaultShare.limit_scope === 'series_shared' }"
-                  >{{ limitScopeShort(row.defaultShare) }}</span>
-                </div>
-              </td>
               <td class="align-center">
-                <span class="badge" :class="statusClass(row)" :title="row.defaultShare.buy_status || '--'">{{ buyStatusLabel(row.defaultShare) }}</span>
+                <div class="purchase-cell" :title="dailyLimitTitle(row.defaultShare)">
+                  <span class="badge" :class="statusClass(row)">{{ buyStatusLabel(row.defaultShare) }}</span>
+                  <div v-if="purchaseLimitText(row)" class="limit-cell purchase-limit">
+                    <span class="mono">{{ dailyLimitDisplay(row.defaultShare) }}</span>
+                    <span
+                      v-if="limitScopeShort(row.defaultShare, row.shares)"
+                      class="limit-scope"
+                      :class="{ shared: row.defaultShare.limit_scope === 'series_shared' }"
+                    >{{ limitScopeShort(row.defaultShare, row.shares) }}</span>
+                  </div>
+                </div>
               </td>
             </template>
             <td class="align-center">
@@ -290,8 +295,8 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
         <div v-else>
           <span>申购</span>
           <span class="badge" :class="statusClass(row)" :title="row.defaultShare.buy_status || '--'">{{ buyStatusLabel(row.defaultShare) }}</span>
-          <small class="mobile-limit" :title="dailyLimitTitle(row.defaultShare)">
-            {{ dailyLimitDisplay(row.defaultShare) }} {{ limitScopeShort(row.defaultShare) }}
+          <small v-if="purchaseLimitText(row)" class="mobile-limit" :title="dailyLimitTitle(row.defaultShare)">
+            {{ purchaseLimitText(row) }}
           </small>
         </div>
       </div>

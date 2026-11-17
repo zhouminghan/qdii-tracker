@@ -84,6 +84,7 @@ const sortOptions = computed(() => {
   const fields: Array<{ key: FundSortKey; label: string }> = [
     { key: 'series_scale', label: '规模' },
     { key: 'price', label: '价格' },
+    { key: 'daily_limit', label: '申购 / 每日限购' },
     { key: 'chg_1m', label: '近 1 月' },
     { key: 'chg_3m', label: '近 3 月' },
     { key: 'chg_6m', label: '近 6 月' },
@@ -94,16 +95,12 @@ const sortOptions = computed(() => {
     { key: 'chg_since_inception', label: '成立来' },
   ]
   if (tab.value === 'etf') fields.splice(2, 0, { key: 'premium', label: '溢价率' })
-  if (tab.value === 'offshore') {
-    fields.splice(1, 0, { key: 'daily_limit', label: '每日限购' })
-  }
-  return fields.flatMap((field) => {
-    const scope = field.key === 'daily_limit' ? '（同币种内）' : ''
-    return [
-      { value: `${field.key}:desc`, label: `${field.label} · 降序${scope}` },
-      { value: `${field.key}:asc`, label: `${field.label} · 升序${scope}` },
-    ]
-  })
+  return fields
+    .filter((field) => tab.value !== 'etf' || field.key !== 'daily_limit')
+    .flatMap((field) => [
+      { value: `${field.key}:desc`, label: `${field.label} · 降序` },
+      { value: `${field.key}:asc`, label: `${field.label} · 升序` },
+    ])
 })
 const groupNotices: Record<string, { text: string; tone: 'info' | 'warn' }> = {
   'offshore:sp500': {

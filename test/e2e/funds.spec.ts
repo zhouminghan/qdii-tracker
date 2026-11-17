@@ -245,10 +245,10 @@ test.describe('funds workflow', () => {
     await expect(page.getByRole('img', { name: '多基金归一化收益对比图' })).toBeVisible()
   })
 
-  test('sorts daily limits on desktop with favorites pinned', async ({ page }, testInfo) => {
+  test('sorts purchase limits on desktop with favorites pinned', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'chromium-desktop', 'header sorting is desktop-only')
     await page.goto('/#/funds')
-    const header = page.getByRole('columnheader', { name: /每日限购/ })
+    const header = page.getByRole('columnheader', { name: /^申购/ })
     const sortButton = header.getByRole('button')
     await sortButton.click()
     await expect(header).toHaveAttribute('aria-sort', 'descending')
@@ -294,7 +294,7 @@ test.describe('funds workflow', () => {
         await page.getByLabel('排序方式').selectOption('daily_limit:asc')
         await expect(mobileCard.locator('.mobile-limit')).toContainText('¥10/日')
       } else {
-        const header = page.getByRole('columnheader', { name: /每日限购/ })
+        const header = page.getByRole('columnheader', { name: /^申购/ })
         await header.getByRole('button').click()
         await expect(header).toHaveAttribute('aria-sort', 'descending')
         await expect(page.locator('.fund-row:visible').first().locator('.limit-cell .mono')).toContainText('/日')
@@ -302,5 +302,17 @@ test.describe('funds workflow', () => {
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
       expect(overflow).toBeLessThanOrEqual(1)
     }
+  })
+
+  test('shows the shared A/C/I purchase limit from verified evidence', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium-desktop', 'shared-series evidence is checked in the desktop row')
+    await page.goto('/#/funds')
+    await fundSearch(page).fill('019524')
+    const row = page.locator('.fund-row:visible')
+    await expect(row).toHaveCount(1)
+    await expect(row).toContainText('A/C/I 共用')
+    await expect(row).toContainText('¥5/日')
+    await expect(page.getByRole('columnheader', { name: '每日限购', exact: true })).toHaveCount(0)
+    await expect(page.getByRole('columnheader', { name: /^申购/ })).toBeVisible()
   })
 })

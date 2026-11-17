@@ -800,12 +800,25 @@
   font-size: 0.6rem;
 }
 
+.purchase-cell {
+  display: grid;
+  min-width: 0;
+  justify-items: center;
+  gap: 3px;
+}
+
 .limit-cell {
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
   gap: 5px;
   min-width: 0;
+}
+
+.purchase-limit {
+  flex-wrap: wrap;
+  justify-content: center;
+  row-gap: 2px;
 }
 
 .limit-cell .mono {

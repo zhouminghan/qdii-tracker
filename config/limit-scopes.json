@@ -1,5 +1,16 @@
 {
   "schema_version": 1,
   "updated_at": "2026-11-17",
-  "entries": []
+  "entries": [
+    {
+      "series_id": "华泰柏瑞__纳斯达克100ETF联接__nasdaq_passive",
+      "share_codes": ["019524", "019525", "022664"],
+      "limit_scope": "series_shared",
+      "limit_group_id": "huatai-pinebridge-nasdaq100-etf-link-cny",
+      "limit_currency": "人民币",
+      "limit_source": "用户确认（2026-11-17）",
+      "limit_verified_at": "2026-11-17",
+      "limit_confidence": "verified"
+    }
+  ]
 }
