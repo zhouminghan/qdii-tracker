@@ -420,7 +420,7 @@
         "7 existing mobile navigation/drawer tests pass with 1 intentional desktop-only skip",
         "65 Vitest tests, typecheck, lint and production build pass"
       ],
-      "commit_sha": ""
+      "commit_sha": "5649f1e"
     }
   ],
   "gates": {
@@ -455,5 +455,5 @@
     "axe": "pass",
     "data_check": "7 layered checks pass; Layer 6 cross-source unavailable (0 compared)"
   },
-  "commit_sha": "9caa2ba"
+  "commit_sha": "5649f1e"
 }
