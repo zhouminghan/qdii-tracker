@@ -48,7 +48,7 @@
         "frontend/src/styles/funds.css"
       ],
       "test_results": ["fund view-model tests pass", "desktop and mobile limit sorting pass", "375/390/768 responsive pass"],
-      "commit_sha": ""
+      "commit_sha": "f9b9835"
     },
     {
       "task_id": "T04",
@@ -411,5 +411,5 @@
     "axe": "pass",
     "data_check": "7 layered checks pass; Layer 6 cross-source unavailable (0 compared)"
   },
-  "commit_sha": "45c02b7"
+  "commit_sha": "f9b9835"
 }
