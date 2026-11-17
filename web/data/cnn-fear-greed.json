@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-11-17T17:13:28.778056+08:00",
+  "generated_at": "2026-11-18T06:04:06.968949+08:00",
   "schema_version": 1,
   "source": "CNN Fear & Greed",
-  "score": 29.98,
+  "score": 25.23,
   "rating": "fear",
   "band": "fear",
   "label": "恐惧",
-  "timestamp": "2026-11-17T08:55:16+00:00",
+  "timestamp": "2026-11-17T21:43:59+00:00",
   "previous": {
     "close": 31.02,
     "week": 37.37,
@@ -724,15 +724,15 @@
     },
     {
       "date": "2026-11-16",
-      "score": 29.98
+      "score": 31.07
     },
     {
       "date": "2026-11-17",
-      "score": 29.98
+      "score": 25.23
     },
     {
       "date": "2026-11-17",
-      "score": 29.98
+      "score": 25.23
     }
   ],
   "disclaimer": "CNN 恐慌与贪婪指数仅为市场情绪参考，不构成具体买卖建议。"

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-17T17:13:29.062898+08:00",
+  "generated_at": "2026-11-18T06:04:07.829262+08:00",
   "schema_version": 1,
   "source": "证券之星",
   "brands": [
@@ -12,11 +12,6 @@
       "brand": "老凤祥",
       "ornament": 1158.0,
       "investment_bar": 1017.0
-    },
-    {
-      "brand": "老凤祥",
-      "ornament": 1163.0,
-      "investment_bar": 1024.0
     },
     {
       "brand": "中国黄金",
