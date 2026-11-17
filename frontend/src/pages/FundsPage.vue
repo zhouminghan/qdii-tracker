@@ -10,7 +10,7 @@ import FundDetailDrawer from '@/features/funds/FundDetailDrawer.vue'
 import SouthboundPanel from '@/features/funds/SouthboundPanel.vue'
 import { ETF_GROUPS, OFFSHORE_CATEGORIES } from '@/shared/constants/funds'
 import type { FundSortKey, FundRow } from '@/shared/lib/funds'
-import { formatDailyLimit, matchesFundQuery } from '@/shared/lib/funds'
+import { confirmedDailyLimit, formatDailyLimit, matchesFundQuery } from '@/shared/lib/funds'
 import { downloadCsv } from '@/shared/lib/csv'
 import { qualityStatusLabel, qualityWarningText } from '@/shared/lib/data-quality'
 import { formatDateTime } from '@/shared/lib/format'
@@ -66,7 +66,21 @@ const currentRows = computed(() => data.allRows.filter((row) => {
   return row.category === 'etf' && (search.value || etfGroupOf(row) === selectedGroup.value)
 }))
 
-const visibleRows = computed(() => currentRows.value.filter((row) => matchesFundQuery(row, search.value)))
+const visibleRows = computed(() => currentRows.value
+  .filter((row) => matchesFundQuery(row, search.value))
+  .map((row) => {
+    const code = search.value.trim()
+    if (!/^\d{6}$/.test(code)) return row
+    const matched = row.shares.find((share) => share.code === code)
+    if (!matched || matched.code === row.default_share_code) return row
+    // 搜索具体份额时展示该份额，避免 D 类被默认 A 类的暂停状态掩盖。
+    return {
+      ...row,
+      defaultShare: matched,
+      default_share_code: matched.code,
+      starred: settings.isFavorite(matched.code),
+    }
+  }))
 const totalScale = computed(() => visibleRows.value.reduce((sum, row) => sum + (row.series_scale ?? 0), 0))
 const currentGroupLabel = computed(() => groups.value.find((group) => group.key === selectedGroup.value)?.label ?? '')
 const visibleNavDate = computed(() => visibleRows.value
@@ -137,20 +151,27 @@ const groupPurchaseSummary = computed(() => {
   let paused = 0
   let open = 0
   let unknown = 0
+  let totalLimit = 0
   for (const row of currentRows.value) {
-    const share = row.defaultShare
-    if (!String(share.share_class).includes('A')) continue
+    const share = row.shares.find((item) => (
+      String(item.share_class).includes('A') && item.currency === '人民币'
+    )) ?? row.shares.find((item) => String(item.share_class).includes('A'))
+    if (!share) continue
     const status = String(share.buy_status || '')
     if (status.includes('暂停')) paused += 1
     else if (status.includes('限')) {
       limited += 1
-      if (!(share.daily_limit && share.daily_limit > 0)) unknown += 1
+      const limit = confirmedDailyLimit(share)
+      if (limit === null) unknown += 1
+      else totalLimit += limit
     } else if (status.includes('开放')) open += 1
   }
   if (!limited && !paused && !open) return null
-  const parts = [`A 类：${limited} 只限购`, `${paused} 只暂停`, `${open} 只开放`]
+  const parts = []
+  if (totalLimit > 0) parts.push(`A 类每日限购合计 ${formatDailyLimit(totalLimit, '人民币')}`)
+  parts.push(`限购 ${limited} 只`, `暂停 ${paused} 只`, `开放 ${open} 只`)
   if (unknown) parts.push(`${unknown} 只额度待核验`)
-  return `${parts.join(' · ')}；额度请按份额逐只查看`
+  return parts.join(' · ')
 })
 interface SharedLimitGroup {
   key: string

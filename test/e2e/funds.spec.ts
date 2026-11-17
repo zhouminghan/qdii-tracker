@@ -311,10 +311,30 @@ test.describe('funds workflow', () => {
     const row = page.locator('.fund-row:visible')
     await expect(row).toHaveCount(1)
     const badge = row.locator('.purchase-cell .badge')
-    await expect(badge).toHaveText('限 ¥5')
+    await expect(badge).toContainText('限 ¥5')
+    await expect(badge).toContainText('A/C/I 共用')
     await expect(row.locator('.purchase-cell')).toHaveAttribute('title', /A\/C\/I 共用/)
     await expect(page.getByRole('columnheader', { name: '每日限购', exact: true })).toHaveCount(0)
     await expect(page.getByRole('columnheader', { name: /^申购/ })).toBeVisible()
+  })
+
+  test('shows the matched D share status and restores the A-class limit total', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium-desktop', 'desktop share-specific search is sufficient')
+    await page.goto('/#/funds')
+    await page.getByRole('button', { name: /纳指100 指数基金/ }).click()
+    await expect(page.locator('.group-brief')).toContainText('A 类每日限购合计 ¥60')
+
+    await fundSearch(page).fill('022525')
+    const row = page.locator('.fund-row:visible')
+    await expect(row).toHaveCount(1)
+    await expect(row.locator('.purchase-cell .badge')).toContainText('限 ¥100')
+    await expect(row).not.toContainText('暂停')
+
+    await row.getByRole('button', { name: '详情' }).click()
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toContainText('022525')
+    await expect(dialog).toContainText('D 类')
+    await expect(dialog).toContainText('限 ¥100')
   })
 
   test('opens the shared-limit announcement board', async ({ page }) => {

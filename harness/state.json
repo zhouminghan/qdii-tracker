@@ -5,7 +5,7 @@
   "current_task": "",
   "run_id": "run-2026-11-17-01",
   "base_sha": "e1537c1308a9f844885b3f3abc671c7a5a294bde",
-  "updated_at": "2026-11-17T16:45:00+08:00",
+  "updated_at": "2026-11-17T17:10:00+08:00",
   "tasks": [
     {
       "task_id": "T01",
@@ -262,6 +262,29 @@
         "focused Chromium shared-limit board/detail tests pass"
       ],
       "commit_sha": "0656ec1"
+    },
+    {
+      "task_id": "T18",
+      "task_goal": "细化份额级搜索展示、恢复 A 类每日限购合计并标注共用份额",
+      "status": "COMPLETED",
+      "dependencies": ["T17"],
+      "attempt_count": 2,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": [
+        "frontend/src/pages/FundsPage.vue",
+        "frontend/src/features/funds/FundTable.vue",
+        "test/e2e/funds.spec.ts",
+        "docs/data-contract.md",
+        "docs/ux-audit.md"
+      ],
+      "test_results": [
+        "search 022525 shows D share 限 ¥100 instead of default A pause",
+        "Nasdaq group summary restores A-class daily total ¥60",
+        "shared purchase badge shows A/C or A/C/I 共用",
+        "138 Python, 64 Vitest and focused Chromium tests pass"
+      ],
+      "commit_sha": ""
     }
   ],
   "gates": {

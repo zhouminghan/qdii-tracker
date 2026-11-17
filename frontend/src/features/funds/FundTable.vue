@@ -76,6 +76,13 @@ function purchaseTitle(row: FundRow): string {
   return [dailyLimitTitle(row.defaultShare), scope].filter(Boolean).join(' · ')
 }
 
+function purchaseStatusLabel(row: FundRow): string {
+  const scope = row.defaultShare.limit_scope === 'series_shared'
+    ? limitScopeShort(row.defaultShare, row.shares)
+    : ''
+  return [buyStatusLabel(row.defaultShare), scope].filter(Boolean).join(' · ')
+}
+
 function scaleText(value: number | null | undefined): string {
   if (!value) return '--'
   return value >= 100 ? `${value.toFixed(0)}亿` : `${value.toFixed(2)}亿`
@@ -228,7 +235,7 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
               <td class="align-right mono" :class="movementClass(row.defaultShare.chg_since_inception)">{{ metricDisplay(row, 'chg_since_inception') }}</td>
               <td class="align-center">
                 <div class="purchase-cell" :title="purchaseTitle(row)">
-                  <span class="badge" :class="statusClass(row)">{{ buyStatusLabel(row.defaultShare) }}</span>
+                  <span class="badge" :class="statusClass(row)">{{ purchaseStatusLabel(row) }}</span>
                 </div>
               </td>
             </template>
@@ -284,7 +291,7 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
         <div v-if="tab === 'etf'"><span>溢价</span><strong class="mono premium-cell">{{ formatPercent(row.defaultShare.etf_premium) }}</strong></div>
         <div v-else>
           <span>申购</span>
-          <span class="badge" :class="statusClass(row)" :title="purchaseTitle(row)">{{ buyStatusLabel(row.defaultShare) }}</span>
+          <span class="badge" :class="statusClass(row)" :title="purchaseTitle(row)">{{ purchaseStatusLabel(row) }}</span>
         </div>
       </div>
       <div class="fund-mobile-performance">
