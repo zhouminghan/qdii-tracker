@@ -150,7 +150,8 @@ qdii-tracker/
 │   └── setup_hooks.sh
 ├── config/    # 基金分类 SSOT 配置
 │   ├── funds.json
-│   └── limit-scopes.json
+│   ├── limit-scopes.json
+│   └── purchase-overrides.json
 ├── web/    # 前端（纯静态）
 │   ├── data/
 │   ├── .nojekyll

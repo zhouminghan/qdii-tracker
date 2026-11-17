@@ -8,11 +8,37 @@ import re
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from core.constants import CATEGORIES, OTC_CATEGORIES, ETF_CATEGORIES, DATA_DIR, ETF_SKIP_FIELDS, ALWAYS_OVERWRITE_FIELDS, ETF_CODE_PREFIXES
+from core.constants import CATEGORIES, OTC_CATEGORIES, ETF_CATEGORIES, CONFIG_DIR, DATA_DIR, ETF_SKIP_FIELDS, ALWAYS_OVERWRITE_FIELDS, ETF_CODE_PREFIXES
 from core.utils import to_float, read_json, write_json, bump_generated_at, normalize_share_keys, beijing_now_iso, calc_series_scale
 from sources.eastmoney_source import fetch_lsjz, fetch_pzd, fetch_f10, fetch_fee_rules
 from sources.akshare_source import fetch_ytd, fetch_inception_return, fetch_etf_data, fetch_purchase_data, fetch_rank_data
 from sources.ths_source import apply_ths_limit_fallback, merge_purchase_info
+
+
+PURCHASE_OVERRIDE_FILE = "purchase-overrides.json"
+
+
+def _load_purchase_overrides() -> dict:
+    path = CONFIG_DIR / PURCHASE_OVERRIDE_FILE
+    if not path.exists():
+        return {}
+    try:
+        payload = read_json(path)
+    except Exception:  # noqa: BLE001
+        return {}
+    entries = payload.get("entries") if isinstance(payload, dict) else {}
+    return entries if isinstance(entries, dict) else {}
+
+
+def _apply_purchase_override(share: dict, override: dict) -> bool:
+    if not isinstance(override, dict) or not override.get("buy_status"):
+        return False
+    share["buy_status"] = str(override["buy_status"])
+    if "daily_limit" in override:
+        share["daily_limit"] = override.get("daily_limit")
+    share["buy_status_source"] = override.get("source") or "人工核验"
+    share["buy_status_verified_at"] = override.get("verified_at")
+    return True
 
 
 def _update_history(share: dict, today: str):
@@ -473,6 +499,7 @@ def _refresh_purchase_status(data_dir, only_codes, categories=None):
     today = beijing_now_iso()[:10]
     purchase_map = fetch_purchase_data()
     rank_map = fetch_rank_data()
+    purchase_overrides = _load_purchase_overrides()
     for cat in categories:
         fp = data_dir / f"{cat}.json"
         if not fp.exists(): continue
@@ -488,6 +515,8 @@ def _refresh_purchase_status(data_dir, only_codes, categories=None):
                     merge_purchase_info(share, purchase_map[code]); updated += 1
                 if not code.startswith(ETF_CODE_PREFIXES):
                     apply_ths_limit_fallback(share)
+                if code in purchase_overrides:
+                    _apply_purchase_override(share, purchase_overrides[code])
                 if code in rank_map:
                     r = rank_map[code]
                     if r.get("nav_date", "") >= share.get("nav_date", ""):

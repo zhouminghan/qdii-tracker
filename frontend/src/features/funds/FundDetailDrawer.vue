@@ -10,6 +10,7 @@ import {
   dailyLimitTitle,
   limitChannelSummary,
   limitScopeLabel,
+  purchaseActionLabel,
   type FundRow,
 } from '@/shared/lib/funds'
 import { lineTooltipFormatter } from '@/shared/lib/chart-tooltip'
@@ -394,6 +395,7 @@ function holdingChangeClass(item: HoldingItem): string {
               <p :title="dailyLimitTitle(defaultShare)">
                 默认份额 · {{ defaultShare.currency }}
                 <template v-if="!isEtf"> · 单日限购 {{ dailyLimitDisplay(defaultShare) }} · {{ limitScopeLabel(defaultShare) }}</template>
+                <template v-if="!isEtf"> · {{ purchaseActionLabel(defaultShare) }}</template>
                 · 由新到旧
               </p>
             </div>

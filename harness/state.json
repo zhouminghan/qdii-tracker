@@ -5,7 +5,7 @@
   "current_task": "",
   "run_id": "run-2026-11-17-01",
   "base_sha": "e1537c1308a9f844885b3f3abc671c7a5a294bde",
-  "updated_at": "2026-11-17T17:10:00+08:00",
+  "updated_at": "2026-11-17T17:30:00+08:00",
   "tasks": [
     {
       "task_id": "T01",
@@ -285,6 +285,29 @@
         "139 Python, 64 Vitest and focused Chromium tests pass"
       ],
       "commit_sha": "de0a290"
+    },
+    {
+      "task_id": "T19",
+      "task_goal": "按份额刷新申购状态并校正平台 action 状态",
+      "status": "COMPLETED",
+      "dependencies": ["T18"],
+      "attempt_count": 2,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": [
+        "config/purchase-overrides.json",
+        "scripts/pipeline/fill.py",
+        "frontend/src/shared/lib/funds.ts",
+        "frontend/src/features/funds/FundDetailDrawer.vue",
+        "web/data/nasdaq_passive.json"
+      ],
+      "test_results": [
+        "天弘 D 022525 override applied as 暂停申购 and history recorded 2026-11-17",
+        "A/C/D remain independent in per-share refresh regression",
+        "140 Python tests pass",
+        "online seven-layer gate passes; Layer 6 source unavailable"
+      ],
+      "commit_sha": ""
     }
   ],
   "gates": {
@@ -310,7 +333,7 @@
     ]
   },
   "test_results": {
-    "python": "139 passed",
+    "python": "140 passed",
     "vitest": "64 passed",
     "typecheck": "pass",
     "lint": "pass with 1 pre-existing AppHeader warning",

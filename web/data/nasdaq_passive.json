@@ -1783,8 +1783,8 @@
           "fund_company": "天弘基金管理有限公司",
           "fund_type_xq": "QDII-股票",
           "full_name": "天弘纳斯达克100指数型发起式证券投资基金(QDII)",
-          "buy_status": "限大额",
-          "daily_limit": 100.0,
+          "buy_status": "暂停申购",
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-07-11",
@@ -1810,6 +1810,11 @@
               "date": "2026-10-29",
               "buy_status": "限大额",
               "daily_limit": 100.0
+            },
+            {
+              "date": "2026-11-17",
+              "buy_status": "暂停申购",
+              "daily_limit": null
             }
           ],
           "buy_rules": [
@@ -1841,7 +1846,9 @@
           "buy_min": 0.1,
           "chg_1w": 5.92,
           "free_hold_days": 30,
-          "max_sell_rate": 1.5
+          "max_sell_rate": 1.5,
+          "buy_status_source": "腾讯理财通用户核验",
+          "buy_status_verified_at": "2026-11-17"
         }
       ],
       "default_share_code": "018043",

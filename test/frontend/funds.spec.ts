@@ -7,6 +7,7 @@ import {
   dailyLimitDisplay,
   dailyLimitTitle,
   limitChannelSummary,
+  purchaseActionLabel,
   limitScopeShort,
   matchesFundQuery,
   sortFundRows,
@@ -116,6 +117,7 @@ describe('fund view-model helpers', () => {
     expect(confirmedDailyLimit(paused.defaultShare)).toBeNull()
     expect(dailyLimitDisplay(paused.defaultShare)).toBe('--')
     expect(buyStatusLabel(paused.defaultShare)).toBe('暂停')
+    expect(purchaseActionLabel(paused.defaultShare)).toBe('暂停买入与定投')
     expect(sortFundRows([paused, limited], 'daily_limit', 'asc').map((row) => row.series_id))
       .toEqual(['limited', 'paused'])
   })
@@ -165,6 +167,7 @@ describe('fund view-model helpers', () => {
     expect(limitScopeShort(shared.defaultShare)).toBe('共享')
     expect(limitScopeShort(unknown.defaultShare)).toBe('待核验')
     expect(dailyLimitDisplay(open.defaultShare)).toBe('不限额')
+    expect(purchaseActionLabel(open.defaultShare)).toBe('可买入与定投')
     expect(buyStatusLabel(shared.defaultShare)).toBe('限 ¥10万')
     shared.defaultShare.limit_status = 'active'
     shared.defaultShare.limit_expires_at = '2026-12-31'

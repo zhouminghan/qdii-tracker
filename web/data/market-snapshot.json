@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-17T17:03:24.189802+08:00",
+  "generated_at": "2026-11-17T17:13:16.943158+08:00",
   "schema_version": 1,
   "source": "local data files (offline close snapshot)",
   "market_indices": {
@@ -350,7 +350,7 @@
     }
   },
   "brand_gold": {
-    "generated_at": "2026-11-17T17:03:36.887256+08:00",
+    "generated_at": "2026-11-17T17:13:29.062898+08:00",
     "as_of": "2026-11-17",
     "source": "证券之星",
     "brands": [
@@ -418,13 +418,13 @@
   },
   "macro": {
     "vix": {
-      "value": 23.27,
+      "value": 23.4,
       "as_of": "2026-11-17",
       "source": "market-temperature.json",
       "derived": false
     },
     "dxy": {
-      "value": 103.5,
+      "value": 103.48,
       "as_of": "2026-11-17",
       "source": "market-temperature.json",
       "derived": false
@@ -468,7 +468,7 @@
     "as_of": "2026-11-17"
   },
   "temperature": {
-    "generated_at": "2026-11-17T17:03:35.238005+08:00",
+    "generated_at": "2026-11-17T17:13:27.594783+08:00",
     "schema_version": 1,
     "score": 41,
     "band": "yellow",
@@ -503,10 +503,10 @@
         "score": 50,
         "label": "情绪偏紧",
         "raw": {
-          "value": 23.27,
+          "value": 23.4,
           "date": "2026-11-17"
         },
-        "note": "VIX 23.3，恐慌情绪中性。",
+        "note": "VIX 23.4，恐慌情绪中性。",
         "source": "Yahoo Finance",
         "stale": false
       },
@@ -525,7 +525,7 @@
         "score": 55,
         "label": "美元中性",
         "raw": {
-          "value": 103.5,
+          "value": 103.48,
           "date": "2026-11-17"
         },
         "note": "美元指数 103.5。",
@@ -541,10 +541,10 @@
       "10 年期美债收益率 5.12%，压制高估值资产。"
     ],
     "disclaimer": "本评分仅为基于公开数据的量化情绪参考，不构成投资建议。权重与阈值可调，历史表现不代表未来。",
-    "as_of": "2026-11-17T17:03:35.238005+08:00"
+    "as_of": "2026-11-17T17:13:27.594783+08:00"
   },
   "etf_premium": {
-    "generated_at": "2026-11-17T17:03:24.189802+08:00",
+    "generated_at": "2026-11-17T17:13:16.943158+08:00",
     "as_of": "2026-11-13",
     "count": 21,
     "items": {
@@ -824,7 +824,7 @@
     }
   },
   "offshore_live_nav": {
-    "generated_at": "2026-11-17T17:03:24.189802+08:00",
+    "generated_at": "2026-11-17T17:13:16.943158+08:00",
     "as_of": "2026-11-16",
     "count": 70,
     "items": {

@@ -327,14 +327,13 @@ test.describe('funds workflow', () => {
     await fundSearch(page).fill('022525')
     const row = page.locator('.fund-row:visible')
     await expect(row).toHaveCount(1)
-    await expect(row.locator('.purchase-cell .badge')).toContainText('限 ¥100')
-    await expect(row).not.toContainText('暂停')
+    await expect(row.locator('.purchase-cell .badge')).toContainText('暂停')
 
     await row.getByRole('button', { name: '详情' }).click()
     const dialog = page.getByRole('dialog')
     await expect(dialog).toContainText('022525')
     await expect(dialog).toContainText('D 类')
-    await expect(dialog).toContainText('限 ¥100')
+    await expect(dialog).toContainText('暂停买入与定投')
   })
 
   test('opens the shared-limit announcement board', async ({ page }) => {

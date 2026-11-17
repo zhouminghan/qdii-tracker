@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-11-17",
+  "entries": {
+    "022525": {
+      "buy_status": "暂停申购",
+      "daily_limit": null,
+      "source": "腾讯理财通用户核验",
+      "verified_at": "2026-11-17"
+    }
+  }
+}

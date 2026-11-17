@@ -54,6 +54,8 @@ export interface FundShare {
   established?: string | null
   manager?: string | null
   buy_status?: string | null
+  buy_status_source?: string | null
+  buy_status_verified_at?: string | null
   daily_limit?: number | null
   limit_scope?: 'share' | 'series_shared' | 'unknown' | null
   limit_group_id?: string | null

@@ -110,6 +110,14 @@ export function dailyLimitDisplay(share: FundShare): string {
   return `${formatDailyLimit(limit, limitCurrency(share))}/日`
 }
 
+export function purchaseActionLabel(share: FundShare): string {
+  const kind = classifyBuyStatus(share)
+  if (kind === 'paused') return '暂停买入与定投'
+  if (kind === 'limited') return '可买入与定投，受每日额度限制'
+  if (kind === 'open') return '可买入与定投'
+  return '申购状态待确认'
+}
+
 export function limitChannelSummary(share: FundShare): string {
   return (share.limit_channels ?? [])
     .map((item) => {
@@ -120,7 +128,7 @@ export function limitChannelSummary(share: FundShare): string {
 }
 
 export function dailyLimitTitle(share: FundShare): string {
-  const parts = [limitScopeLabel(share)]
+  const parts = [limitScopeLabel(share), purchaseActionLabel(share)]
   if (share.limit_status === 'active') parts.push('核验有效')
   if (share.limit_status === 'expired') parts.push('公告已失效')
   if (share.limit_status === 'unverified') parts.push('待核验')
@@ -132,6 +140,8 @@ export function dailyLimitTitle(share: FundShare): string {
   const channels = limitChannelSummary(share)
   if (channels) parts.push(channels)
   if (share.limit_notice_title) parts.push(`公告：${share.limit_notice_title}`)
+  if (share.buy_status_source) parts.push(`申购状态来源：${share.buy_status_source}`)
+  if (share.buy_status_verified_at) parts.push(`状态核验：${share.buy_status_verified_at}`)
   if (share.limit_source_url) parts.push(share.limit_source_url)
   return parts.join(' · ')
 }

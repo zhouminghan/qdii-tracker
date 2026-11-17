@@ -6,6 +6,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from pipeline.fill import (
     _compact_history,
+    _apply_purchase_override,
     _normalize_purchase_state,
     _refresh_purchase_status,
     _update_history,
@@ -152,6 +153,7 @@ def test_refresh_purchase_status_updates_each_share_independently(monkeypatch, t
     })
     monkeypatch.setattr(fill, "fetch_rank_data", lambda: {})
     monkeypatch.setattr(fill, "apply_ths_limit_fallback", lambda share: False)
+    monkeypatch.setattr(fill, "_load_purchase_overrides", lambda: {})
 
     fill._refresh_purchase_status(tmp_path, set(), categories=[category])
     refreshed = json.loads((tmp_path / f"{category}.json").read_text(encoding="utf-8"))
@@ -160,3 +162,18 @@ def test_refresh_purchase_status_updates_each_share_independently(monkeypatch, t
     assert shares["018044"]["buy_status"] == "暂停申购"
     assert shares["022525"]["buy_status"] == "限大额"
     assert shares["022525"]["daily_limit"] == 100.0
+
+
+def test_purchase_override_persists_platform_specific_pause():
+    share = {"code": "022525", "buy_status": "限大额", "daily_limit": 100.0}
+    applied = _apply_purchase_override(share, {
+        "buy_status": "暂停申购",
+        "daily_limit": None,
+        "source": "腾讯理财通用户核验",
+        "verified_at": "2026-11-17",
+    })
+    assert applied is True
+    assert share["buy_status"] == "暂停申购"
+    assert share["daily_limit"] is None
+    assert share["buy_status_source"] == "腾讯理财通用户核验"
+    assert share["buy_status_verified_at"] == "2026-11-17"
