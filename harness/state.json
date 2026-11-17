@@ -5,7 +5,7 @@
   "current_task": "",
   "run_id": "run-2026-11-17-01",
   "base_sha": "e1537c1308a9f844885b3f3abc671c7a5a294bde",
-  "updated_at": "2026-11-17T14:30:00+08:00",
+  "updated_at": "2026-11-17T16:45:00+08:00",
   "tasks": [
     {
       "task_id": "T01",
@@ -26,9 +26,9 @@
       "dependencies": ["T01"],
       "attempt_count": 1,
       "verification_status": "PASS",
-      "blockers": ["没有基金公司公告证据，不能把同金额 A/C 自动标为共享额度"],
+      "blockers": ["100 个有限购份额仍未匹配到明确的共用额度公告"],
       "changed_files": ["docs/decisions/0004-limit-nasdaq-market-knowledge.md"],
-      "test_results": ["catalog contains 116 limited shares with unknown scope and 3 verified series_shared shares"],
+      "test_results": ["catalog contains 100 limited shares with unknown scope and 19 verified series_shared shares"],
       "commit_sha": ""
     },
     {
@@ -238,6 +238,30 @@
         "seven-layer data gate pass"
       ],
       "commit_sha": "a6437c9"
+    },
+    {
+      "task_id": "T17",
+      "task_goal": "从公开基金公告自动识别共用申购额度并展示证据",
+      "status": "COMPLETED",
+      "dependencies": ["T04", "T15"],
+      "attempt_count": 4,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": [
+        "scripts/pipeline/limit_notices.py",
+        "web/data/limit-notices.json",
+        "scripts/pipeline/public_catalog.py",
+        "frontend/src/pages/FundsPage.vue",
+        "frontend/src/features/funds/FundDetailDrawer.vue",
+        "frontend/src/shared/lib/funds.ts"
+      ],
+      "test_results": [
+        "公开公告扫描 69 个多份额系列，确认 9 组（19 个份额）",
+        "公告正文/PDF、渠道拆分、币种拆分和单独计算误判测试通过",
+        "137 Python tests pass",
+        "focused Chromium shared-limit board/detail tests pass"
+      ],
+      "commit_sha": "2fa916f"
     }
   ],
   "gates": {
@@ -255,22 +279,22 @@
     "p0": 0,
     "p1": 0,
     "p2": 0,
-    "summary": "No unresolved code or product defect found in the implemented scope. Shared A/C limits remain explicitly unknown pending official evidence.",
+    "summary": "No unresolved code or product defect found. Announcement scanning now confirms 9 shared-limit groups; remaining limited shares stay explicitly unknown.",
     "residual_risks": [
       "Layer 6 cross-source validation reported 0 compared shares because lsjz/pzd were unavailable during the online gate.",
       "Siblis PE is a month-end snapshot and may lag the current month.",
-      "116 limited shares remain limit_scope=unknown until official announcements are manually verified."
+      "100 limited shares remain limit_scope=unknown after the current 9 announcement groups."
     ]
   },
   "test_results": {
-    "python": "128 passed",
+    "python": "137 passed",
     "vitest": "64 passed",
     "typecheck": "pass",
     "lint": "pass with 1 pre-existing AppHeader warning",
     "build": "pass",
-    "chromium_t3": "109 passed, 7 skipped",
+    "chromium_focused": "4 passed, 2 intentional skips",
     "axe": "pass",
     "data_check": "7 layered checks pass; Layer 6 cross-source unavailable (0 compared)"
   },
-  "commit_sha": "a6437c9"
+  "commit_sha": "2fa916f"
 }
