@@ -12,7 +12,8 @@
 | 实时汇率 | 新浪财经 `hq.sinajs.cn`（USD/CNY、USD/CNH、USD/JPY、USD/HKD、CNY/HKD） | `fx-spot.json` | 保留最近成功快照；`market-snapshot.json` 优先读取，缺失回退 K 线 |
 | 美债收益率 | 美国财政部官方 CSV → FRED → 东方财富 | `macro-rates.json` | 复用旧快照 |
 | VIX | Yahoo Finance → FRED `VIXCLS` | `market-temperature.json` | 复用旧值 |
-| 纳指历史 | Yahoo `^NDX`、新浪指数兜底 | `nasdaq-history.json` | 保留旧图谱 |
+| 纳指历史 | Yahoo `^NDX`、新浪 `.NDX`（必须同为纳斯达克 100） | `nasdaq-history.json` | 保留旧图谱；新数据日期倒退时拒绝覆盖 |
+| 纳指 PE | Siblis Research `NDX/pe-trailing` | `ndx-pe.json` | 保留旧值；`date` 保持统计日，不改成抓取时间 |
 | CNN 情绪 | CNN dataviz 接口 | `cnn-fear-greed.json` | 保留旧值 |
 | 黄金 | 金投网 Au9999、新浪 `hf_XAU` 伦敦金、本地 K 线兜底 | `gold-spot.json`、`market-snapshot.json` | 保留最近成功值；无独立 XAU 时回退折算且不计算溢价 |
 | 品牌金价 | 证券之星 | `brand-gold.json` | 单字段 `null` |
@@ -23,7 +24,7 @@
 GitHub Actions 工作日 22:00（北京时间）与次日 00:30 兜底
   → fill / nav_history / performance / kline_history / market data
   → fx_spot / gold_spot（实时汇率与黄金）
-  → macro_rates / market_temperature / ndx_pe
+  → macro_rates / market_temperature（新浪 `.NDX`） / ndx_pe
   → fundctl.py check
   → checks/build_snapshot.py
       → snapshot.json / feed.rss

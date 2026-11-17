@@ -149,7 +149,8 @@ qdii-tracker/
 │   ├── requirements.txt
 │   └── setup_hooks.sh
 ├── config/    # 基金分类 SSOT 配置
-│   └── funds.json
+│   ├── funds.json
+│   └── limit-scopes.json
 ├── web/    # 前端（纯静态）
 │   ├── data/
 │   ├── .nojekyll
@@ -184,6 +185,7 @@ qdii-tracker/
 │   ├── test_market_temperature.py
 │   ├── test_nasdaq_history.py
 │   ├── test_nav_history.py
+│   ├── test_ndx_pe.py
 │   ├── test_performance.py
 │   ├── test_premium_history.py
 │   ├── test_public_catalog.py

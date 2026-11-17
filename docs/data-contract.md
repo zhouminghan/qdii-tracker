@@ -38,11 +38,44 @@
     "missing_nav": 0,
     "expected_no_nav": 0,
     "stale_nav": 0,
+    "limit_scope": {
+      "share": 0,
+      "series_shared": 0,
+      "unknown": 119
+    },
     "warnings": [],
     "errors": []
   }
 }
 ```
+
+### 基金份额限购字段
+
+`catalog.json` 的每个 share 保留 pipeline 产出的 `daily_limit`，并由
+`scripts/pipeline/public_catalog.py` 基于 `config/limit-scopes.json` 补充以下可选字段：
+
+| 字段 | 含义 |
+|------|------|
+| `limit_scope` | `share`（单份额）、`series_shared`（系列共同额度）、`unknown`（范围未核验） |
+| `limit_group_id` | 人工核验的共同额度组 ID；仅同一真实额度组使用相同值 |
+| `limit_currency` | 额度币种，缺失时回退 share 的 `currency` |
+| `limit_source` / `limit_source_url` | 基金公司公告或可靠来源及链接 |
+| `limit_effective_date` / `limit_verified_at` | 公告生效日与人工核验日 |
+| `limit_confidence` | `official`、`verified` 或 `unverified` |
+
+`daily_limit` 仍是原始数值，不允许把展示字符串写回数据。暂停申购、开放申购和
+额度缺失不能互相冒充：暂停不是 0 元限购；开放申购即使残留数字也不参与限购排序。
+多份额系列如果没有人工核验记录，全部标记为 `unknown`，不得仅因 A/C 名称、代码、
+金额相同就推断共同额度。
+
+### 限购排序规则
+
+1. 收藏基金始终置顶。
+2. 收藏组内部按默认份额的已确认 `daily_limit` 排序。
+3. 人民币组在美元组之前；只有同币种金额才参与数值比较，不做跨币种换算或直接比较。
+4. 降序/升序只改变同币种金额顺序。
+5. 暂停、开放、额度缺失和未确认数值始终置底。
+6. 系列行显示“默认份额”口径；全部份额的真实额度在详情份额表中逐行展示，不做求和。
 
 ### 状态语义
 
@@ -62,7 +95,8 @@
 - `market-snapshot.json`：首屏市场快照，含 `schema_version`、`generated_at`、`source`。指数、科技股、外汇、黄金与宏观字段均保留原始 `as_of`；`change_pct` 使用百分数单位（如 `-0.54` 表示 -0.54%）。黄金优先使用 `gold-spot.json` 的独立 Au9999 / XAU 报价，此时 `gold.xau.derived = false` 且 `gold.premium_pct` 可计算；没有独立 XAU 时才回退 `au9999 * 31.1034768 / USDCNH` 折算并标记 `derived: true`，此时不计算国内溢价。
 - `fx-spot.json`：新浪财经即期汇率快照，`items` 包含 `fxUSDCNY`、`usdcnh`、`fxUSDJPY`、`fxUSDHKD`、`fxCNYHKD`，每条保留 `price`、`change`、`change_pct`、`as_of`、`source`、`source_updated_at`。`market-snapshot.json` 优先使用它，失败时回退 `fx-kline/`。
 - `gold-spot.json`：独立黄金快照，`au9999` 为金投网上海金（元/克），`xau` 为新浪伦敦金现货（USD/盎司）；两者都带 `derived: false`。抓取失败时保留上一次成功值。
-- `nasdaq-history.json`：纳指年度序列、月度热力图与排行。
+- `nasdaq-history.json`：纳斯达克 100（`^NDX`）年度序列、YTD、日线收盘最大回撤、月度热力图与 5/10/20 年及全长月份排行。`index.symbol` 必须为 `^NDX`；`as_of` 是最后有效交易日；`heatmap.partial_year` 标记进行中的年份，未结束月份不进入季节性排行。
+- `ndx-pe.json`：纳斯达克 100 TTM PE，`source` 为 Siblis Research，`frequency: monthly`、`observation_period: month_end`；`date` 是统计日而不是抓取时间。抓取失败保留旧快照。
 - `cnn-fear-greed.json`：当前值、分档和历史序列。
 - `nav-history/{code}.json`：日期与净值/收盘序列。
 - `holdings/{code}.json`：最近季度 Top10 持仓。

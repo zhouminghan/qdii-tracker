@@ -1,142 +1,270 @@
 {
-  "goal_id": "qdii-architecture-upgrade-2026-11-14",
-  "current_phase": "release-candidate-audit",
-  "current_task": "remote-ci-pages-verification",
-  "validated_code_sha": "9c0975fe52bf767fc2605785d4b7efddbf5f5eab",
-  "frontend_validated_code_sha": "9c0975fe52bf767fc2605785d4b7efddbf5f5eab",
-  "agent_rules_validated_sha": "0c2b5dd9a552c35671f258ef387c15aedf233911",
-  "documentation_sha": "0c2b5dd9a552c35671f258ef387c15aedf233911",
-  "release_candidate_sha": "0c2b5dd9a552c35671f258ef387c15aedf233911",
-  "package_version": "3.0.0",
-  "remote_baseline_sha": "199713153f6e70c042ed221ab7c4f58bae0fa115",
-  "remote_head_sha": "199713153f6e70c042ed221ab7c4f58bae0fa115",
-  "release_tag": null,
-  "last_test_run": "2026-11-15T00:59:09+08:00",
-  "test_level": "T0 + Chromium T3 interactions + visual recheck + data/agent gate",
-  "test_result": "passed; T0/T3 at 9c0975f, docs-only 0c2b5dd reused frontend evidence and passed agent-rule validation",
+  "goal_id": "qdii-limit-nasdaq-knowledge-2026-11-17",
+  "task_goal": "基金限购治理、纳指指标口径校验与 Market 金融知识科普升级",
+  "current_phase": "final_acceptance",
+  "current_task": "T16",
+  "run_id": "run-2026-11-17-01",
+  "base_sha": "e1537c1308a9f844885b3f3abc671c7a5a294bde",
+  "updated_at": "2026-11-17T14:10:00+08:00",
   "tasks": [
     {
-      "id": "sync-remote",
-      "status": "completed",
-      "depends_on": [],
-      "evidence": ["origin/main fast-forwarded to 1997131; local AGENTS.md change preserved"]
+      "task_id": "T01",
+      "task_goal": "仓库状态、规范和当前数据契约对账",
+      "status": "COMPLETED",
+      "dependencies": [],
+      "attempt_count": 1,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": ["harness/state.json"],
+      "test_results": ["main at base SHA e1537c1", "local worktree reconciled"],
+      "commit_sha": "e1537c1"
     },
     {
-      "id": "audit-repository",
-      "status": "completed",
-      "depends_on": ["sync-remote"],
-      "evidence": ["docs/audit.md"]
+      "task_id": "T02",
+      "task_goal": "审计基金份额、daily_limit、排序逻辑和 A/C 额度数据现状",
+      "status": "COMPLETED",
+      "dependencies": ["T01"],
+      "attempt_count": 1,
+      "verification_status": "PASS",
+      "blockers": ["没有基金公司公告证据，不能把同金额 A/C 自动标为共享额度"],
+      "changed_files": ["docs/decisions/0004-limit-nasdaq-market-knowledge.md"],
+      "test_results": ["catalog contains 119 limited shares with unknown scope and 0 confirmed series_shared"],
+      "commit_sha": ""
     },
     {
-      "id": "technical-research",
-      "status": "completed",
-      "depends_on": ["audit-repository"],
-      "evidence": [
-        "docs/decisions/0001-frontend-platform.md",
-        "docs/decisions/0002-local-data.md"
-      ]
+      "task_id": "T03",
+      "task_goal": "实现每日限购列、排序、币种分组和缺失值置底",
+      "status": "COMPLETED",
+      "dependencies": ["T02"],
+      "attempt_count": 2,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": [
+        "frontend/src/shared/lib/funds.ts",
+        "frontend/src/pages/FundsPage.vue",
+        "frontend/src/features/funds/FundTable.vue",
+        "frontend/src/features/funds/FundShareComparisonTable.vue",
+        "frontend/src/features/funds/FundDetailDrawer.vue",
+        "frontend/src/styles/funds.css"
+      ],
+      "test_results": ["fund view-model tests pass", "desktop and mobile limit sorting pass", "375/390/768 responsive pass"],
+      "commit_sha": ""
     },
     {
-      "id": "public-data-contract",
-      "status": "completed",
-      "depends_on": ["audit-repository"],
-      "evidence": ["web/data/catalog.json", "docs/data-contract.md", "test/test_public_catalog.py"]
+      "task_id": "T04",
+      "task_goal": "建立 limit_scope 数据模型、人工核验入口和 A/C 共同额度展示",
+      "status": "COMPLETED",
+      "dependencies": ["T02"],
+      "attempt_count": 1,
+      "verification_status": "PASS",
+      "blockers": ["series_shared remains 0 until official announcements are manually verified"],
+      "changed_files": [
+        "config/limit-scopes.json",
+        "scripts/pipeline/public_catalog.py",
+        "frontend/src/types/data.ts"
+      ],
+      "test_results": ["shared, independent, single-share, invalid-scope and unknown fixtures pass"],
+      "commit_sha": ""
     },
     {
-      "id": "frontend-foundation",
-      "status": "completed",
-      "depends_on": ["technical-research", "public-data-contract"],
-      "evidence": ["npm run typecheck", "npm run build"]
+      "task_id": "T05",
+      "task_goal": "补充基金限购排序、范围、币种和回归测试",
+      "status": "COMPLETED",
+      "dependencies": ["T03", "T04"],
+      "attempt_count": 2,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": ["test/frontend/funds.spec.ts", "test/test_public_catalog.py", "test/e2e/funds.spec.ts"],
+      "test_results": ["62 Vitest tests pass", "125 Python tests pass", "Chromium desktop/mobile funds suites pass"],
+      "commit_sha": ""
     },
     {
-      "id": "funds-migration",
-      "status": "completed",
-      "depends_on": ["frontend-foundation"],
-      "evidence": ["test/e2e/funds.spec.ts", "Vitest fund sort/missing-value tests"]
+      "task_id": "T06",
+      "task_goal": "审计 Nasdaq Composite 与 Nasdaq-100 的数据源、历史和 PE 身份",
+      "status": "COMPLETED",
+      "dependencies": ["T01"],
+      "attempt_count": 1,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": ["scripts/pipeline/nasdaq_history.py", "scripts/pipeline/ndx_pe.py", "web/data/nasdaq-history.json"],
+      "test_results": ["history index symbol is ^NDX", "Yahoo ^NDX and Sina .NDX are the only fetchers", "PE snapshot is Nasdaq-100 TTM"],
+      "commit_sha": ""
     },
     {
-      "id": "market-migration",
-      "status": "completed",
-      "depends_on": ["frontend-foundation"],
-      "evidence": ["test/e2e/market.spec.ts", "docs/evidence/market-desktop-dark.png"]
+      "task_id": "T07",
+      "task_goal": "治理纳指年度/月度/YTD/季节性统计和回撤口径",
+      "status": "COMPLETED",
+      "dependencies": ["T06"],
+      "attempt_count": 2,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": ["scripts/pipeline/nasdaq_history.py", "frontend/src/pages/MarketPage.vue", "test/test_nasdaq_history.py"],
+      "test_results": ["1986-2026 annual data", "2026 YTD marked", "5y/10y/20y sample counts present", "daily-close drawdown marked per year"],
+      "commit_sha": ""
     },
     {
-      "id": "portfolio-migration",
-      "status": "completed",
-      "depends_on": ["frontend-foundation", "public-data-contract"],
-      "evidence": ["test/e2e/portfolio.spec.ts", "test/frontend/local-db.spec.ts"]
+      "task_id": "T08",
+      "task_goal": "治理 PE 指标名称、TTM 口径、更新频率和新鲜度展示",
+      "status": "COMPLETED",
+      "dependencies": ["T06"],
+      "attempt_count": 2,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": ["scripts/pipeline/ndx_pe.py", "scripts/pipeline/market_snapshot.py", "web/data/ndx-pe.json", "frontend/src/pages/MarketPage.vue"],
+      "test_results": ["PE date remains 2026-09-30", "month_end observation period", "stale source failure preserves old value"],
+      "commit_sha": ""
     },
     {
-      "id": "research-workspace",
-      "status": "completed",
-      "depends_on": ["frontend-foundation", "portfolio-migration"],
-      "evidence": ["test/e2e/research.spec.ts", "Dexie v2 noteHistory"]
+      "task_id": "T09",
+      "task_goal": "治理市场温度权重解释、缺失数据和降级状态",
+      "status": "COMPLETED",
+      "dependencies": ["T06"],
+      "attempt_count": 1,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": ["scripts/pipeline/market_temperature.py", "frontend/src/pages/MarketPage.vue", "frontend/src/styles/market.css"],
+      "test_results": ["coverage metadata added", "partial coverage renders 数据降级", "weights remain 40/20/20/20"],
+      "commit_sha": ""
     },
     {
-      "id": "legacy-cleanup",
-      "status": "completed",
-      "depends_on": ["funds-migration", "market-migration", "portfolio-migration", "research-workspace"],
-      "evidence": ["web/js and web/css removed", "Vite production output verified"]
+      "task_id": "T10",
+      "task_goal": "建立统一的 Market 指标知识配置",
+      "status": "COMPLETED",
+      "dependencies": ["T07", "T08", "T09"],
+      "attempt_count": 1,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": ["frontend/src/features/market/metricKnowledge.ts"],
+      "test_results": ["index, PE, VIX, fear-greed, temperature, Treasury, DXY, gold and FX entries complete"],
+      "commit_sha": ""
     },
     {
-      "id": "quality-gate",
-      "status": "completed",
-      "depends_on": ["legacy-cleanup"],
-      "evidence": [
-    "npm run test:t0: 27 passed",
-    "realtime overlay focused typecheck/lint/vitest/build: passed",
-    "Vitest: 27 passed",
-    "Chromium T3: 36 distinct passed, 4 mobile visual duplicates skipped",
-    "Chromium visual recheck: 4 passed",
-        "pytest: 96 passed",
-        "fundctl check --offline --agent-rules: passed",
-        "npm audit: 0 vulnerabilities"
-      ]
+      "task_id": "T11",
+      "task_goal": "实现 Market 指标知识按钮、抽屉、键盘和移动端交互",
+      "status": "COMPLETED",
+      "dependencies": ["T10"],
+      "attempt_count": 2,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": [
+        "frontend/src/features/market/MetricInfoButton.vue",
+        "frontend/src/features/market/MetricKnowledgeDrawer.vue",
+        "frontend/src/pages/MarketPage.vue",
+        "frontend/src/styles/market.css"
+      ],
+      "test_results": ["Escape and focus containment pass", "light/dark drawer passes", "mobile knowledge drawer screenshot verified"],
+      "commit_sha": ""
     },
     {
-      "id": "chromium-only-policy",
-      "status": "completed",
-      "depends_on": ["quality-gate"],
-      "evidence": [
-        "docs/decisions/0003-chromium-only-testing.md",
-        "playwright.config.ts contains Chromium desktop/mobile only",
-        "GitHub Actions contains no browser installation or Playwright execution"
-      ]
+      "task_id": "T12",
+      "task_goal": "执行跨模块集成测试、Chromium 交互和 axe 检查",
+      "status": "COMPLETED",
+      "dependencies": ["T05", "T07", "T08", "T09", "T11"],
+      "attempt_count": 3,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": [
+        "test/e2e/market.spec.ts",
+        "test/e2e/accessibility.spec.ts",
+        "test/e2e/funds.spec.ts",
+        "test/e2e/fund-detail-status.spec.ts",
+        "test/e2e/drawer-a11y.spec.ts"
+      ],
+      "test_results": ["T3: 109 passed, 7 intentional skips", "axe market drawer light/dark passes", "375/390/768 responsive assertions pass"],
+      "commit_sha": ""
     },
     {
-      "id": "remote-ci-pages-verification",
-      "status": "needs_human",
-      "depends_on": ["chromium-only-policy"],
-      "evidence": [
-        "remote origin/main remains 199713153f6e70c042ed221ab7c4f58bae0fa115",
-        "current release candidate has not been pushed; no remote CI or Pages run exists"
-      ]
+      "task_id": "T13",
+      "task_goal": "独立 Reviewer 检查业务语义、回归和测试真实性",
+      "status": "COMPLETED",
+      "dependencies": ["T12"],
+      "attempt_count": 2,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": [],
+      "test_results": [
+        "Reviewer found and corrected 768 tablet hidden sorting",
+        "Reviewer removed ambiguous PE source_frequency",
+        "Reviewer added stale Nasdaq date guard",
+        "Reviewer aligned two outdated Chromium assertions without weakening feature coverage"
+      ],
+      "commit_sha": ""
+    },
+    {
+      "task_id": "T14",
+      "task_goal": "修复复核问题并完成定向回归",
+      "status": "COMPLETED",
+      "dependencies": ["T13"],
+      "attempt_count": 2,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": ["frontend/src/styles/funds.css", "scripts/pipeline/ndx_pe.py", "test/e2e/drawer-a11y.spec.ts", "test/e2e/fund-detail-status.spec.ts"],
+      "test_results": ["focused failures fixed", "full T3 rerun green"],
+      "commit_sha": ""
+    },
+    {
+      "task_id": "T15",
+      "task_goal": "同步基金限购、纳指口径和 Market 知识文档",
+      "status": "COMPLETED",
+      "dependencies": ["T14"],
+      "attempt_count": 1,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": [
+        "docs/data-contract.md",
+        "docs/architecture.md",
+        "docs/data-sources.md",
+        "docs/ux-audit.md",
+        "docs/decisions/0004-limit-nasdaq-market-knowledge.md",
+        "README.md"
+      ],
+      "test_results": ["doc_sync --fix pass", "architecture contract layer pass"],
+      "commit_sha": ""
+    },
+    {
+      "task_id": "T16",
+      "task_goal": "最终验收、文档门禁和本地 Commit",
+      "status": "IN_PROGRESS",
+      "dependencies": ["T15"],
+      "attempt_count": 1,
+      "verification_status": "PENDING",
+      "blockers": [],
+      "changed_files": [],
+      "test_results": [],
+      "commit_sha": ""
     }
   ],
-  "modified_files": [
-    "frontend/",
-    "scripts/pipeline/public_catalog.py",
-    "web/data/catalog.json",
-    ".github/workflows/",
-    ".gitignore",
-    "playwright.config.ts",
-    "package.json",
-    "README.md",
-    "docs/",
-    "AGENTS.md"
-  ],
-  "tests": [
-    "npm run test:t0: 27 passed",
-    "pytest: 96 passed",
-    "Chromium T3: 36 distinct passed; 4 mobile visual duplicates skipped",
-    "Chromium visual recheck: 4 passed",
-    "production static smoke: 4 pages passed"
-  ],
-  "failures": [],
-  "remote_verification": {
-    "status": "not_verified",
-    "reason": "Release candidate is local-only; push and deployment require explicit authorization."
+  "gates": {
+    "G0_git_state": "PASS",
+    "G1_data_contract": "PASS",
+    "G2_fund_limit": "PASS",
+    "G3_index_identity": "PASS",
+    "G4_history_statistics": "PASS",
+    "G5_knowledge_consistency": "PASS",
+    "G6_frontend_interaction": "PASS",
+    "G7_full_regression": "PASS",
+    "G8_docs_commit": "PENDING"
   },
-  "decisions": ["ADR-0001", "ADR-0002", "ADR-0003"],
-  "next_action": "After explicit authorization, push the validated release candidate, run/review remote CI, then deploy and smoke test the Pages artifact."
+  "reviewer_conclusion": {
+    "p0": 0,
+    "p1": 0,
+    "p2": 0,
+    "summary": "No unresolved code or product defect found in the implemented scope. Shared A/C limits remain explicitly unknown pending official evidence.",
+    "residual_risks": [
+      "Layer 6 cross-source validation reported 0 compared shares because lsjz/pzd were unavailable during the online gate.",
+      "Siblis PE is a month-end snapshot and may lag the current month.",
+      "119 limited shares remain limit_scope=unknown until official announcements are manually verified."
+    ]
+  },
+  "test_results": {
+    "python": "125 passed",
+    "vitest": "62 passed",
+    "typecheck": "pass",
+    "lint": "pass with 1 pre-existing AppHeader warning",
+    "build": "pass",
+    "chromium_t3": "109 passed, 7 skipped",
+    "axe": "pass",
+    "data_check": "7 layered checks pass; Layer 6 cross-source unavailable (0 compared)"
+  },
+  "commit_sha": ""
 }

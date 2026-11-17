@@ -54,8 +54,8 @@
 
 | 属性 | 内容 |
 |------|------|
-| **职责** | 汇总六个分类 JSON 与公司品牌配置，生成带 schema/status/quality 的前端唯一入口 |
-| **输入文件** | `web/data/{CATEGORIES}.json`、`web/data/meta.json`、`config/funds.json` |
+| **职责** | 汇总六个分类 JSON、公司品牌配置与人工额度核验记录，生成带 schema/status/quality 的前端唯一入口；为每个 share 补充 `limit_scope`、币种和来源字段 |
+| **输入文件** | `web/data/{CATEGORIES}.json`、`web/data/meta.json`、`config/funds.json`、`config/limit-scopes.json` |
 | **输出文件** | `web/data/catalog.json` |
 | **依赖** | `core.constants` |
 
@@ -65,16 +65,16 @@
 |------|------|
 | **职责** | 抓取纳指趋势 / VIX / 10 年期美债 / 美元指数，按可配置阈值打分并加权，生成红绿灯信号 |
 | **输入文件** | 新浪 `.NDX`、Yahoo `^VIX`、东财中美国债收益率、东财美元指数（失败时复用旧快照） |
-| **输出文件** | `web/data/market-temperature.json` |
+| **输出文件** | `web/data/market-temperature.json`（含 `weights` 与 `coverage`；缺失数据标记 degraded） |
 | **依赖** | `core.constants`、`core.utils`、`akshare`、`requests` |
 
-### 8. nasdaq_history.py — 纳指 40 年历史图谱
+### 8. nasdaq_history.py — 纳指历史图谱
 
 | 属性 | 内容 |
 |------|------|
-| **职责** | 抓取纳斯达克 100 指数（^NDX）日线并按月聚合，计算逐年收益/年内最大回撤/峰谷月份、月度收益热力矩阵、多周期月份排行榜与谷值月份分布 |
-| **输入文件** | Yahoo Finance `^NDX`（分段日线，429 退避重试）、新浪 `.IXIC`（多源降级；失败时复用旧快照） |
-| **输出文件** | `web/data/nasdaq-history.json` |
+| **职责** | 抓取纳斯达克 100 指数（^NDX）日线并按月聚合，计算逐年收益/日线收盘最大回撤/峰谷月份、YTD、完整月份热力矩阵、5/10/20 年与全长月份排行榜及谷值月份分布；未结束月份不参与季节性统计；数据日期倒退时保留旧快照 |
+| **输入文件** | Yahoo Finance `^NDX`（分段日线，429 退避重试）、新浪 `.NDX`（同一指数身份的多源降级；失败时复用旧快照） |
+| **输出文件** | `web/data/nasdaq-history.json`（`index.symbol = ^NDX`、`as_of`、`drawdown_basis`、`ranking.20y`） |
 | **依赖** | `core.constants`、`core.utils`、`requests`、`akshare`（兜底源） |
 
 ### 9. cnn_sentiment.py — CNN 恐慌与贪婪
@@ -99,9 +99,9 @@
 
 | 属性 | 内容 |
 |------|------|
-| **职责** | 抓取 Siblis Research 免费 API 的 NDX trailing PE 月末快照，取最新值 |
+| **职责** | 抓取 Siblis Research 免费 API 的 NDX trailing PE 月末快照，明确输出 Nasdaq-100 + TTM + 月度口径；失败时保留旧值 |
 | **输入文件** | Siblis `api/v1/NDX/pe-trailing`（免费档仅月末快照；失败时复用旧快照） |
-| **输出文件** | `web/data/ndx-pe.json` |
+| **输出文件** | `web/data/ndx-pe.json`（`index`、`index_symbol`、`pe_type`、`frequency`、`observation_period`、`date`） |
 | **依赖** | `core.constants`、`core.utils`、`requests` |
 
 ### 12. macro_rates.py — 宏观利率
