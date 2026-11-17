@@ -397,7 +397,7 @@
         "笔记 route reaches /#/research from funds, market, and portfolio",
         "65 Vitest tests and production build pass"
       ],
-      "commit_sha": ""
+      "commit_sha": "9caa2ba"
     }
   ],
   "gates": {
@@ -432,5 +432,5 @@
     "axe": "pass",
     "data_check": "7 layered checks pass; Layer 6 cross-source unavailable (0 compared)"
   },
-  "commit_sha": "f9b9835"
+  "commit_sha": "9caa2ba"
 }
