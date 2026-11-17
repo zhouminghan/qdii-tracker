@@ -307,6 +307,8 @@
   }
 
   .bottom-nav-link {
+    position: relative;
+    z-index: 1;
     display: grid;
     place-items: center;
     align-content: center;
@@ -316,6 +318,14 @@
     color: var(--color-text-tertiary);
     font-size: 0.65rem;
     font-weight: 600;
+    pointer-events: auto;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .bottom-nav-link > * {
+    pointer-events: none;
   }
 
   .bottom-nav-link.active {

@@ -36,6 +36,25 @@ test.describe('core navigation', () => {
     await expect(page.locator('html')).toHaveAttribute('data-color-mode', 'green-up')
   })
 
+  test('mobile bottom navigation taps icons and labels independently', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium-mobile', 'mobile bottom navigation coverage')
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/#/funds')
+    const bottomLink = (name: string) => page.locator('.bottom-nav-link').filter({ hasText: name })
+
+    await bottomLink('市场').locator('svg').tap({ force: true })
+    await expect(page).toHaveURL(/#\/market$/)
+
+    await bottomLink('基金').locator('span').tap({ force: true })
+    await expect(page).toHaveURL(/#\/funds$/)
+
+    await bottomLink('笔记').tap()
+    await expect(page).toHaveURL(/#\/research$/)
+
+    await bottomLink('账户').tap()
+    await expect(page).toHaveURL(/#\/portfolio$/)
+  })
+
   test('uses one header search across pages', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'chromium-desktop', 'header search is hidden on mobile')
     await page.goto('/#/funds')

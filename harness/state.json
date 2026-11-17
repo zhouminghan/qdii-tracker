@@ -376,6 +376,27 @@
         "baseline tag web-2026-11-01 -> a91775a",
         "140 Python, 65 Vitest and focused Chromium tests pass"
       ],
+      "commit_sha": "f9b9835"
+    },
+    {
+      "task_id": "T23",
+      "task_goal": "修复移动端底部“笔记”入口不可点击",
+      "status": "COMPLETED",
+      "dependencies": ["T22"],
+      "attempt_count": 2,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": [
+        "frontend/src/widgets/BottomNav.vue",
+        "frontend/src/styles/layout.css",
+        "test/e2e/navigation.spec.ts",
+        "docs/ux-audit.md"
+      ],
+      "test_results": [
+        "390x844 mobile test taps all four bottom-nav icons/labels",
+        "笔记 route reaches /#/research from funds, market, and portfolio",
+        "65 Vitest tests and production build pass"
+      ],
       "commit_sha": ""
     }
   ],
