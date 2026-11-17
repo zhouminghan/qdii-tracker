@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-17T13:43:45.125130+08:00",
+  "generated_at": "2026-11-17T17:03:35.238005+08:00",
   "schema_version": 1,
   "score": 41,
   "band": "yellow",
@@ -34,10 +34,10 @@
       "score": 50,
       "label": "情绪偏紧",
       "raw": {
-        "value": 22.91,
-        "date": "2026-11-16"
+        "value": 23.27,
+        "date": "2026-11-17"
       },
-      "note": "VIX 22.9，恐慌情绪中性。",
+      "note": "VIX 23.3，恐慌情绪中性。",
       "source": "Yahoo Finance",
       "stale": false
     },
@@ -56,7 +56,7 @@
       "score": 55,
       "label": "美元中性",
       "raw": {
-        "value": 103.45,
+        "value": 103.5,
         "date": "2026-11-17"
       },
       "note": "美元指数 103.5。",
