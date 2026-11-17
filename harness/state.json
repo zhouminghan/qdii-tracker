@@ -5,7 +5,7 @@
   "current_task": "",
   "run_id": "run-2026-11-17-01",
   "base_sha": "e1537c1308a9f844885b3f3abc671c7a5a294bde",
-  "updated_at": "2026-11-17T18:35:00+08:00",
+  "updated_at": "2026-11-17T19:00:00+08:00",
   "tasks": [
     {
       "task_id": "T01",
@@ -350,6 +350,28 @@
       "test_results": [
         "main table shows 11/13 directly beside 022525 while other shares show their own dates",
         "share detail table shows a date in every NAV cell",
+        "140 Python, 64 Vitest and focused Chromium tests pass"
+      ],
+      "commit_sha": "c6dcae7"
+    },
+    {
+      "task_id": "T22",
+      "task_goal": "复刻上周单列表头净值日期并标记旧 Web 基线",
+      "status": "COMPLETED",
+      "dependencies": ["T21"],
+      "attempt_count": 1,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": [
+        "frontend/src/pages/FundsPage.vue",
+        "frontend/src/features/funds/FundTable.vue",
+        "frontend/src/features/funds/FundShareComparisonTable.vue",
+        "frontend/src/features/funds/FundDetailDrawer.vue",
+        "docs/ux-audit.md"
+      ],
+      "test_results": [
+        "NAV date restored to the single header-date style from last week's web version",
+        "per-row duplicate date labels removed",
         "140 Python, 64 Vitest and focused Chromium tests pass"
       ],
       "commit_sha": ""

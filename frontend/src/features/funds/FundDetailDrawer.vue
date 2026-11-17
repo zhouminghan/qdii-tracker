@@ -441,6 +441,7 @@ function holdingChangeClass(item: HoldingItem): string {
         <FundShareComparisonTable
           :shares="row.shares"
           :default-code="row.default_share_code"
+          :nav-date="defaultShare.nav_date"
         />
       </section>
 

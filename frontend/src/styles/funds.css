@@ -800,24 +800,6 @@
   font-size: 0.6rem;
 }
 
-.price-value-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: flex-end;
-  gap: 4px;
-  white-space: nowrap;
-}
-
-.price-value-row small,
-.mobile-price-date {
-  color: var(--color-text-tertiary);
-  font-size: 0.6rem;
-}
-
-.mobile-price-date {
-  margin-top: 1px;
-}
-
 .purchase-cell {
   display: grid;
   min-width: 0;
