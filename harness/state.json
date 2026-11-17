@@ -5,7 +5,7 @@
   "current_task": "",
   "run_id": "run-2026-11-17-01",
   "base_sha": "e1537c1308a9f844885b3f3abc671c7a5a294bde",
-  "updated_at": "2026-11-17T17:40:00+08:00",
+  "updated_at": "2026-11-17T18:35:00+08:00",
   "tasks": [
     {
       "task_id": "T01",
@@ -331,6 +331,27 @@
         "build and data gate pass"
       ],
       "commit_sha": "77bdabe"
+    },
+    {
+      "task_id": "T21",
+      "task_goal": "修正混合净值日期的表头与行级日期提示",
+      "status": "COMPLETED",
+      "dependencies": ["T20"],
+      "attempt_count": 1,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": [
+        "frontend/src/pages/FundsPage.vue",
+        "frontend/src/features/funds/FundTable.vue",
+        "test/e2e/funds.spec.ts",
+        "docs/ux-audit.md"
+      ],
+      "test_results": [
+        "Nasdaq group header displays 日期不一 for 11/13 and 11/16 mix",
+        "022525 price cell title shows its own 11/13 NAV date",
+        "140 Python, 64 Vitest and focused Chromium tests pass"
+      ],
+      "commit_sha": ""
     }
   ],
   "gates": {

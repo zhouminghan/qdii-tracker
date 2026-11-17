@@ -83,11 +83,14 @@ const visibleRows = computed(() => currentRows.value
   }))
 const totalScale = computed(() => visibleRows.value.reduce((sum, row) => sum + (row.series_scale ?? 0), 0))
 const currentGroupLabel = computed(() => groups.value.find((group) => group.key === selectedGroup.value)?.label ?? '')
-const visibleNavDate = computed(() => visibleRows.value
+const visibleNavDates = computed(() => [...new Set(visibleRows.value
   .map((row) => row.defaultShare.nav_date)
   .filter((date): date is string => Boolean(date))
-  .sort()
-  .at(-1) ?? data.catalog?.data.summary.newest_nav_date ?? null)
+  .sort())])
+const visibleNavDate = computed(() => visibleNavDates.value.at(-1)
+  ?? data.catalog?.data.summary.newest_nav_date
+  ?? null)
+const visibleNavDateMixed = computed(() => visibleNavDates.value.length > 1)
 const missingPriceShares = computed(() => data.allRows.flatMap((row) => row.shares
   .filter((share) => share.nav == null && share.etf_price == null)
   .map((share) => ({ code: share.code, name: share.name }))))
@@ -570,6 +573,7 @@ onBeforeUnmount(() => {
             :sort-direction="sortDirection"
             :total-scale="totalScale"
             :nav-date="visibleNavDate"
+            :nav-date-mixed="visibleNavDateMixed"
             :category-label="categoryLabel"
             :show-category="Boolean(search)"
             @sort="sortBy"

@@ -22,6 +22,7 @@ const props = defineProps<{
   sortDirection: 'asc' | 'desc'
   totalScale: number
   navDate: string | null
+  navDateMixed: boolean
   categoryLabel: (row: FundRow) => string
   showCategory: boolean
 }>()
@@ -42,7 +43,7 @@ const columns = computed<Array<{ key: FundSortKey | null; label: string; align?:
     key: 'price',
     label: props.tab === 'etf' ? '最新价' : '净值',
     align: 'right',
-    sub: props.navDate ? formatDate(props.navDate) : '',
+    sub: props.navDateMixed ? '日期不一' : (props.navDate ? formatDate(props.navDate) : ''),
   },
   ...(props.tab === 'etf' ? [{ key: 'premium' as const, label: '溢价率', align: 'right' as const }] : []),
   { key: 'chg_1m', label: '近 1 月', align: 'right' },
@@ -216,7 +217,10 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
             </td>
             <td class="align-right mono">{{ scaleText(row.series_scale) }}</td>
             <td class="align-right">
-              <div class="price-cell">
+              <div
+                class="price-cell"
+                :title="row.defaultShare.nav_date ? `净值日期 ${formatDate(row.defaultShare.nav_date)}` : '净值日期未知'"
+              >
                 <strong class="mono">{{ priceDisplay(row) }}</strong>
                 <span class="mono" :class="movementClass(dailyChange(row))">{{ formatPercent(dailyChange(row)) }}</span>
               </div>

@@ -323,11 +323,13 @@ test.describe('funds workflow', () => {
     await page.goto('/#/funds')
     await page.getByRole('button', { name: /纳指100 指数基金/ }).click()
     await expect(page.locator('.group-brief')).toContainText('A 类每日限购合计 ¥60')
+    await expect(page.getByRole('columnheader', { name: /净值/ })).toContainText('日期不一')
 
     await fundSearch(page).fill('022525')
     const row = page.locator('.fund-row:visible')
     await expect(row).toHaveCount(1)
     await expect(row.locator('.purchase-cell .badge')).toContainText('暂停')
+    await expect(row.locator('.price-cell')).toHaveAttribute('title', /11\/13/)
 
     await row.getByRole('button', { name: '详情' }).click()
     const dialog = page.getByRole('dialog')
