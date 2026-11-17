@@ -5,7 +5,7 @@
   "current_task": "",
   "run_id": "run-2026-11-17-01",
   "base_sha": "e1537c1308a9f844885b3f3abc671c7a5a294bde",
-  "updated_at": "2026-11-17T19:00:00+08:00",
+  "updated_at": "2026-11-17T23:05:00+08:00",
   "tasks": [
     {
       "task_id": "T01",
@@ -398,6 +398,29 @@
         "65 Vitest tests and production build pass"
       ],
       "commit_sha": "9caa2ba"
+    },
+    {
+      "task_id": "T24",
+      "task_goal": "审计其他移动端图标控件并补齐全局点击命中测试",
+      "status": "COMPLETED",
+      "dependencies": ["T23"],
+      "attempt_count": 1,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": [
+        "frontend/src/styles/base.css",
+        "test/e2e/mobile-hit-targets.spec.ts",
+        "docs/ux-audit.md",
+        "web/index.html"
+      ],
+      "test_results": [
+        "四页按钮和链接内 SVG 全部 pointer-events:none",
+        "基金设置/收藏/搜索清除、研究标签/新建笔记、行情指标说明、组合删除图标点击通过",
+        "5 mobile hit-target tests pass",
+        "7 existing mobile navigation/drawer tests pass with 1 intentional desktop-only skip",
+        "65 Vitest tests, typecheck, lint and production build pass"
+      ],
+      "commit_sha": ""
     }
   ],
   "gates": {
@@ -424,7 +447,7 @@
   },
   "test_results": {
     "python": "140 passed",
-    "vitest": "64 passed",
+    "vitest": "65 passed",
     "typecheck": "pass",
     "lint": "pass with 1 pre-existing AppHeader warning",
     "build": "pass",

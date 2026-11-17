@@ -36,6 +36,11 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+button svg,
+a svg {
+  pointer-events: none;
+}
+
 button {
   cursor: pointer;
 }
