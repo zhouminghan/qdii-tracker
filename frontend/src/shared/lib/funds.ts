@@ -18,6 +18,23 @@ export function getDefaultShare(series: FundSeries): FundShare {
     }
 }
 
+export function representativeNavDate(dates: Array<string | null | undefined>): string | null {
+  const counts = new Map<string, number>()
+  for (const date of dates) {
+    if (!date) continue
+    counts.set(date, (counts.get(date) ?? 0) + 1)
+  }
+  let best: string | null = null
+  let bestCount = 0
+  for (const [date, count] of counts) {
+    if (count > bestCount || (count === bestCount && (!best || date > best))) {
+      best = date
+      bestCount = count
+    }
+  }
+  return best
+}
+
 export function fundPrice(series: FundSeries, isEtf: boolean): number | null {
   const share = getDefaultShare(series)
   return asNumber(isEtf ? share.etf_price ?? share.nav : share.nav)

@@ -8,6 +8,7 @@ import {
   dailyLimitTitle,
   limitChannelSummary,
   purchaseActionLabel,
+  representativeNavDate,
   limitScopeShort,
   matchesFundQuery,
   sortFundRows,
@@ -52,6 +53,12 @@ function series(
 }
 
 describe('fund view-model helpers', () => {
+  it('uses the representative NAV date and resolves ties to the later date', () => {
+    expect(representativeNavDate(['2026-11-13', '2026-11-13', '2026-11-16'])).toBe('2026-11-13')
+    expect(representativeNavDate(['2026-11-13', '2026-11-16'])).toBe('2026-11-16')
+    expect(representativeNavDate([null, undefined])).toBeNull()
+  })
+
   it('keeps missing numeric values last in both directions', () => {
     expect(compareMissingLast(10, 5)).toBeGreaterThan(0)
     expect(compareMissingLast(null, 5)).toBe(1)

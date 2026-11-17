@@ -10,7 +10,7 @@ import FundDetailDrawer from '@/features/funds/FundDetailDrawer.vue'
 import SouthboundPanel from '@/features/funds/SouthboundPanel.vue'
 import { ETF_GROUPS, OFFSHORE_CATEGORIES } from '@/shared/constants/funds'
 import type { FundSortKey, FundRow } from '@/shared/lib/funds'
-import { confirmedDailyLimit, formatDailyLimit, matchesFundQuery } from '@/shared/lib/funds'
+import { confirmedDailyLimit, formatDailyLimit, matchesFundQuery, representativeNavDate } from '@/shared/lib/funds'
 import { downloadCsv } from '@/shared/lib/csv'
 import { qualityStatusLabel, qualityWarningText } from '@/shared/lib/data-quality'
 import { formatDateTime } from '@/shared/lib/format'
@@ -83,11 +83,9 @@ const visibleRows = computed(() => currentRows.value
   }))
 const totalScale = computed(() => visibleRows.value.reduce((sum, row) => sum + (row.series_scale ?? 0), 0))
 const currentGroupLabel = computed(() => groups.value.find((group) => group.key === selectedGroup.value)?.label ?? '')
-const visibleNavDate = computed(() => visibleRows.value
-  .map((row) => row.defaultShare.nav_date)
-  .filter((date): date is string => Boolean(date))
-  .sort()
-  .at(-1) ?? data.catalog?.data.summary.newest_nav_date ?? null)
+const visibleNavDate = computed(() => representativeNavDate(
+  visibleRows.value.map((row) => row.defaultShare.nav_date),
+) ?? data.catalog?.data.summary.newest_nav_date ?? null)
 const missingPriceShares = computed(() => data.allRows.flatMap((row) => row.shares
   .filter((share) => share.nav == null && share.etf_price == null)
   .map((share) => ({ code: share.code, name: share.name }))))

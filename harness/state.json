@@ -367,14 +367,16 @@
         "frontend/src/features/funds/FundTable.vue",
         "frontend/src/features/funds/FundShareComparisonTable.vue",
         "frontend/src/features/funds/FundDetailDrawer.vue",
+        "frontend/src/shared/lib/funds.ts",
         "docs/ux-audit.md"
       ],
       "test_results": [
-        "NAV date restored to the single header-date style from last week's web version",
-        "per-row duplicate date labels removed",
-        "140 Python, 64 Vitest and focused Chromium tests pass"
+        "NAV header restored to 2026-11-01 representative-date logic",
+        "row date shown only when it differs from the group header date",
+        "baseline tag web-2026-11-01 -> a91775a",
+        "140 Python, 65 Vitest and focused Chromium tests pass"
       ],
-      "commit_sha": "45c02b7"
+      "commit_sha": ""
     }
   ],
   "gates": {

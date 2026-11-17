@@ -673,6 +673,13 @@
   color: var(--color-text);
 }
 
+.column-info {
+  display: inline-flex;
+  margin-left: 3px;
+  color: var(--color-text-tertiary);
+  vertical-align: -1px;
+}
+
 .expand-col {
   width: 30px;
   padding-right: 0 !important;
@@ -798,6 +805,13 @@
 .price-cell small {
   color: var(--color-text-tertiary);
   font-size: 0.6rem;
+}
+
+.row-nav-date {
+  color: var(--color-text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  white-space: nowrap;
 }
 
 .purchase-cell {

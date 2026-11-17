@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { ChevronDown, ChevronRight, LineChart, Star } from '@lucide/vue'
+import { ChevronDown, ChevronRight, Info, LineChart, Star } from '@lucide/vue'
 import type { FundSortKey, FundRow } from '@/shared/lib/funds'
 import {
   buyStatusLabel,
@@ -100,6 +100,11 @@ function price(row: FundRow): number | null {
     : row.defaultShare.nav ?? null
 }
 
+function showRowNavDate(row: FundRow): boolean {
+  const date = row.defaultShare.nav_date
+  return Boolean(date && date !== props.navDate)
+}
+
 function logoColor(company: string): string {
   return data.catalog?.data.company_brands[company]?.color
     ?? (settings.resolvedTheme === 'dark' ? '#c8d1dc' : '#506070')
@@ -163,7 +168,17 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
               type="button"
               @click="emit('sort', column.key)"
             >
-              <span>{{ column.label }} <span aria-hidden="true">{{ column.key === sortKey ? (sortDirection === 'asc' ? '↑' : '↓') : '↕' }}</span></span>
+              <span>
+                {{ column.label }}
+                <span aria-hidden="true">{{ column.key === sortKey ? (sortDirection === 'asc' ? '↑' : '↓') : '↕' }}</span>
+                <span
+                  v-if="column.key === 'price' && tab === 'offshore'"
+                  class="column-info"
+                  title="QDII 净值通常在 T+1~T+2 个工作日披露，日期滞后于海外交易日属正常。"
+                >
+                  <Info :size="11" aria-hidden="true" />
+                </span>
+              </span>
               <small v-if="column.sub" class="column-sub">{{ column.sub }}</small>
             </button>
             <template v-else>
@@ -219,6 +234,7 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
               <div class="price-cell">
                 <strong class="mono">{{ priceDisplay(row) }}</strong>
                 <span class="mono" :class="movementClass(dailyChange(row))">{{ formatPercent(dailyChange(row)) }}</span>
+                <small v-if="showRowNavDate(row)" class="row-nav-date mono">{{ formatDate(row.defaultShare.nav_date) }}</small>
               </div>
             </td>
             <td v-if="tab === 'etf'" class="align-right mono premium-cell">
@@ -286,7 +302,11 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
         </button>
       </div>
       <div class="fund-mobile-metrics">
-        <div><span>最新</span><strong class="mono">{{ priceDisplay(row) }}</strong></div>
+        <div>
+          <span>最新</span>
+          <strong class="mono">{{ priceDisplay(row) }}</strong>
+          <small v-if="showRowNavDate(row)" class="row-nav-date">{{ formatDate(row.defaultShare.nav_date) }}</small>
+        </div>
         <div><span>日涨跌</span><strong class="mono" :class="movementClass(dailyChange(row))">{{ formatPercent(dailyChange(row)) }}</strong></div>
         <div v-if="tab === 'etf'"><span>溢价</span><strong class="mono premium-cell">{{ formatPercent(row.defaultShare.etf_premium) }}</strong></div>
         <div v-else>
