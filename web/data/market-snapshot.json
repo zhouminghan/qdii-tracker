@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-17T07:12:23.776796+08:00",
+  "generated_at": "2026-11-17T08:23:19.142593+08:00",
   "schema_version": 1,
   "source": "local data files (offline close snapshot)",
   "market_indices": {
@@ -196,11 +196,11 @@
     "as_of": "2026-11-17",
     "items": {
       "usdcnh": {
-        "price": 6.6659,
-        "change": 0.0013,
-        "change_pct": 0.02,
+        "price": 6.6643,
+        "change": -0.0003,
+        "change_pct": -0.02,
         "as_of": "2026-11-17",
-        "source_updated_at": "2026-11-17T07:14:31+08:00",
+        "source_updated_at": "2026-11-17T08:30:26+08:00",
         "source": "新浪财经 fx_susdcnh",
         "derived": false
       },
@@ -214,11 +214,11 @@
         "derived": false
       },
       "fxUSDJPY": {
-        "price": 159.44,
-        "change": 0.03,
-        "change_pct": 0.02,
+        "price": 159.42,
+        "change": 0.01,
+        "change_pct": 0.01,
         "as_of": "2026-11-17",
-        "source_updated_at": "2026-11-17T07:14:35+08:00",
+        "source_updated_at": "2026-11-17T08:30:26+08:00",
         "source": "新浪财经 fx_susdjpy",
         "derived": false
       },
@@ -227,7 +227,7 @@
         "change": -0.00025,
         "change_pct": -0.02,
         "as_of": "2026-11-17",
-        "source_updated_at": "2026-11-17T07:14:26+08:00",
+        "source_updated_at": "2026-11-17T08:30:25+08:00",
         "source": "新浪财经 fx_scnyhkd",
         "derived": false
       },
@@ -236,7 +236,7 @@
         "change": -0.0001,
         "change_pct": 0.01,
         "as_of": "2026-11-17",
-        "source_updated_at": "2026-11-17T07:14:26+08:00",
+        "source_updated_at": "2026-11-17T08:30:25+08:00",
         "source": "新浪财经 fx_susdhkd",
         "derived": false
       },
@@ -313,44 +313,44 @@
       "derived": false
     },
     "xau": {
-      "price": 3853.11,
-      "change": -3.13,
-      "change_pct": -0.081,
+      "price": 3855.43,
+      "change": -0.81,
+      "change_pct": -0.021,
       "as_of": "2026-11-17",
-      "source_updated_at": "2026-11-17T07:14:00+08:00",
+      "source_updated_at": "2026-11-17T08:30:00+08:00",
       "source": "新浪财经 hf_XAU",
       "derived": false
     },
     "usdcnh": {
-      "price": 6.6659,
-      "change": 0.0013,
-      "change_pct": 0.02,
+      "price": 6.6643,
+      "change": -0.0003,
+      "change_pct": -0.02,
       "as_of": "2026-11-17",
-      "source_updated_at": "2026-11-17T07:14:31+08:00",
+      "source_updated_at": "2026-11-17T08:30:26+08:00",
       "source": "新浪财经 fx_susdcnh",
       "derived": false
     },
     "converted_cny_per_gram": {
-      "value": 825.774112,
+      "value": 826.072992,
       "as_of": "2026-11-17",
       "source": "derived:XAU*USDCNH",
       "derived": true
     },
     "premium_cny": {
-      "value": 3.715888,
+      "value": 3.417008,
       "as_of": "2026-11-17",
       "source": "computed:au9999-converted",
       "derived": true
     },
     "premium_pct": {
-      "value": 0.449988,
+      "value": 0.413645,
       "as_of": "2026-11-17",
       "source": "computed:(au9999-converted)/converted",
       "derived": true
     }
   },
   "brand_gold": {
-    "generated_at": "2026-11-17T07:14:41.952376+08:00",
+    "generated_at": "2026-11-17T08:30:34.209214+08:00",
     "as_of": "2026-11-17",
     "source": "证券之星",
     "brands": [
@@ -464,7 +464,7 @@
     "as_of": "2026-11-16"
   },
   "temperature": {
-    "generated_at": "2026-11-17T07:14:27.764478+08:00",
+    "generated_at": "2026-11-17T08:30:20.399414+08:00",
     "schema_version": 1,
     "score": 46,
     "band": "yellow",
@@ -531,10 +531,10 @@
       "10 年期美债收益率 5.12%，压制高估值资产。"
     ],
     "disclaimer": "本评分仅为基于公开数据的量化情绪参考，不构成投资建议。权重与阈值可调，历史表现不代表未来。",
-    "as_of": "2026-11-17T07:14:27.764478+08:00"
+    "as_of": "2026-11-17T08:30:20.399414+08:00"
   },
   "etf_premium": {
-    "generated_at": "2026-11-17T07:12:23.776796+08:00",
+    "generated_at": "2026-11-17T08:23:19.142593+08:00",
     "as_of": "2026-11-16",
     "count": 21,
     "items": {
@@ -814,7 +814,7 @@
     }
   },
   "offshore_live_nav": {
-    "generated_at": "2026-11-17T07:12:23.776796+08:00",
+    "generated_at": "2026-11-17T08:23:19.142593+08:00",
     "as_of": "2026-11-16",
     "count": 70,
     "items": {

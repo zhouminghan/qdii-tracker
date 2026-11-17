@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-11-17T07:14:40.809162+08:00",
+  "generated_at": "2026-11-17T08:30:33.508866+08:00",
   "schema_version": 1,
   "source": "CNN Fear & Greed",
   "score": 31.02,
   "rating": "fear",
   "band": "fear",
   "label": "恐惧",
-  "timestamp": "2026-11-16T22:54:26+00:00",
+  "timestamp": "2026-11-16T23:59:54+00:00",
   "previous": {
     "close": 38.6,
     "week": 31.51,
