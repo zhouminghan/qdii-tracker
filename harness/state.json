@@ -351,7 +351,7 @@
         "022525 price cell title shows its own 11/13 NAV date",
         "140 Python, 64 Vitest and focused Chromium tests pass"
       ],
-      "commit_sha": ""
+      "commit_sha": "3ac7714"
     }
   ],
   "gates": {
@@ -386,5 +386,5 @@
     "axe": "pass",
     "data_check": "7 layered checks pass; Layer 6 cross-source unavailable (0 compared)"
   },
-  "commit_sha": "77bdabe"
+  "commit_sha": "3ac7714"
 }
