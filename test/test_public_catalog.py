@@ -241,3 +241,57 @@ def test_expired_limit_evidence_is_downgraded(tmp_path):
     assert all(share["limit_status"] == "expired" for share in shares)
     assert catalog["quality"]["limit_scope"]["series_shared"] == 0
     assert any("额度核验记录已失效" in warning for warning in catalog["quality"]["warnings"])
+
+
+def test_public_notice_group_is_applied_as_shared_limit(tmp_path):
+    _write_limit_fixture(tmp_path)
+    notices = {"groups": [{
+        "series_id": "series-a-c",
+        "share_codes": ["000001", "000002"],
+        "limit_scope": "series_shared",
+        "limit_group_id": "notice-AN123",
+        "limit_source": "基金公告（东方财富公告库）",
+        "limit_source_url": "https://example.com/notice",
+        "limit_effective_date": "2026-10-29",
+        "limit_verified_at": "2026-11-17",
+        "limit_confidence": "official",
+        "limit_channels": [{
+            "channel": "代销机构",
+            "amount": 500,
+            "currency": "人民币",
+            "includes_installment": True,
+            "effective_date": "2026-10-29",
+        }],
+    }]}
+    catalog = build_catalog(
+        data_dir=tmp_path,
+        config={"company_brand": {}},
+        limit_config={"entries": []},
+        limit_notices=notices,
+    )
+    shares = catalog["data"]["categories"]["sp500"]["series"][0]["shares"]
+    assert all(share["limit_scope"] == "series_shared" for share in shares)
+    assert all(share["limit_group_id"] == "notice-AN123" for share in shares)
+    assert shares[0]["limit_channels"][0]["amount"] == 500
+
+
+def test_manual_limit_scope_wins_over_notice_group(tmp_path):
+    _write_limit_fixture(tmp_path)
+    catalog = build_catalog(
+        data_dir=tmp_path,
+        config={"company_brand": {}},
+        limit_config={"entries": [{
+            "series_id": "series-a-c",
+            "share_codes": ["000001"],
+            "limit_scope": "share",
+        }]},
+        limit_notices={"groups": [{
+            "series_id": "series-a-c",
+            "share_codes": ["000001", "000002"],
+            "limit_scope": "series_shared",
+            "limit_group_id": "notice-AN123",
+        }]},
+    )
+    shares = catalog["data"]["categories"]["sp500"]["series"][0]["shares"]
+    assert shares[0]["limit_scope"] == "share"
+    assert shares[1]["limit_scope"] == "series_shared"

@@ -64,11 +64,45 @@
 | `limit_verified_at` | 人工核验日 |
 | `limit_confidence` | `official`、`verified` 或 `unverified` |
 | `limit_status` | `active`、`expired`、`unverified` 或 `unknown` |
+| `limit_channels` | 公告中按渠道拆分的额度数组；每项含渠道、金额、币种、是否含定投和生效日 |
+| `limit_notice_title` | 适用公告标题，便于在详情中追溯证据 |
 
 `daily_limit` 仍是原始数值，不允许把展示字符串写回数据。暂停申购、开放申购和
 额度缺失不能互相冒充：暂停不是 0 元限购；开放申购即使残留数字也不参与限购排序。
 多份额系列如果没有人工核验记录，全部标记为 `unknown`，不得仅因 A/C 名称、代码、
 金额相同就推断共同额度。
+
+公告自动识别结果来自 `web/data/limit-notices.json`。`public_catalog.py` 先读取公告
+组，再合并人工 `config/limit-scopes.json`；人工记录优先。只有公告正文明确出现
+“多份额合计”或“合并计算”的公告才会进入自动结果。
+
+`limit-notices.json` 示例：
+
+```json
+{
+  "schema_version": 1,
+  "generated_at": "ISO-8601",
+  "groups": [
+    {
+      "series_id": "银华__海外数字经济量化选股混合__active",
+      "share_codes": ["016701", "016702"],
+      "limit_scope": "series_shared",
+      "limit_group_id": "notice-AN202610291831147463",
+      "limit_channels": [
+        {
+          "channel": "代销机构",
+          "amount": 500,
+          "currency": "人民币",
+          "includes_installment": true,
+          "effective_date": "2026-10-29"
+        }
+      ],
+      "limit_source": "基金公告（东方财富公告库）",
+      "limit_source_url": "https://data.eastmoney.com/..."
+    }
+  ]
+}
+```
 
 ### 限购排序规则
 

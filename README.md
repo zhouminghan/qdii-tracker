@@ -181,6 +181,7 @@ qdii-tracker/
 │   ├── test_gold.py
 │   ├── test_gold_spot.py
 │   ├── test_kline_history.py
+│   ├── test_limit_notices.py
 │   ├── test_macro_rates.py
 │   ├── test_market_temperature.py
 │   ├── test_nasdaq_history.py
@@ -226,6 +227,7 @@ python3 fundctl.py refresh      # 增量刷新
 python3 fundctl.py sync         # 全量同步
 python3 fundctl.py nasdaq       # 刷新纳指 40 年历史图谱数据
 python3 fundctl.py sentiment    # 刷新 CNN 恐慌贪婪指数
+python3 fundctl.py limits       # 扫描基金公告中的共用申购额度
 python3 fundctl.py catalog      # 生成前端公共基金目录契约
 python3 fundctl.py diagnose     # 诊断数据异常
 python3 fundctl.py check        # 一致性校验

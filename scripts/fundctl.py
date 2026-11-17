@@ -22,7 +22,7 @@ from core.constants import CATEGORIES, DATA_DIR, DATA_SCHEMA_VERSION, HOLDINGS_C
 from core.config_loader import get_config, save_config, validate_config
 
 # 直接 import pipeline 模块（替代 subprocess 调用）
-from pipeline import scan, enrich, fill, holdings, reclassify, premium_history, nav_history, kline_history, market_temperature, nasdaq_history, cnn_sentiment, brand_gold, ndx_pe, macro_rates, public_catalog, performance
+from pipeline import scan, enrich, fill, holdings, reclassify, premium_history, nav_history, kline_history, market_temperature, nasdaq_history, cnn_sentiment, brand_gold, ndx_pe, macro_rates, public_catalog, performance, limit_notices
 
 from checks.verify_data import run_verification
 from checks.verify_purchase import run_verification as run_purchase_verification
@@ -199,6 +199,7 @@ def cmd_sync(_args):
     _run(brand_gold.main)
     _run(ndx_pe.main)
     _run(macro_rates.main)
+    _run(limit_notices.main)
     public_catalog.write_catalog()
 
 
@@ -212,6 +213,11 @@ def cmd_nasdaq(_args):
 
 def cmd_sentiment(_args):
     _run(cnn_sentiment.main)
+
+
+def cmd_limits(_args):
+    _run(limit_notices.main)
+    public_catalog.write_catalog()
 
 
 def _all_share_codes() -> set:
@@ -496,6 +502,9 @@ def main():
 
     p_sentiment = sub.add_parser("sentiment", help="刷新 CNN 恐慌贪婪指数")
     p_sentiment.set_defaults(func=cmd_sentiment)
+
+    p_limits = sub.add_parser("limits", help="扫描基金公告中的共用申购额度")
+    p_limits.set_defaults(func=cmd_limits)
 
     p_catalog = sub.add_parser("catalog", help="生成前端公共基金目录契约")
     p_catalog.set_defaults(func=cmd_catalog)

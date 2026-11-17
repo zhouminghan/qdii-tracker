@@ -24,6 +24,7 @@ from core.constants import CATEGORIES, CONFIG_DIR, DATA_DIR
 CATALOG_SCHEMA_VERSION = 1
 CATALOG_FILENAME = "catalog.json"
 LIMIT_SCOPE_FILE = "limit-scopes.json"
+LIMIT_NOTICE_FILE = "limit-notices.json"
 LIMIT_SCOPE_VALUES = ("share", "series_shared", "unknown")
 LIMIT_SCOPE_FIELDS = (
     "limit_scope",
@@ -36,6 +37,8 @@ LIMIT_SCOPE_FIELDS = (
     "limit_verified_at",
     "limit_confidence",
     "limit_status",
+    "limit_channels",
+    "limit_notice_title",
 )
 
 
@@ -62,6 +65,16 @@ def _load_limit_scope_config() -> dict[str, Any]:
         return {"entries": []}
 
 
+def _load_limit_notices() -> dict[str, Any]:
+    path = DATA_DIR / LIMIT_NOTICE_FILE
+    if not path.exists():
+        return {"groups": []}
+    try:
+        return _read_json(path)
+    except (OSError, json.JSONDecodeError, ValueError):
+        return {"groups": []}
+
+
 def _limit_scope_overrides(config: dict[str, Any]) -> dict[str, dict[str, Any]]:
     """把人工核验配置展开为 share_code -> entry。"""
     overrides: dict[str, dict[str, Any]] = {}
@@ -70,6 +83,25 @@ def _limit_scope_overrides(config: dict[str, Any]) -> dict[str, dict[str, Any]]:
         if not isinstance(entry, dict):
             continue
         for code in entry.get("share_codes") or []:
+            if code:
+                overrides[str(code)] = entry
+    return overrides
+
+
+def _notice_overrides(config: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """把公告自动识别结果展开为 share_code -> entry。"""
+    overrides: dict[str, dict[str, Any]] = {}
+    groups = config.get("groups") if isinstance(config, dict) else []
+    for group in groups or []:
+        if not isinstance(group, dict):
+            continue
+        entry = {
+            key: group.get(key)
+            for key in LIMIT_SCOPE_FIELDS
+            if group.get(key) is not None
+        }
+        entry["limit_scope"] = "series_shared"
+        for code in group.get("share_codes") or []:
             if code:
                 overrides[str(code)] = entry
     return overrides
@@ -137,13 +169,20 @@ def build_catalog(
     config: dict[str, Any] | None = None,
     generated_at: str | None = None,
     limit_config: dict[str, Any] | None = None,
+    limit_notices: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """读取现有分类 JSON 并返回带质量信息的公共目录 envelope。"""
     meta = _read_json(data_dir / "meta.json") if (data_dir / "meta.json").exists() else {}
     generated_at = generated_at or meta.get("generated_at") or datetime.now().astimezone().isoformat()
     reference_date = datetime.fromisoformat(generated_at.replace("Z", "+00:00")).date()
     brand_config = (config or _load_brand_config()).get("company_brand", {})
-    limit_overrides = _limit_scope_overrides(limit_config if limit_config is not None else _load_limit_scope_config())
+    auto_overrides = _notice_overrides(
+        limit_notices if limit_notices is not None else _load_limit_notices()
+    )
+    manual_overrides = _limit_scope_overrides(
+        limit_config if limit_config is not None else _load_limit_scope_config()
+    )
+    limit_overrides = {**auto_overrides, **manual_overrides}
 
     categories: dict[str, dict[str, Any]] = {}
     warnings: list[str] = []

@@ -54,8 +54,8 @@
 
 | 属性 | 内容 |
 |------|------|
-| **职责** | 汇总六个分类 JSON、公司品牌配置与人工额度核验记录，生成带 schema/status/quality 的前端唯一入口；为每个 share 补充 `limit_scope`、币种和来源字段 |
-| **输入文件** | `web/data/{CATEGORIES}.json`、`web/data/meta.json`、`config/funds.json`、`config/limit-scopes.json` |
+| **职责** | 汇总六个分类 JSON、公司品牌配置、人工额度核验和公告自动识别结果，生成带 schema/status/quality 的前端唯一入口；为每个 share 补充 `limit_scope`、渠道额度、币种和来源字段 |
+| **输入文件** | `web/data/{CATEGORIES}.json`、`web/data/meta.json`、`web/data/limit-notices.json`、`config/funds.json`、`config/limit-scopes.json` |
 | **输出文件** | `web/data/catalog.json` |
 | **依赖** | `core.constants` |
 
@@ -103,6 +103,16 @@
 | **输入文件** | Siblis `api/v1/NDX/pe-trailing`（免费档仅月末快照；失败时复用旧快照） |
 | **输出文件** | `web/data/ndx-pe.json`（`index`、`index_symbol`、`pe_type`、`frequency`、`observation_period`、`date`） |
 | **依赖** | `core.constants`、`core.utils`、`requests` |
+
+### 18. limit_notices.py — 共用申购限额公告扫描
+
+| 属性 | 内容 |
+|------|------|
+| **职责** | 扫描多份额基金的公开公告，只提取正文明确出现“多份额合计”或“合并计算”的共用额度；按渠道记录金额、是否含定投和生效日 |
+| **输入文件** | 东方财富基金公告列表 API、公告正文 API、公告 PDF |
+| **输出文件** | `web/data/limit-notices.json` |
+| **依赖** | `core.constants`、`core.utils`、`requests`、`pypdf` |
+| **调用方** | `fundctl.py limits`；全量 `sync` 在生成 catalog 前执行 |
 
 ### 12. macro_rates.py — 宏观利率
 
@@ -232,6 +242,7 @@ brand_gold.py ► core.constants, core.utils, requests
 fx_spot.py ► core.constants, core.utils, requests
 gold_spot.py ► core.constants, core.utils, requests
 ndx_pe.py ► core.constants, core.utils, requests
+limit_notices.py ► core.constants, core.utils, requests, pypdf
 macro_rates.py ► core.constants, core.utils, akshare, requests
 market_snapshot.py ► core.constants, core.utils
 ```

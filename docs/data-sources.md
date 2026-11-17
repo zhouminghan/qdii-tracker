@@ -5,6 +5,7 @@
 | 数据 | 数据源 | 产物 | 失败策略 |
 |------|--------|------|----------|
 | 场外基金净值/申购 | 天天基金、pingzhongdata、AKShare | 六个分类 JSON | 保留旧值，nav_date 不回退 |
+| 共用限额公告 | 东方财富基金公告列表/正文 API、公告 PDF | `limit-notices.json` | 仅接受正文明确“合计/合并计算”；抓取失败保留上一份结果 |
 | 区间收益补算 | 本地 `nav-history/`、pingzhongdata | 六个分类 JSON | 只填 `null`，不覆盖已有公开值；封闭期份额不伪造净值 |
 | 南向通渠道资料 | 基金公司官方产品/业绩页、建行亚洲南向通合资格基金筛选器、银行 APP 人工核验 | `southbound.json` | 官方页提供份额代码、ISIN、净值与收益；银行渠道码来自公开合资格名单，实际可购状态仍以 APP 当日信息为准。建行亚洲 2026-11-15 显示 344 个合资格份额，名单按销售银行动态变化 |
 | ETF 价格/规模 | 东方财富、AKShare | `etf.json` | 保留旧值并标记缺失 |
@@ -24,7 +25,7 @@
 GitHub Actions 工作日 22:00（北京时间）与次日 00:30 兜底
   → fill / nav_history / performance / kline_history / market data
   → fx_spot / gold_spot（实时汇率与黄金）
-  → macro_rates / market_temperature（新浪 `.NDX`） / ndx_pe
+  → macro_rates / market_temperature（新浪 `.NDX`） / ndx_pe / limit_notices
   → fundctl.py check
   → checks/build_snapshot.py
       → snapshot.json / feed.rss
