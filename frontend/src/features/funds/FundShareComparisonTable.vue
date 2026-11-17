@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
 import type { FundShare } from '@/types/data'
-import { buyStatusLabel, classifyBuyStatus } from '@/shared/lib/funds'
+import {
+  buyStatusLabel,
+  classifyBuyStatus,
+  dailyLimitDisplay,
+  dailyLimitTitle,
+  limitScopeShort,
+} from '@/shared/lib/funds'
 import {
   annualFeeDetail,
   cleanRuleCondition,
@@ -116,6 +122,7 @@ onBeforeUnmount(cancelRuleHide)
           <th class="align-right">近 3 年</th>
           <th class="align-right">成立来</th>
           <th class="align-center">申购</th>
+          <th class="align-right">每日限购</th>
           <th class="align-right">买入费</th>
           <th class="align-right">综合费率</th>
           <th class="align-right">卖出规则</th>
@@ -141,6 +148,12 @@ onBeforeUnmount(cancelRuleHide)
               :class="classifyBuyStatus(share) === 'paused' ? 'badge-danger' : classifyBuyStatus(share) === 'limited' ? 'badge-warn' : 'badge-accent'"
               :title="share.buy_status || '--'"
             >{{ buyStatusLabel(share) }}</span>
+          </td>
+          <td class="align-right">
+            <div class="limit-cell" :title="dailyLimitTitle(share)">
+              <span class="mono">{{ dailyLimitDisplay(share) }}</span>
+              <span v-if="limitScopeShort(share)" class="limit-scope" :class="{ shared: share.limit_scope === 'series_shared' }">{{ limitScopeShort(share) }}</span>
+            </div>
           </td>
           <td class="align-right rule-anchor-cell">
             <button

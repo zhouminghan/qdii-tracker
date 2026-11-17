@@ -47,6 +47,14 @@ export interface FundShare {
   manager?: string | null
   buy_status?: string | null
   daily_limit?: number | null
+  limit_scope?: 'share' | 'series_shared' | 'unknown' | null
+  limit_group_id?: string | null
+  limit_currency?: string | null
+  limit_source?: string | null
+  limit_source_url?: string | null
+  limit_effective_date?: string | null
+  limit_verified_at?: string | null
+  limit_confidence?: 'official' | 'verified' | 'unverified' | null
   buy_status_history?: BuyStatusHistory[]
   buy_rules?: FundRule[]
   sell_rules?: FundRule[]
@@ -204,13 +212,22 @@ export interface MarketSnapshot {
     treasury_2y: { value: number | null; as_of: string | null }
     treasury_10y: { value: number | null; as_of: string | null }
     treasury_30y: { value: number | null; as_of: string | null }
-    ndx_pe: { value: number | null; as_of: string | null }
+    ndx_pe: {
+      value: number | null
+      as_of: string | null
+      index?: string
+      pe_type?: 'TTM' | 'Forward'
+      frequency?: string
+      observation_period?: 'month_end' | 'daily' | string
+    }
   }
   temperature: {
     score: number
     band: 'green' | 'yellow' | 'red'
     verdict: string
     summary: string
+    weights?: Record<string, number>
+    coverage?: { fresh: number; total: number; degraded: boolean }
     positives: string[]
     risks: string[]
     indicators: Record<
@@ -229,6 +246,8 @@ export interface NasdaqHistory {
   schema_version: number
   generated_at: string
   source: string
+  as_of?: string | null
+  drawdown_basis?: 'daily_close' | 'monthly_close'
   range: { first_year: number; last_year: number }
   summary: { best_month: number; worst_month: number; text: string }
   annual: Array<{
@@ -236,13 +255,15 @@ export interface NasdaqHistory {
     close: number
     return_pct: number
     max_drawdown_pct: number
+    max_drawdown_basis?: 'daily_close' | 'monthly_close'
     peak_month: number
     trough_month: number
+    is_ytd?: boolean
   }>
-  heatmap: { years: number[]; rows: number[][] }
+  heatmap: { years: number[]; rows: number[][]; partial_year?: number | null }
   ranking: Record<string, Array<{ month: number; avg_pct: number; positive_ratio: number; n: number }>>
   drawdown_histogram?: Array<{ month: number; count: number }>
-  index?: string
+  index?: { symbol: string; name: string; currency: string } | string
   disclaimer?: string
 }
 

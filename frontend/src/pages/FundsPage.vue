@@ -10,7 +10,7 @@ import FundDetailDrawer from '@/features/funds/FundDetailDrawer.vue'
 import SouthboundPanel from '@/features/funds/SouthboundPanel.vue'
 import { ETF_GROUPS, OFFSHORE_CATEGORIES } from '@/shared/constants/funds'
 import type { FundSortKey, FundRow } from '@/shared/lib/funds'
-import { formatDailyLimit, matchesFundQuery } from '@/shared/lib/funds'
+import { matchesFundQuery } from '@/shared/lib/funds'
 import { downloadCsv } from '@/shared/lib/csv'
 import { qualityStatusLabel, qualityWarningText } from '@/shared/lib/data-quality'
 import { formatDateTime } from '@/shared/lib/format'
@@ -94,10 +94,16 @@ const sortOptions = computed(() => {
     { key: 'chg_since_inception', label: '成立来' },
   ]
   if (tab.value === 'etf') fields.splice(2, 0, { key: 'premium', label: '溢价率' })
-  return fields.flatMap((field) => [
-    { value: `${field.key}:desc`, label: `${field.label} · 降序` },
-    { value: `${field.key}:asc`, label: `${field.label} · 升序` },
-  ])
+  if (tab.value === 'offshore') {
+    fields.splice(1, 0, { key: 'daily_limit', label: '每日限购' })
+  }
+  return fields.flatMap((field) => {
+    const scope = field.key === 'daily_limit' ? '（同币种内）' : ''
+    return [
+      { value: `${field.key}:desc`, label: `${field.label} · 降序${scope}` },
+      { value: `${field.key}:asc`, label: `${field.label} · 升序${scope}` },
+    ]
+  })
 })
 const groupNotices: Record<string, { text: string; tone: 'info' | 'warn' }> = {
   'offshore:sp500': {
@@ -127,19 +133,26 @@ const groupNotices: Record<string, { text: string; tone: 'info' | 'warn' }> = {
 const activeGroupNotice = computed(() => search.value
   ? null
   : groupNotices[`${tab.value}:${selectedGroup.value}`] ?? null)
-const groupDailyPurchase = computed(() => {
+const groupPurchaseSummary = computed(() => {
   if (tab.value !== 'offshore' || search.value) return null
-  let totalLimit = 0
-  let openCount = 0
+  let limited = 0
+  let paused = 0
+  let open = 0
+  let unknown = 0
   for (const row of currentRows.value) {
     const share = row.defaultShare
-    if (!String(share.share_class).includes('A') || String(share.buy_status || '').includes('暂停')) continue
-    if (share.daily_limit && share.daily_limit > 0) totalLimit += share.daily_limit
-    else if (String(share.buy_status || '').includes('开放')) openCount += 1
+    if (!String(share.share_class).includes('A')) continue
+    const status = String(share.buy_status || '')
+    if (status.includes('暂停')) paused += 1
+    else if (status.includes('限')) {
+      limited += 1
+      if (!(share.daily_limit && share.daily_limit > 0)) unknown += 1
+    } else if (status.includes('开放')) open += 1
   }
-  if (totalLimit > 0) return `当前每日可购买 ${formatDailyLimit(totalLimit, '人民币')}（仅 A 类）`
-  if (openCount > 0) return `${openCount} 只 A 类当前开放申购`
-  return '当前分组没有可申购的 A 类份额'
+  if (!limited && !paused && !open) return null
+  const parts = [`A 类：${limited} 只限购`, `${paused} 只暂停`, `${open} 只开放`]
+  if (unknown) parts.push(`${unknown} 只额度待核验`)
+  return `${parts.join(' · ')}；额度请按份额逐只查看`
 })
 
 watch(() => ui.quickSearch, (value) => {
@@ -151,6 +164,10 @@ watch(search, (value) => {
 watch(tab, () => {
   if (liveBootTimer !== null) window.clearTimeout(liveBootTimer)
   if (tab.value === 'southbound') return
+  if (sortKey.value === 'daily_limit' && tab.value === 'etf') {
+    sortKey.value = 'series_scale'
+    sortDirection.value = 'desc'
+  }
   selectedGroup.value = tab.value === 'offshore' ? 'sp500' : 'sp500'
   if (tab.value === 'etf' && !navigator.webdriver) {
     liveBootTimer = window.setTimeout(() => {
@@ -470,7 +487,7 @@ onBeforeUnmount(() => {
           <Info :size="15" aria-hidden="true" />
           <div>
             <p>{{ activeGroupNotice.text }}</p>
-            <p v-if="groupDailyPurchase"><strong>{{ groupDailyPurchase }}</strong></p>
+            <p v-if="groupPurchaseSummary"><strong>{{ groupPurchaseSummary }}</strong></p>
           </div>
         </aside>
 

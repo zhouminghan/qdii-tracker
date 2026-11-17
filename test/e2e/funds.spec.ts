@@ -16,7 +16,7 @@ test.describe('funds workflow', () => {
     await expect(page.getByRole('button', { name: '取消收藏' }).first()).toBeVisible()
     await expect(page.locator('.table-action').filter({ hasText: '对比' })).toHaveCount(0)
     await expect(page.getByRole('button', { name: '对比', exact: true })).toBeVisible()
-    await expect(page.getByText('当前每日可购买 ¥60（仅 A 类）')).toBeVisible()
+    await expect(page.getByText(/A 类：.*额度请按份额逐只查看/)).toBeVisible()
 
     await fundSearch(page).fill('022525')
     await expect(page.locator('.fund-row:visible, .fund-mobile-card:visible')).toHaveCount(1)
@@ -31,7 +31,7 @@ test.describe('funds workflow', () => {
     await expect(dialog).toBeVisible()
     await expect(dialog.locator('.metric-card.surface-up, .metric-card.surface-down').first()).toBeVisible()
     const dShare = dialog.locator('.share-comparison-table tbody tr').filter({ hasText: '022525' })
-    await expect(dShare).toContainText('限 ¥100')
+    await expect(dShare).toContainText('¥100/日')
   })
 
   test('uses distinct company logos and exposes the Southbound category', async ({ page }) => {
@@ -243,5 +243,64 @@ test.describe('funds workflow', () => {
     await picker.selectOption('017641')
     await expect(page.getByRole('dialog')).toBeVisible()
     await expect(page.getByRole('img', { name: '多基金归一化收益对比图' })).toBeVisible()
+  })
+
+  test('sorts daily limits on desktop with favorites pinned', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium-desktop', 'header sorting is desktop-only')
+    await page.goto('/#/funds')
+    const header = page.getByRole('columnheader', { name: /每日限购/ })
+    const sortButton = header.getByRole('button')
+    await sortButton.click()
+    await expect(header).toHaveAttribute('aria-sort', 'descending')
+    await expect(page.locator('.fund-row:visible').first().getByRole('button', { name: '取消收藏' })).toBeVisible()
+
+    await sortButton.click()
+    await expect(header).toHaveAttribute('aria-sort', 'ascending')
+    const activeChip = page.getByRole('button', { name: /主动基金/ })
+    await activeChip.click()
+    await expect(activeChip).toHaveAttribute('aria-pressed', 'true')
+    await expect(page.locator('.fund-row:visible').first().locator('.limit-cell .mono')).toHaveText('¥10/日')
+
+    await sortButton.click()
+    await expect(header).toHaveAttribute('aria-sort', 'descending')
+    await expect(page.locator('.fund-row:visible').first().locator('.limit-cell .mono')).toHaveText('¥50万/日')
+
+    await fundSearch(page).fill('005698')
+    await expect(page.locator('.fund-row:visible')).toHaveCount(1)
+    await expect(header).toHaveAttribute('aria-sort', 'descending')
+    await expect(page.locator('.fund-row:visible').first()).toContainText('华夏全球科技先锋混合')
+  })
+
+  test('sorts daily limits on mobile with the sort select', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium-mobile', 'mobile select sorting only')
+    await page.goto('/#/funds')
+    const activeChip = page.getByRole('button', { name: /主动基金/ })
+    await activeChip.click()
+    await expect(activeChip).toHaveAttribute('aria-pressed', 'true')
+    await page.getByLabel('排序方式').selectOption('daily_limit:asc')
+    await expect(page.locator('.fund-mobile-card:visible').first().locator('.mobile-limit')).toContainText('¥10/日')
+    await page.getByLabel('排序方式').selectOption('daily_limit:desc')
+    await expect(page.locator('.fund-mobile-card:visible').first().locator('.mobile-limit')).toContainText('¥50万/日')
+  })
+
+  test('supports daily-limit sorting at 375, 390, and 768 widths', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium-desktop', 'exact responsive widths are covered once')
+    for (const [width, height] of [[375, 812], [390, 844], [768, 1024]] as const) {
+      await page.setViewportSize({ width, height })
+      await page.goto('/#/funds')
+      await page.getByRole('button', { name: /主动基金/ }).click()
+      const mobileCard = page.locator('.fund-mobile-card:visible').first()
+      if (await mobileCard.count()) {
+        await page.getByLabel('排序方式').selectOption('daily_limit:asc')
+        await expect(mobileCard.locator('.mobile-limit')).toContainText('¥10/日')
+      } else {
+        const header = page.getByRole('columnheader', { name: /每日限购/ })
+        await header.getByRole('button').click()
+        await expect(header).toHaveAttribute('aria-sort', 'descending')
+        await expect(page.locator('.fund-row:visible').first().locator('.limit-cell .mono')).toContainText('/日')
+      }
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
+      expect(overflow).toBeLessThanOrEqual(1)
+    }
   })
 })

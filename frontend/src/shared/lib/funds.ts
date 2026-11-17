@@ -49,7 +49,68 @@ export type FundSortKey =
   | 'chg_2y'
   | 'chg_3y'
   | 'chg_since_inception'
+  | 'daily_limit'
   | 'buy_status'
+
+export function limitCurrency(share: FundShare): string {
+  return share.limit_currency || share.currency || ''
+}
+
+export function currencyRank(currency: string | null | undefined): number {
+  if (!currency) return 2
+  if (currency.includes('人民币')) return 0
+  if (currency.includes('美元')) return 1
+  return 2
+}
+
+export function currencyPrefix(currency: string | null | undefined): string {
+  if (!currency) return '¥'
+  if (currency.includes('美元')) return '$'
+  if (currency.includes('港币')) return 'HK$'
+  if (currency.includes('日元')) return '¥'
+  return '¥'
+}
+
+export function confirmedDailyLimit(share: FundShare): number | null {
+  const limit = asNumber(share.daily_limit)
+  const kind = classifyBuyStatus(share)
+  if (limit === null || limit <= 0 || kind === 'paused' || kind === 'open') return null
+  return limit
+}
+
+export function limitScopeLabel(share: FundShare): string {
+  if (share.limit_scope === 'series_shared') return '系列共享额度'
+  if (share.limit_scope === 'share') return '单份额额度'
+  return '额度范围待核验'
+}
+
+export function limitScopeShort(share: FundShare): string {
+  if (share.limit_scope === 'series_shared') return '共享'
+  if (share.limit_scope === 'unknown' && confirmedDailyLimit(share) !== null) return '待核验'
+  return ''
+}
+
+export function dailyLimitDisplay(share: FundShare): string {
+  const kind = classifyBuyStatus(share)
+  if (kind === 'paused') return '--'
+  const limit = confirmedDailyLimit(share)
+  if (limit === null) {
+    if (kind === 'limited') return '待核验'
+    if (kind === 'open') return '不限额'
+    return '--'
+  }
+  return `${formatDailyLimit(limit, limitCurrency(share))}/日`
+}
+
+export function dailyLimitTitle(share: FundShare): string {
+  const parts = [limitScopeLabel(share)]
+  if (share.limit_source) parts.push(`来源：${share.limit_source}`)
+  if (share.limit_confidence) parts.push(`置信度：${share.limit_confidence}`)
+  if (share.limit_effective_date) parts.push(`生效：${share.limit_effective_date}`)
+  if (share.limit_verified_at) parts.push(`核验：${share.limit_verified_at}`)
+  if (share.limit_source_url) parts.push(share.limit_source_url)
+  return parts.join(' · ')
+}
 
 export function sortFundRows(
   rows: FundRow[],
@@ -70,13 +131,26 @@ export function sortFundRows(
       case 'chg_2y': return asNumber(share.chg_2y)
       case 'chg_3y': return asNumber(share.chg_3y)
       case 'chg_since_inception': return asNumber(share.chg_since_inception)
+      case 'daily_limit': return confirmedDailyLimit(share)
       case 'buy_status': return share.buy_status ?? ''
     }
   }
 
   const multiplier = direction === 'desc' ? -1 : 1
+  const byName = (a: FundRow, b: FundRow) => a.display_name.localeCompare(b.display_name, 'zh-CN')
   return [...rows].sort((a, b) => {
     if (a.starred !== b.starred) return a.starred ? -1 : 1
+    if (key === 'daily_limit') {
+      const left = confirmedDailyLimit(a.defaultShare)
+      const right = confirmedDailyLimit(b.defaultShare)
+      if (left === null && right === null) return byName(a, b)
+      if (left === null) return 1
+      if (right === null) return -1
+      const currencyDiff = currencyRank(limitCurrency(a.defaultShare)) - currencyRank(limitCurrency(b.defaultShare))
+      if (currencyDiff !== 0) return currencyDiff
+      const compared = left - right
+      return compared === 0 ? byName(a, b) : compared * multiplier
+    }
     const left = valueOf(a)
     const right = valueOf(b)
     if (typeof left === 'string' || typeof right === 'string') {
@@ -85,7 +159,7 @@ export function sortFundRows(
     if (left === null) return 1
     if (right === null) return -1
     const compared = left - right
-    return compared === 0 ? a.display_name.localeCompare(b.display_name, 'zh-CN') : compared * multiplier
+    return compared === 0 ? byName(a, b) : compared * multiplier
   })
 }
 
@@ -112,7 +186,7 @@ export function classifyBuyStatus(share: FundShare): 'open' | 'limited' | 'pause
 export function formatDailyLimit(value: unknown, currency?: string | null): string {
   const limit = asNumber(value)
   if (limit === null || limit <= 0) return '--'
-  const prefix = currency === '美元' ? '$' : '¥'
+  const prefix = currencyPrefix(currency)
   const amount = limit >= 100_000_000
     ? `${parseFloat((limit / 100_000_000).toFixed(1))}亿`
     : limit >= 10_000
@@ -127,9 +201,6 @@ export function buyStatusLabel(share: FundShare): string {
   const kind = classifyBuyStatus(share)
   if (kind === 'none') return '--'
   if (kind === 'paused') return '暂停'
-  if (kind === 'limited') {
-    const limit = formatDailyLimit(share.daily_limit, share.currency)
-    return limit === '--' ? (share.buy_status || '限购') : `限 ${limit}`
-  }
+  if (kind === 'limited') return share.buy_status || '限购'
   return share.buy_status || '开放'
 }

@@ -4,7 +4,13 @@ import { CircleAlert, ExternalLink, History, Star, TrendingUp } from '@lucide/vu
 import BaseDrawer from '@/shared/components/BaseDrawer.vue'
 import EChart from '@/shared/components/EChart.vue'
 import FundShareComparisonTable from '@/features/funds/FundShareComparisonTable.vue'
-import { buyStatusLabel, type FundRow } from '@/shared/lib/funds'
+import {
+  buyStatusLabel,
+  dailyLimitDisplay,
+  dailyLimitTitle,
+  limitScopeLabel,
+  type FundRow,
+} from '@/shared/lib/funds'
 import { lineTooltipFormatter } from '@/shared/lib/chart-tooltip'
 import { asNumber, daysSince, formatDate, formatPercent, formatPrice, movementClass, movementSurfaceClass } from '@/shared/lib/format'
 import { annualFeeDetail, cleanRuleCondition, formatHoldPeriod, formatRuleRate, freeHoldDays, sellRuleLabel, totalAnnualFee } from '@/shared/lib/fund-rules'
@@ -384,7 +390,11 @@ function holdingChangeClass(item: HoldingItem): string {
           <div class="section-header purchase-history-heading">
             <div>
               <h3 id="purchase-history-title">申购状态变化</h3>
-              <p>默认份额 · {{ defaultShare.currency }} · 由新到旧</p>
+              <p :title="dailyLimitTitle(defaultShare)">
+                默认份额 · {{ defaultShare.currency }}
+                <template v-if="!isEtf"> · 单日限购 {{ dailyLimitDisplay(defaultShare) }} · {{ limitScopeLabel(defaultShare) }}</template>
+                · 由新到旧
+              </p>
             </div>
             <span class="badge" :class="statusTone()">{{ defaultShare.buy_status || '--' }}</span>
           </div>

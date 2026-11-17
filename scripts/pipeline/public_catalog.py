@@ -23,6 +23,18 @@ from core.constants import CATEGORIES, CONFIG_DIR, DATA_DIR
 
 CATALOG_SCHEMA_VERSION = 1
 CATALOG_FILENAME = "catalog.json"
+LIMIT_SCOPE_FILE = "limit-scopes.json"
+LIMIT_SCOPE_VALUES = ("share", "series_shared", "unknown")
+LIMIT_SCOPE_FIELDS = (
+    "limit_scope",
+    "limit_group_id",
+    "limit_currency",
+    "limit_source",
+    "limit_source_url",
+    "limit_effective_date",
+    "limit_verified_at",
+    "limit_confidence",
+)
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -36,6 +48,61 @@ def _load_brand_config() -> dict[str, Any]:
     if not path.exists():
         return {}
     return _read_json(path).get("company_brand", {})
+
+
+def _load_limit_scope_config() -> dict[str, Any]:
+    path = CONFIG_DIR / LIMIT_SCOPE_FILE
+    if not path.exists():
+        return {"entries": []}
+    try:
+        return _read_json(path)
+    except (OSError, json.JSONDecodeError, ValueError):
+        return {"entries": []}
+
+
+def _limit_scope_overrides(config: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """把人工核验配置展开为 share_code -> entry。"""
+    overrides: dict[str, dict[str, Any]] = {}
+    entries = config.get("entries") if isinstance(config, dict) else []
+    for entry in entries or []:
+        if not isinstance(entry, dict):
+            continue
+        for code in entry.get("share_codes") or []:
+            if code:
+                overrides[str(code)] = entry
+    return overrides
+
+
+def _apply_limit_scope(
+    share: dict[str, Any],
+    series: dict[str, Any],
+    overrides: dict[str, dict[str, Any]],
+    warnings: list[str],
+) -> str | None:
+    """给份额补充额度适用范围；没有可靠公告时保持 unknown。"""
+    code = str(share.get("code") or "")
+    entry = overrides.get(code)
+    daily_limit = share.get("daily_limit")
+    has_limit = isinstance(daily_limit, (int, float)) and daily_limit > 0
+
+    if entry:
+        expected_series = entry.get("series_id")
+        if expected_series and expected_series != series.get("series_id"):
+            warnings.append(f"{code}: 额度核验记录的 series_id 与当前系列不一致")
+        scope = entry.get("limit_scope")
+        if scope not in LIMIT_SCOPE_VALUES:
+            scope = "unknown"
+            warnings.append(f"{code}: 额度核验记录的 limit_scope 无效，已降级为 unknown")
+        for field in LIMIT_SCOPE_FIELDS:
+            if field in entry:
+                share[field] = entry[field]
+        share["limit_scope"] = scope
+        share["limit_currency"] = entry.get("limit_currency") or share.get("currency")
+        return scope if has_limit else None
+
+    share["limit_scope"] = "share" if has_limit and len(series.get("shares") or []) == 1 else "unknown"
+    share["limit_currency"] = share.get("currency")
+    return share["limit_scope"] if has_limit else None
 
 
 def _date_age_days(value: str | None, reference: date) -> int | None:
@@ -52,12 +119,14 @@ def build_catalog(
     data_dir: Path = DATA_DIR,
     config: dict[str, Any] | None = None,
     generated_at: str | None = None,
+    limit_config: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """读取现有分类 JSON 并返回带质量信息的公共目录 envelope。"""
     meta = _read_json(data_dir / "meta.json") if (data_dir / "meta.json").exists() else {}
     generated_at = generated_at or meta.get("generated_at") or datetime.now().astimezone().isoformat()
     reference_date = datetime.fromisoformat(generated_at.replace("Z", "+00:00")).date()
     brand_config = (config or _load_brand_config()).get("company_brand", {})
+    limit_overrides = _limit_scope_overrides(limit_config if limit_config is not None else _load_limit_scope_config())
 
     categories: dict[str, dict[str, Any]] = {}
     warnings: list[str] = []
@@ -67,6 +136,7 @@ def build_catalog(
     missing_nav = 0
     expected_no_nav = 0
     stale_nav = 0
+    limit_scope_counts = {value: 0 for value in LIMIT_SCOPE_VALUES}
     newest_nav_date: str | None = None
 
     for category in CATEGORIES:
@@ -91,6 +161,9 @@ def build_catalog(
                 shares = []
             total_shares += len(shares)
             for share in shares:
+                scope = _apply_limit_scope(share, item, limit_overrides, warnings)
+                if scope:
+                    limit_scope_counts[scope] += 1
                 is_etf = category == "etf"
                 price = share.get("etf_price") if is_etf else share.get("nav")
                 if price is None:
@@ -145,6 +218,7 @@ def build_catalog(
             "missing_nav": missing_nav,
             "expected_no_nav": expected_no_nav,
             "stale_nav": stale_nav,
+            "limit_scope": limit_scope_counts,
             "warnings": warnings,
             "errors": errors,
         },

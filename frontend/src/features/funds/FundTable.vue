@@ -2,7 +2,14 @@
 import { computed, ref } from 'vue'
 import { ChevronDown, ChevronRight, LineChart, Star } from '@lucide/vue'
 import type { FundSortKey, FundRow } from '@/shared/lib/funds'
-import { buyStatusLabel, classifyBuyStatus, sortFundRows } from '@/shared/lib/funds'
+import {
+  buyStatusLabel,
+  classifyBuyStatus,
+  dailyLimitDisplay,
+  dailyLimitTitle,
+  limitScopeShort,
+  sortFundRows,
+} from '@/shared/lib/funds'
 import FundShareComparisonTable from '@/features/funds/FundShareComparisonTable.vue'
 import { formatDate, formatPercent, formatPrice, movementClass, movementSurfaceClass } from '@/shared/lib/format'
 import { performanceDisplay, type PerformanceKey } from '@/shared/lib/performance'
@@ -48,6 +55,7 @@ const columns = computed<Array<{ key: FundSortKey | null; label: string; align?:
   { key: 'chg_3y', label: '近 3 年', align: 'right' },
   ...(props.tab === 'offshore' ? [
     { key: 'chg_since_inception' as const, label: '成立来', align: 'right' as const },
+    { key: 'daily_limit' as const, label: '每日限购', align: 'right' as const, sub: '默认份额' },
     { key: 'buy_status' as const, label: '申购', align: 'center' as const },
   ] : []),
   { key: null, label: '操作', align: 'center' },
@@ -215,6 +223,16 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
             <td class="align-right mono" :class="movementClass(row.defaultShare.chg_3y)">{{ metricDisplay(row, 'chg_3y') }}</td>
             <template v-if="tab === 'offshore'">
               <td class="align-right mono" :class="movementClass(row.defaultShare.chg_since_inception)">{{ metricDisplay(row, 'chg_since_inception') }}</td>
+              <td class="align-right">
+                <div class="limit-cell" :title="dailyLimitTitle(row.defaultShare)">
+                  <span class="mono">{{ dailyLimitDisplay(row.defaultShare) }}</span>
+                  <span
+                    v-if="limitScopeShort(row.defaultShare)"
+                    class="limit-scope"
+                    :class="{ shared: row.defaultShare.limit_scope === 'series_shared' }"
+                  >{{ limitScopeShort(row.defaultShare) }}</span>
+                </div>
+              </td>
               <td class="align-center">
                 <span class="badge" :class="statusClass(row)" :title="row.defaultShare.buy_status || '--'">{{ buyStatusLabel(row.defaultShare) }}</span>
               </td>
@@ -269,7 +287,13 @@ function mobilePerformance(): Array<{ label: string; key: PerformanceKey }> {
         <div><span>最新</span><strong class="mono">{{ priceDisplay(row) }}</strong></div>
         <div><span>日涨跌</span><strong class="mono" :class="movementClass(dailyChange(row))">{{ formatPercent(dailyChange(row)) }}</strong></div>
         <div v-if="tab === 'etf'"><span>溢价</span><strong class="mono premium-cell">{{ formatPercent(row.defaultShare.etf_premium) }}</strong></div>
-        <div v-else><span>申购</span><span class="badge" :class="statusClass(row)" :title="row.defaultShare.buy_status || '--'">{{ buyStatusLabel(row.defaultShare) }}</span></div>
+        <div v-else>
+          <span>申购</span>
+          <span class="badge" :class="statusClass(row)" :title="row.defaultShare.buy_status || '--'">{{ buyStatusLabel(row.defaultShare) }}</span>
+          <small class="mobile-limit" :title="dailyLimitTitle(row.defaultShare)">
+            {{ dailyLimitDisplay(row.defaultShare) }} {{ limitScopeShort(row.defaultShare) }}
+          </small>
+        </div>
       </div>
       <div class="fund-mobile-performance">
         <div
