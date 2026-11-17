@@ -334,6 +334,14 @@ test.describe('funds workflow', () => {
     await expect(dialog).toContainText('022525')
     await expect(dialog).toContainText('D 类')
     await expect(dialog).toContainText('暂停买入与定投')
+
+    const dRow = dialog.locator('.share-comparison-table tbody tr').filter({ hasText: '022525' })
+    await dRow.locator('.limit-hover-trigger').hover({ force: true })
+    const tooltip = page.getByRole('tooltip')
+    await expect(tooltip).toContainText('申购与限额历史')
+    await expect(tooltip).toContainText('2026-11-17')
+    await expect(tooltip).toContainText('2026-10-29')
+    await expect(tooltip).toContainText('¥100/日')
   })
 
   test('opens the shared-limit announcement board', async ({ page }) => {

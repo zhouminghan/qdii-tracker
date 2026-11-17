@@ -4,8 +4,11 @@ import type { FundShare } from '@/types/data'
 import {
   buyStatusLabel,
   classifyBuyStatus,
+  formatDailyLimit,
   dailyLimitTitle,
+  limitScopeLabel,
   limitScopeShort,
+  purchaseActionLabel,
 } from '@/shared/lib/funds'
 import {
   annualFeeDetail,
@@ -70,7 +73,7 @@ function sellRule(share: FundShare): string {
   return firstRate == null ? '--' : `${firstRate}%起`
 }
 
-type RuleMode = 'buy' | 'fee' | 'sell'
+type RuleMode = 'buy' | 'fee' | 'sell' | 'limit'
 
 const ruleShare = ref<FundShare | null>(null)
 const ruleMode = ref<RuleMode>('buy')
@@ -103,6 +106,26 @@ function showRules(share: FundShare, event: Event, mode: RuleMode): void {
   }
   ruleShare.value = share
   ruleMode.value = mode
+}
+
+function purchaseStatusLabel(share: FundShare): string {
+  const scope = share.limit_scope === 'series_shared' ? limitScopeShort(share, props.shares) : ''
+  return [buyStatusLabel(share), scope].filter(Boolean).join(' · ')
+}
+
+function limitHistory(share: FundShare) {
+  return [...(share.buy_status_history ?? [])]
+    .sort((left, right) => right.date.localeCompare(left.date))
+    .slice(0, 8)
+}
+
+function historyLimit(share: FundShare, entry: { buy_status: string; daily_limit: number | null }): string {
+  if (entry.buy_status.includes('暂停') || entry.buy_status.includes('封闭')) return '无可用额度'
+  if (entry.buy_status.includes('开放')) return '不限额'
+  const limit = Number(entry.daily_limit)
+  return Number.isFinite(limit) && limit > 0
+    ? `${formatDailyLimit(limit, share.currency)}/日`
+    : '额度未公布'
 }
 
 onBeforeUnmount(cancelRuleHide)
@@ -146,12 +169,22 @@ onBeforeUnmount(cancelRuleHide)
           <td class="align-right mono" :class="movementClass(share.chg_3y)">{{ performanceDisplay(share.chg_3y, 'chg_3y', share) }}</td>
           <td class="align-right mono" :class="movementClass(share.chg_since_inception)">{{ performanceDisplay(share.chg_since_inception, 'chg_since_inception', share) }}</td>
           <td class="align-center">
-            <div class="purchase-cell" :title="purchaseTitle(share)">
+            <button
+              class="limit-hover-trigger purchase-cell"
+              type="button"
+              :title="purchaseTitle(share)"
+              :aria-label="`查看 ${share.code} 申购与限额历史`"
+              @mouseenter="showRules(share, $event, 'limit')"
+              @mouseleave="hideRulesSoon"
+              @focus="showRules(share, $event, 'limit')"
+              @blur="hideRulesSoon"
+              @click="showRules(share, $event, 'limit')"
+            >
               <span
                 class="badge"
                 :class="classifyBuyStatus(share) === 'paused' ? 'badge-danger' : classifyBuyStatus(share) === 'limited' ? 'badge-warn' : 'badge-accent'"
-              >{{ buyStatusLabel(share) }}</span>
-            </div>
+              >{{ purchaseStatusLabel(share) }}</span>
+            </button>
           </td>
           <td class="align-right rule-anchor-cell">
             <button
@@ -236,6 +269,28 @@ onBeforeUnmount(cancelRuleHide)
           <strong class="mono">{{ sellRuleLabel(rule) }}</strong>
         </div>
         <p v-if="!ruleShare.sell_rules?.length" class="muted">场内交易无申赎规则。</p>
+      </section>
+      <section v-if="ruleMode === 'limit'" class="rule-popover-section">
+        <h4>申购与限额历史</h4>
+        <p class="rule-popover-note">
+          {{ purchaseActionLabel(ruleShare) }} · {{ limitScopeLabel(ruleShare) }}
+        </p>
+        <div
+          v-for="entry in limitHistory(ruleShare)"
+          :key="`${entry.date}-${entry.buy_status}-${entry.daily_limit}`"
+          class="rule-popover-row limit-history-row"
+        >
+          <span>
+            <time class="mono">{{ entry.date }}</time>
+            <small>{{ entry.buy_status }}</small>
+          </span>
+          <strong class="mono">{{ historyLimit(ruleShare, entry) }}</strong>
+        </div>
+        <p v-if="!limitHistory(ruleShare).length" class="muted">暂无申购限额历史。</p>
+        <p v-if="ruleShare.buy_status_source" class="rule-popover-note">
+          {{ ruleShare.buy_status_source }}
+          <template v-if="ruleShare.buy_status_verified_at"> · {{ ruleShare.buy_status_verified_at }}</template>
+        </p>
       </section>
     </div>
   </Teleport>

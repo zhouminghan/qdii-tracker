@@ -66,6 +66,8 @@
 | `limit_status` | `active`、`expired`、`unverified` 或 `unknown` |
 | `limit_channels` | 公告中按渠道拆分的额度数组；每项含渠道、金额、币种、是否含定投和生效日 |
 | `limit_notice_title` | 适用公告标题，便于在详情中追溯证据 |
+| `buy_status_source` | 非批量源直接确认的申购状态来源（如平台人工核验） |
+| `buy_status_verified_at` | 份额级申购状态核验日期 |
 
 `daily_limit` 仍是原始数值，不允许把展示字符串写回数据。暂停申购、开放申购和
 额度缺失不能互相冒充：暂停不是 0 元限购；开放申购即使残留数字也不参与限购排序。

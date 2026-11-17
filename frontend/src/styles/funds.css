@@ -807,6 +807,29 @@
   gap: 3px;
 }
 
+.limit-hover-trigger {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: help;
+  font: inherit;
+}
+
+.limit-hover-trigger:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.limit-history-row > span {
+  display: grid;
+  gap: 2px;
+}
+
+.limit-history-row small {
+  color: var(--color-text-tertiary);
+  font-size: 0.64rem;
+}
+
 .limit-board-list {
   display: grid;
   gap: 10px;

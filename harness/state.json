@@ -5,7 +5,7 @@
   "current_task": "",
   "run_id": "run-2026-11-17-01",
   "base_sha": "e1537c1308a9f844885b3f3abc671c7a5a294bde",
-  "updated_at": "2026-11-17T17:30:00+08:00",
+  "updated_at": "2026-11-17T17:40:00+08:00",
   "tasks": [
     {
       "task_id": "T01",
@@ -308,6 +308,29 @@
         "online seven-layer gate passes; Layer 6 source unavailable"
       ],
       "commit_sha": "11b4894"
+    },
+    {
+      "task_id": "T20",
+      "task_goal": "验证份额级 action 独立性并增加申购限额历史悬浮窗",
+      "status": "COMPLETED",
+      "dependencies": ["T19"],
+      "attempt_count": 1,
+      "verification_status": "PASS",
+      "blockers": [],
+      "changed_files": [
+        "frontend/src/features/funds/FundShareComparisonTable.vue",
+        "frontend/src/styles/funds.css",
+        "test/e2e/funds.spec.ts",
+        "docs/data-contract.md",
+        "docs/ux-audit.md"
+      ],
+      "test_results": [
+        "hover popover shows 022525 own pause/limit history",
+        "action labels stay share-specific",
+        "140 Python tests and 64 Vitest tests pass",
+        "build and data gate pass"
+      ],
+      "commit_sha": ""
     }
   ],
   "gates": {
