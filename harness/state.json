@@ -29,7 +29,7 @@
       "blockers": ["107 个有限购份额仍未匹配到明确的共用额度公告"],
       "changed_files": ["docs/decisions/0004-limit-nasdaq-market-knowledge.md"],
       "test_results": ["catalog contains 107 limited shares with unknown scope and 12 verified series_shared shares"],
-      "commit_sha": ""
+      "commit_sha": "c6dcae7"
     },
     {
       "task_id": "T03",
@@ -387,5 +387,5 @@
     "axe": "pass",
     "data_check": "7 layered checks pass; Layer 6 cross-source unavailable (0 compared)"
   },
-  "commit_sha": "3ac7714"
+  "commit_sha": "c6dcae7"
 }
