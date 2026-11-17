@@ -2182,7 +2182,7 @@
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 2.92,
+          "chg_1w": 1.64,
           "free_hold_days": null,
           "max_sell_rate": 1.5
         },
@@ -2253,7 +2253,7 @@
           "sale_service_fee": 0.4,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 2.91,
+          "chg_1w": 1.64,
           "free_hold_days": 30,
           "max_sell_rate": 1.5
         },
@@ -3258,7 +3258,7 @@
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 5.63,
+          "chg_1w": 2.72,
           "free_hold_days": 180,
           "max_sell_rate": 1.5
         },
@@ -3359,7 +3359,7 @@
           "sale_service_fee": 0.4,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 5.62,
+          "chg_1w": 2.71,
           "free_hold_days": 30,
           "max_sell_rate": 1.5
         }
@@ -4886,7 +4886,7 @@
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 5.35,
+          "chg_1w": 0.8,
           "free_hold_days": 180,
           "max_sell_rate": 1.5
         },
@@ -4958,7 +4958,7 @@
           "sale_service_fee": 0.3,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 5.34,
+          "chg_1w": 0.8,
           "free_hold_days": 7,
           "max_sell_rate": 1.5
         }
@@ -5900,7 +5900,7 @@
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 3.07,
+          "chg_1w": 1.52,
           "free_hold_days": 180,
           "max_sell_rate": 1.5
         },
@@ -5991,7 +5991,7 @@
           "sale_service_fee": 0.5,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 3.07,
+          "chg_1w": 1.52,
           "free_hold_days": 30,
           "max_sell_rate": 1.5
         },
@@ -6428,7 +6428,7 @@
           "sale_service_fee": 0.0,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 6.22,
+          "chg_1w": 0.72,
           "free_hold_days": 180,
           "max_sell_rate": 1.5
         },
@@ -6504,7 +6504,7 @@
           "sale_service_fee": 0.4,
           "sell_status": "开放赎回",
           "buy_min": 10.0,
-          "chg_1w": 6.22,
+          "chg_1w": 0.71,
           "free_hold_days": 30,
           "max_sell_rate": 1.5
         }
