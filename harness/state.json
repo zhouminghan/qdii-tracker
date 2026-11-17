@@ -1,11 +1,11 @@
 {
   "goal_id": "qdii-limit-nasdaq-knowledge-2026-11-17",
   "task_goal": "基金限购治理、纳指指标口径校验与 Market 金融知识科普升级",
-  "current_phase": "final_acceptance",
-  "current_task": "T16",
+  "current_phase": "completed",
+  "current_task": "",
   "run_id": "run-2026-11-17-01",
   "base_sha": "e1537c1308a9f844885b3f3abc671c7a5a294bde",
-  "updated_at": "2026-11-17T14:10:00+08:00",
+  "updated_at": "2026-11-17T14:16:00+08:00",
   "tasks": [
     {
       "task_id": "T01",
@@ -224,14 +224,20 @@
     {
       "task_id": "T16",
       "task_goal": "最终验收、文档门禁和本地 Commit",
-      "status": "IN_PROGRESS",
+      "status": "COMPLETED",
       "dependencies": ["T15"],
-      "attempt_count": 1,
-      "verification_status": "PENDING",
+      "attempt_count": 2,
+      "verification_status": "PASS",
       "blockers": [],
-      "changed_files": [],
-      "test_results": [],
-      "commit_sha": ""
+      "changed_files": ["README.md", "docs/decisions/0004-limit-nasdaq-market-knowledge.md", "harness/state.json"],
+      "test_results": [
+        "Python 125 passed",
+        "Vitest 62 passed",
+        "T3 Chromium 109 passed / 7 intentional skips",
+        "build pass",
+        "seven-layer data gate pass"
+      ],
+      "commit_sha": "1bbce4f"
     }
   ],
   "gates": {
@@ -243,7 +249,7 @@
     "G5_knowledge_consistency": "PASS",
     "G6_frontend_interaction": "PASS",
     "G7_full_regression": "PASS",
-    "G8_docs_commit": "PENDING"
+    "G8_docs_commit": "PASS"
   },
   "reviewer_conclusion": {
     "p0": 0,
@@ -266,5 +272,5 @@
     "axe": "pass",
     "data_check": "7 layered checks pass; Layer 6 cross-source unavailable (0 compared)"
   },
-  "commit_sha": ""
+  "commit_sha": "1bbce4f"
 }
