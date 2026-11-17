@@ -4,7 +4,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from pipeline.fill import _normalize_purchase_state, _compact_history, _update_history, merge_share_data
+from pipeline.fill import (
+    _compact_history,
+    _normalize_purchase_state,
+    _refresh_purchase_status,
+    _update_history,
+    merge_share_data,
+)
 
 
 def _rmb(code="016055"):
@@ -121,3 +127,36 @@ def test_merge_share_data_does_not_overwrite_when_nav_stale():
     pzd = {"nav_date": "2026-10-20", "nav": 5.0, "chg_1y": 99.0}
     merge_share_data(share, pzd)
     assert share["chg_1y"] == 18.05
+
+
+def test_refresh_purchase_status_updates_each_share_independently(monkeypatch, tmp_path):
+    import json
+    import pipeline.fill as fill
+
+    category = "nasdaq_passive"
+    payload = {
+        "series": [{
+            "series_id": "tianhong-test",
+            "display_name": "天弘纳斯达克100指数",
+            "default_share_code": "018043",
+            "shares": [
+                {"code": "018043", "share_class": "A", "currency": "人民币", "buy_status": "暂停申购", "daily_limit": None},
+                {"code": "018044", "share_class": "C", "currency": "人民币", "buy_status": "暂停申购", "daily_limit": None},
+                {"code": "022525", "share_class": "D", "currency": "人民币", "buy_status": "暂停申购", "daily_limit": None},
+            ],
+        }],
+    }
+    (tmp_path / f"{category}.json").write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    monkeypatch.setattr(fill, "fetch_purchase_data", lambda: {
+        "022525": {"buy_status": "限大额", "daily_limit": 100.0, "sell_status": "开放赎回"},
+    })
+    monkeypatch.setattr(fill, "fetch_rank_data", lambda: {})
+    monkeypatch.setattr(fill, "apply_ths_limit_fallback", lambda share: False)
+
+    fill._refresh_purchase_status(tmp_path, set(), categories=[category])
+    refreshed = json.loads((tmp_path / f"{category}.json").read_text(encoding="utf-8"))
+    shares = {share["code"]: share for share in refreshed["series"][0]["shares"]}
+    assert shares["018043"]["buy_status"] == "暂停申购"
+    assert shares["018044"]["buy_status"] == "暂停申购"
+    assert shares["022525"]["buy_status"] == "限大额"
+    assert shares["022525"]["daily_limit"] == 100.0
