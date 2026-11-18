@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-11-18T07:41:48.449356+08:00",
+  "generated_at": "2026-11-19T05:48:42.383493+08:00",
   "schema_version": 1,
-  "score": 38,
-  "band": "red",
-  "verdict": "红灯 · 防守区间",
-  "summary": "市场风险偏高，控制仓位、避免追高。",
+  "score": 41,
+  "band": "yellow",
+  "verdict": "黄灯 · 中性区间",
+  "summary": "市场处于合理区间，适合定投或谨慎操作。",
   "weights": {
     "nasdaq_trend": 0.4,
     "vix": 0.2,
@@ -12,7 +12,7 @@
     "dxy": 0.2
   },
   "coverage": {
-    "fresh": 3,
+    "fresh": 2,
     "total": 4,
     "degraded": true
   },
@@ -31,13 +31,13 @@
       "stale": false
     },
     "vix": {
-      "score": 35,
-      "label": "恐慌升温",
+      "score": 50,
+      "label": "情绪偏紧",
       "raw": {
-        "value": 25.46,
-        "date": "2026-11-17"
+        "value": 24.56,
+        "date": "2026-11-18"
       },
-      "note": "VIX 25.5，恐慌情绪偏高。",
+      "note": "VIX 24.6，恐慌情绪中性。",
       "source": "Yahoo Finance",
       "stale": false
     },
@@ -45,10 +45,10 @@
       "score": 30,
       "label": "利率压制",
       "raw": {
-        "value": 5.1,
-        "date": "2026-11-17"
+        "value": 5.07,
+        "date": "2026-11-18"
       },
-      "note": "10 年期美债收益率 5.10%。",
+      "note": "10 年期美债收益率 5.07%。",
       "source": "美国财政部/FRED",
       "stale": false
     },
@@ -69,8 +69,7 @@
   ],
   "risks": [
     "纳指跌破 200 日线，趋势转弱。",
-    "VIX 25.5，恐慌情绪升温。",
-    "10 年期美债收益率 5.10%，压制高估值资产。"
+    "10 年期美债收益率 5.07%，压制高估值资产。"
   ],
   "disclaimer": "本评分仅为基于公开数据的量化情绪参考，不构成投资建议。权重与阈值可调，历史表现不代表未来。"
 }
