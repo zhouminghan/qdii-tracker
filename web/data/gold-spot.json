@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-11-19T07:06:34.315264+08:00",
+  "generated_at": "2026-11-20T06:03:40.395652+08:00",
   "schema_version": 1,
   "source": "金投网 + 新浪财经",
   "au9999": {
-    "price": 810.79,
-    "change": -4.789978,
-    "change_pct": -0.5907791,
-    "as_of": "2026-11-19",
+    "price": 801.93,
+    "change": -9.830017,
+    "change_pct": -1.2257949,
+    "as_of": "2026-11-20",
     "source": "金投网 Au9999",
-    "source_updated_at": "2026-11-19T01:05:04+08:00",
+    "source_updated_at": "2026-11-20T02:29:59+08:00",
     "derived": false
   },
   "xau": {
-    "price": 3730.2,
-    "change": 5.53,
-    "change_pct": 0.148,
-    "as_of": "2026-11-19",
+    "price": 3625.01,
+    "change": -99.66,
+    "change_pct": -2.676,
+    "as_of": "2026-11-20",
     "source": "新浪财经 hf_XAU",
-    "source_updated_at": "2026-11-19T07:06:00+08:00",
+    "source_updated_at": "2026-11-20T05:58:00+08:00",
     "derived": false
   },
-  "as_of": "2026-11-19"
+  "as_of": "2026-11-20"
 }

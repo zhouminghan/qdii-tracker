@@ -1,52 +1,52 @@
 {
-  "generated_at": "2026-11-19T07:06:34.242352+08:00",
+  "generated_at": "2026-11-20T06:03:40.329797+08:00",
   "schema_version": 1,
   "source": "新浪财经外汇",
-  "as_of": "2026-11-19",
+  "as_of": "2026-11-20",
   "items": {
     "fxUSDCNY": {
-      "price": 6.6678,
-      "change": 0.0,
-      "change_pct": 0.0,
-      "as_of": "2026-11-19",
+      "price": 6.695,
+      "change": 0.005,
+      "change_pct": 0.0747,
+      "as_of": "2026-11-20",
       "source": "新浪财经 fx_susdcny",
-      "source_updated_at": "2026-11-19T03:00:00+08:00",
+      "source_updated_at": "2026-11-20T03:00:00+08:00",
       "derived": false
     },
     "usdcnh": {
-      "price": 6.6676,
-      "change": -0.0006,
+      "price": 6.6936,
+      "change": 0.0002,
       "change_pct": -0.01,
-      "as_of": "2026-11-19",
+      "as_of": "2026-11-20",
       "source": "新浪财经 fx_susdcnh",
-      "source_updated_at": "2026-11-19T07:06:22+08:00",
+      "source_updated_at": "2026-11-20T06:01:29+08:00",
       "derived": false
     },
     "fxUSDJPY": {
-      "price": 159.35,
-      "change": 0.02,
-      "change_pct": 0.01,
-      "as_of": "2026-11-19",
+      "price": 159.66,
+      "change": -0.01,
+      "change_pct": -0.01,
+      "as_of": "2026-11-20",
       "source": "新浪财经 fx_susdjpy",
-      "source_updated_at": "2026-11-19T07:06:21+08:00",
+      "source_updated_at": "2026-11-20T06:02:14+08:00",
       "derived": false
     },
     "fxUSDHKD": {
-      "price": 7.8452,
-      "change": -0.0001,
-      "change_pct": -0.01,
-      "as_of": "2026-11-19",
+      "price": 7.8433,
+      "change": 0.0006,
+      "change_pct": 0.01,
+      "as_of": "2026-11-20",
       "source": "新浪财经 fx_susdhkd",
-      "source_updated_at": "2026-11-19T07:06:25+08:00",
+      "source_updated_at": "2026-11-20T06:03:32+08:00",
       "derived": false
     },
     "fxCNYHKD": {
-      "price": 1.17656,
-      "change": 0.0,
-      "change_pct": 0.0,
-      "as_of": "2026-11-19",
+      "price": 1.17647,
+      "change": 9e-05,
+      "change_pct": 0.01,
+      "as_of": "2026-11-20",
       "source": "新浪财经 fx_scnyhkd",
-      "source_updated_at": "2026-11-19T07:06:25+08:00",
+      "source_updated_at": "2026-11-20T06:03:32+08:00",
       "derived": false
     }
   }
