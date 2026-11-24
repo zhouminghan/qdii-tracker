@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-11-21T06:51:40.314536+08:00",
+  "generated_at": "2026-11-24T09:32:29.611061+08:00",
   "schema_version": 1,
-  "score": 38,
-  "band": "red",
-  "verdict": "红灯 · 防守区间",
-  "summary": "市场风险偏高，控制仓位、避免追高。",
+  "score": 41,
+  "band": "yellow",
+  "verdict": "黄灯 · 中性区间",
+  "summary": "市场处于合理区间，适合定投或谨慎操作。",
   "weights": {
     "nasdaq_trend": 0.4,
     "vix": 0.2,
@@ -12,7 +12,7 @@
     "dxy": 0.2
   },
   "coverage": {
-    "fresh": 2,
+    "fresh": 3,
     "total": 4,
     "degraded": true
   },
@@ -31,13 +31,13 @@
       "stale": false
     },
     "vix": {
-      "score": 20,
+      "score": 35,
       "label": "恐慌升温",
       "raw": {
-        "value": 35.89,
-        "date": "2026-11-20"
+        "value": 26.62,
+        "date": "2026-11-23"
       },
-      "note": "VIX 35.9，恐慌情绪偏高。",
+      "note": "VIX 26.6，恐慌情绪偏高。",
       "source": "Yahoo Finance",
       "stale": false
     },
@@ -46,7 +46,7 @@
       "label": "利率中性",
       "raw": {
         "value": 4.92,
-        "date": "2026-11-20"
+        "date": "2026-11-23"
       },
       "note": "10 年期美债收益率 4.92%。",
       "source": "美国财政部/FRED",
@@ -56,10 +56,10 @@
       "score": 55,
       "label": "美元中性",
       "raw": {
-        "value": 103.62,
-        "date": "2026-11-18"
+        "value": 104.22,
+        "date": "2026-11-24"
       },
-      "note": "美元指数 103.6。",
+      "note": "美元指数 104.2。",
       "source": "东方财富",
       "stale": false
     }
@@ -69,7 +69,7 @@
   ],
   "risks": [
     "纳指跌破 200 日线，趋势转弱。",
-    "VIX 35.9，恐慌情绪升温。"
+    "VIX 26.6，恐慌情绪升温。"
   ],
   "disclaimer": "本评分仅为基于公开数据的量化情绪参考，不构成投资建议。权重与阈值可调，历史表现不代表未来。"
 }

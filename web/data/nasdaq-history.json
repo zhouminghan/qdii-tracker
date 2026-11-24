@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T06:51:53.359670+08:00",
+  "generated_at": "2026-11-24T09:32:43.499113+08:00",
   "schema_version": 1,
   "index": {
     "symbol": "^NDX",
@@ -7,7 +7,7 @@
     "currency": "USD"
   },
   "source": "Yahoo Finance",
-  "as_of": "2026-11-20",
+  "as_of": "2026-11-23",
   "drawdown_basis": "daily_close",
   "range": {
     "first_year": 1986,
@@ -416,8 +416,8 @@
     },
     {
       "year": 2026,
-      "close": 25028.98,
-      "return_pct": -0.87,
+      "close": 26746.1,
+      "return_pct": 5.93,
       "max_drawdown_pct": -19.84,
       "max_drawdown_basis": "daily_close",
       "peak_month": 10,
@@ -926,7 +926,7 @@
         4.18,
         3.23,
         -6.65,
-        -11.82,
+        -5.77,
         null
       ]
     ],

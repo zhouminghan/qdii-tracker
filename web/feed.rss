@@ -2,106 +2,106 @@
 <rss version="2.0"><channel>
   <title>US Fund Tracker · 美股基金看板</title>
   <link>https://zhouminghan.github.io/qdii-tracker/</link>
-  <description>美股 QDII/ETF 净值与涨跌快照（数据时间 2026-11-21T06:47:03.408720+08:00）</description>
-  <lastBuildDate>Fri, 20 Nov 2026 22:52:12 GMT</lastBuildDate>
+  <description>美股 QDII/ETF 净值与涨跌快照（数据时间 2026-11-24T09:29:37.644292+08:00）</description>
+  <lastBuildDate>Tue, 24 Nov 2026 01:33:04 GMT</lastBuildDate>
   <item>
-    <title>华泰柏瑞中韩半导体ETF联接 -5.31%</title>
-    <description>代码 019454 · 分类 global_index · 净值/价格 2.6674 · 净值日 2026-11-20 · 申购 限大额</description>
-    <guid>019454</guid>
+    <title>建信新兴市场混合 -10.26%</title>
+    <description>代码 539002 · 分类 active · 净值/价格 1.54 · 净值日 2026-11-20 · 申购 限大额</description>
+    <guid>539002</guid>
   </item>
   <item>
-    <title>华安三菱日联日经225ETF联接 -4.62%</title>
-    <description>代码 020712 · 分类 global_index · 净值/价格 1.1997 · 净值日 2026-11-20 · 申购 暂停申购</description>
-    <guid>020712</guid>
+    <title>创金合信全球芯片产业股票 -8.93%</title>
+    <description>代码 017653 · 分类 global_other · 净值/价格 1.508 · 净值日 2026-11-20 · 申购 限大额</description>
+    <guid>017653</guid>
   </item>
   <item>
-    <title>摩根日本精选股票 -3.80%</title>
-    <description>代码 007280 · 分类 global_other · 净值/价格 1.9953 · 净值日 2026-11-20 · 申购 暂停申购</description>
-    <guid>007280</guid>
+    <title>景顺长城全球半导体芯片股票 -8.49%</title>
+    <description>代码 501225 · 分类 active · 净值/价格 2.1667 · 净值日 2026-11-20 · 申购 暂停申购</description>
+    <guid>501225</guid>
   </item>
   <item>
-    <title>纳斯达克生物科技ETF汇添富 -3.68%</title>
-    <description>代码 513290 · 分类 etf · 净值/价格 1.83 · 净值日 2026-11-19 · 申购 场内交易</description>
-    <guid>513290</guid>
-  </item>
-  <item>
-    <title>华宝海外新能源汽车股票 -3.62%</title>
-    <description>代码 017144 · 分类 active · 净值/价格 1.1668 · 净值日 2026-11-19 · 申购 限大额</description>
+    <title>华宝海外新能源汽车股票 -8.48%</title>
+    <description>代码 017144 · 分类 active · 净值/价格 1.0678 · 净值日 2026-11-20 · 申购 限大额</description>
     <guid>017144</guid>
   </item>
   <item>
-    <title>华宝纳斯达克精选股票 -3.07%</title>
-    <description>代码 017436 · 分类 active · 净值/价格 1.8944 · 净值日 2026-11-19 · 申购 限大额</description>
-    <guid>017436</guid>
-  </item>
-  <item>
-    <title>鹏华港美互联股票 -2.91%</title>
-    <description>代码 160644 · 分类 global_other · 净值/价格 1.306 · 净值日 2026-11-19 · 申购 暂停申购</description>
-    <guid>160644</guid>
-  </item>
-  <item>
-    <title>纳斯达克科技ETF景顺 -2.87%</title>
-    <description>代码 159509 · 分类 etf · 净值/价格 2.812 · 净值日 2026-11-19 · 申购 场内交易</description>
-    <guid>159509</guid>
-  </item>
-  <item>
-    <title>国富亚洲机会股票 -2.64%</title>
-    <description>代码 457001 · 分类 active · 净值/价格 2.1101 · 净值日 2026-11-19 · 申购 限大额</description>
+    <title>国富亚洲机会股票 -7.43%</title>
+    <description>代码 457001 · 分类 active · 净值/价格 1.9533 · 净值日 2026-11-20 · 申购 限大额</description>
     <guid>457001</guid>
   </item>
   <item>
-    <title>华宝海外科技股票 -2.45%</title>
-    <description>代码 501312 · 分类 active · 净值/价格 1.9942 · 净值日 2026-11-19 · 申购 限大额</description>
-    <guid>501312</guid>
+    <title>天弘全球新能源汽车股票 -7.24%</title>
+    <description>代码 164212 · 分类 active · 净值/价格 1.1615 · 净值日 2026-11-20 · 申购 限大额</description>
+    <guid>164212</guid>
   </item>
   <item>
-    <title>汇添富全球移动互联混合 -2.28%</title>
-    <description>代码 001668 · 分类 active · 净值/价格 4.44 · 净值日 2026-11-19 · 申购 限大额</description>
+    <title>华夏移动互联混合 -6.97%</title>
+    <description>代码 002891 · 分类 active · 净值/价格 1.789 · 净值日 2026-11-20 · 申购 限大额</description>
+    <guid>002891</guid>
+  </item>
+  <item>
+    <title>天弘全球高端制造混合 -6.92%</title>
+    <description>代码 016664 · 分类 active · 净值/价格 1.6211 · 净值日 2026-11-20 · 申购 限大额</description>
+    <guid>016664</guid>
+  </item>
+  <item>
+    <title>鹏华港美互联股票 -6.91%</title>
+    <description>代码 160644 · 分类 global_other · 净值/价格 1.2158 · 净值日 2026-11-20 · 申购 暂停申购</description>
+    <guid>160644</guid>
+  </item>
+  <item>
+    <title>华宝纳斯达克精选股票 -6.70%</title>
+    <description>代码 017436 · 分类 active · 净值/价格 1.7674 · 净值日 2026-11-20 · 申购 限大额</description>
+    <guid>017436</guid>
+  </item>
+  <item>
+    <title>易方达标普信息科技指数 -6.67%</title>
+    <description>代码 161128 · 分类 active · 净值/价格 5.5051 · 净值日 2026-11-20 · 申购 暂停申购</description>
+    <guid>161128</guid>
+  </item>
+  <item>
+    <title>汇添富全球移动互联混合 -6.35%</title>
+    <description>代码 001668 · 分类 active · 净值/价格 4.1582 · 净值日 2026-11-20 · 申购 限大额</description>
     <guid>001668</guid>
   </item>
   <item>
-    <title>大成纳斯达克100ETF联接 -2.20%</title>
-    <description>代码 000834 · 分类 nasdaq_passive · 净值/价格 5.5613 · 净值日 2026-11-19 · 申购 限大额</description>
-    <guid>000834</guid>
+    <title>华宝海外科技股票 -6.32%</title>
+    <description>代码 501312 · 分类 active · 净值/价格 1.8681 · 净值日 2026-11-20 · 申购 限大额</description>
+    <guid>501312</guid>
   </item>
   <item>
-    <title>国泰纳斯达克100指数 -2.19%</title>
-    <description>代码 160213 · 分类 nasdaq_passive · 净值/价格 3.971 · 净值日 2026-11-19 · 申购 暂停申购</description>
-    <guid>160213</guid>
+    <title>景顺长城纳斯达克科技ETF联接 -6.20%</title>
+    <description>代码 017091 · 分类 active · 净值/价格 2.2824 · 净值日 2026-11-20 · 申购 暂停申购</description>
+    <guid>017091</guid>
   </item>
   <item>
-    <title>广发纳斯达克100ETF联接 -2.18%</title>
-    <description>代码 270042 · 分类 nasdaq_passive · 净值/价格 7.2387 · 净值日 2026-11-19 · 申购 暂停申购</description>
-    <guid>270042</guid>
+    <title>国富全球科技互联混合 -6.17%</title>
+    <description>代码 006373 · 分类 active · 净值/价格 5.1931 · 净值日 2026-11-20 · 申购 限大额</description>
+    <guid>006373</guid>
   </item>
   <item>
-    <title>华安纳斯达克100ETF联接 -2.17%</title>
-    <description>代码 040046 · 分类 nasdaq_passive · 净值/价格 7.2819 · 净值日 2026-11-19 · 申购 暂停申购</description>
-    <guid>040046</guid>
+    <title>富国全球科技互联网股票 -6.06%</title>
+    <description>代码 100055 · 分类 active · 净值/价格 3.4784 · 净值日 2026-11-20 · 申购 限大额</description>
+    <guid>100055</guid>
   </item>
   <item>
-    <title>广发全球科技三个月定开混合 -2.13%</title>
-    <description>代码 011420 · 分类 global_other · 净值/价格 1.1829 · 净值日 2026-11-19 · 申购 暂停申购</description>
-    <guid>011420</guid>
-  </item>
-  <item>
-    <title>银华海外数字经济量化选股混合 -2.11%</title>
-    <description>代码 016701 · 分类 active · 净值/价格 1.7743 · 净值日 2026-11-19 · 申购 限大额</description>
+    <title>银华海外数字经济量化选股混合 -5.59%</title>
+    <description>代码 016701 · 分类 active · 净值/价格 1.6751 · 净值日 2026-11-20 · 申购 限大额</description>
     <guid>016701</guid>
   </item>
   <item>
-    <title>南方纳斯达克100指数 -2.08%</title>
-    <description>代码 016452 · 分类 nasdaq_passive · 净值/价格 2.0484 · 净值日 2026-11-19 · 申购 限大额</description>
-    <guid>016452</guid>
+    <title>国泰纳斯达克100指数 -5.57%</title>
+    <description>代码 160213 · 分类 nasdaq_passive · 净值/价格 3.75 · 净值日 2026-11-20 · 申购 暂停申购</description>
+    <guid>160213</guid>
   </item>
   <item>
-    <title>天弘纳斯达克100指数 -2.08%</title>
-    <description>代码 018043 · 分类 nasdaq_passive · 净值/价格 1.8214 · 净值日 2026-11-19 · 申购 暂停申购</description>
-    <guid>018043</guid>
+    <title>华安纳斯达克100ETF联接 -5.56%</title>
+    <description>代码 040046 · 分类 nasdaq_passive · 净值/价格 6.8769 · 净值日 2026-11-20 · 申购 暂停申购</description>
+    <guid>040046</guid>
   </item>
   <item>
-    <title>易方达纳斯达克100ETF联接 -2.07%</title>
-    <description>代码 161130 · 分类 nasdaq_passive · 净值/价格 3.9887 · 净值日 2026-11-19 · 申购 暂停申购</description>
-    <guid>161130</guid>
+    <title>广发纳斯达克100ETF联接 -5.54%</title>
+    <description>代码 270042 · 分类 nasdaq_passive · 净值/价格 6.8377 · 净值日 2026-11-20 · 申购 暂停申购</description>
+    <guid>270042</guid>
   </item>
 </channel></rss>

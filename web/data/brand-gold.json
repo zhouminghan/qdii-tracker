@@ -1,47 +1,47 @@
 {
-  "generated_at": "2026-11-21T06:51:54.725233+08:00",
+  "generated_at": "2026-11-24T09:32:44.870216+08:00",
   "schema_version": 1,
   "source": "证券之星",
   "brands": [
     {
       "brand": "周大福",
-      "ornament": 1088.0,
-      "investment_bar": 957.0
+      "ornament": 1091.0,
+      "investment_bar": 960.0
     },
     {
       "brand": "老凤祥",
-      "ornament": 1090.0,
-      "investment_bar": 951.0
+      "ornament": 1088.0,
+      "investment_bar": 954.0
     },
     {
       "brand": "中国黄金",
-      "ornament": 1069.0,
-      "investment_bar": 771.0
+      "ornament": 1078.0,
+      "investment_bar": 804.0
     },
     {
       "brand": "六福珠宝",
-      "ornament": 1086.0,
-      "investment_bar": 957.0
+      "ornament": 1089.0,
+      "investment_bar": 960.0
     },
     {
       "brand": "周生生",
-      "ornament": 1089.0,
-      "investment_bar": 957.0
+      "ornament": 1087.0,
+      "investment_bar": 960.0
     },
     {
       "brand": "周六福",
-      "ornament": 1083.0,
-      "investment_bar": 957.0
+      "ornament": 1086.0,
+      "investment_bar": 960.0
     },
     {
       "brand": "周大生",
-      "ornament": 1088.0,
+      "ornament": 1091.0,
       "investment_bar": null
     },
     {
       "brand": "潮宏基",
-      "ornament": 1088.0,
-      "investment_bar": 957.0
+      "ornament": 1091.0,
+      "investment_bar": 960.0
     },
     {
       "brand": "老庙黄金",
@@ -50,8 +50,8 @@
     },
     {
       "brand": "菜百首饰",
-      "ornament": 1118.0,
-      "investment_bar": 985.0
+      "ornament": 1098.0,
+      "investment_bar": 975.0
     }
   ]
 }
