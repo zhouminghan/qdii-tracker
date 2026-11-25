@@ -1,52 +1,52 @@
 {
-  "generated_at": "2026-11-25T09:07:12.130015+08:00",
+  "generated_at": "2026-11-26T07:03:17.040014+08:00",
   "schema_version": 1,
   "source": "新浪财经外汇",
-  "as_of": "2026-11-25",
+  "as_of": "2026-11-26",
   "items": {
     "fxUSDCNY": {
-      "price": 6.6653,
+      "price": 6.6681,
       "change": 0.0,
       "change_pct": 0.0,
-      "as_of": "2026-11-25",
+      "as_of": "2026-11-26",
       "source": "新浪财经 fx_susdcny",
-      "source_updated_at": "2026-11-25T03:00:00+08:00",
+      "source_updated_at": "2026-11-26T03:00:00+08:00",
       "derived": false
     },
     "usdcnh": {
-      "price": 6.6641,
+      "price": 6.6671,
       "change": -0.0007,
       "change_pct": -0.01,
-      "as_of": "2026-11-25",
+      "as_of": "2026-11-26",
       "source": "新浪财经 fx_susdcnh",
-      "source_updated_at": "2026-11-25T09:07:01+08:00",
+      "source_updated_at": "2026-11-26T07:02:58+08:00",
       "derived": false
     },
     "fxUSDJPY": {
-      "price": 159.21,
-      "change": -0.04,
-      "change_pct": -0.03,
-      "as_of": "2026-11-25",
+      "price": 159.15,
+      "change": -0.02,
+      "change_pct": -0.01,
+      "as_of": "2026-11-26",
       "source": "新浪财经 fx_susdjpy",
-      "source_updated_at": "2026-11-25T09:07:01+08:00",
+      "source_updated_at": "2026-11-26T07:02:52+08:00",
       "derived": false
     },
     "fxUSDHKD": {
-      "price": 7.8425,
-      "change": 0.001,
-      "change_pct": 0.01,
-      "as_of": "2026-11-25",
+      "price": 7.8388,
+      "change": -0.0009,
+      "change_pct": -0.01,
+      "as_of": "2026-11-26",
       "source": "新浪财经 fx_susdhkd",
-      "source_updated_at": "2026-11-25T09:07:00+08:00",
+      "source_updated_at": "2026-11-26T07:03:03+08:00",
       "derived": false
     },
     "fxCNYHKD": {
-      "price": 1.17667,
-      "change": 0.00015,
-      "change_pct": 0.01,
-      "as_of": "2026-11-25",
+      "price": 1.17415,
+      "change": -0.00013,
+      "change_pct": -0.01,
+      "as_of": "2026-11-26",
       "source": "新浪财经 fx_scnyhkd",
-      "source_updated_at": "2026-11-25T09:07:01+08:00",
+      "source_updated_at": "2026-11-26T07:03:03+08:00",
       "derived": false
     }
   }
