@@ -754,8 +754,8 @@
           "fund_company": "天弘基金管理有限公司",
           "fund_type_xq": "QDII-股票",
           "full_name": "天弘越南市场股票型发起式证券投资基金(QDII)",
-          "buy_status": "暂停申购",
-          "daily_limit": null,
+          "buy_status": "限大额",
+          "daily_limit": 1000.0,
           "buy_status_history": [
             {
               "date": "2026-07-11",
@@ -781,6 +781,11 @@
               "date": "2026-11-24",
               "buy_status": "暂停申购",
               "daily_limit": null
+            },
+            {
+              "date": "2026-11-25",
+              "buy_status": "限大额",
+              "daily_limit": 1000.0
             }
           ],
           "buy_rules": [
@@ -808,7 +813,7 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.25,
-          "sell_status": "暂停赎回",
+          "sell_status": "开放赎回",
           "buy_min": 0.1,
           "chg_1w": -1.17,
           "free_hold_days": 30,
@@ -3478,6 +3483,7 @@
           "nav_date": "2026-11-23",
           "daily_change": 1.26,
           "chg_1m": -6.19,
+          "chg_3m": -9.44,
           "chg_ytd": -9.45,
           "chg_since_inception": -9.45,
           "scale": 17.26,
@@ -3526,8 +3532,7 @@
           "buy_min": 100.0,
           "chg_1w": 1.21,
           "free_hold_days": 180,
-          "error": "'data'",
-          "chg_3m": -9.44
+          "error": "'data'"
         }
       ],
       "default_share_code": "023591",
