@@ -299,7 +299,7 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.18,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 500.0,
           "chg_1w": 6.3,
           "free_hold_days": 7,
@@ -375,7 +375,7 @@
           "fee": "1.3",
           "first_buy_rate": 1.3,
           "sale_service_fee": 0.0,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 1.0,
           "chg_1w": 6.27,
           "free_hold_days": 730,
@@ -432,7 +432,7 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.2,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 1.0,
           "chg_1w": 6.27,
           "free_hold_days": 7,
@@ -636,8 +636,8 @@
           "scale_raw": "40.79亿",
           "established": "2024-03-19",
           "manager": "张其思",
-          "buy_status": "限大额",
-          "daily_limit": 200.0,
+          "buy_status": "暂停申购",
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-07-11",
@@ -658,6 +658,11 @@
               "date": "2026-10-29",
               "buy_status": "限大额",
               "daily_limit": 200.0
+            },
+            {
+              "date": "2026-11-26",
+              "buy_status": "暂停申购",
+              "daily_limit": null
             }
           ],
           "buy_rules": [
@@ -681,7 +686,7 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.01,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 10.0,
           "chg_1w": 6.05,
           "free_hold_days": 7,
@@ -936,7 +941,7 @@
           "fee": "1.2",
           "first_buy_rate": 1.2,
           "sale_service_fee": 0.0,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 0.0,
           "chg_1w": 6.21,
           "free_hold_days": 7,
@@ -1004,7 +1009,7 @@
           "fee": "1.2",
           "first_buy_rate": 1.2,
           "sale_service_fee": 0.0,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 0.0,
           "chg_1w": 6.21,
           "free_hold_days": 7,
@@ -1499,13 +1504,18 @@
           "scale_raw": "43.74亿",
           "established": "2021-09-22",
           "manager": "朱金钰",
-          "buy_status": "限大额",
-          "daily_limit": 1.0,
+          "buy_status": "暂停申购",
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-10-31",
               "buy_status": "限大额",
               "daily_limit": 1.0
+            },
+            {
+              "date": "2026-11-26",
+              "buy_status": "暂停申购",
+              "daily_limit": null
             }
           ],
           "buy_rules": [
@@ -1545,7 +1555,7 @@
           "fee": "1.2",
           "first_buy_rate": 1.2,
           "sale_service_fee": 0.0,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 100.0,
           "chg_1w": 5.72,
           "free_hold_days": 90,
@@ -1572,13 +1582,18 @@
           "scale_raw": "23.61亿",
           "established": "2021-09-22",
           "manager": "朱金钰",
-          "buy_status": "限大额",
-          "daily_limit": 1.0,
+          "buy_status": "暂停申购",
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-10-31",
               "buy_status": "限大额",
               "daily_limit": 1.0
+            },
+            {
+              "date": "2026-11-26",
+              "buy_status": "暂停申购",
+              "daily_limit": null
             }
           ],
           "buy_rules": [
@@ -1602,7 +1617,7 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.3,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 100.0,
           "chg_1w": 5.73,
           "free_hold_days": 7,
@@ -1877,7 +1892,7 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.2,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 0.1,
           "chg_1w": 5.92,
           "free_hold_days": 30,
@@ -2083,13 +2098,18 @@
           "scale_raw": "0.16亿",
           "established": "2023-09-25",
           "manager": "何智豪",
-          "buy_status": "限大额",
-          "daily_limit": 1.0,
+          "buy_status": "暂停申购",
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-10-31",
               "buy_status": "限大额",
               "daily_limit": 1.0
+            },
+            {
+              "date": "2026-11-26",
+              "buy_status": "暂停申购",
+              "daily_limit": null
             }
           ],
           "buy_rules": [
@@ -2121,7 +2141,7 @@
           "fee": "1.2",
           "first_buy_rate": 1.2,
           "sale_service_fee": 0.0,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 1.0,
           "chg_1w": 5.8,
           "free_hold_days": 7,
@@ -2148,13 +2168,18 @@
           "scale_raw": "0.14亿",
           "established": "2023-09-25",
           "manager": "何智豪",
-          "buy_status": "限大额",
-          "daily_limit": 1.0,
+          "buy_status": "暂停申购",
+          "daily_limit": null,
           "buy_status_history": [
             {
               "date": "2026-10-31",
               "buy_status": "限大额",
               "daily_limit": 1.0
+            },
+            {
+              "date": "2026-11-26",
+              "buy_status": "暂停申购",
+              "daily_limit": null
             }
           ],
           "buy_rules": [
@@ -2178,7 +2203,7 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.3,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 1.0,
           "chg_1w": 5.8,
           "free_hold_days": 7,
@@ -3103,7 +3128,7 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.1,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 1.0,
           "chg_1w": 5.93,
           "free_hold_days": 7,
@@ -3938,7 +3963,7 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.15,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 1.0,
           "chg_1w": 5.93,
           "free_hold_days": 7,
@@ -3999,7 +4024,7 @@
           "fee": "1.0",
           "first_buy_rate": 1.0,
           "sale_service_fee": 0.0,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 100.0,
           "chg_1w": 5.87,
           "free_hold_days": 7,
@@ -4056,7 +4081,7 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.3,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 100.0,
           "chg_1w": 5.88,
           "free_hold_days": 7,
@@ -4830,7 +4855,7 @@
           "fee": "1.2",
           "first_buy_rate": 1.2,
           "sale_service_fee": 0.0,
-          "sell_status": "开放赎回",
+          "sell_status": "暂停赎回",
           "buy_min": 1.0,
           "chg_1w": 5.91,
           "free_hold_days": 7,

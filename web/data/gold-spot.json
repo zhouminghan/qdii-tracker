@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T07:03:17.118148+08:00",
+  "generated_at": "2026-11-26T08:43:43.696319+08:00",
   "schema_version": 1,
   "source": "金投网 + 新浪财经",
   "au9999": {
@@ -12,12 +12,12 @@
     "derived": false
   },
   "xau": {
-    "price": 3584.08,
-    "change": -4.47,
-    "change_pct": -0.125,
+    "price": 3572.43,
+    "change": -16.12,
+    "change_pct": -0.449,
     "as_of": "2026-11-26",
     "source": "新浪财经 hf_XAU",
-    "source_updated_at": "2026-11-26T07:03:00+08:00",
+    "source_updated_at": "2026-11-26T08:43:00+08:00",
     "derived": false
   },
   "as_of": "2026-11-26"
