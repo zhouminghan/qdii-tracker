@@ -63,8 +63,12 @@
   `normalize_holdings_keys`（G010 防 diff 噪音契约）与 `bump_generated_at`
   补确定性单测。
   验证：`check --offline --agent-rules` 全绿 + `pytest` 144 passed。
+- **批次 15 · 补黄金折算运行时单测**：为 `market_snapshot._build_gold` 的
+  XAU×USDCNH÷OZ 折算与国内溢价公式补确定性单测（mocked 数据源），并覆盖
+  `_round`/`_scalar` 精度契约。
+  验证：`check --offline --agent-rules` 全绿 + `pytest` 146 passed。
 
 ## 当前状态
 
-- 批次 1–14 已完成并独立提交。
+- 批次 1–15 已完成并独立提交。
 - P1 已清空；剩余见 `docs/governance/TASK-POOL.md`（P2 / 待确认）。

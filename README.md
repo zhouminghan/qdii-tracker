@@ -185,6 +185,7 @@ qdii-tracker/
 │   ├── test_kline_history.py
 │   ├── test_limit_notices.py
 │   ├── test_macro_rates.py
+│   ├── test_market_snapshot.py
 │   ├── test_market_temperature.py
 │   ├── test_nasdaq_history.py
 │   ├── test_nav_history.py
