@@ -175,6 +175,7 @@ qdii-tracker/
 │   ├── e2e/
 │   ├── frontend/
 │   ├── test_akshare_source.py
+│   ├── test_architecture_lint.py
 │   ├── test_brand_gold.py
 │   ├── test_classify.py
 │   ├── test_cnn_sentiment.py

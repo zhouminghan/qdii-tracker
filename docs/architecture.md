@@ -225,12 +225,12 @@
 | **输出文件** | 无（只输出诊断报告；--auto-fix 时调 `fundctl.py refresh` 修复） |
 | **依赖** | `core.constants` |
 
-### 4. architecture_lint.py — 目录纪律校验
+### 4. architecture_lint.py — 目录纪律与 import 方向校验
 
 | 属性 | 内容 |
 |------|------|
-| **职责** | 校验 `web/` 目录结构符合白名单规则 |
-| **输入文件** | `web/` 目录 |
+| **职责** | 校验 `web/` 目录结构符合白名单规则，并校验 `scripts/` 的分层 import 方向（core ← sources ← pipeline ← checks，禁止向上/同级横向） |
+| **输入文件** | `web/` 目录、`scripts/` 源码 |
 | **输出文件** | 无（返回错误列表） |
 | **依赖** | `core.constants` |
 

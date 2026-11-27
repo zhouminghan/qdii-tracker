@@ -21,8 +21,11 @@
   pipeline 17→20、checks 5→8 全量登记，统一顺序编号并修正依赖列表；
   在 `check_agent_rules.py` 新增 Layer B2 反向完整性校验（漏登记即失败）。
   验证：`check --offline --agent-rules` 全绿（含 Layer B2）+ `pytest` 133 passed。
+- **批次 4 · 强制 import 分层方向**：`architecture_lint.py` 新增 AST 依赖方向校验
+  （core ← sources ← pipeline ← checks，既有横向耦合 allowlist），并加回归单测。
+  验证：`check --offline --agent-rules` 全绿 + `pytest` 135 passed。
 
 ## 当前状态
 
-- 批次 1、2、3 已完成并独立提交。
-- 下一步见 `docs/governance/TASK-POOL.md`（P1：import 方向 lint、黄金公式精度收敛）。
+- 批次 1、2、3、4 已完成并独立提交。
+- 下一步见 `docs/governance/TASK-POOL.md`（P1：黄金公式精度收敛）。

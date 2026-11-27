@@ -7,8 +7,6 @@
 
 - **DUP-3 黄金公式收敛**：评估 `market_snapshot.py` 与 `core/gold.py` 的精度差异
   （`round(...,6)` vs `round(...,2)`），在不改变产出的前提下消除平行公式。
-- **DEV-5 Python import 方向 lint**：新增 AST 检查，禁止 `sources → pipeline`、
-  `core → pipeline/sources/checks`、以及 pipeline 模块间横向 import。
 
 ## P2（常规）
 
