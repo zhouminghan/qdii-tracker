@@ -107,7 +107,7 @@
 | **职责** | 抓取纳指趋势 / VIX / 10 年期美债 / 美元指数，按可配置阈值打分并加权，生成红绿灯信号 |
 | **输入文件** | 新浪 `.NDX`、Yahoo `^VIX`、东财中美国债收益率、东财美元指数（失败时复用旧快照） |
 | **输出文件** | `web/data/market-temperature.json`（含 `weights` 与 `coverage`；缺失数据标记 degraded） |
-| **依赖** | `core.constants`、`core.utils`、`akshare`、`requests`、`pipeline.macro_rates`（函数内惰性导入） |
+| **依赖** | `core.constants`、`core.utils`、`akshare`、`requests`、`sources.treasury_source`（函数内惰性导入） |
 
 ### 12. nasdaq_history.py — 纳指历史图谱
 
@@ -152,7 +152,7 @@
 | **职责** | 抓取美国国债 2/10/30 年收益率最新值，写入宏观利率数据；优先美国财政部官方 CSV，回退 FRED，再回退东方财富 |
 | **输入文件** | 美国财政部 daily_treasury_yield_curve CSV、FRED DGS2/DGS10/DGS30、akshare `bond_zh_us_rate`（全部失败时复用旧快照） |
 | **输出文件** | `web/data/macro-rates.json` |
-| **依赖** | `core.constants`、`core.utils`、`requests`、`akshare` |
+| **依赖** | `core.constants`、`core.utils`、`sources.treasury_source` |
 
 ### 17. fx_spot.py — 实时汇率快照
 
@@ -290,12 +290,12 @@ nav_history.py ─────► core.constants, core.utils, sources.eastmoney_
 premium_history.py ─► core.constants, core.utils, sources.eastmoney_source
 kline_history.py ───► core.constants, core.utils
 public_catalog.py ──► core.constants
-market_temperature.py ► core.constants, core.utils, akshare, requests, pipeline.macro_rates
+market_temperature.py ► core.constants, core.utils, akshare, requests, sources.treasury_source
 nasdaq_history.py ──► core.constants, core.utils, requests, akshare
 cnn_sentiment.py ───► core.constants, core.utils, requests
 brand_gold.py ──────► core.constants, core.utils, requests
 ndx_pe.py ──────────► core.constants, core.utils, requests
-macro_rates.py ─────► core.constants, core.utils, requests, akshare
+macro_rates.py ─────► core.constants, core.utils, sources.treasury_source
 fx_spot.py ─────────► core.constants, core.utils, requests
 gold_spot.py ───────► core.constants, core.utils, requests
 market_snapshot.py ─► core.constants, core.gold
@@ -317,7 +317,6 @@ build_snapshot.py ──────► core.constants, pipeline.market_snapshot
 
 > 注：`checks/` 模块通过 `fundctl.py` 统一调用；除 `build_snapshot → pipeline` 与
 > `check_agent_rules → doc_sync` 两条已显式标注的方向外，checks 不依赖其他 checks 兄弟模块。
-> `pipeline.market_temperature → pipeline.macro_rates` 是 pipeline 内部唯一横向耦合，待下沉到 sources/core。
 
 ## frontend/ — Vue 应用
 

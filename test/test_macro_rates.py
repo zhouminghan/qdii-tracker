@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from pipeline.macro_rates import parse_fred_series, parse_treasury_csv
+from sources.treasury_source import parse_fred_series, parse_treasury_csv
 
 TREASURY_SAMPLE = (
     'Date,"1 Mo","1.5 Month","2 Mo","3 Mo","4 Mo","6 Mo","1 Yr","2 Yr","3 Yr",'

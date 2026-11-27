@@ -58,7 +58,6 @@ LAYER_FORBIDDEN = {
 
 # 已识别且待下沉的既有横向耦合（见 docs/governance/TASK-POOL.md）；新同类耦合会被拒绝。
 ALLOWED_SAME_LAYER = {
-    ("pipeline", "pipeline"): {("market_temperature", "macro_rates")},
     ("checks", "checks"): {("check_agent_rules", "doc_sync")},
 }
 

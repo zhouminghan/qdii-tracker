@@ -27,8 +27,8 @@ config/              业务配置 SSOT（funds.json 经 fundctl 变更）
 
 ### 已知依赖异常
 
-- `pipeline/market_temperature.py:222` 在函数内惰性 `from pipeline.macro_rates import
-  fetch_treasury`：pipeline 模块间的隐式横向耦合，应收敛到 `sources` 或 `core`。
+- ~~`pipeline/market_temperature` 惰性 `from pipeline.macro_rates import fetch_treasury`~~：
+  ✅已收敛（批次 5）：抓取链下沉到 `sources/treasury_source.py`，两处 pipeline 改向下依赖 sources。
 - `checks/build_snapshot.py:19` 直接 `from pipeline import market_snapshot, public_catalog`：
   这是「checks 消费 pipeline」的方向，语义成立，但未在契约中显式标注为唯一允许方向。
 
@@ -64,6 +64,7 @@ pages/components → Dexie 个人数据 → JSON 备份
 | DUP-1 | 黄金折算常数 `31.1034768` | `core/gold.py`（SSOT） | `pipeline/market_snapshot.py` 内联常量 | ✅已收敛：market_snapshot 改从 core.gold 导入 |
 | DUP-2 | VIX/PE 阶梯定投规则 | `frontend/src/shared/lib/dca.ts`（运行时） | `core/dca_strategy.py`（零运行时调用方） | ✅已收敛：删除 Python 侧，前端为唯一实现 |
 | DUP-3 | 黄金折算 `XAU*USDCNH/OZ` | `pipeline/market_snapshot.py`（运行时） | `core/gold.py:gold_cny_per_gram`（仅测试用） | 待：与 DUP-1 一并收敛 |
+| DUP-4 | FRED CSV 解析 | `sources/treasury_source.py:parse_fred_series`（round 2） | `pipeline/market_temperature.py:parse_fred_series`（raw） | 待：精度口径需先决策，再行为等价收敛 |
 
 已收敛（既往批次）：`calc_series_scale`、`fetch_and_save_holdings`、
 `normalize_share_keys`/`normalize_holdings_keys`、`to_float` 均已收拢到 `core/utils.py`。

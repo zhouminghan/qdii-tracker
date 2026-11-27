@@ -217,9 +217,9 @@ def fetch_nasdaq_trend():
 
 
 def fetch_treasury_10y():
-    # 与 macro_rates 共用官方财政部 → FRED → 东方财富回退链。
+    # 与 macro_rates 共用官方财政部 → FRED → 东方财富回退链（sources/treasury_source.py）。
     try:
-        from pipeline.macro_rates import fetch_treasury
+        from sources.treasury_source import fetch_treasury
 
         treasury, _ = fetch_treasury()
         if treasury and treasury.get("y10") is not None:

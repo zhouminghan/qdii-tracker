@@ -24,8 +24,13 @@
 - **批次 4 · 强制 import 分层方向**：`architecture_lint.py` 新增 AST 依赖方向校验
   （core ← sources ← pipeline ← checks，既有横向耦合 allowlist），并加回归单测。
   验证：`check --offline --agent-rules` 全绿 + `pytest` 135 passed。
+- **批次 5 · 下沉美债抓取链，消除 pipeline 横向耦合**：把财政部→FRED→东方财富
+  抓取链从 `pipeline/macro_rates.py` 下沉到 `sources/treasury_source.py`；
+  `macro_rates` 与 `market_temperature` 改向下依赖 sources；移除 import lint 的
+  pipeline→pipeline allowlist（分层约束收紧）。
+  验证：`check --offline --agent-rules` 全绿（import lint 收紧后仍 0 违例）+ `pytest` 135 passed。
 
 ## 当前状态
 
-- 批次 1、2、3、4 已完成并独立提交。
-- 下一步见 `docs/governance/TASK-POOL.md`（P1：黄金公式精度收敛）。
+- 批次 1–5 已完成并独立提交。
+- 下一步见 `docs/governance/TASK-POOL.md`（P1：黄金公式精度收敛、FRED 解析收敛）。
