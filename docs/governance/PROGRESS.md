@@ -59,8 +59,12 @@
   4xx 永久失败/DNS 永久失败）与 `core.config_loader`（校验/读取/落盘回环）
   补确定性单测，锁定两个权威模块的行为契约。
   验证：`check --offline --agent-rules` 全绿 + `pytest` 141 passed。
+- **批次 14 · 补 key 归一化与时间戳单测**：为 `normalize_share_keys` /
+  `normalize_holdings_keys`（G010 防 diff 噪音契约）与 `bump_generated_at`
+  补确定性单测。
+  验证：`check --offline --agent-rules` 全绿 + `pytest` 144 passed。
 
 ## 当前状态
 
-- 批次 1–13 已完成并独立提交。
+- 批次 1–14 已完成并独立提交。
 - P1 已清空；剩余见 `docs/governance/TASK-POOL.md`（P2 / 待确认）。

@@ -1,4 +1,5 @@
 """单元测试：core/utils.py 的纯函数"""
+import json
 import sys
 import time
 from pathlib import Path
@@ -6,7 +7,11 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 import requests
 
-from core.utils import to_float, read_json, write_json, parse_scale, calc_series_scale, call_ak, requests_get
+from core.utils import (
+    to_float, read_json, write_json, parse_scale, calc_series_scale,
+    call_ak, requests_get, normalize_share_keys, normalize_holdings_keys,
+    bump_generated_at,
+)
 
 
 class _FakeResp:
@@ -155,6 +160,35 @@ def test_requests_get_no_retry_on_dns_failure(monkeypatch):
     monkeypatch.setattr(time, "sleep", lambda _: None)
     assert requests_get("http://example.test", backoff=0) is None
     assert calls["n"] == 1
+
+
+def test_normalize_share_keys_orders_standard_first():
+    data = {"series": [{"shares": [{"nav": 1.0, "code": "x", "name": "y", "custom": 9}]}]}
+    normalize_share_keys(data)
+    keys = list(data["series"][0]["shares"][0].keys())
+    assert keys == ["code", "name", "nav", "custom"]
+
+
+def test_normalize_holdings_keys_orders_top_and_items():
+    data = {
+        "all_quarters": {"Q1": [{"weight": 5, "rank": 1}]},
+        "holdings": [{"stock_name": "A", "rank": 1, "weight": 5}],
+        "code": "x",
+        "latest_quarter": "Q1",
+    }
+    normalize_holdings_keys(data)
+    assert list(data.keys()) == ["code", "latest_quarter", "holdings", "all_quarters"]
+    assert list(data["holdings"][0].keys()) == ["rank", "stock_name", "weight"]
+    assert list(data["all_quarters"]["Q1"][0].keys()) == ["rank", "weight"]
+
+
+def test_bump_generated_at_updates_meta_only(tmp_path):
+    meta = tmp_path / "meta.json"
+    meta.write_text(json.dumps({"generated_at": "old", "schema_version": 1}), encoding="utf-8")
+    bump_generated_at(meta_fp=meta, now_str="2026-11-28T00:00:00+08:00")
+    updated = json.loads(meta.read_text(encoding="utf-8"))
+    assert updated["generated_at"] == "2026-11-28T00:00:00+08:00"
+    assert updated["schema_version"] == 1
 
 
 if __name__ == "__main__":
