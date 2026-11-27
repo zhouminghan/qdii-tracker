@@ -107,7 +107,7 @@
 | **职责** | 抓取纳指趋势 / VIX / 10 年期美债 / 美元指数，按可配置阈值打分并加权，生成红绿灯信号 |
 | **输入文件** | 新浪 `.NDX`、Yahoo `^VIX`、东财中美国债收益率、东财美元指数（失败时复用旧快照） |
 | **输出文件** | `web/data/market-temperature.json`（含 `weights` 与 `coverage`；缺失数据标记 degraded） |
-| **依赖** | `core.constants`、`core.utils`、`akshare`、`requests`、`sources.treasury_source`（函数内惰性导入） |
+| **依赖** | `core.constants`、`core.utils`、`akshare`、`sources.treasury_source`（函数内惰性导入） |
 
 ### 12. nasdaq_history.py — 纳指历史图谱
 
@@ -134,7 +134,7 @@
 | **职责** | 抓取证券之星金条金币报价页，解析周大福/老凤祥/中国黄金等品牌的足金饰品与投资金条挂牌价 |
 | **输入文件** | 证券之星 `quote.stockstar.com/gold/salegold.shtml`（GBK 服务端渲染；失败时复用旧快照） |
 | **输出文件** | `web/data/brand-gold.json` |
-| **依赖** | `core.constants`、`core.utils`、`requests` |
+| **依赖** | `core.constants`、`core.utils` |
 
 ### 15. ndx_pe.py — 纳指100 市盈率
 
@@ -143,7 +143,7 @@
 | **职责** | 抓取 Siblis Research 免费 API 的 NDX trailing PE 月末快照，明确输出 Nasdaq-100 + TTM + 月度口径；失败时保留旧值 |
 | **输入文件** | Siblis `api/v1/NDX/pe-trailing`（免费档仅月末快照；失败时复用旧快照） |
 | **输出文件** | `web/data/ndx-pe.json`（`index`、`index_symbol`、`pe_type`、`frequency`、`observation_period`、`date`） |
-| **依赖** | `core.constants`、`core.utils`、`requests` |
+| **依赖** | `core.constants`、`core.utils` |
 
 ### 16. macro_rates.py — 宏观利率
 
@@ -161,7 +161,7 @@
 | **职责** | 从新浪财经外汇报价抓取 USD/CNY、USD/CNH、USD/JPY、USD/HKD、CNY/HKD 即期报价，写入 `fx-spot.json`；免密钥，失败保留旧快照 |
 | **输入文件** | 新浪财经 `hq.sinajs.cn`（需 Referer，GBK 解码） |
 | **输出文件** | `web/data/fx-spot.json` |
-| **依赖** | `core.constants`、`core.utils`、`requests` |
+| **依赖** | `core.constants`、`core.utils` |
 | **调用方** | `update-data.yml`；`market_snapshot.py` 读取 |
 
 ### 18. gold_spot.py — 现货黄金与上海金实时快照
@@ -171,7 +171,7 @@
 | **职责** | 从金投网 `JO_71` 抓取上海金 Au9999（元/克），从新浪 `hf_XAU` 抓取伦敦金现货 XAU/USD；写入 `gold-spot.json`，失败保留旧快照 |
 | **输入文件** | 金投网 `api.jijinhao.com`、新浪财经 `hq.sinajs.cn` |
 | **输出文件** | `web/data/gold-spot.json` |
-| **依赖** | `core.constants`、`core.utils`、`requests` |
+| **依赖** | `core.constants`、`core.utils` |
 | **调用方** | `update-data.yml`；`market_snapshot.py` 读取 |
 
 ### 19. market_snapshot.py — 首屏行情本地快照
@@ -290,14 +290,14 @@ nav_history.py ─────► core.constants, core.utils, sources.eastmoney_
 premium_history.py ─► core.constants, core.utils, sources.eastmoney_source
 kline_history.py ───► core.constants, core.utils
 public_catalog.py ──► core.constants, core.utils, core.config_loader
-market_temperature.py ► core.constants, core.utils, akshare, requests, sources.treasury_source
+market_temperature.py ► core.constants, core.utils, akshare, sources.treasury_source
 nasdaq_history.py ──► core.constants, core.utils, requests, akshare
 cnn_sentiment.py ───► core.constants, core.utils, requests
-brand_gold.py ──────► core.constants, core.utils, requests
-ndx_pe.py ──────────► core.constants, core.utils, requests
+brand_gold.py ──────► core.constants, core.utils
+ndx_pe.py ──────────► core.constants, core.utils
 macro_rates.py ─────► core.constants, core.utils, sources.treasury_source
-fx_spot.py ─────────► core.constants, core.utils, requests
-gold_spot.py ───────► core.constants, core.utils, requests
+fx_spot.py ─────────► core.constants, core.utils
+gold_spot.py ───────► core.constants, core.utils
 market_snapshot.py ─► core.constants, core.gold, core.utils
 limit_notices.py ───► core.constants, core.utils, requests, pypdf
 ```

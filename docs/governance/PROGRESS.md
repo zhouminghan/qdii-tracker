@@ -43,8 +43,12 @@
   `core/utils.py` 用 stdlib `zoneinfo` 替换 `pytz`；`check --offline` 与 `--help`
   现在仅需标准库即可运行（无需 requests/akshare/pypdf/pandas/pytz）。
   验证：系统 python3 可跑 `--help` + `check --offline`；venv 全绿 + `pytest` 136 passed。
+- **批次 10 · 统一 HTTP 获取带重试**：`brand_gold` / `ndx_pe` / `market_temperature` /
+  `treasury_source` 的裸 `requests.get` 收敛到 `core.utils.requests_get`（统一重试/退避），
+  移除顶层 `import requests`；同步更新测试与 architecture.md 依赖清单。
+  验证：`check --offline --agent-rules` 全绿 + `pytest` 136 passed。
 
 ## 当前状态
 
-- 批次 1–9 已完成并独立提交。
+- 批次 1–10 已完成并独立提交。
 - 下一步见 `docs/governance/TASK-POOL.md`（P1：黄金公式精度收敛、FRED 解析收敛）。

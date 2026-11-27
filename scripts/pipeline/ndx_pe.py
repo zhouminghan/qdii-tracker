@@ -4,10 +4,8 @@ scripts/pipeline/ndx_pe.py — 纳指100 市盈率（PE）
 从 Siblis Research 免费 API 抓取 NDX trailing PE 月末快照，取最新值，
 写入 web/data/ndx-pe.json。免费档仅提供历史月末快照，非每日实时值。
 """
-import requests
-
 from core.constants import DATA_DIR
-from core.utils import beijing_now_iso, read_json, write_json
+from core.utils import beijing_now_iso, read_json, requests_get, write_json
 
 URL = "https://siblisresearch.com/api/v1/NDX/pe-trailing"
 HEADERS = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"}
@@ -15,8 +13,9 @@ OUTPUT_FP = DATA_DIR / "ndx-pe.json"
 
 
 def fetch_latest():
-    r = requests.get(URL, timeout=20, headers=HEADERS)
-    r.raise_for_status()
+    r = requests_get(URL, headers=HEADERS, timeout=20)
+    if r is None:
+        return None
     payload = r.json()
     data = payload.get("data") or []
     if not data:

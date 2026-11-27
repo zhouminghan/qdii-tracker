@@ -7,10 +7,8 @@ scripts/pipeline/brand_gold.py — 品牌实物金价
 """
 import re
 
-import requests
-
 from core.constants import DATA_DIR
-from core.utils import beijing_now_iso, read_json, write_json
+from core.utils import beijing_now_iso, read_json, requests_get, write_json
 
 URL = "https://quote.stockstar.com/gold/salegold.shtml"
 HEADERS = {
@@ -52,8 +50,9 @@ def parse_brands(html):
 
 
 def fetch_html():
-    r = requests.get(URL, timeout=20, headers=HEADERS)
-    r.raise_for_status()
+    r = requests_get(URL, headers=HEADERS, timeout=20)
+    if r is None:
+        return None
     r.encoding = "gbk"
     return r.text
 

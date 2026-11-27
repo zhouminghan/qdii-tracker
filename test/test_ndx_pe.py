@@ -46,13 +46,10 @@ def test_build_keeps_old_pe_when_source_fails(monkeypatch, tmp_path):
 
 def test_fetch_latest_rejects_nonpositive_value(monkeypatch):
     class Response:
-        def raise_for_status(self):
-            return None
-
         def json(self):
             return {"data": [{"value": 0, "trading_day (EOD)": "2026-09-30"}]}
 
-    monkeypatch.setattr(ndx_pe.requests, "get", lambda *args, **kwargs: Response())
+    monkeypatch.setattr(ndx_pe, "requests_get", lambda *args, **kwargs: Response())
     try:
         ndx_pe.fetch_latest()
     except ValueError as error:

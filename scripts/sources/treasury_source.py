@@ -11,7 +11,7 @@ import csv
 import io
 from datetime import datetime, timedelta
 
-from core.utils import beijing_now
+from core.utils import beijing_now, requests_get
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"}
 TREASURY_URL = (
@@ -68,18 +68,16 @@ def parse_fred_series(text):
 
 def fetch_treasury_official():
     year = beijing_now().year
-    import requests
-
-    response = requests.get(TREASURY_URL.format(year=year), timeout=30, headers=HEADERS)
-    response.raise_for_status()
+    response = requests_get(TREASURY_URL.format(year=year), headers=HEADERS, timeout=30)
+    if response is None:
+        return None
     return parse_treasury_csv(response.text)
 
 
 def _fetch_fred_series(series_id, start):
-    import requests
-
-    response = requests.get(FRED_URL.format(series_id=series_id, start=start), timeout=20, headers=HEADERS)
-    response.raise_for_status()
+    response = requests_get(FRED_URL.format(series_id=series_id, start=start), headers=HEADERS, timeout=20)
+    if response is None:
+        return None
     return dict(parse_fred_series(response.text))
 
 
@@ -88,6 +86,8 @@ def fetch_treasury_fred():
     y2 = _fetch_fred_series("DGS2", start)
     y10 = _fetch_fred_series("DGS10", start)
     y30 = _fetch_fred_series("DGS30", start)
+    if not y2 or not y10 or not y30:
+        return None
     common = set(y2) & set(y10) & set(y30)
     for date in sorted(common, reverse=True):
         if y2[date] is not None and y10[date] is not None and y30[date] is not None:
