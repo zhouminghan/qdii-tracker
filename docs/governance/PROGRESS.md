@@ -39,8 +39,12 @@
 - **批次 8 · 收敛 config/funds.json 读取入口**：`public_catalog.py` 的品牌配置
   改经 `core.config_loader.get_config()` 读取，消除绕过 SSOT 的直接 `json.load`。
   验证：`check --offline --agent-rules` 全绿 + `pytest` 136 passed。
+- **批次 9 · CLI 入口去重依赖**：`fundctl.py` 改为按命令惰性导入 pipeline/checks，
+  `core/utils.py` 用 stdlib `zoneinfo` 替换 `pytz`；`check --offline` 与 `--help`
+  现在仅需标准库即可运行（无需 requests/akshare/pypdf/pandas/pytz）。
+  验证：系统 python3 可跑 `--help` + `check --offline`；venv 全绿 + `pytest` 136 passed。
 
 ## 当前状态
 
-- 批次 1–8 已完成并独立提交。
+- 批次 1–9 已完成并独立提交。
 - 下一步见 `docs/governance/TASK-POOL.md`（P1：黄金公式精度收敛、FRED 解析收敛）。

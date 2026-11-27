@@ -9,13 +9,12 @@ import signal
 import threading
 from pathlib import Path
 from datetime import datetime
-
-import pytz
+from zoneinfo import ZoneInfo
 
 from core.constants import DATA_DIR, HTTP_TIMEOUT, STANDARD_SHARE_KEY_ORDER, STANDARD_HOLDINGS_KEY_ORDER, STANDARD_HOLDING_ITEM_KEY_ORDER
 
 # ==================== 北京时间 ====================
-BEIJING_TZ = pytz.timezone('Asia/Shanghai')
+BEIJING_TZ = ZoneInfo("Asia/Shanghai")
 
 
 def beijing_now() -> datetime:

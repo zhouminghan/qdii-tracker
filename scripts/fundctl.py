@@ -22,14 +22,8 @@ from core.constants import CATEGORIES, DATA_DIR, DATA_SCHEMA_VERSION, HOLDINGS_C
 from core.config_loader import get_config, save_config, validate_config
 from core.utils import write_json
 
-# 直接 import pipeline 模块（替代 subprocess 调用）
-from pipeline import scan, enrich, fill, holdings, reclassify, premium_history, nav_history, kline_history, market_temperature, nasdaq_history, cnn_sentiment, brand_gold, ndx_pe, macro_rates, public_catalog, performance, limit_notices
-
-from checks.verify_data import run_verification
-from checks.verify_purchase import run_verification as run_purchase_verification
-from checks.cross_validate import run_cross_validation
-from checks.architecture_lint import run_lint as run_architecture_lint
-from checks.diagnose import diagnose_all
+# pipeline / checks 模块按命令惰性导入：check / probe / --help 等轻量命令
+# 不应因顶层 import 连带拉取 requests / akshare / pypdf。
 
 
 def _run(main_fn, *argv_extra):
@@ -43,6 +37,8 @@ def _run(main_fn, *argv_extra):
 
 
 def cmd_add(args):
+    from pipeline import scan, enrich, fill, holdings, public_catalog
+
     code = args.code.strip()
     to_cat = args.to
 
@@ -67,6 +63,8 @@ def cmd_add(args):
 
 
 def cmd_move(args):
+    from pipeline import reclassify, public_catalog
+
     extra = []
     if args.no_holdings:
         extra.append("--no-holdings")
@@ -79,6 +77,8 @@ def cmd_move(args):
 
 def cmd_brand(args):
     """设置 company_brand 的 logo 文字，并刷新前端派生常量。"""
+    from pipeline import public_catalog
+
     company = args.company.strip()
     letter = args.letter.strip()
     if not company or not letter:
@@ -102,6 +102,8 @@ def cmd_brand(args):
 
 def cmd_remove(args):
     """从配置和数据中移除一只基金的所有份额。"""
+    from pipeline import public_catalog
+
     code = args.code.strip()
 
     # 1. 从 config force_include 移除
@@ -158,6 +160,11 @@ def cmd_remove(args):
 
 def cmd_refresh(args):
     """增量刷新（fill 已包含净值 + 申购状态 + 历史追踪）"""
+    from pipeline import (
+        fill, market_temperature, cnn_sentiment, brand_gold, ndx_pe,
+        macro_rates, nav_history, performance, kline_history,
+    )
+
     fill_args = []
     if args.scope and args.scope != "all":
         fill_args += ["--scope", args.scope]
@@ -186,6 +193,13 @@ def cmd_refresh(args):
 
 
 def cmd_sync(_args):
+    from pipeline import (
+        scan, enrich, fill, holdings, premium_history, nav_history,
+        performance, kline_history, market_temperature, nasdaq_history,
+        cnn_sentiment, brand_gold, ndx_pe, macro_rates, limit_notices,
+        public_catalog,
+    )
+
     _run(scan.main)
     _run(enrich.main)
     _run(fill.main)
@@ -205,18 +219,26 @@ def cmd_sync(_args):
 
 
 def cmd_catalog(_args):
+    from pipeline import public_catalog
+
     public_catalog.main()
 
 
 def cmd_nasdaq(_args):
+    from pipeline import nasdaq_history
+
     _run(nasdaq_history.main)
 
 
 def cmd_sentiment(_args):
+    from pipeline import cnn_sentiment
+
     _run(cnn_sentiment.main)
 
 
 def cmd_limits(_args):
+    from pipeline import limit_notices, public_catalog
+
     _run(limit_notices.main)
     public_catalog.write_catalog()
 
@@ -279,6 +301,11 @@ def _check_module_contracts():
 
 def cmd_check(_args):
     """分层短路校验：每层失败立即退出，不继续后续检查。"""
+    from checks.verify_data import run_verification
+    from checks.verify_purchase import run_verification as run_purchase_verification
+    from checks.cross_validate import run_cross_validation
+    from checks.architecture_lint import run_lint as run_architecture_lint
+
     import time
     _t0 = time.time()
 

@@ -24,6 +24,7 @@ config/              业务配置 SSOT（funds.json 经 fundctl 变更）
 
 依赖方向：`sources → core`、`pipeline → {core, sources}`、`checks → {core, pipeline}`、
 前端 `pages → features/widgets/stores → shared → types`。`shared` 不依赖页面。
+`fundctl.py` 按命令惰性导入 pipeline/checks，`check --offline` 与 `--help` 零第三方依赖。
 
 ### 已知依赖异常
 
