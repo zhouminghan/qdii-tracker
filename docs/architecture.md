@@ -98,7 +98,7 @@
 | **职责** | 汇总六个分类 JSON、公司品牌配置、人工额度核验和公告自动识别结果，生成带 schema/status/quality 的前端唯一入口；为每个 share 补充 `limit_scope`、渠道额度、币种和来源字段 |
 | **输入文件** | `web/data/{CATEGORIES}.json`、`web/data/meta.json`、`web/data/limit-notices.json`、`config/funds.json`、`config/limit-scopes.json` |
 | **输出文件** | `web/data/catalog.json` |
-| **依赖** | `core.constants`、`core.utils` |
+| **依赖** | `core.constants`、`core.utils`、`core.config_loader` |
 
 ### 11. market_temperature.py — 市场温度评分
 
@@ -289,7 +289,7 @@ performance.py ─────► core.constants, core.utils, sources.eastmoney_
 nav_history.py ─────► core.constants, core.utils, sources.eastmoney_source
 premium_history.py ─► core.constants, core.utils, sources.eastmoney_source
 kline_history.py ───► core.constants, core.utils
-public_catalog.py ──► core.constants, core.utils
+public_catalog.py ──► core.constants, core.utils, core.config_loader
 market_temperature.py ► core.constants, core.utils, akshare, requests, sources.treasury_source
 nasdaq_history.py ──► core.constants, core.utils, requests, akshare
 cnn_sentiment.py ───► core.constants, core.utils, requests

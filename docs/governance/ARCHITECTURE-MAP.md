@@ -68,7 +68,8 @@ pages/components → Dexie 个人数据 → JSON 备份
 
 已收敛（既往批次）：`calc_series_scale`、`fetch_and_save_holdings`、
 `normalize_share_keys`/`normalize_holdings_keys`、`to_float`、JSON 原子写入
-（`write_json` + `compact`）均已收拢到 `core/utils.py`。
+（`write_json` + `compact`）、config/funds.json 读取入口（`core.config_loader`）
+均已收拢到唯一权威实现。
 
 ## 6. 规范偏离清单
 

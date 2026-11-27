@@ -36,8 +36,11 @@
 - **批次 7 · 标注 audit.md 为历史快照**：在 `docs/audit.md` 顶部标注 Vue 迁移前
   历史审计，当前架构指向 architecture.md / governance/ARCHITECTURE-MAP.md。
   验证：`check --offline --agent-rules` 全绿（纯 docs）。
+- **批次 8 · 收敛 config/funds.json 读取入口**：`public_catalog.py` 的品牌配置
+  改经 `core.config_loader.get_config()` 读取，消除绕过 SSOT 的直接 `json.load`。
+  验证：`check --offline --agent-rules` 全绿 + `pytest` 136 passed。
 
 ## 当前状态
 
-- 批次 1–7 已完成并独立提交。
+- 批次 1–8 已完成并独立提交。
 - 下一步见 `docs/governance/TASK-POOL.md`（P1：黄金公式精度收敛、FRED 解析收敛）。

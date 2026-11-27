@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any
 
 from core.constants import CATEGORIES, CONFIG_DIR, DATA_DIR
+from core.config_loader import get_config
 from core.utils import write_json
 
 CATALOG_SCHEMA_VERSION = 1
@@ -50,10 +51,8 @@ def _read_json(path: Path) -> dict[str, Any]:
 
 
 def _load_brand_config() -> dict[str, Any]:
-    path = CONFIG_DIR / "funds.json"
-    if not path.exists():
-        return {}
-    return _read_json(path).get("company_brand", {})
+    # config/funds.json 的唯一权威读取入口是 core.config_loader。
+    return get_config().get("company_brand") or {}
 
 
 def _load_limit_scope_config() -> dict[str, Any]:
