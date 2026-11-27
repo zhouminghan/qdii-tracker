@@ -164,6 +164,7 @@ qdii-tracker/
 │   └── sw.js
 ├── docs/    # 人读文档 — 踩坑 / 架构
 │   ├── decisions/
+│   ├── governance/
 │   ├── architecture.md
 │   ├── audit.md
 │   ├── data-contract.md
