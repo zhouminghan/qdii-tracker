@@ -5,7 +5,7 @@ scripts/pipeline/cnn_sentiment.py — 生成「CNN 恐慌与贪婪」仪表盘�
 web/data/cnn-fear-greed.json，供前端「市场温度」Tab 的恐慌贪婪仪表盘渲染，
 并作为 VIX & PE 阶梯定投矩阵的恐慌贪婪输入。
 
-分档（与 core.dca_strategy 一致）：
+分档（与前端 shared/lib/dca.ts 的 DCA_BANDS 边界一致）：
   0-25 极度恐慌 / 25-45 恐惧 / 45-55 中性 / 55-75 贪婪 / 75-100 极度贪婪。
 
 纯函数（band_of）可单测；网络抓取在 sync / refresh / CI 增量时执行，

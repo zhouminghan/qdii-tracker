@@ -18,8 +18,8 @@ from pathlib import Path
 from typing import Any
 
 from core.constants import DATA_DIR
+from core.gold import OZ_TO_GRAM
 
-OZ_TO_GRAM = 31.1034768
 OUTPUT_FILE = DATA_DIR / "market-snapshot.json"
 
 # 键与前端 market-cards 的 data-symbol 对齐；缺失文件会产出 null 报价。

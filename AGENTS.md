@@ -173,7 +173,7 @@ npm run check                                        # TypeScript + lint + Vites
 ```
 scripts/
 ├── fundctl.py            ← 统一入口
-├── core/                 ← 基础设施（constants / utils / config_loader / dca_strategy / gold）
+├── core/                 ← 基础设施（constants / utils / config_loader / gold）
 ├── sources/              ← 数据源适配（akshare / eastmoney / xueqiu / ths）
 ├── pipeline/             ← 数据生产链路（scan / enrich / fill / performance / holdings / reclassify / public_catalog / premium_history / nav_history / kline_history / market_temperature / nasdaq_history / cnn_sentiment / brand_gold / fx_spot / gold_spot / ndx_pe / macro_rates / market_snapshot / limit_notices）
 └── checks/               ← 质量门禁（verify_data / verify_purchase / cross_validate / diagnose / architecture_lint / check_agent_rules / doc_sync / build_snapshot）

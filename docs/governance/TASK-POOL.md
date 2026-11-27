@@ -3,16 +3,6 @@
 > 优先级：P0 立即 / P1 近期 / P2 常规 / 待确认。
 > 每条含：ID、目标、方案、验收。已完成的移入 PROGRESS.md。
 
-## P0（可安全立即执行）
-
-- **B1 删除死代码 stamp_asset_version**：删除 `scripts/checks/stamp_asset_version.py`，
-  同步 `docs/architecture.md`、`docs/gotchas.md` G014、AGENTS.md 模块登记。
-  验收：`fundctl.py check --offline --agent-rules` 全绿。
-- **B2 黄金折算单一事实源 + 删除 DCA 平行实现**：
-  `market_snapshot.py` 从 `core.gold` 导入 `OZ_TO_GRAM`；删除零调用方的
-  `core/dca_strategy.py` 与 `test/test_dca_strategy.py`，前端 `dca.ts` 为唯一实现。
-  验收：`check --offline` + `pytest` 全绿。
-
 ## P1（近期）
 
 - **DEV-3 补全 architecture.md pipeline 契约**：为 `premium_history` / `nav_history` /
