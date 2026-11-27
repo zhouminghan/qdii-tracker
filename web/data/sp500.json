@@ -208,7 +208,7 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.01,
-          "sell_status": "暂停赎回",
+          "sell_status": "开放赎回",
           "buy_min": 1.0,
           "chg_1w": 3.11,
           "free_hold_days": 7,
@@ -281,7 +281,7 @@
           "fee": "1.2",
           "first_buy_rate": 1.2,
           "sale_service_fee": 0.0,
-          "sell_status": "暂停赎回",
+          "sell_status": "开放赎回",
           "buy_min": 1.0,
           "chg_1w": 3.08,
           "free_hold_days": 1095,
@@ -338,7 +338,7 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.35,
-          "sell_status": "暂停赎回",
+          "sell_status": "开放赎回",
           "buy_min": 1.0,
           "chg_1w": 3.07,
           "free_hold_days": 7,
@@ -560,8 +560,8 @@
           "scale_raw": "59.31亿",
           "established": "2023-04-06",
           "manager": "张军",
-          "buy_status": "暂停申购",
-          "daily_limit": null,
+          "buy_status": "限大额",
+          "daily_limit": 1.0,
           "buy_status_history": [
             {
               "date": "2026-10-31",
@@ -572,6 +572,11 @@
               "date": "2026-11-26",
               "buy_status": "暂停申购",
               "daily_limit": null
+            },
+            {
+              "date": "2026-11-27",
+              "buy_status": "限大额",
+              "daily_limit": 1.0
             }
           ],
           "buy_rules": [
@@ -611,7 +616,7 @@
           "fee": "1.2",
           "first_buy_rate": 1.2,
           "sale_service_fee": 0.0,
-          "sell_status": "暂停赎回",
+          "sell_status": "开放赎回",
           "buy_min": 1.0,
           "chg_1w": 2.98,
           "free_hold_days": 730,
@@ -638,8 +643,8 @@
           "scale_raw": "59.31亿",
           "established": "2023-04-06",
           "manager": "张军",
-          "buy_status": "暂停申购",
-          "daily_limit": null,
+          "buy_status": "限大额",
+          "daily_limit": 1.0,
           "buy_status_history": [
             {
               "date": "2026-10-31",
@@ -650,6 +655,11 @@
               "date": "2026-11-26",
               "buy_status": "暂停申购",
               "daily_limit": null
+            },
+            {
+              "date": "2026-11-27",
+              "buy_status": "限大额",
+              "daily_limit": 1.0
             }
           ],
           "buy_rules": [
@@ -689,7 +699,7 @@
           "fee": "1.2",
           "first_buy_rate": 1.2,
           "sale_service_fee": 0.0,
-          "sell_status": "暂停赎回",
+          "sell_status": "开放赎回",
           "buy_min": 1.0,
           "chg_1w": 2.98,
           "free_hold_days": 730,
@@ -905,8 +915,8 @@
           "fund_company": "天弘基金管理有限公司",
           "fund_type_xq": "QDII-混合",
           "full_name": "天弘标普500发起式证券投资基金(QDII-FOF)",
-          "buy_status": "暂停申购",
-          "daily_limit": null,
+          "buy_status": "限大额",
+          "daily_limit": 100.0,
           "buy_status_history": [
             {
               "date": "2026-07-11",
@@ -937,6 +947,11 @@
               "date": "2026-11-26",
               "buy_status": "暂停申购",
               "daily_limit": null
+            },
+            {
+              "date": "2026-11-27",
+              "buy_status": "限大额",
+              "daily_limit": 100.0
             }
           ],
           "buy_rules": [
@@ -964,7 +979,7 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.25,
-          "sell_status": "暂停赎回",
+          "sell_status": "开放赎回",
           "buy_min": 1.0,
           "chg_1w": 2.88,
           "free_hold_days": 30,
@@ -1488,8 +1503,8 @@
           "scale_raw": "8.83亿",
           "established": "2021-09-07",
           "manager": "冉凌浩",
-          "buy_status": "暂停申购",
-          "daily_limit": null,
+          "buy_status": "限大额",
+          "daily_limit": 75.0,
           "buy_status_history": [
             {
               "date": "2026-10-31",
@@ -1500,6 +1515,11 @@
               "date": "2026-11-26",
               "buy_status": "暂停申购",
               "daily_limit": null
+            },
+            {
+              "date": "2026-11-27",
+              "buy_status": "限大额",
+              "daily_limit": 75.0
             }
           ],
           "buy_rules": [
@@ -1535,7 +1555,7 @@
           "fee": "1.5",
           "first_buy_rate": 1.5,
           "sale_service_fee": 0.0,
-          "sell_status": "暂停赎回",
+          "sell_status": "开放赎回",
           "buy_min": 1.0,
           "chg_1w": 1.58,
           "free_hold_days": 730,
@@ -1562,8 +1582,8 @@
           "scale_raw": "2.81亿",
           "established": "2023-08-30",
           "manager": "冉凌浩",
-          "buy_status": "暂停申购",
-          "daily_limit": null,
+          "buy_status": "限大额",
+          "daily_limit": 75.0,
           "buy_status_history": [
             {
               "date": "2026-10-31",
@@ -1574,6 +1594,11 @@
               "date": "2026-11-26",
               "buy_status": "暂停申购",
               "daily_limit": null
+            },
+            {
+              "date": "2026-11-27",
+              "buy_status": "限大额",
+              "daily_limit": 75.0
             }
           ],
           "buy_rules": [
@@ -1597,7 +1622,7 @@
           "fee": "",
           "first_buy_rate": 0.0,
           "sale_service_fee": 0.3,
-          "sell_status": "暂停赎回",
+          "sell_status": "开放赎回",
           "buy_min": 1.0,
           "chg_1w": 1.57,
           "free_hold_days": 7,
@@ -1808,7 +1833,7 @@
           "fee": "1.2",
           "first_buy_rate": 1.2,
           "sale_service_fee": 0.0,
-          "sell_status": "暂停赎回",
+          "sell_status": "开放赎回",
           "buy_min": 1.0,
           "chg_1w": 3.08,
           "free_hold_days": 7,

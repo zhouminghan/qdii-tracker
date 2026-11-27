@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-27T06:48:05.825420+08:00",
+  "generated_at": "2026-11-27T08:45:57.631839+08:00",
   "schema_version": 1,
   "source": "local data files (offline close snapshot)",
   "market_indices": {
@@ -51,20 +51,20 @@
         "derived": false
       },
       "sh000001": {
-        "price": 3476.47,
-        "change": -88.71,
-        "change_pct": -2.488233,
-        "as_of": "2026-11-25",
-        "source_updated_at": "2026-11-26T06:58:20.453435+08:00",
+        "price": 3476.88,
+        "change": 0.41,
+        "change_pct": 0.011794,
+        "as_of": "2026-11-26",
+        "source_updated_at": "2026-11-27T08:47:30.994128+08:00",
         "source": "index-kline/sh000001.json",
         "derived": false
       },
       "sh000300": {
-        "price": 3898.24,
-        "change": -93.68,
-        "change_pct": -2.34674,
-        "as_of": "2026-11-25",
-        "source_updated_at": "2026-11-26T06:58:21.104764+08:00",
+        "price": 3900.55,
+        "change": 2.31,
+        "change_pct": 0.059258,
+        "as_of": "2026-11-26",
+        "source_updated_at": "2026-11-27T08:47:31.776582+08:00",
         "source": "index-kline/sh000300.json",
         "derived": false
       },
@@ -196,11 +196,11 @@
     "as_of": "2026-11-27",
     "items": {
       "usdcnh": {
-        "price": 6.6637,
-        "change": 0.0024,
-        "change_pct": 0.04,
+        "price": 6.6627,
+        "change": 0.0014,
+        "change_pct": 0.02,
         "as_of": "2026-11-27",
-        "source_updated_at": "2026-11-27T06:16:00+08:00",
+        "source_updated_at": "2026-11-27T08:53:34+08:00",
         "source": "新浪财经 fx_susdcnh",
         "derived": false
       },
@@ -214,29 +214,29 @@
         "derived": false
       },
       "fxUSDJPY": {
-        "price": 159.21,
-        "change": -0.04,
-        "change_pct": -0.03,
+        "price": 159.32,
+        "change": 0.07,
+        "change_pct": 0.04,
         "as_of": "2026-11-27",
-        "source_updated_at": "2026-11-27T06:55:25+08:00",
+        "source_updated_at": "2026-11-27T08:53:35+08:00",
         "source": "新浪财经 fx_susdjpy",
         "derived": false
       },
       "fxCNYHKD": {
-        "price": 1.17656,
-        "change": 2e-05,
-        "change_pct": 0.0,
+        "price": 1.17665,
+        "change": 0.00011,
+        "change_pct": 0.01,
         "as_of": "2026-11-27",
-        "source_updated_at": "2026-11-27T06:55:37+08:00",
+        "source_updated_at": "2026-11-27T08:53:29+08:00",
         "source": "新浪财经 fx_scnyhkd",
         "derived": false
       },
       "fxUSDHKD": {
-        "price": 7.8368,
-        "change": 0.0002,
+        "price": 7.8373,
+        "change": 0.0007,
         "change_pct": 0.01,
         "as_of": "2026-11-27",
-        "source_updated_at": "2026-11-27T06:55:37+08:00",
+        "source_updated_at": "2026-11-27T08:53:29+08:00",
         "source": "新浪财经 fx_susdhkd",
         "derived": false
       },
@@ -313,44 +313,44 @@
       "derived": false
     },
     "xau": {
-      "price": 3566.26,
-      "change": -22.29,
-      "change_pct": -0.621,
+      "price": 3559.72,
+      "change": -6.54,
+      "change_pct": -0.183,
       "as_of": "2026-11-27",
-      "source_updated_at": "2026-11-27T03:29:00+08:00",
+      "source_updated_at": "2026-11-27T08:53:00+08:00",
       "source": "新浪财经 hf_XAU",
       "derived": false
     },
     "usdcnh": {
-      "price": 6.6637,
-      "change": 0.0024,
-      "change_pct": 0.04,
+      "price": 6.6627,
+      "change": 0.0014,
+      "change_pct": 0.02,
       "as_of": "2026-11-27",
-      "source_updated_at": "2026-11-27T06:16:00+08:00",
+      "source_updated_at": "2026-11-27T08:53:34+08:00",
       "source": "新浪财经 fx_susdcnh",
       "derived": false
     },
     "converted_cny_per_gram": {
-      "value": 764.045991,
+      "value": 762.530395,
       "as_of": "2026-11-27",
       "source": "derived:XAU*USDCNH",
       "derived": true
     },
     "premium_cny": {
-      "value": 1.774009,
+      "value": 3.289605,
       "as_of": "2026-11-27",
       "source": "computed:au9999-converted",
       "derived": true
     },
     "premium_pct": {
-      "value": 0.232186,
+      "value": 0.431406,
       "as_of": "2026-11-27",
       "source": "computed:(au9999-converted)/converted",
       "derived": true
     }
   },
   "brand_gold": {
-    "generated_at": "2026-11-27T06:55:50.648447+08:00",
+    "generated_at": "2026-11-27T08:53:44.015511+08:00",
     "as_of": "2026-11-27",
     "source": "证券之星",
     "brands": [
@@ -468,7 +468,7 @@
     "as_of": "2026-11-26"
   },
   "temperature": {
-    "generated_at": "2026-11-27T06:55:36.183270+08:00",
+    "generated_at": "2026-11-27T08:53:29.432615+08:00",
     "schema_version": 1,
     "score": 41,
     "band": "yellow",
@@ -541,10 +541,10 @@
       "VIX 26.8，恐慌情绪升温。"
     ],
     "disclaimer": "本评分仅为基于公开数据的量化情绪参考，不构成投资建议。权重与阈值可调，历史表现不代表未来。",
-    "as_of": "2026-11-27T06:55:36.183270+08:00"
+    "as_of": "2026-11-27T08:53:29.432615+08:00"
   },
   "etf_premium": {
-    "generated_at": "2026-11-27T06:48:05.825420+08:00",
+    "generated_at": "2026-11-27T08:45:57.631839+08:00",
     "as_of": "2026-11-26",
     "count": 21,
     "items": {
@@ -824,7 +824,7 @@
     }
   },
   "offshore_live_nav": {
-    "generated_at": "2026-11-27T06:48:05.825420+08:00",
+    "generated_at": "2026-11-27T08:45:57.631839+08:00",
     "as_of": "2026-11-26",
     "count": 70,
     "items": {
