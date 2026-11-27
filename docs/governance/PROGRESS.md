@@ -72,3 +72,5 @@
 
 - 批次 1–15 已完成并独立提交。
 - P1 已清空；剩余见 `docs/governance/TASK-POOL.md`（P2 / 待确认）。
+- 前端 T0 已验证：`vue-tsc --noEmit` 通过、ESLint 0 error（1 个既有 warning：
+  AppHeader.vue 属性顺序）、Vitest 16 文件 65 测试全过。
