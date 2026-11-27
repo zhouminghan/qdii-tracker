@@ -70,7 +70,7 @@ def _check_gotchas_refs():
     for ref in refs:
         # 跳过明显不是文件路径的（如全大写的常量名）
         if ref.endswith(('.js', '.css', '.py', '.md', '.json', '.html')):
-            # 裸文件名（不含 /）无法可靠解析到唯一路径（如 stamp_asset_version.py），跳过
+            # 裸文件名（不含 /）无法可靠解析到唯一路径（如 fundctl.py），跳过
             if "/" not in ref:
                 continue
             full = ROOT / ref

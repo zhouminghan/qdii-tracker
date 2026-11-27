@@ -203,16 +203,7 @@
 | **输出文件** | 无（返回错误列表） |
 | **依赖** | 无兄弟模块依赖 |
 
-### 19. stamp_asset_version.py — 历史版本戳工具
-
-| 属性 | 内容 |
-|------|------|
-| **职责** | 旧 Vanilla 前端时期的资源版本工具；Vue/Vite 迁移后生产资源使用内容哈希，部署流程不再调用 |
-| **输入文件** | `web/index.html` |
-| **输出文件** | 同文件覆写 |
-| **依赖** | `core.constants` |
-
-### 20. verify_purchase.py — 申购状态/限额/历史一致性校验
+### 19. verify_purchase.py — 申购状态/限额/历史一致性校验
 
 | 属性 | 内容 |
 |------|------|
@@ -254,7 +245,6 @@ verify_data.py ──────► (独立)
 cross_validate.py ───► (独立)
 diagnose.py ─────────► (独立)
 architecture_lint.py ─► (独立)
-stamp_asset_version.py ► core.constants
 verify_purchase.py ───► core.constants
 ```
 
