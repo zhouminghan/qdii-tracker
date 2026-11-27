@@ -51,8 +51,12 @@
   `core/constants.py`；删除运行时零调用方的 `core/gold.py` 与其测试，
   `market_snapshot.py` 为黄金折算的唯一实现。
   验证：`check --offline --agent-rules` 全绿 + `pytest` 132 passed。
+- **批次 12 · 收敛 FRED CSV 解析**：`parse_fred_series` 统一为
+  `sources/treasury_source.py` 的 raw 实现，`market_temperature` 改复用，
+  宏观利率消费端按需 round(2) 保持原输出。
+  验证：`check --offline --agent-rules` 全绿 + `pytest` 132 passed。
 
 ## 当前状态
 
-- 批次 1–11 已完成并独立提交。
-- 下一步见 `docs/governance/TASK-POOL.md`（P1：FRED 解析收敛）。
+- 批次 1–12 已完成并独立提交。
+- P1 已清空；剩余见 `docs/governance/TASK-POOL.md`（P2 / 待确认）。

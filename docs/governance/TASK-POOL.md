@@ -5,9 +5,7 @@
 
 ## P1（近期）
 
-- **DUP-4 FRED CSV 解析收敛**：`sources/treasury_source.py` 与
-  `pipeline/market_temperature.py` 各有一份 `parse_fred_series`，精度口径不同
-  （round 2 vs raw），先定唯一口径再合并。
+（暂无）
 
 ## P2（常规）
 

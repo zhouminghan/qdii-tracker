@@ -65,7 +65,7 @@ pages/components → Dexie 个人数据 → JSON 备份
 | DUP-1 | 黄金折算常数 `31.1034768` | `core/constants.py`（SSOT） | `pipeline/market_snapshot.py` 内联常量 | ✅已收敛：常量移入 constants，market_snapshot 从 constants 导入 |
 | DUP-2 | VIX/PE 阶梯定投规则 | `frontend/src/shared/lib/dca.ts`（运行时） | `core/dca_strategy.py`（零运行时调用方） | ✅已收敛：删除 Python 侧，前端为唯一实现 |
 | DUP-3 | 黄金折算 `XAU*USDCNH/OZ` | `pipeline/market_snapshot.py`（运行时） | `core/gold.py:gold_cny_per_gram`（仅测试用） | ✅已收敛：删除 orphaned core/gold.py，market_snapshot 为唯一实现 |
-| DUP-4 | FRED CSV 解析 | `sources/treasury_source.py:parse_fred_series`（round 2） | `pipeline/market_temperature.py:parse_fred_series`（raw） | 待：精度口径需先决策，再行为等价收敛 |
+| DUP-4 | FRED CSV 解析 | `sources/treasury_source.py:parse_fred_series`（raw，唯一实现） | `pipeline/market_temperature.py` 本地副本 | ✅已收敛：统一 raw 解析，消费端按需 round |
 
 已收敛（既往批次）：`calc_series_scale`、`fetch_and_save_holdings`、
 `normalize_share_keys`/`normalize_holdings_keys`、`to_float`、JSON 原子写入

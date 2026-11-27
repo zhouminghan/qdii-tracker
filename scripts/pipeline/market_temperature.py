@@ -270,18 +270,8 @@ def _fetch_vix_yahoo():
     return {"value": round(value, 2), "date": date, "source": "Yahoo Finance"}
 
 
-def parse_fred_series(text):
-    """解析 FRED CSV（DATE,VALUE），返回 [(date, value|None), ...]。"""
-    out = []
-    for line in text.strip().splitlines()[1:]:
-        parts = line.split(",")
-        if len(parts) < 2:
-            continue
-        out.append((parts[0].strip(), _to_float(parts[1])))
-    return out
-
-
 def _fetch_vix_fred():
+    from sources.treasury_source import parse_fred_series
     from core.utils import beijing_now
     from datetime import timedelta
 

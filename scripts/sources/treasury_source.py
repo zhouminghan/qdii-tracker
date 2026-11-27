@@ -30,6 +30,15 @@ def _to_float(v):
         return None
 
 
+def _to_float_raw(v):
+    """不四舍五入的安全转浮点（供 FRED CSV 解析，精度由调用方决定）。"""
+    try:
+        f = float(v)
+        return f if f == f else None
+    except (TypeError, ValueError):
+        return None
+
+
 def _normalize_date(raw):
     text = str(raw or "").strip()
     for fmt in ("%m/%d/%Y", "%Y-%m-%d"):
@@ -62,7 +71,7 @@ def parse_fred_series(text):
         parts = line.split(",")
         if len(parts) < 2:
             continue
-        out.append((parts[0].strip(), _to_float(parts[1])))
+        out.append((parts[0].strip(), _to_float_raw(parts[1])))
     return out
 
 
@@ -91,7 +100,12 @@ def fetch_treasury_fred():
     common = set(y2) & set(y10) & set(y30)
     for date in sorted(common, reverse=True):
         if y2[date] is not None and y10[date] is not None and y30[date] is not None:
-            return {"date": date, "y2": y2[date], "y10": y10[date], "y30": y30[date]}
+            return {
+                "date": date,
+                "y2": round(y2[date], 2),
+                "y10": round(y10[date], 2),
+                "y30": round(y30[date], 2),
+            }
     return None
 
 
