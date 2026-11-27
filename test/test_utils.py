@@ -86,6 +86,16 @@ def test_write_json_atomic(tmp_path):
     assert len(tmp_files) == 0
 
 
+def test_write_json_compact_single_line(tmp_path):
+    """compact 模式应输出无缩进的单行 JSON，且末尾换行。"""
+    fp = tmp_path / "compact.json"
+    write_json(fp, {"a": 1, "b": [1, 2]}, compact=True)
+    text = fp.read_text(encoding="utf-8")
+    assert "\n" not in text.rstrip("\n")
+    assert text.endswith("\n")
+    assert text.rstrip("\n") == '{"a":1,"b":[1,2]}'
+
+
 if __name__ == "__main__":
     import pytest
     pytest.main([__file__, "-v"])

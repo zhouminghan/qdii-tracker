@@ -67,7 +67,8 @@ pages/components → Dexie 个人数据 → JSON 备份
 | DUP-4 | FRED CSV 解析 | `sources/treasury_source.py:parse_fred_series`（round 2） | `pipeline/market_temperature.py:parse_fred_series`（raw） | 待：精度口径需先决策，再行为等价收敛 |
 
 已收敛（既往批次）：`calc_series_scale`、`fetch_and_save_holdings`、
-`normalize_share_keys`/`normalize_holdings_keys`、`to_float` 均已收拢到 `core/utils.py`。
+`normalize_share_keys`/`normalize_holdings_keys`、`to_float`、JSON 原子写入
+（`write_json` + `compact`）均已收拢到 `core/utils.py`。
 
 ## 6. 规范偏离清单
 

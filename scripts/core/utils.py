@@ -82,11 +82,18 @@ def read_json(path: Path) -> dict:
         return json.load(f)
 
 
-def write_json(path: Path, data: dict):
-    """原子写入：先写临时文件，fsync 后 rename，防止半写文件。"""
+def write_json(path: Path, data: dict, compact: bool = False):
+    """原子写入：先写临时文件，fsync 后 rename，防止半写文件。
+
+    compact=True 时输出紧凑单行 JSON（separators 无空格），供大体积目录文件使用；
+    默认 indent=2，保持人类可读。两种模式都追加末尾换行。
+    """
     tmp = path.with_suffix(path.suffix + ".tmp")
     with open(tmp, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+        if compact:
+            json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
+        else:
+            json.dump(data, f, ensure_ascii=False, indent=2)
         f.write("\n")
         f.flush()
         os.fsync(f.fileno())

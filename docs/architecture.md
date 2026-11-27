@@ -98,7 +98,7 @@
 | **职责** | 汇总六个分类 JSON、公司品牌配置、人工额度核验和公告自动识别结果，生成带 schema/status/quality 的前端唯一入口；为每个 share 补充 `limit_scope`、渠道额度、币种和来源字段 |
 | **输入文件** | `web/data/{CATEGORIES}.json`、`web/data/meta.json`、`web/data/limit-notices.json`、`config/funds.json`、`config/limit-scopes.json` |
 | **输出文件** | `web/data/catalog.json` |
-| **依赖** | `core.constants` |
+| **依赖** | `core.constants`、`core.utils` |
 
 ### 11. market_temperature.py — 市场温度评分
 
@@ -181,7 +181,7 @@
 | **职责** | 纯离线汇总指数、科技股、外汇、黄金、宏观、温度、ETF 溢价与场外净值，生成首屏可直接渲染的本地快照；不联网、不伪造实时值，缺失字段写 `null`；优先读取 `fx-spot.json` / `gold-spot.json` 的独立实时报价，缺失时回退 K 线与 `au9999 * 31.1034768 / USDCNH` 折算；只有独立 XAU 存在时才计算国内溢价 |
 | **输入文件** | `web/data/meta.json`、`web/data/*.json`、`web/data/fx-spot.json`、`web/data/gold-spot.json`、`web/data/index-kline/*.json`、`web/data/fx-kline/*.json`、`web/data/etf-premium-history.json` |
 | **输出文件** | `web/data/market-snapshot.json` |
-| **依赖** | `core.constants`、`core.gold` |
+| **依赖** | `core.constants`、`core.gold`、`core.utils` |
 | **调用方** | `scripts/checks/build_snapshot.py`；由 `update-data.yml` 每个工作日生成并随 `web/data/` 发布 |
 
 ### 20. limit_notices.py — 共用申购限额公告扫描
@@ -270,7 +270,7 @@
 | **职责** | 纯离线汇总生成 `snapshot.json`、`market-snapshot.json`、`catalog.json`、`holdings-index.json` 与 `feed.rss` |
 | **输入文件** | `web/data/{CATEGORIES}.json`、`web/data/meta.json`、`web/data/holdings/*.json` |
 | **输出文件** | `web/data/snapshot.json`、`web/data/market-snapshot.json`、`web/data/catalog.json`、`web/data/holdings-index.json`、`web/feed.rss` |
-| **依赖** | `core.constants`、`pipeline.market_snapshot`、`pipeline.public_catalog` |
+| **依赖** | `core.constants`、`core.utils`、`pipeline.market_snapshot`、`pipeline.public_catalog` |
 | **调用方** | `update-data.yml`（每次数据更新后） |
 
 ---
@@ -289,7 +289,7 @@ performance.py ─────► core.constants, core.utils, sources.eastmoney_
 nav_history.py ─────► core.constants, core.utils, sources.eastmoney_source
 premium_history.py ─► core.constants, core.utils, sources.eastmoney_source
 kline_history.py ───► core.constants, core.utils
-public_catalog.py ──► core.constants
+public_catalog.py ──► core.constants, core.utils
 market_temperature.py ► core.constants, core.utils, akshare, requests, sources.treasury_source
 nasdaq_history.py ──► core.constants, core.utils, requests, akshare
 cnn_sentiment.py ───► core.constants, core.utils, requests
@@ -298,7 +298,7 @@ ndx_pe.py ──────────► core.constants, core.utils, requests
 macro_rates.py ─────► core.constants, core.utils, sources.treasury_source
 fx_spot.py ─────────► core.constants, core.utils, requests
 gold_spot.py ───────► core.constants, core.utils, requests
-market_snapshot.py ─► core.constants, core.gold
+market_snapshot.py ─► core.constants, core.gold, core.utils
 limit_notices.py ───► core.constants, core.utils, requests, pypdf
 ```
 
@@ -312,7 +312,7 @@ architecture_lint.py ───► core.constants
 verify_purchase.py ─────► core.constants
 check_agent_rules.py ───► checks.doc_sync（函数内惰性导入）
 doc_sync.py ────────────► (独立)
-build_snapshot.py ──────► core.constants, pipeline.market_snapshot, pipeline.public_catalog
+build_snapshot.py ──────► core.constants, core.utils, pipeline.market_snapshot, pipeline.public_catalog
 ```
 
 > 注：`checks/` 模块通过 `fundctl.py` 统一调用；除 `build_snapshot → pipeline` 与

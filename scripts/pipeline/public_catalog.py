@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any
 
 from core.constants import CATEGORIES, CONFIG_DIR, DATA_DIR
+from core.utils import write_json
 
 CATALOG_SCHEMA_VERSION = 1
 CATALOG_FILENAME = "catalog.json"
@@ -284,10 +285,7 @@ def build_catalog(
 
 def write_catalog(output: Path = DATA_DIR / CATALOG_FILENAME) -> dict[str, Any]:
     catalog = build_catalog()
-    output.write_text(
-        json.dumps(catalog, ensure_ascii=False, separators=(",", ":")) + "\n",
-        encoding="utf-8",
-    )
+    write_json(output, catalog, compact=True)
     return catalog
 
 

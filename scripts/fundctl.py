@@ -20,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from core.constants import CATEGORIES, DATA_DIR, DATA_SCHEMA_VERSION, HOLDINGS_CATEGORIES, ROOT_DIR
 from core.config_loader import get_config, save_config, validate_config
+from core.utils import write_json
 
 # 直接 import pipeline 模块（替代 subprocess 调用）
 from pipeline import scan, enrich, fill, holdings, reclassify, premium_history, nav_history, kline_history, market_temperature, nasdaq_history, cnn_sentiment, brand_gold, ndx_pe, macro_rates, public_catalog, performance, limit_notices
@@ -130,7 +131,7 @@ def cmd_remove(args):
             new_series.append(s)
         if len(new_series) != len(data.get("series", [])):
             data["series"] = new_series
-            fp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+            write_json(fp, data)
 
     if not found_any:
         print(f"⚠ 未在任何分类中找到基金代码: {code}")
@@ -148,7 +149,7 @@ def cmd_remove(args):
         import datetime
         meta = json.loads(meta_fp.read_text(encoding="utf-8"))
         meta["generated_at"] = datetime.datetime.now().isoformat()
-        meta_fp.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+        write_json(meta_fp, meta)
 
     # 5. 重新生成前端公共契约
     public_catalog.write_catalog()

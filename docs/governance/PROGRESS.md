@@ -29,8 +29,12 @@
   `macro_rates` 与 `market_temperature` 改向下依赖 sources；移除 import lint 的
   pipeline→pipeline allowlist（分层约束收紧）。
   验证：`check --offline --agent-rules` 全绿（import lint 收紧后仍 0 违例）+ `pytest` 135 passed。
+- **批次 6 · 统一 JSON 原子写入**：为 `core/utils.write_json` 增加 `compact` 模式，
+  并把 `fundctl.py` / `build_snapshot.py` / `market_snapshot.py` / `public_catalog.py`
+  中手写的 `write_text(json.dumps(...))` 收敛到原子写入工具（目录文件保持紧凑格式）。
+  验证：`check --offline --agent-rules` 全绿 + `pytest` 136 passed。
 
 ## 当前状态
 
-- 批次 1–5 已完成并独立提交。
+- 批次 1–6 已完成并独立提交。
 - 下一步见 `docs/governance/TASK-POOL.md`（P1：黄金公式精度收敛、FRED 解析收敛）。

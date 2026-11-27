@@ -19,6 +19,7 @@ from typing import Any
 
 from core.constants import DATA_DIR
 from core.gold import OZ_TO_GRAM
+from core.utils import write_json
 
 OUTPUT_FILE = DATA_DIR / "market-snapshot.json"
 
@@ -504,10 +505,7 @@ def build() -> dict[str, Any]:
     """生成并返回 market-snapshot.json；仅读写本地文件，不发起网络请求。"""
     snapshot = collect_snapshot()
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_FILE.write_text(
-        json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    write_json(OUTPUT_FILE, snapshot)
     return snapshot
 
 
