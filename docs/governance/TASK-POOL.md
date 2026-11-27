@@ -12,9 +12,6 @@
 - **HTTP 获取（3 处有意保留裸 `requests.get`）**：`cnn_sentiment`（418 bot 诊断语义）、
   `limit_notices`（`lru_cache` + raise-on-failure 防缓存瞬时失败 + params + PDF）、
   `nasdaq_history`（自定义 429 退避 + params）。均经评估确认迁移会改变语义，记录为有意例外。
-- **DEV-1 修正重复决策编号**：将 `0003-notes-storage.md` 重编号为 0005（待主树笔记
-  改动合并后再执行，避免改名冲突）。
-- ~~market_temperature 横向耦合~~：✅已下沉（批次 5）。
 
 ## 待确认
 

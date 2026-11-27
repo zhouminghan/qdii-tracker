@@ -67,10 +67,13 @@
   XAU×USDCNH÷OZ 折算与国内溢价公式补确定性单测（mocked 数据源），并覆盖
   `_round`/`_scalar` 精度契约。
   验证：`check --offline --agent-rules` 全绿 + `pytest` 146 passed。
+- **批次 16 · 修正重复决策编号**：`docs/decisions/0003-notes-storage.md`
+  重编号为 `0005-notes-storage.md`，消除与 chromium-only-testing 的 `0003` 撞号。
+  验证：`check --offline --agent-rules` 全绿（纯 docs）。
 
 ## 当前状态
 
-- 批次 1–15 已完成并独立提交。
-- P1 已清空；剩余见 `docs/governance/TASK-POOL.md`（P2 / 待确认）。
+- 批次 1–16 已完成并独立提交。
+- P1/P2 已清空；仅剩「待确认」跨栈 SSOT 产品决策。
 - 前端 T0 已验证：`vue-tsc --noEmit` 通过、ESLint 0 error（1 个既有 warning：
   AppHeader.vue 属性顺序）、Vitest 16 文件 65 测试全过。
