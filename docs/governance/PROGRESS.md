@@ -33,8 +33,11 @@
   并把 `fundctl.py` / `build_snapshot.py` / `market_snapshot.py` / `public_catalog.py`
   中手写的 `write_text(json.dumps(...))` 收敛到原子写入工具（目录文件保持紧凑格式）。
   验证：`check --offline --agent-rules` 全绿 + `pytest` 136 passed。
+- **批次 7 · 标注 audit.md 为历史快照**：在 `docs/audit.md` 顶部标注 Vue 迁移前
+  历史审计，当前架构指向 architecture.md / governance/ARCHITECTURE-MAP.md。
+  验证：`check --offline --agent-rules` 全绿（纯 docs）。
 
 ## 当前状态
 
-- 批次 1–6 已完成并独立提交。
+- 批次 1–7 已完成并独立提交。
 - 下一步见 `docs/governance/TASK-POOL.md`（P1：黄金公式精度收敛、FRED 解析收敛）。

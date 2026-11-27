@@ -15,7 +15,6 @@
 
 - **DEV-1 修正重复决策编号**：将 `0003-notes-storage.md` 重编号为 0005（待主树笔记
   改动合并后再执行，避免改名冲突）。
-- **DEV-4 归档/标注 audit.md**：标注为历史审计快照，或迁移到 `docs/governance/` 归档区。
 - ~~market_temperature 横向耦合~~：✅已下沉（批次 5）。
 
 ## 待确认
