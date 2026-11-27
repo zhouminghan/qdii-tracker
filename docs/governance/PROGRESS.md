@@ -47,8 +47,12 @@
   `treasury_source` 的裸 `requests.get` 收敛到 `core.utils.requests_get`（统一重试/退避），
   移除顶层 `import requests`；同步更新测试与 architecture.md 依赖清单。
   验证：`check --offline --agent-rules` 全绿 + `pytest` 136 passed。
+- **批次 11 · 删除 orphaned 黄金逻辑，单一事实源**：`OZ_TO_GRAM` 移入
+  `core/constants.py`；删除运行时零调用方的 `core/gold.py` 与其测试，
+  `market_snapshot.py` 为黄金折算的唯一实现。
+  验证：`check --offline --agent-rules` 全绿 + `pytest` 132 passed。
 
 ## 当前状态
 
-- 批次 1–10 已完成并独立提交。
-- 下一步见 `docs/governance/TASK-POOL.md`（P1：黄金公式精度收敛、FRED 解析收敛）。
+- 批次 1–11 已完成并独立提交。
+- 下一步见 `docs/governance/TASK-POOL.md`（P1：FRED 解析收敛）。

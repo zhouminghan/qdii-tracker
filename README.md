@@ -180,7 +180,6 @@ qdii-tracker/
 │   ├── test_classify.py
 │   ├── test_cnn_sentiment.py
 │   ├── test_fx_spot.py
-│   ├── test_gold.py
 │   ├── test_gold_spot.py
 │   ├── test_kline_history.py
 │   ├── test_limit_notices.py

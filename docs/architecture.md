@@ -181,7 +181,7 @@
 | **职责** | 纯离线汇总指数、科技股、外汇、黄金、宏观、温度、ETF 溢价与场外净值，生成首屏可直接渲染的本地快照；不联网、不伪造实时值，缺失字段写 `null`；优先读取 `fx-spot.json` / `gold-spot.json` 的独立实时报价，缺失时回退 K 线与 `au9999 * 31.1034768 / USDCNH` 折算；只有独立 XAU 存在时才计算国内溢价 |
 | **输入文件** | `web/data/meta.json`、`web/data/*.json`、`web/data/fx-spot.json`、`web/data/gold-spot.json`、`web/data/index-kline/*.json`、`web/data/fx-kline/*.json`、`web/data/etf-premium-history.json` |
 | **输出文件** | `web/data/market-snapshot.json` |
-| **依赖** | `core.constants`、`core.gold`、`core.utils` |
+| **依赖** | `core.constants`、`core.utils` |
 | **调用方** | `scripts/checks/build_snapshot.py`；由 `update-data.yml` 每个工作日生成并随 `web/data/` 发布 |
 
 ### 20. limit_notices.py — 共用申购限额公告扫描
@@ -298,7 +298,7 @@ ndx_pe.py ──────────► core.constants, core.utils
 macro_rates.py ─────► core.constants, core.utils, sources.treasury_source
 fx_spot.py ─────────► core.constants, core.utils
 gold_spot.py ───────► core.constants, core.utils
-market_snapshot.py ─► core.constants, core.gold, core.utils
+market_snapshot.py ─► core.constants, core.utils
 limit_notices.py ───► core.constants, core.utils, requests, pypdf
 ```
 

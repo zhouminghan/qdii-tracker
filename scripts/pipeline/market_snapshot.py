@@ -17,8 +17,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from core.constants import DATA_DIR
-from core.gold import OZ_TO_GRAM
+from core.constants import DATA_DIR, OZ_TO_GRAM
 from core.utils import write_json
 
 OUTPUT_FILE = DATA_DIR / "market-snapshot.json"

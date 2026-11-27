@@ -5,8 +5,6 @@
 
 ## P1（近期）
 
-- **DUP-3 黄金公式收敛**：评估 `market_snapshot.py` 与 `core/gold.py` 的精度差异
-  （`round(...,6)` vs `round(...,2)`），在不改变产出的前提下消除平行公式。
 - **DUP-4 FRED CSV 解析收敛**：`sources/treasury_source.py` 与
   `pipeline/market_temperature.py` 各有一份 `parse_fred_series`，精度口径不同
   （round 2 vs raw），先定唯一口径再合并。
