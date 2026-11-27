@@ -74,6 +74,6 @@ pages/components → Dexie 个人数据 → JSON 备份
 |----|------|------|------|
 | DEV-1 | 两个 `0003` 决策编号并存 | `docs/decisions/0003-notes-storage.md` 与 `0003-chromium-only-testing.md` | 待确认（与主树在途笔记改动纠缠，避免此刻改名冲突） |
 | DEV-2 | 死代码仍登记 | `scripts/checks/stamp_asset_version.py` 无调用方，仍列于 architecture.md / AGENTS.md | ✅已删除（批次 1） |
-| DEV-3 | `architecture.md` 缺 3 个 pipeline 契约 | `premium_history` / `nav_history` / `kline_history` 未登记；章节编号错乱/重复 | 待补 |
+| DEV-3 | `architecture.md` 契约不完整 | 缺 3 个 pipeline + 3 个 checks 契约，编号错乱 | ✅已补全（批次 3）：20 pipeline + 8 checks 全量登记，并新增 Layer B2 反向完整性校验 |
 | DEV-4 | `docs/audit.md` 过期 | 仍描述 Vanilla JS 旧架构（2026-11-14 快照） | 待归档或标注历史 |
 | DEV-5 | 无 import 边界机器约束 | `architecture_lint.py` 只校验 `web/` 目录，Python import 方向无 AST 检查 | 待：新增 import 方向 lint |

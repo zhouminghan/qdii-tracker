@@ -5,8 +5,6 @@
 
 ## P1（近期）
 
-- **DEV-3 补全 architecture.md pipeline 契约**：为 `premium_history` / `nav_history` /
-  `kline_history` 补模块契约，修正 checks/pipeline 章节编号错乱与重复。
 - **DUP-3 黄金公式收敛**：评估 `market_snapshot.py` 与 `core/gold.py` 的精度差异
   （`round(...,6)` vs `round(...,2)`），在不改变产出的前提下消除平行公式。
 - **DEV-5 Python import 方向 lint**：新增 AST 检查，禁止 `sources → pipeline`、

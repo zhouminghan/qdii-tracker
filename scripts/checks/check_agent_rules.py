@@ -58,6 +58,22 @@ def _check_architecture_modules():
     return errors
 
 
+def _check_architecture_completeness():
+    """反向验证：scripts/pipeline + scripts/checks 的每个模块都登记在 architecture.md。"""
+    fp = DOCS_DIR / "architecture.md"
+    if not fp.exists():
+        return ["architecture.md not found"]
+    content = fp.read_text(encoding="utf-8")
+    errors = []
+    for prefix in ("pipeline", "checks"):
+        for p in sorted((ROOT / "scripts" / prefix).glob("*.py")):
+            if p.name == "__init__.py":
+                continue
+            if not re.search(rf"\b{re.escape(p.stem)}\.py\b", content):
+                errors.append(f"architecture.md 未登记模块: {prefix}/{p.stem}.py")
+    return errors
+
+
 def _check_gotchas_refs():
     """验证 gotchas.md 中涉及的源文件路径有效。"""
     fp = DOCS_DIR / "gotchas.md"
@@ -193,6 +209,13 @@ def check_agent_rules():
         print(f"  ✅ {ok}")
 
     errs, el, ok = _layer("Layer B: architecture.md 模块登记有效性", _check_architecture_modules, "个无效引用", "全部有效")
+    if errs:
+        all_errors.extend(errs)
+        print(f"  ❌ {len(errs)} {el}")
+    else:
+        print(f"  ✅ {ok}")
+
+    errs, el, ok = _layer("Layer B2: architecture.md 模块登记完整性", _check_architecture_completeness, "个未登记模块", "全部登记")
     if errs:
         all_errors.extend(errs)
         print(f"  ❌ {len(errs)} {el}")

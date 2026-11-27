@@ -17,8 +17,12 @@
   与 `test/test_dca_strategy.py`，前端 `dca.ts` 为唯一实现；同步
   `cnn_sentiment.py` 注释与 AGENTS.md 登记。
   验证：`check --offline --agent-rules` 全绿 + `pytest` 133 passed。
+- **批次 3 · 补全并强制 architecture.md 契约**：重写 `docs/architecture.md`，
+  pipeline 17→20、checks 5→8 全量登记，统一顺序编号并修正依赖列表；
+  在 `check_agent_rules.py` 新增 Layer B2 反向完整性校验（漏登记即失败）。
+  验证：`check --offline --agent-rules` 全绿（含 Layer B2）+ `pytest` 133 passed。
 
 ## 当前状态
 
-- 批次 1、2 已完成并独立提交。
-- 下一步见 `docs/governance/TASK-POOL.md`（P1：补全 architecture.md pipeline 契约）。
+- 批次 1、2、3 已完成并独立提交。
+- 下一步见 `docs/governance/TASK-POOL.md`（P1：import 方向 lint、黄金公式精度收敛）。
