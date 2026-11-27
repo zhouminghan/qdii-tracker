@@ -70,10 +70,14 @@
 - **批次 16 · 修正重复决策编号**：`docs/decisions/0003-notes-storage.md`
   重编号为 `0005-notes-storage.md`，消除与 chromium-only-testing 的 `0003` 撞号。
   验证：`check --offline --agent-rules` 全绿（纯 docs）。
+- **批次 17 · 决议跨栈单一权威来源**：新增 `docs/decisions/0006-cross-stack-single-source.md`，
+  固化「黄金折算=Python SSOT、DCA 阶梯=前端 SSOT」，并记录 hot-path `_finite`/`_to_float`
+  轻量变体为有意保留；清空「待确认」。
+  验证：`check --offline --agent-rules` 全绿（纯 docs）。
 
 ## 当前状态
 
-- 批次 1–16 已完成并独立提交。
-- P1/P2 已清空；仅剩「待确认」跨栈 SSOT 产品决策。
+- 批次 1–17 已完成并独立提交。
+- P0/P1/P2/待确认 已全部清空或决议。
 - 前端 T0 已验证：`vue-tsc --noEmit` 通过、ESLint 0 error（1 个既有 warning：
   AppHeader.vue 属性顺序）、Vitest 16 文件 65 测试全过。

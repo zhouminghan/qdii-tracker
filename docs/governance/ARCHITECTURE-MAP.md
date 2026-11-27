@@ -73,6 +73,11 @@ pages/components → Dexie 个人数据 → JSON 备份
 、HTTP 获取（`core.utils.requests_get`，剩余 cnn/limit_notices/nasdaq 3 处例外）
 均已收拢到唯一权威实现。
 
+有意保留的轻量变体（非平行实现，语义不同）：`market_snapshot`/`fx_spot`/`gold_spot`
+的 `_finite` 与 `market_temperature`/`build_snapshot`/`nasdaq_history` 的本地
+`_to_float` 是 hot-path 的 raw 转换（不加载 pandas、不去 %/逗号），与
+`core.utils.to_float`（数据源解析用、含 pandas/%/逗号处理）职责不同，不做形式合并。
+
 ## 6. 规范偏离清单
 
 | ID | 偏离 | 位置 | 处置 |
