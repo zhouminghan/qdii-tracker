@@ -1,9 +1,17 @@
 """单元测试：core/utils.py 的纯函数"""
 import sys
+import time
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from core.utils import to_float, read_json, write_json, parse_scale, calc_series_scale, call_ak
+import requests
+
+from core.utils import to_float, read_json, write_json, parse_scale, calc_series_scale, call_ak, requests_get
+
+
+class _FakeResp:
+    def __init__(self, status_code):
+        self.status_code = status_code
 
 
 def test_to_float_None():
@@ -94,6 +102,59 @@ def test_write_json_compact_single_line(tmp_path):
     assert "\n" not in text.rstrip("\n")
     assert text.endswith("\n")
     assert text.rstrip("\n") == '{"a":1,"b":[1,2]}'
+
+
+def test_requests_get_returns_response_on_200(monkeypatch):
+    calls = {"n": 0}
+
+    def fake_get(url, headers=None, timeout=None):
+        calls["n"] += 1
+        return _FakeResp(200)
+
+    monkeypatch.setattr(requests, "get", fake_get)
+    monkeypatch.setattr(time, "sleep", lambda _: None)
+    r = requests_get("http://example.test", backoff=0)
+    assert r is not None and r.status_code == 200
+    assert calls["n"] == 1
+
+
+def test_requests_get_retries_transient_then_returns_none(monkeypatch):
+    calls = {"n": 0}
+
+    def fake_get(url, headers=None, timeout=None):
+        calls["n"] += 1
+        return _FakeResp(500)
+
+    monkeypatch.setattr(requests, "get", fake_get)
+    monkeypatch.setattr(time, "sleep", lambda _: None)
+    assert requests_get("http://example.test", backoff=0) is None
+    assert calls["n"] == 3  # retries=2 → 3 attempts
+
+
+def test_requests_get_no_retry_on_permanent_4xx(monkeypatch):
+    calls = {"n": 0}
+
+    def fake_get(url, headers=None, timeout=None):
+        calls["n"] += 1
+        return _FakeResp(404)
+
+    monkeypatch.setattr(requests, "get", fake_get)
+    monkeypatch.setattr(time, "sleep", lambda _: None)
+    assert requests_get("http://example.test", backoff=0) is None
+    assert calls["n"] == 1
+
+
+def test_requests_get_no_retry_on_dns_failure(monkeypatch):
+    calls = {"n": 0}
+
+    def fake_get(url, headers=None, timeout=None):
+        calls["n"] += 1
+        raise requests.exceptions.ConnectionError("nodename nor servname")
+
+    monkeypatch.setattr(requests, "get", fake_get)
+    monkeypatch.setattr(time, "sleep", lambda _: None)
+    assert requests_get("http://example.test", backoff=0) is None
+    assert calls["n"] == 1
 
 
 if __name__ == "__main__":

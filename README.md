@@ -179,6 +179,7 @@ qdii-tracker/
 │   ├── test_brand_gold.py
 │   ├── test_classify.py
 │   ├── test_cnn_sentiment.py
+│   ├── test_config_loader.py
 │   ├── test_fx_spot.py
 │   ├── test_gold_spot.py
 │   ├── test_kline_history.py
