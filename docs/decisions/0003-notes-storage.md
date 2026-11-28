@@ -77,6 +77,8 @@
 
 ## 当前实现
 
+- 仓库内种子笔记按 `notes/<slug>.md` 一篇一文件保存，文件头记录标题、基金代码、标签和时间。
+- 前端通过 Vite 的 raw glob 载入全部 Markdown 文件，并播种到本地 IndexedDB。
 - 笔记正文按 Markdown 保存。
 - 笔记正文支持安全渲染 HTTP/HTTPS 链接。
 - 每篇笔记可下载为独立 `.md` 文件。

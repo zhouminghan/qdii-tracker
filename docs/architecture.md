@@ -267,7 +267,7 @@ pages/
   FundsPage      -> catalog.json + holdings + nav-history
   MarketPage     -> market-snapshot + nasdaq-history + fear-greed
   PortfolioPage  -> catalog.json + Dexie(positions/trades)
-  ResearchPage   -> knowledge.ts + Dexie(notes/watchlist/strategyLogs/noteHistory)
+  ResearchPage   -> knowledge.ts + notes/*.md + Dexie(notes/watchlist/strategyLogs/noteHistory)
 
 stores/
   data           -> 公共 JSON 唯一加载入口

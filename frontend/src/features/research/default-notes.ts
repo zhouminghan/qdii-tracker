@@ -1,187 +1,46 @@
 import type { ResearchNote } from '@/types/local'
 
-export const DEFAULT_RESEARCH_NOTES: ResearchNote[] = [
-  {
-    id: 'southbound-2026-11-15-83004',
-    title: '跨境理财通南向通：产品代码、额度与渠道',
-    fundCode: '83004',
-    tags: ['南向通', '香港银行', '标普500', '纳斯达克100', '日经225', '额度', '费率'],
-    createdAt: '2026-11-15T15:30:00+08:00',
-    updatedAt: '2026-11-16T08:00:00+08:00',
-    body: `# 跨境理财通南向通产品记录
+const noteFiles = import.meta.glob<string>('../../../../notes/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+})
 
-- **记录日期**：2026-11-15
-- **整理日期**：2026-11-16
-- **个人额度**：南向通个人额度上限 300 万元；同时使用银行和券商渠道时，银行、券商各 150 万元。
-- **已整理渠道**：香港众安银行 ZA Bank、招商永隆银行、中国建设银行（亚洲）
-- **核心产品**：易方达香港标普500、纳斯达克100、日经225；恒生标普500指数ETF非上市类别
+function requiredField(fields: Record<string, string>, key: string): string {
+  const value = fields[key]?.trim()
+  if (!value) throw new Error(`笔记文件缺少 ${key}`)
+  return value
+}
 
-![南向通渠道资料截图](https://images.weserv.nl/?url=pbs.twimg.com/media/HXJIJHnaIAAkxNN%3Fformat%3Djpg%26name%3Dlarge)
+export function parseResearchNoteFile(source: string): ResearchNote {
+  const lines = source.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').split('\n')
+  if (lines[0]?.trim() !== '---') throw new Error('笔记文件缺少 frontmatter')
 
-## 标普500
+  const closing = lines.findIndex((line, index) => index > 0 && line.trim() === '---')
+  if (closing < 0) throw new Error('笔记文件 frontmatter 未闭合')
 
-易方达（香港）标普500指数基金：
+  const fields: Record<string, string> = {}
+  for (const line of lines.slice(1, closing)) {
+    if (!line.trim()) continue
+    const separator = line.indexOf(':')
+    if (separator <= 0) throw new Error(`笔记文件 frontmatter 格式错误：${line}`)
+    fields[line.slice(0, separator).trim()] = line.slice(separator + 1).trim()
+  }
 
-- 港元：EHSPAHK HK / HK0001050324
-- 人民币：EHSPAAR HK / HK0001050266
-- 美元：EHSPACU HK / HK0001050308
-- 美元渠道码：83004（ZA Bank、招商永隆渠道记录）
-- 近一年收益（截至 2026-10-31）：港元 +11.8%、人民币 +3.5%、美元 +10.6%
+  const body = lines.slice(closing + 1).join('\n').trim()
+  if (!body) throw new Error('笔记文件正文为空')
 
-## 纳斯达克100
+  return {
+    id: requiredField(fields, 'id'),
+    title: requiredField(fields, 'title'),
+    fundCode: fields.fundCode?.trim() ?? '',
+    tags: (fields.tags ?? '').split(',').map((tag) => tag.trim()).filter(Boolean),
+    createdAt: requiredField(fields, 'createdAt'),
+    updatedAt: requiredField(fields, 'updatedAt'),
+    body,
+  }
+}
 
-易方达（香港）纳斯达克100指数基金：
-
-- 港元：EFHNAAH HK / HK0001027009 / 建行亚洲 EF13
-- 人民币：EFHNAAR HK / HK0001026944 / 建行亚洲 EF14
-- 美元：EFHNAAU HK / HK0001026985 / 建行亚洲 EF12
-- 近一年收益（截至 2026-09-30）：港元 +22.4%、人民币 +14.2%、美元 +21.3%
-
-## 日经225
-
-易方达（香港）日经225指数基金：
-
-- 港元：EIONIAH HK / HK0001027348 / 建行亚洲 EF25
-- 日元：EHKNKAJ HK / HK0001027389 / 建行亚洲 EF23
-- 人民币：EHKNARM HK / HK0001027264 / 建行亚洲 EF26
-- 美元：EIFNIAA HK / HK0001027306 / 建行亚洲 EF24
-- 近一年收益（截至 2026-10-31）：港元 +19.5%、人民币 +10.5%、美元 +18.3%
-
-## 恒生标普500指数ETF
-
-非上市类别：
-
-- 港元：建行亚洲 HM01
-- 人民币对冲：建行亚洲 HM02
-- 美元：建行亚洲 HM03
-- 非上市类别按基金未知价成交；公开资料未披露独立 ISIN。
-
-## 渠道与额度
-
-- **ZA Bank、招商永隆**：整理到易方达标普500美元份额渠道码 83004。
-- **建行亚洲**：整理到纳指100、日经225和恒生标普500非上市类别渠道码。
-- **个人额度**：300 万元是个人总额度；银行和券商同时使用时各 150 万元。
-- **额度性质**：额度是跨境投资上限，不代表需要一次性使用。
-
-## 其他南向通基金
-
-- 建行亚洲公开筛选器的“理财通合资格基金”共 344 个份额。
-- 仅易方达香港就有 21 个合资格份额，包括指数、债券和货币市场基金。
-- 南向通名单按销售银行动态变化，不同银行上架范围不同。
-- [查看建行亚洲合资格基金名单](https://online.asia.ccb.com/PersonalHKWeb/pubmutualfund/webForm/PMF_FundSearchController.jpf?lang=chinese&linkFrom=pubmutualfund)
-
-## 风险
-
-- 海外指数会经历市场回撤，汇率波动会放大或抵消部分收益。
-- 跨境基金存在净值披露时差和较长的确认、赎回到账周期。
-- 场内 ETF 需要关注二级市场溢价，场外和南向通产品按基金净值成交。
-- 以上为公开来源整理，不构成投资建议。
-
-## 来源
-
-- [易方达香港标普500官方页](https://www.efunds.com.hk/products/40/info/)
-- [易方达香港纳斯达克100官方页](https://www.efunds.com.hk/products/38/info/)
-- [易方达香港日经225官方页](https://www.efunds.com.hk/products/39/info/)
-- [建行亚洲南向通基金筛选器](https://online.asia.ccb.com/PersonalHKWeb/pubmutualfund/webForm/PMF_FundSearchController.jpf?lang=chinese&linkFrom=pubmutualfund)
-- [渣打香港南向通规则](https://www.sc.com/hk/zh/gba-sc/cross-boundary-wealth-management-connect/south-bound/)`,
-  },
-  {
-    id: 'market-seven-vs-qqq-2026-11-15',
-    title: '2026-11-15 · 七巨头与 QQQ 年内收益对比',
-    fundCode: 'QQQ',
-    tags: ['美股', 'QQQ', '七巨头', '七姐妹', '收益对比', '科技股'],
-    createdAt: '2026-11-15T19:20:00+08:00',
-    updatedAt: '2026-11-15T19:20:00+08:00',
-    body: `# 七巨头与 QQQ 年内收益对比
-
-- **记录日期**：2026-11-15
-- **数据日期**：2026-11-13
-- **统计口径**：年初至今总回报
-- **名称说明**：七巨头与“七姐妹”指同一组美股科技龙头，市场叫法不同
-
-![美股七巨头与 QQQ 年内收益对比](https://pbs.twimg.com/media/HXH68Iua8AA7_BW.jpg?name=orig)
-
-## 收益数据
-
-- QQQ：+11.05%
-- 苹果：+31.51%
-- 亚马逊：+15.53%
-- 微软：+9.01%
-- Meta：-2.54%
-- 谷歌：-5.32%
-- 英伟达：-12.48%
-- 特斯拉：-13.23%
-
-## 记录要点
-
-- 七巨头中有五家年内收益跑输 QQQ。
-- 苹果和亚马逊是七巨头中相对突出的两家。
-- 事前判断哪家公司会胜出很难，事后看结果不等于当时能重仓押中。
-- 单一年份的相对表现不能直接外推为长期结论。
-
-## 观点摘录
-
-- “七巨头，五家跑输指数！”
-- “天天研究财报、分析估值、猜美联储，折腾大半年，还不如买个 QQQ 躺着。”
-- 苹果和亚马逊表现突出，但年初是否能重仓押中仍是另一回事。
-
-## 观察框架
-
-- 比较个股与指数时，应统一时间区间、总回报口径和货币单位。
-- 个股集中度高，收益弹性大，也承担更大的单一公司风险。
-- 宽基指数通过分散降低单一公司对组合的影响，但仍会承受市场整体回撤。`,
-  },
-  {
-    id: 'active-fund-risk-2026-11-15',
-    title: '2026-11-15 · 主动基金亏损案例与指数定投讨论',
-    fundCode: '',
-    tags: ['主动基金', '基金风险', '亏损案例', '指数定投', '纳指'],
-    createdAt: '2026-11-15T21:45:00+08:00',
-    updatedAt: '2026-11-15T21:45:00+08:00',
-    body: `# 主动基金亏损案例与指数定投讨论
-
-- **记录日期**：2026-11-15
-
-## 个案数据
-
-- 华夏核心成长混合 C：-50.34%
-- 华夏全球科技先锋混合：-48.15%
-- 案例记录：账户持有收益亏损 7.6 万元，累计亏损 6.8 万元。
-
-## 观点
-
-- 不认同普通投资者重仓主动基金。
-- 认为研究基金经理调仓的难度高，长期结果未必优于简单指数定投。
-- 更倾向定投纳指等宽基指数，作为省心的长期配置方式。
-
-## 原话
-
-> 主动基金这玩意，99% 的人买了就是纯纯在给基金经理打工。
->
-> 一年折腾下来，收益跑不赢银行定存的一抓一大把。
->
-> 有这精力研究基金经理的调仓，真不如直接无脑定投纳指。
-
-![账户亏损记录 1](https://pbs.twimg.com/media/HXKxEU-bYAA0ODz?format=jpg&name=large)
-
-![账户亏损记录 2](https://pbs.twimg.com/media/HXKxEVEboAA3Lxw?format=jpg&name=large)
-
-![账户亏损记录 3](https://pbs.twimg.com/media/HXKxEVCbkAAxZsj?format=jpg&name=large)
-
-![账户亏损记录 4](https://pbs.twimg.com/media/HXIHmp6bgAAkf3N?format=jpg&name=large)
-
-![账户亏损记录 5](https://pbs.twimg.com/media/HXIHmqCasAAJapM?format=jpg&name=large)
-
-## 需要区分的边界
-
-- 上述为个人案例记录，应结合基金代码、份额类别、时间区间和分红口径复核。
-- 单只主动基金的大幅亏损，不能直接推导所有主动基金都会长期跑输。
-- 主动基金可能存在经理变更、风格漂移、规模变化和费用偏高等风险。
-- 指数定投同样会经历市场回撤，不代表短期保本。
-
-## 结论记录
-
-- 主动基金不能只看历史高收益，需要同时评估经理、策略、规模、费用和回撤。
-- 是否选择指数定投，应结合投资目标、持有期限和风险承受能力。`,
-  },
-]
+export const DEFAULT_RESEARCH_NOTES: ResearchNote[] = Object.values(noteFiles)
+  .map(parseResearchNoteFile)
+  .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt))

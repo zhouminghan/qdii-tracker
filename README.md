@@ -42,6 +42,7 @@
 - 场内/场外、份额、溢价、选基、额度与汇率知识库。
 - 基金笔记、观察清单、策略记录；点击笔记卡片任意区域进入全文侧栏。
 - 知识库全部展开，覆盖场内/场外、份额、费用、溢价、申赎、额度、汇率与组合方法。
+- 种子笔记按 `notes/<slug>.md` 一篇一文件保存，应用启动时载入本地笔记库。
 - 种子南向通笔记只保留整理后的代码、额度、渠道、收益和来源，不保留待核验清单。
 - JSON 备份与校验恢复。
 
@@ -202,6 +203,21 @@ qdii-tracker/
 │   └── index.html
 ├── harness/
 │   └── state.json
+├── notes/
+│   ├── 2026-11-15-active-fund-risk.md
+│   ├── 2026-11-15-seven-vs-qqq.md
+│   ├── 2026-11-15-southbound.md
+│   ├── 2026-11-21-dca-us-broad-index.md
+│   ├── 2026-11-21-nasdaq-20-drawdown-recovery.md
+│   ├── 2026-11-22-why-us-stocks.md
+│   ├── 2026-11-23-fund-premium-discussion.md
+│   ├── 2026-11-23-nasdaq-channel-comparison.md
+│   ├── 2026-11-23-nasdaq-fee-comparison.md
+│   ├── 2026-11-24-hk-nasdaq-currency.md
+│   ├── 2026-11-25-efunds-hk-sp500-currency.md
+│   ├── 2026-11-26-dividend-etf-comparison.md
+│   ├── 2026-11-26-overseas-income-crs.md
+│   └── 2026-11-27-usd-deposit-and-fx-quota.md
 ├── .gitignore
 ├── .nvmrc
 ├── AGENTS.md
