@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-28T06:29:40.405421+08:00",
+  "generated_at": "2026-11-28T08:11:36.816434+08:00",
   "schema_version": 1,
   "count": 91,
   "funds": [
@@ -1002,7 +1002,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 125.04336024
+      "scale": 125.01973175
     },
     {
       "code": "159659",
@@ -1015,7 +1015,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 109.92060698
+      "scale": 109.89777844
     },
     {
       "code": "513650",
@@ -1041,7 +1041,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 92.28321498
+      "scale": 92.02551388
     },
     {
       "code": "513110",
@@ -1067,7 +1067,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 60.73648064
+      "scale": 60.71648064
     },
     {
       "code": "159660",
@@ -1106,7 +1106,7 @@
       "buy_status": "场内交易",
       "daily_limit": 0.0,
       "etf_premium": null,
-      "scale": 44.35853495
+      "scale": 44.33927495
     },
     {
       "code": "513880",

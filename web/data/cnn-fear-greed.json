@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-11-28T06:32:39.049670+08:00",
+  "generated_at": "2026-11-28T08:14:12.349003+08:00",
   "schema_version": 1,
   "source": "CNN Fear & Greed",
   "score": 24.89,
   "rating": "extreme fear",
   "band": "extreme_fear",
   "label": "极度恐慌",
-  "timestamp": "2026-11-27T22:13:14+00:00",
+  "timestamp": "2026-11-27T23:58:11+00:00",
   "previous": {
     "close": 15.6,
     "week": 18.59,

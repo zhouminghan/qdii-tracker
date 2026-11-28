@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-28T06:29:40.405421+08:00",
+  "generated_at": "2026-11-28T08:11:36.816434+08:00",
   "schema_version": 1,
   "source": "local data files (offline close snapshot)",
   "market_indices": {
@@ -227,7 +227,7 @@
         "change": 0.0,
         "change_pct": 0.0,
         "as_of": "2026-11-28",
-        "source_updated_at": "2026-11-28T06:32:13+08:00",
+        "source_updated_at": "2026-11-28T06:59:34+08:00",
         "source": "新浪财经 fx_scnyhkd",
         "derived": false
       },
@@ -236,7 +236,7 @@
         "change": -0.0069,
         "change_pct": -0.09,
         "as_of": "2026-11-28",
-        "source_updated_at": "2026-11-28T06:32:13+08:00",
+        "source_updated_at": "2026-11-28T06:59:34+08:00",
         "source": "新浪财经 fx_susdhkd",
         "derived": false
       },
@@ -350,7 +350,7 @@
     }
   },
   "brand_gold": {
-    "generated_at": "2026-11-28T06:32:39.978249+08:00",
+    "generated_at": "2026-11-28T08:14:13.616182+08:00",
     "as_of": "2026-11-28",
     "source": "证券之星",
     "brands": [
@@ -468,7 +468,7 @@
     "as_of": "2026-11-27"
   },
   "temperature": {
-    "generated_at": "2026-11-28T06:32:25.955442+08:00",
+    "generated_at": "2026-11-28T08:13:58.051450+08:00",
     "schema_version": 1,
     "score": 44,
     "band": "yellow",
@@ -540,10 +540,10 @@
       "纳指跌破 200 日线，趋势转弱。"
     ],
     "disclaimer": "本评分仅为基于公开数据的量化情绪参考，不构成投资建议。权重与阈值可调，历史表现不代表未来。",
-    "as_of": "2026-11-28T06:32:25.955442+08:00"
+    "as_of": "2026-11-28T08:13:58.051450+08:00"
   },
   "etf_premium": {
-    "generated_at": "2026-11-28T06:29:40.405421+08:00",
+    "generated_at": "2026-11-28T08:11:36.816434+08:00",
     "as_of": "2026-11-27",
     "count": 21,
     "items": {
@@ -823,7 +823,7 @@
     }
   },
   "offshore_live_nav": {
-    "generated_at": "2026-11-28T06:29:40.405421+08:00",
+    "generated_at": "2026-11-28T08:11:36.816434+08:00",
     "as_of": "2026-11-27",
     "count": 70,
     "items": {

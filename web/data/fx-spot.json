@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-28T06:32:40.673407+08:00",
+  "generated_at": "2026-11-28T08:14:14.903794+08:00",
   "schema_version": 1,
   "source": "新浪财经外汇",
   "as_of": "2026-11-28",
@@ -37,7 +37,7 @@
       "change_pct": -0.09,
       "as_of": "2026-11-28",
       "source": "新浪财经 fx_susdhkd",
-      "source_updated_at": "2026-11-28T06:32:13+08:00",
+      "source_updated_at": "2026-11-28T06:59:34+08:00",
       "derived": false
     },
     "fxCNYHKD": {
@@ -46,7 +46,7 @@
       "change_pct": 0.0,
       "as_of": "2026-11-28",
       "source": "新浪财经 fx_scnyhkd",
-      "source_updated_at": "2026-11-28T06:32:13+08:00",
+      "source_updated_at": "2026-11-28T06:59:34+08:00",
       "derived": false
     }
   }
