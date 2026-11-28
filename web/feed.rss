@@ -2,106 +2,106 @@
 <rss version="2.0"><channel>
   <title>US Fund Tracker · 美股基金看板</title>
   <link>https://zhouminghan.github.io/qdii-tracker/</link>
-  <description>美股 QDII/ETF 净值与涨跌快照（数据时间 2026-11-17T17:13:16.943158+08:00）</description>
-  <lastBuildDate>Tue, 17 Nov 2026 10:26:53 GMT</lastBuildDate>
+  <description>美股 QDII/ETF 净值与涨跌快照（数据时间 2026-11-28T08:11:36.816434+08:00）</description>
+  <lastBuildDate>Sat, 28 Nov 2026 00:14:29 GMT</lastBuildDate>
   <item>
-    <title>华泰柏瑞中韩半导体ETF联接 -5.90%</title>
-    <description>代码 019454 · 分类 global_index · 净值/价格 2.7043 · 净值日 2026-11-16 · 申购 限大额</description>
+    <title>华泰柏瑞中韩半导体ETF联接 +10.81%</title>
+    <description>代码 019454 · 分类 global_index · 净值/价格 2.7906 · 净值日 2026-11-27 · 申购 限大额</description>
     <guid>019454</guid>
   </item>
   <item>
-    <title>创金合信全球芯片产业股票 -5.68%</title>
-    <description>代码 017653 · 分类 global_other · 净值/价格 1.6735 · 净值日 2026-11-16 · 申购 限大额</description>
-    <guid>017653</guid>
-  </item>
-  <item>
-    <title>华宝海外科技股票 -4.07%</title>
-    <description>代码 501312 · 分类 active · 净值/价格 2.0567 · 净值日 2026-11-16 · 申购 限大额</description>
-    <guid>501312</guid>
-  </item>
-  <item>
-    <title>天弘全球新能源汽车股票 -3.91%</title>
-    <description>代码 164212 · 分类 active · 净值/价格 1.333 · 净值日 2026-11-13 · 申购 限大额</description>
-    <guid>164212</guid>
-  </item>
-  <item>
-    <title>华夏全球科技先锋混合 -3.87%</title>
-    <description>代码 005698 · 分类 active · 净值/价格 1.8165 · 净值日 2026-11-13 · 申购 限大额</description>
-    <guid>005698</guid>
-  </item>
-  <item>
-    <title>纳斯达克ETF华安 +3.87%</title>
-    <description>代码 159632 · 分类 etf · 净值/价格 2.418 · 净值日 2026-11-13 · 申购 场内交易</description>
-    <guid>159632</guid>
-  </item>
-  <item>
-    <title>纳斯达克100ETF招商 +3.81%</title>
-    <description>代码 159659 · 分类 etf · 净值/价格 2.344 · 净值日 2026-11-13 · 申购 场内交易</description>
-    <guid>159659</guid>
-  </item>
-  <item>
-    <title>华宝海外新能源汽车股票 -3.80%</title>
-    <description>代码 017144 · 分类 active · 净值/价格 1.2154 · 净值日 2026-11-16 · 申购 限大额</description>
-    <guid>017144</guid>
-  </item>
-  <item>
-    <title>纳斯达克ETF华泰柏瑞 +3.72%</title>
-    <description>代码 513110 · 分类 etf · 净值/价格 2.428 · 净值日 2026-11-13 · 申购 场内交易</description>
-    <guid>513110</guid>
-  </item>
-  <item>
-    <title>纳斯达克100ETF大成 +3.71%</title>
-    <description>代码 159513 · 分类 etf · 净值/价格 1.76 · 净值日 2026-11-13 · 申购 场内交易</description>
-    <guid>159513</guid>
-  </item>
-  <item>
-    <title>纳斯达克ETF广发 +3.69%</title>
-    <description>代码 159941 · 分类 etf · 净值/价格 1.63 · 净值日 2026-11-13 · 申购 场内交易</description>
-    <guid>159941</guid>
-  </item>
-  <item>
-    <title>天弘全球高端制造混合 -3.65%</title>
-    <description>代码 016664 · 分类 active · 净值/价格 1.8437 · 净值日 2026-11-13 · 申购 限大额</description>
-    <guid>016664</guid>
-  </item>
-  <item>
-    <title>纳斯达克100ETF博时 +3.61%</title>
-    <description>代码 513390 · 分类 etf · 净值/价格 2.409 · 净值日 2026-11-13 · 申购 场内交易</description>
-    <guid>513390</guid>
-  </item>
-  <item>
-    <title>华宝纳斯达克精选股票 -3.58%</title>
-    <description>代码 017436 · 分类 active · 净值/价格 1.9741 · 净值日 2026-11-16 · 申购 限大额</description>
-    <guid>017436</guid>
-  </item>
-  <item>
-    <title>纳斯达克ETF富国 +3.58%</title>
-    <description>代码 513870 · 分类 etf · 净值/价格 2.055 · 净值日 2026-11-13 · 申购 场内交易</description>
-    <guid>513870</guid>
-  </item>
-  <item>
-    <title>纳斯达克ETF易方达 +3.54%</title>
-    <description>代码 159696 · 分类 etf · 净值/价格 2.049 · 净值日 2026-11-13 · 申购 场内交易</description>
-    <guid>159696</guid>
-  </item>
-  <item>
-    <title>纳斯达克ETF华夏 +3.53%</title>
-    <description>代码 513300 · 分类 etf · 净值/价格 2.669 · 净值日 2026-11-13 · 申购 场内交易</description>
-    <guid>513300</guid>
-  </item>
-  <item>
-    <title>纳斯达克ETF汇添富 +3.49%</title>
-    <description>代码 159660 · 分类 etf · 净值/价格 2.345 · 净值日 2026-11-13 · 申购 场内交易</description>
-    <guid>159660</guid>
-  </item>
-  <item>
-    <title>纳斯达克科技ETF景顺 +3.47%</title>
-    <description>代码 159509 · 分类 etf · 净值/价格 2.896 · 净值日 2026-11-13 · 申购 场内交易</description>
+    <title>纳斯达克科技ETF景顺 +4.01%</title>
+    <description>代码 159509 · 分类 etf · 净值/价格 2.775 · 净值日 2026-11-26 · 申购 场内交易</description>
     <guid>159509</guid>
   </item>
   <item>
-    <title>鹏华港美互联股票 -3.41%</title>
-    <description>代码 160644 · 分类 global_other · 净值/价格 1.415 · 净值日 2026-11-13 · 申购 暂停申购</description>
-    <guid>160644</guid>
+    <title>纳斯达克ETF汇添富 +3.74%</title>
+    <description>代码 159660 · 分类 etf · 净值/价格 2.301 · 净值日 2026-11-26 · 申购 场内交易</description>
+    <guid>159660</guid>
+  </item>
+  <item>
+    <title>纳斯达克ETF华安 +3.64%</title>
+    <description>代码 159632 · 分类 etf · 净值/价格 2.363 · 净值日 2026-11-26 · 申购 场内交易</description>
+    <guid>159632</guid>
+  </item>
+  <item>
+    <title>纳斯达克100ETF大成 +3.62%</title>
+    <description>代码 159513 · 分类 etf · 净值/价格 1.718 · 净值日 2026-11-26 · 申购 场内交易</description>
+    <guid>159513</guid>
+  </item>
+  <item>
+    <title>纳斯达克ETF华泰柏瑞 +3.50%</title>
+    <description>代码 513110 · 分类 etf · 净值/价格 2.364 · 净值日 2026-11-26 · 申购 场内交易</description>
+    <guid>513110</guid>
+  </item>
+  <item>
+    <title>纳斯达克ETF广发 +3.29%</title>
+    <description>代码 159941 · 分类 etf · 净值/价格 1.571 · 净值日 2026-11-26 · 申购 场内交易</description>
+    <guid>159941</guid>
+  </item>
+  <item>
+    <title>纳斯达克ETF富国 +3.29%</title>
+    <description>代码 513870 · 分类 etf · 净值/价格 2.008 · 净值日 2026-11-26 · 申购 场内交易</description>
+    <guid>513870</guid>
+  </item>
+  <item>
+    <title>日经225ETF华安 +3.25%</title>
+    <description>代码 513880 · 分类 etf · 净值/价格 1.873 · 净值日 2026-11-27 · 申购 场内交易</description>
+    <guid>513880</guid>
+  </item>
+  <item>
+    <title>纳斯达克100ETF招商 +3.21%</title>
+    <description>代码 159659 · 分类 etf · 净值/价格 2.283 · 净值日 2026-11-26 · 申购 场内交易</description>
+    <guid>159659</guid>
+  </item>
+  <item>
+    <title>纳斯达克100ETF博时 +3.21%</title>
+    <description>代码 513390 · 分类 etf · 净值/价格 2.344 · 净值日 2026-11-26 · 申购 场内交易</description>
+    <guid>513390</guid>
+  </item>
+  <item>
+    <title>纳斯达克ETF华夏 +3.09%</title>
+    <description>代码 513300 · 分类 etf · 净值/价格 2.6 · 净值日 2026-11-26 · 申购 场内交易</description>
+    <guid>513300</guid>
+  </item>
+  <item>
+    <title>美国50ETF易方达 +3.09%</title>
+    <description>代码 513850 · 分类 etf · 净值/价格 1.801 · 净值日 2026-11-26 · 申购 场内交易</description>
+    <guid>513850</guid>
+  </item>
+  <item>
+    <title>美国50ETF汇添富 +2.94%</title>
+    <description>代码 159577 · 分类 etf · 净值/价格 1.613 · 净值日 2026-11-26 · 申购 场内交易</description>
+    <guid>159577</guid>
+  </item>
+  <item>
+    <title>标普500ETF华夏 +2.83%</title>
+    <description>代码 159655 · 分类 etf · 净值/价格 1.926 · 净值日 2026-11-26 · 申购 场内交易</description>
+    <guid>159655</guid>
+  </item>
+  <item>
+    <title>纳斯达克ETF嘉实 +2.80%</title>
+    <description>代码 159501 · 分类 etf · 净值/价格 2.019 · 净值日 2026-11-26 · 申购 场内交易</description>
+    <guid>159501</guid>
+  </item>
+  <item>
+    <title>天弘越南市场股票 -2.74%</title>
+    <description>代码 008763 · 分类 global_other · 净值/价格 1.4355 · 净值日 2026-11-26 · 申购 限大额</description>
+    <guid>008763</guid>
+  </item>
+  <item>
+    <title>纳斯达克ETF易方达 +2.67%</title>
+    <description>代码 159696 · 分类 etf · 净值/价格 2.0 · 净值日 2026-11-26 · 申购 场内交易</description>
+    <guid>159696</guid>
+  </item>
+  <item>
+    <title>纳斯达克生物科技ETF汇添富 +2.63%</title>
+    <description>代码 513290 · 分类 etf · 净值/价格 1.913 · 净值日 2026-11-26 · 申购 场内交易</description>
+    <guid>513290</guid>
+  </item>
+  <item>
+    <title>标普500ETF南方 +2.36%</title>
+    <description>代码 513650 · 分类 etf · 净值/价格 1.908 · 净值日 2026-11-26 · 申购 场内交易</description>
+    <guid>513650</guid>
   </item>
 </channel></rss>
