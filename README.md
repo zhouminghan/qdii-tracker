@@ -165,6 +165,7 @@ qdii-tracker/
 │   └── sw.js
 ├── docs/    # 人读文档 — 踩坑 / 架构
 │   ├── decisions/
+│   ├── governance/
 │   ├── architecture.md
 │   ├── audit.md
 │   ├── data-contract.md
@@ -175,16 +176,17 @@ qdii-tracker/
 │   ├── e2e/
 │   ├── frontend/
 │   ├── test_akshare_source.py
+│   ├── test_architecture_lint.py
 │   ├── test_brand_gold.py
 │   ├── test_classify.py
 │   ├── test_cnn_sentiment.py
-│   ├── test_dca_strategy.py
+│   ├── test_config_loader.py
 │   ├── test_fx_spot.py
-│   ├── test_gold.py
 │   ├── test_gold_spot.py
 │   ├── test_kline_history.py
 │   ├── test_limit_notices.py
 │   ├── test_macro_rates.py
+│   ├── test_market_snapshot.py
 │   ├── test_market_temperature.py
 │   ├── test_nasdaq_history.py
 │   ├── test_nav_history.py

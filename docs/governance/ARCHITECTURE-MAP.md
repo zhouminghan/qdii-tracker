@@ -1,0 +1,89 @@
+# 架构地图
+
+> 本文件是治理程序的事实基线，随每批重构更新。生成日期：2026-11-27。
+
+## 1. 技术栈
+
+- 前端：Vue 3 + TypeScript + Vite + Pinia + Vue Router；TanStack Table（部分）、
+  Apache ECharts、Dexie/IndexedDB、html-to-image、Lucide 图标。
+- 测试：Vitest + Vue Test Utils + Playwright（仅 Chromium）+ axe-core。
+- 数据：Python + AKShare / 东方财富 / 雪球 / 天天基金 / 新浪 / Yahoo 等公开源，
+  产出静态 JSON 到 `web/data/`，GitHub Pages 纯静态部署。
+
+## 2. 模块地图与依赖方向
+
+```text
+scripts/core/        基础常量与纯函数（constants, utils, config_loader, gold）
+scripts/sources/     外部数据源适配（akshare/eastmoney/xueqiu/ths）→ 仅依赖 core
+scripts/pipeline/    数据生产链路 → 依赖 core + sources
+scripts/checks/      质量门禁与诊断 → 大多独立；build_snapshot → pipeline
+frontend/src/        页面 → features/widgets/stores → shared/ → types
+web/data/            数据层（pipeline 输出，前端只读）
+config/              业务配置 SSOT（funds.json 经 fundctl 变更）
+```
+
+依赖方向：`sources → core`、`pipeline → {core, sources}`、`checks → {core, pipeline}`、
+前端 `pages → features/widgets/stores → shared → types`。`shared` 不依赖页面。
+`fundctl.py` 按命令惰性导入 pipeline/checks，`check --offline` 与 `--help` 零第三方依赖。
+
+### 已知依赖异常
+
+- ~~`pipeline/market_temperature` 惰性 `from pipeline.macro_rates import fetch_treasury`~~：
+  ✅已收敛（批次 5）：抓取链下沉到 `sources/treasury_source.py`，两处 pipeline 改向下依赖 sources。
+- `checks/build_snapshot.py:19` 直接 `from pipeline import market_snapshot, public_catalog`：
+  这是「checks 消费 pipeline」的方向，语义成立，但未在契约中显式标注为唯一允许方向。
+
+## 3. 状态所有权地图
+
+| 状态 | 权威来源（SSOT） | 写路径 |
+|------|------------------|--------|
+| 基金分类/白名单/品牌/被动覆盖 | `config/funds.json` | 仅 `fundctl.py`（经 `core.config_loader`） |
+| 人工限购核验 | `config/limit-scopes.json` | `public_catalog.py` 读取 |
+| 人工申购状态覆盖 | `config/purchase-overrides.json` | `fill.py` 读取 |
+| 分类/净值/申购/规模等公开数据 | `web/data/{CATEGORIES}.json` | pipeline（scan/enrich/fill 等） |
+| 前端基金唯一入口 | `web/data/catalog.json` | `public_catalog.py` 生成 |
+| 首屏行情 | `web/data/market-snapshot.json` | `market_snapshot.py`（经 build_snapshot） |
+| 校验黄金样例 | `scripts/checks/golden-fixtures.json` | `verify_data.py` 读取 |
+| 个人持仓/交易/笔记 | 浏览器 IndexedDB `qdii-tracker` | `shared/infrastructure/local-db.ts` |
+| 主题/涨跌配色/收藏 | localStorage `qdii-settings-v2` | `stores/settings.ts` |
+| 人读数据契约 | `docs/data-contract.md` | 与 `public_catalog.py`、`types/data.ts` 同步 |
+
+## 4. 数据流
+
+```text
+sources → pipeline → web/data/*.json
+  → public_catalog.py → catalog.json
+  → market_snapshot.py → market-snapshot.json
+catalog.json + market-snapshot.json → Vue stores → pages/components
+pages/components → Dexie 个人数据 → JSON 备份
+```
+
+## 5. 重复实现清单
+
+| ID | 语义 | 位置 A（权威/运行时） | 位置 B（平行实现） | 处置 |
+|----|------|----------------------|--------------------|------|
+| DUP-1 | 黄金折算常数 `31.1034768` | `core/constants.py`（SSOT） | `pipeline/market_snapshot.py` 内联常量 | ✅已收敛：常量移入 constants，market_snapshot 从 constants 导入 |
+| DUP-2 | VIX/PE 阶梯定投规则 | `frontend/src/shared/lib/dca.ts`（运行时） | `core/dca_strategy.py`（零运行时调用方） | ✅已收敛：删除 Python 侧，前端为唯一实现 |
+| DUP-3 | 黄金折算 `XAU*USDCNH/OZ` | `pipeline/market_snapshot.py`（运行时） | `core/gold.py:gold_cny_per_gram`（仅测试用） | ✅已收敛：删除 orphaned core/gold.py，market_snapshot 为唯一实现 |
+| DUP-4 | FRED CSV 解析 | `sources/treasury_source.py:parse_fred_series`（raw，唯一实现） | `pipeline/market_temperature.py` 本地副本 | ✅已收敛：统一 raw 解析，消费端按需 round |
+
+已收敛（既往批次）：`calc_series_scale`、`fetch_and_save_holdings`、
+`normalize_share_keys`/`normalize_holdings_keys`、`to_float`、JSON 原子写入
+（`write_json` + `compact`）、config/funds.json 读取入口（`core.config_loader`）
+、HTTP 获取（`core.utils.requests_get`，剩余 cnn/limit_notices/nasdaq 3 处例外）
+均已收拢到唯一权威实现。
+
+有意保留的轻量变体（非平行实现，语义不同）：`market_snapshot`/`fx_spot`/`gold_spot`
+的 `_finite` 与 `market_temperature`/`build_snapshot`/`nasdaq_history` 的本地
+`_to_float` 是 hot-path 的 raw 转换（不加载 pandas、不去 %/逗号），与
+`core.utils.to_float`（数据源解析用、含 pandas/%/逗号处理）职责不同，不做形式合并。
+
+## 6. 规范偏离清单
+
+| ID | 偏离 | 位置 | 处置 |
+|----|------|------|------|
+| DEV-1 | 两个 `0003` 决策编号并存 | `docs/decisions/0003-notes-storage.md` 与 `0003-chromium-only-testing.md` | ✅已修正（批次 16）：notes-storage 重编号为 0005 |
+| DEV-2 | 死代码仍登记 | `scripts/checks/stamp_asset_version.py` 无调用方，仍列于 architecture.md / AGENTS.md | ✅已删除（批次 1） |
+| DEV-3 | `architecture.md` 契约不完整 | 缺 3 个 pipeline + 3 个 checks 契约，编号错乱 | ✅已补全（批次 3）：20 pipeline + 8 checks 全量登记，并新增 Layer B2 反向完整性校验 |
+| DEV-4 | `docs/audit.md` 过期 | 仍描述 Vanilla JS 旧架构（2026-11-14 快照） | ✅已标注历史（批次 7） |
+| DEV-5 | 无 import 边界机器约束 | `architecture_lint.py` 只校验 `web/` 目录，Python import 方向无 AST 检查 | ✅已约束（批次 4）：Layer 2 内 AST 校验分层 import 方向 + 回归单测 |

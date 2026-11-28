@@ -1,5 +1,9 @@
 # 仓库审计（2026-11-14）
 
+> **历史快照**：本文是 Vue 迁移前（Vanilla JS + Tailwind）的审计记录，仅作历史参考。
+> 当前架构以 [architecture.md](./architecture.md) 与
+> [governance/ARCHITECTURE-MAP.md](./governance/ARCHITECTURE-MAP.md) 为准。
+
 ## 当前架构
 
 ```mermaid

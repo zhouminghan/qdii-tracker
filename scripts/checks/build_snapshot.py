@@ -16,6 +16,7 @@ import html
 from datetime import datetime, timezone
 
 from core.constants import DATA_DIR, CATEGORIES, ROOT_DIR
+from core.utils import write_json
 from pipeline import market_snapshot, public_catalog
 
 
@@ -119,16 +120,12 @@ def build_rss(snapshot, generated_at):
 def main():
     snapshot, generated_at = build_snapshot()
     market_snapshot.build()
-    (DATA_DIR / "snapshot.json").write_text(
-        json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
+    write_json(DATA_DIR / "snapshot.json", snapshot)
     (ROOT_DIR / "web" / "feed.rss").write_text(build_rss(snapshot, generated_at), encoding="utf-8")
     # 持仓文件索引：供前端「重仓透视」只拉存在的文件，避免批量 404
     holdings_dir = DATA_DIR / "holdings"
     holdings_codes = sorted(p.stem for p in holdings_dir.glob("*.json")) if holdings_dir.exists() else []
-    (DATA_DIR / "holdings-index.json").write_text(
-        json.dumps({"codes": holdings_codes}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
+    write_json(DATA_DIR / "holdings-index.json", {"codes": holdings_codes})
     catalog = public_catalog.write_catalog()
     print(
         f"✅ 快照已生成：{len(snapshot['funds'])} 只基金 + "

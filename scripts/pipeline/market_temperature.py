@@ -15,10 +15,8 @@ scripts/pipeline/market_temperature.py — 生成「市场温度」评分数据
 import json
 from datetime import datetime
 
-import requests
-
 from core.constants import DATA_DIR
-from core.utils import beijing_now_iso, read_json, write_json
+from core.utils import beijing_now_iso, read_json, requests_get, write_json
 
 # ============================================================
 # 可配置：权重 / 区间 / 指标映射锚点
@@ -217,9 +215,9 @@ def fetch_nasdaq_trend():
 
 
 def fetch_treasury_10y():
-    # 与 macro_rates 共用官方财政部 → FRED → 东方财富回退链。
+    # 与 macro_rates 共用官方财政部 → FRED → 东方财富回退链（sources/treasury_source.py）。
     try:
-        from pipeline.macro_rates import fetch_treasury
+        from sources.treasury_source import fetch_treasury
 
         treasury, _ = fetch_treasury()
         if treasury and treasury.get("y10") is not None:
@@ -254,8 +252,9 @@ def fetch_dxy():
 
 def _fetch_vix_yahoo():
     url = "https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?range=1y&interval=1d"
-    r = requests.get(url, timeout=15, headers=YAHOO_UA)
-    r.raise_for_status()
+    r = requests_get(url, headers=YAHOO_UA, timeout=15)
+    if r is None:
+        return None
     result = r.json()["chart"]["result"][0]
     timestamps = result.get("timestamp") or []
     closes = (result.get("indicators", {}).get("quote") or [{}])[0].get("close") or []
@@ -271,28 +270,19 @@ def _fetch_vix_yahoo():
     return {"value": round(value, 2), "date": date, "source": "Yahoo Finance"}
 
 
-def parse_fred_series(text):
-    """解析 FRED CSV（DATE,VALUE），返回 [(date, value|None), ...]。"""
-    out = []
-    for line in text.strip().splitlines()[1:]:
-        parts = line.split(",")
-        if len(parts) < 2:
-            continue
-        out.append((parts[0].strip(), _to_float(parts[1])))
-    return out
-
-
 def _fetch_vix_fred():
+    from sources.treasury_source import parse_fred_series
     from core.utils import beijing_now
     from datetime import timedelta
 
     start = (beijing_now() - timedelta(days=60)).strftime("%Y-%m-%d")
-    r = requests.get(
+    r = requests_get(
         f"https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS&cosd={start}",
-        timeout=15,
         headers=YAHOO_UA,
+        timeout=15,
     )
-    r.raise_for_status()
+    if r is None:
+        return None
     rows = parse_fred_series(r.text)
     for date, value in reversed(rows):
         if value is not None:

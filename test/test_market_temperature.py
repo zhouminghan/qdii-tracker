@@ -10,9 +10,9 @@ from pipeline.market_temperature import (
     compute_scores,
     weighted_score,
     band_of,
-    parse_fred_series,
     WEIGHTS,
 )
+from sources.treasury_source import parse_fred_series
 
 
 def test_score_piecewise_lower_is_better():

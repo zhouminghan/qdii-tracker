@@ -17,6 +17,7 @@ scripts/architecture_lint.py — 目录纪律强制校验
         - feed.rss（每日快照订阅）
     web/data/  仅允许 *.json（+ holdings/、nav-history/、index-kline/、etf-kline/、fx-kline/ 子目录，同样仅 *.json）
     web/assets/ 仅允许 Vite 构建产物（*.js / *.css / *.map）
+    scripts/ 依赖方向：core ← sources ← pipeline ← checks（只许向下依赖，禁止向上/同级横向）
 
 设计原则：
     - 只做「结构」校验，不做内容语义校验（内容校验交给 scripts/pipeline/verify_data.py）
@@ -27,10 +28,12 @@ scripts/architecture_lint.py — 目录纪律强制校验
     python3 scripts/architecture_lint.py          # 独立运行（从项目根目录）
     from architecture_lint import run_lint         # 被 fundctl.py check 调用
 """
+import ast
 import sys
 
 from core.constants import ROOT_DIR
 WEB_DIR = ROOT_DIR / "web"
+SCRIPTS_DIR = ROOT_DIR / "scripts"
 
 # web/ 顶层允许的文件名（精确匹配）
 WEB_TOP_ALLOWED_FILES = {"index.html", "robots.txt", "sitemap.xml", ".nojekyll",
@@ -42,6 +45,20 @@ WEB_TOP_ALLOWED_DIRS = {"data", "assets"}
 SUBDIR_ALLOWED_EXT = {
     "data": {".json"},
     "assets": {".js", ".css", ".map"},
+}
+
+# 依赖方向：key 层的模块禁止 import 这些层（向上访问或同级横向）。
+# core 允许 core→core（constants 被 utils/config_loader 复用）；其余层禁止同级横向。
+LAYER_FORBIDDEN = {
+    "core": {"sources", "pipeline", "checks"},
+    "sources": {"sources", "pipeline", "checks"},
+    "pipeline": {"pipeline", "checks"},
+    "checks": {"checks"},
+}
+
+# 已识别且待下沉的既有横向耦合（见 docs/governance/TASK-POOL.md）；新同类耦合会被拒绝。
+ALLOWED_SAME_LAYER = {
+    ("checks", "checks"): {("check_agent_rules", "doc_sync")},
 }
 
 
@@ -85,12 +102,55 @@ def _check_subdir(name: str, allowed_ext: set) -> list:
     return errors
 
 
+def _imported_modules(node) -> list:
+    """从 ast 节点提取导入的顶层模块名（import / from ... import）。"""
+    if isinstance(node, ast.Import):
+        return [alias.name for alias in node.names]
+    if isinstance(node, ast.ImportFrom) and node.module:
+        return [node.module]
+    return []
+
+
+def _allowlisted(layer: str, target_layer: str, importer: str, module: str) -> bool:
+    if layer != target_layer:
+        return False
+    target = module.split(".")[1] if "." in module else module
+    return (importer, target) in ALLOWED_SAME_LAYER.get((layer, target_layer), set())
+
+
+def run_import_lint() -> list:
+    """校验 scripts/ 的 import 方向，返回错误列表（空 = 通过）。"""
+    errors = []
+    for layer in LAYER_FORBIDDEN:
+        layer_dir = SCRIPTS_DIR / layer
+        if not layer_dir.is_dir():
+            continue
+        for fp in sorted(layer_dir.glob("*.py")):
+            if fp.name == "__init__.py":
+                continue
+            try:
+                tree = ast.parse(fp.read_text(encoding="utf-8"), filename=str(fp))
+            except SyntaxError as e:
+                errors.append(f"{layer}/{fp.name} 语法错误: {e}")
+                continue
+            for node in ast.walk(tree):
+                for module in _imported_modules(node):
+                    target_layer = module.split(".")[0]
+                    if target_layer not in LAYER_FORBIDDEN[layer]:
+                        continue
+                    if _allowlisted(layer, target_layer, fp.stem, module):
+                        continue
+                    errors.append(f"{layer}/{fp.name} 违反依赖方向: import {module}")
+    return errors
+
+
 def run_lint() -> list:
     """执行全部校验，返回错误列表（空列表 = 全部通过）。"""
     errors = []
     errors.extend(_check_top_level())
     for subdir, allowed_ext in SUBDIR_ALLOWED_EXT.items():
         errors.extend(_check_subdir(subdir, allowed_ext))
+    errors.extend(run_import_lint())
     return errors
 
 

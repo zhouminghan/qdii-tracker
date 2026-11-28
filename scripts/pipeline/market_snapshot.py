@@ -17,9 +17,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from core.constants import DATA_DIR
+from core.constants import DATA_DIR, OZ_TO_GRAM
+from core.utils import write_json
 
-OZ_TO_GRAM = 31.1034768
 OUTPUT_FILE = DATA_DIR / "market-snapshot.json"
 
 # 键与前端 market-cards 的 data-symbol 对齐；缺失文件会产出 null 报价。
@@ -504,10 +504,7 @@ def build() -> dict[str, Any]:
     """生成并返回 market-snapshot.json；仅读写本地文件，不发起网络请求。"""
     snapshot = collect_snapshot()
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_FILE.write_text(
-        json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    write_json(OUTPUT_FILE, snapshot)
     return snapshot
 
 

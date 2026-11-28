@@ -91,9 +91,9 @@ npm run dev                                                     # Vite 开发（
 ## 模块登记
 
 ```text
-scripts/core: constants utils config_loader dca_strategy gold
-scripts/sources: akshare eastmoney xueqiu ths
+scripts/core: constants utils config_loader
+scripts/sources: akshare eastmoney xueqiu ths treasury
 scripts/pipeline: scan enrich fill performance holdings reclassify public_catalog premium_history nav_history kline_history market_temperature nasdaq_history cnn_sentiment brand_gold fx_spot gold_spot ndx_pe macro_rates market_snapshot limit_notices
-scripts/checks: verify_data verify_purchase cross_validate diagnose architecture_lint stamp_asset_version check_agent_rules doc_sync build_snapshot
+scripts/checks: verify_data verify_purchase cross_validate diagnose architecture_lint check_agent_rules doc_sync build_snapshot
 frontend: Vue 3 + TypeScript（pages/widgets/features/shared/stores/types）
 ```
